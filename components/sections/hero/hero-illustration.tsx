@@ -71,7 +71,7 @@ function HeroIllustration() {
     <motion.div
       animate={reduceMotion ? undefined : { y: [0, -10, 0] }}
       transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-      className="relative mx-auto aspect-square w-full max-w-md"
+      className="relative mx-auto aspect-square w-full max-w-sm"
     >
       <motion.svg
         viewBox="0 0 480 480"

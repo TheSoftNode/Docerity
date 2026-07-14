@@ -14,18 +14,18 @@ function Hero() {
             Engineering · Mentorship · Technical Writing
           </p>
 
-          <h1 className="mt-6 max-w-xl font-heading text-4xl font-medium leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.4rem]">
+          <h1 className="mt-5 max-w-2xl font-heading text-3xl font-medium leading-[1.15] tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem]">
             Docerity builds software, grows engineers, and makes hard
             ideas easy to hold.
           </h1>
 
-          <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base lg:text-lg">
             A practice for teams that need production-ready systems,
             engineers who want real mentorship, and anyone who wants
             technical concepts explained without the fluff.
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center gap-4">
             <Button
               size="lg"
               className="h-11 px-6 text-sm"
