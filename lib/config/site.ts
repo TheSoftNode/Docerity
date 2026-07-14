@@ -1,0 +1,19 @@
+export const siteConfig = {
+  name: "Docerity",
+  tagline: "Engineering · Mentorship · Technical Writing",
+  description:
+    "Docerity builds production software, takes on ambitious projects, and mentors the next generation of engineers.",
+  email: "hello@docerity.dev",
+  socials: {
+    github: "https://github.com",
+    linkedin: "https://linkedin.com",
+    x: "https://x.com",
+  },
+} as const;
+
+export const navLinks = [
+  { label: "Work", href: "#work" },
+  { label: "Services", href: "#services" },
+  { label: "Mentorship", href: "#mentorship" },
+  { label: "Blog", href: "#blog" },
+] as const;
