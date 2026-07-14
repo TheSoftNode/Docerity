@@ -87,6 +87,8 @@
   --sidebar-accent-foreground: #f3f1ea;
   --sidebar-border: oklch(0.98 0.01 90 / 10%);
   --sidebar-ring: #c2660a;
+
+  --nav-h: 5rem;
 }
 
 @layer base {

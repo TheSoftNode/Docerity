@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { MenuIcon } from "lucide-react";
+import { ArrowUpRightIcon, MenuIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { navLinks, siteConfig } from "@/lib/config/site";
 import { Container } from "@/components/shared/container";
+import { BrandMark } from "@/components/shared/brand-mark";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
@@ -23,35 +24,43 @@ function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b transition-colors duration-300",
+        "sticky top-0 z-40 border-b transition-all duration-300",
         scrolled
           ? "border-border/80 bg-background/90 backdrop-blur-md"
           : "border-transparent bg-transparent"
       )}
     >
-      <Container className="flex h-16 items-center justify-between">
-        <Link
-          href="/"
-          className="font-heading text-lg font-semibold tracking-tight text-foreground"
-        >
-          {siteConfig.name}
+      <Container className="flex h-[var(--nav-h)] items-center justify-between">
+        <Link href="/" className="group flex items-center gap-3">
+          <BrandMark className="transition-transform duration-300 group-hover:-rotate-6" />
+          <span className="font-heading text-lg font-medium tracking-tight text-foreground">
+            {siteConfig.name}
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-9 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="group relative text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
+              <span className="absolute -bottom-1.5 left-0 h-px w-full origin-left scale-x-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100" />
             </Link>
           ))}
         </nav>
 
-        <div className="hidden md:block">
-          <Button variant="default" nativeButton={false} render={<Link href="#contact" />}>
+        <div className="hidden items-center gap-5 md:flex">
+          <div className="h-5 w-px bg-border" />
+          <Button
+            variant="default"
+            nativeButton={false}
+            render={<Link href="#contact" />}
+            className="group"
+          >
             Start a project
+            <ArrowUpRightIcon className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Button>
         </div>
 
@@ -62,7 +71,10 @@ function Navbar() {
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-xs">
             <SheetHeader>
-              <SheetTitle>{siteConfig.name}</SheetTitle>
+              <SheetTitle className="flex items-center gap-3">
+                <BrandMark />
+                {siteConfig.name}
+              </SheetTitle>
             </SheetHeader>
             <nav className="flex flex-col gap-1 px-4">
               {navLinks.map((link) => (
