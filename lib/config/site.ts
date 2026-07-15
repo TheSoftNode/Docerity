@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Docerity",
-  tagline: "Engineering · Mentorship · Technical Writing",
+  tagline: "Engineering · Mentorship · Tech Explainers",
   description:
     "Docerity builds production software, takes on ambitious projects, and mentors the next generation of engineers.",
   email: "hello@docerity.dev",
@@ -13,7 +13,6 @@ export const siteConfig = {
 
 export const navLinks = [
   { label: "Work", href: "#work" },
-  { label: "Services", href: "#services" },
   { label: "Mentorship", href: "#mentorship" },
   { label: "Blog", href: "#blog" },
 ] as const;

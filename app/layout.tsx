@@ -18,7 +18,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Docerity — Engineering, Mentorship & Technical Writing",
+  title: "Docerity — Engineering, Mentorship & Tech Explainers",
   description:
     "Docerity builds production software, takes on ambitious projects, and mentors the next generation of engineers.",
 };
@@ -33,7 +33,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col overflow-x-hidden bg-background text-foreground">
         {children}
       </body>
     </html>

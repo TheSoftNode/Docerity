@@ -11,7 +11,7 @@ test.describe("Hero", () => {
     await page.goto("/");
 
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Docerity builds software"
+      "Software shipped"
     );
     await expect(page.getByRole("button", { name: "Start a project" }).first()).toBeVisible();
     await expect(page.getByRole("button", { name: "See the work" })).toBeVisible();

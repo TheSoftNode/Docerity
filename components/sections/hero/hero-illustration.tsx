@@ -1,209 +1,163 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "framer-motion";
 
-const container: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.11, delayChildren: 0.15 },
-  },
-};
+import { fadeUp } from "@/components/sections/hero/illustration-variants";
+import { scenes } from "@/components/sections/hero/illustration-scenes";
+import { TagChips } from "@/components/sections/hero/illustration-tag-chips";
+import { ProofCard } from "@/components/sections/hero/illustration-proof-card";
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
-
-const popIn: Variants = {
-  hidden: { opacity: 0, scale: 0 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.45, ease: "easeOut" },
-  },
-};
-
-const drawLine: Variants = {
-  hidden: { pathLength: 0, opacity: 0 },
-  visible: {
-    pathLength: 1,
-    opacity: 1,
-    transition: { duration: 0.55, ease: "easeInOut" },
-  },
-};
-
-const growBar: Variants = {
-  hidden: { scaleX: 0 },
-  visible: {
-    scaleX: 1,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
-};
-
-const codeLines = [
-  { width: 132, tone: "muted" as const },
-  { width: 196, tone: "faint" as const },
-  { width: 96, tone: "highlight" as const },
-  { width: 168, tone: "faint" as const },
-  { width: 118, tone: "muted" as const },
-];
-
-const barFill: Record<(typeof codeLines)[number]["tone"], string> = {
-  muted: "fill-muted-foreground/60",
-  faint: "fill-muted-foreground/30",
-  highlight: "fill-primary",
-};
-
-const graphNodes = [
-  { cx: 344, cy: 226 },
-  { cx: 334, cy: 288 },
-  { cx: 276, cy: 292 },
-];
+const SCENE_INTERVAL = 4200;
+const MAX_TILT = 9;
 
 function HeroIllustration() {
   const reduceMotion = useReducedMotion();
+  const [activeScene, setActiveScene] = useState(0);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const springX = useSpring(rotateX, { stiffness: 150, damping: 18 });
+  const springY = useSpring(rotateY, { stiffness: 150, damping: 18 });
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const id = window.setInterval(() => {
+      setActiveScene((current) => (current + 1) % scenes.length);
+    }, SCENE_INTERVAL);
+    return () => window.clearInterval(id);
+  }, [reduceMotion]);
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (reduceMotion || !wrapperRef.current) return;
+    const rect = wrapperRef.current.getBoundingClientRect();
+    const relX = (event.clientX - rect.left) / rect.width - 0.5;
+    const relY = (event.clientY - rect.top) / rect.height - 0.5;
+    rotateY.set(relX * MAX_TILT * 2);
+    rotateX.set(-relY * MAX_TILT * 2);
+  };
+
+  const handlePointerLeave = () => {
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
+  const ActiveScene = scenes[activeScene].Component;
 
   return (
-    <motion.div
-      animate={reduceMotion ? undefined : { y: [0, -10, 0] }}
-      transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-      className="relative mx-auto aspect-square w-full max-w-sm"
+    <div
+      ref={wrapperRef}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="relative mx-auto aspect-square w-full max-w-md"
+      style={{ perspective: 1200 }}
     >
-      <motion.svg
-        viewBox="0 0 480 480"
-        className="h-full w-full overflow-visible"
-        aria-hidden
-        initial={reduceMotion ? "visible" : "hidden"}
-        animate="visible"
-        variants={container}
+      <motion.div
+        animate={reduceMotion ? undefined : { y: [0, -10, 0] }}
+        transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
+        style={{ rotateX: springX, rotateY: springY, transformStyle: "preserve-3d" }}
+        className="h-full w-full"
       >
-        <defs>
-          <pattern id="dot-grid" width="26" height="26" patternUnits="userSpaceOnUse">
-            <circle cx="1.5" cy="1.5" r="1.5" className="fill-foreground/10" />
-          </pattern>
-        </defs>
+        <svg viewBox="0 0 480 480" className="h-full w-full overflow-visible" aria-hidden>
+          <defs>
+            <pattern id="dot-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+              <circle cx="1.5" cy="1.5" r="1.5" className="fill-foreground/10" />
+            </pattern>
+          </defs>
 
-        <rect x="20" y="30" width="440" height="420" fill="url(#dot-grid)" />
+          <rect x="10" y="20" width="460" height="440" fill="url(#dot-grid)" />
 
-        <motion.g variants={fadeUp} style={{ transformOrigin: "240px 240px" }}>
+          <ProofCard activeScene={activeScene} />
+
           <motion.g
-            animate={reduceMotion ? undefined : { rotate: [-6, -3.5, -6] }}
-            transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              rotate: reduceMotion ? -7 : [-7, -4, -7],
+            }}
+            transition={{
+              opacity: { duration: 0.5, ease: "easeOut", delay: 0.08 },
+              y: { duration: 0.5, ease: "easeOut", delay: 0.08 },
+              rotate: reduceMotion
+                ? { duration: 0 }
+                : { duration: 7, ease: "easeInOut", repeat: Infinity },
+            }}
             style={{ transformOrigin: "240px 240px" }}
           >
             <rect
-              x="94"
-              y="132"
-              width="292"
-              height="216"
+              x="88"
+              y="122"
+              width="304"
+              height="226"
               rx="22"
               className="fill-secondary stroke-border"
               strokeWidth={1}
             />
           </motion.g>
-        </motion.g>
 
-        <motion.rect
-          x="56"
-          y="66"
-          width="320"
-          height="238"
-          rx="20"
-          className="fill-card stroke-border"
-          strokeWidth={1}
-          variants={fadeUp}
-        />
+          <motion.rect
+            x="46"
+            y="52"
+            width="340"
+            height="256"
+            rx="20"
+            className="fill-card stroke-border drop-shadow-[0_24px_48px_-16px_rgba(0,0,0,0.55)]"
+            strokeWidth={1}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.16 }}
+          />
 
-        <motion.circle cx="84" cy="94" r="5.5" className="fill-primary" variants={popIn} />
-        <motion.circle cx="103" cy="94" r="5.5" className="fill-muted-foreground/40" variants={popIn} />
-        <motion.circle cx="122" cy="94" r="5.5" className="fill-muted-foreground/40" variants={popIn} />
+          <motion.circle cx="74" cy="80" r="5.5" className="fill-primary" variants={fadeUp} initial="hidden" animate="visible" />
+          <motion.circle cx="93" cy="80" r="5.5" className="fill-muted-foreground/40" variants={fadeUp} initial="hidden" animate="visible" />
+          <motion.circle cx="112" cy="80" r="5.5" className="fill-muted-foreground/40" variants={fadeUp} initial="hidden" animate="visible" />
 
-        <motion.line
-          x1="56"
-          y1="112"
-          x2="376"
-          y2="112"
-          className="stroke-border"
-          strokeWidth={1}
-          variants={drawLine}
-        />
+          <motion.line
+            x1="46"
+            y1="98"
+            x2="386"
+            y2="98"
+            className="stroke-border"
+            strokeWidth={1}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          />
 
-        {codeLines.map((line, index) =>
-          line.tone === "highlight" ? (
-            <motion.g
-              key={index}
-              variants={growBar}
-              style={{ transformOrigin: "82px 0px" }}
-            >
-              <motion.rect
-                x="82"
-                y={138 + index * 22}
-                height="8"
-                width={line.width}
-                rx="4"
-                className={barFill[line.tone]}
-                animate={reduceMotion ? undefined : { opacity: [1, 0.45, 1] }}
-                transition={{ duration: 3.2, ease: "easeInOut", repeat: Infinity }}
+          <clipPath id="scene-clip">
+            <rect x="46" y="98" width="340" height="200" />
+          </clipPath>
+
+          <g clipPath="url(#scene-clip)">
+            <AnimatePresence mode="wait">
+              <ActiveScene key={scenes[activeScene].id} />
+            </AnimatePresence>
+          </g>
+
+          <g>
+            {scenes.map((scene, index) => (
+              <circle
+                key={scene.id}
+                cx={190 + index * 16}
+                cy="332"
+                r={index === activeScene ? 4 : 3}
+                className={index === activeScene ? "fill-primary" : "fill-muted-foreground/40"}
               />
-            </motion.g>
-          ) : (
-            <motion.rect
-              key={index}
-              x="82"
-              y={138 + index * 22}
-              height="8"
-              width={line.width}
-              rx="4"
-              className={barFill[line.tone]}
-              style={{ transformOrigin: "82px 0px" }}
-              variants={growBar}
-            />
-          )
-        )}
+            ))}
+          </g>
+        </svg>
+      </motion.div>
 
-        <motion.g variants={fadeUp}>
-          {graphNodes.map((node, index) => (
-            <motion.line
-              key={index}
-              x1="302"
-              y1="256"
-              x2={node.cx}
-              y2={node.cy}
-              className="stroke-border"
-              strokeWidth={1.5}
-              variants={drawLine}
-            />
-          ))}
-        </motion.g>
-
-        {graphNodes.map((node, index) => (
-          <motion.circle
-            key={index}
-            cx={node.cx}
-            cy={node.cy}
-            r="6"
-            className="fill-foreground"
-            variants={popIn}
-          />
-        ))}
-
-        <motion.g variants={popIn} style={{ transformOrigin: "302px 256px" }}>
-          <motion.circle
-            cx="302"
-            cy="256"
-            r="9"
-            className="fill-primary"
-            animate={reduceMotion ? undefined : { scale: [1, 1.18, 1] }}
-            transition={{ duration: 2.6, ease: "easeInOut", repeat: Infinity }}
-            style={{ transformOrigin: "302px 256px" }}
-          />
-        </motion.g>
-      </motion.svg>
-    </motion.div>
+      <TagChips />
+    </div>
   );
 }
 

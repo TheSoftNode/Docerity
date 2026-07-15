@@ -1,0 +1,34 @@
+import { test, expect } from "@playwright/test";
+
+test.describe("Final CTA", () => {
+  test("renders with no console errors and both contact actions", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") errors.push(msg.text());
+    });
+    page.on("pageerror", (err) => errors.push(String(err)));
+
+    await page.goto("/");
+    await page.locator("#contact").scrollIntoViewIfNeeded();
+
+    await expect(
+      page.getByRole("heading", { name: "Got something worth building?" })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Start the conversation" })
+    ).toBeVisible();
+    await expect(
+      page.locator("#contact").getByRole("link", { name: "hello@docerity.dev" })
+    ).toBeVisible();
+
+    expect(errors).toEqual([]);
+  });
+
+  test("navbar and hero CTAs scroll to the contact section", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("button", { name: "Start a project" }).first().click();
+
+    await expect(page.locator("#contact")).toBeInViewport();
+  });
+});

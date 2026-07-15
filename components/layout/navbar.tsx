@@ -41,7 +41,7 @@ function Navbar() {
         <nav className="hidden items-center gap-9 md:flex">
           {navLinks.map((link) => (
             <Link
-              key={link.href}
+              key={link.label}
               href={link.href}
               className="group relative text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
@@ -79,7 +79,7 @@ function Navbar() {
             <nav className="flex flex-col gap-1 px-4">
               {navLinks.map((link) => (
                 <SheetClose
-                  key={link.href}
+                  key={link.label}
                   nativeButton={false}
                   render={<Link href={link.href} />}
                   className="rounded-md px-2 py-3 text-base text-foreground/90 transition-colors hover:bg-muted"
