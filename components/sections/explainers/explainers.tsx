@@ -38,7 +38,7 @@ function Explainers() {
             variant="outline"
             className="h-11 px-6 text-sm"
             nativeButton={false}
-            render={<Link href="#" />}
+            render={<Link href="/blog" />}
           >
             Read the blog
             <ArrowRightIcon />

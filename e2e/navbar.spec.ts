@@ -19,7 +19,7 @@ test.describe("Navbar", () => {
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
-    for (const label of ["Work", "Mentorship", "Blog"]) {
+    for (const label of ["Work", "AI", "Web3", "Mentorship", "Blog"]) {
       await expect(dialog.getByRole("button", { name: label })).toBeVisible();
     }
 

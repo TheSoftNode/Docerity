@@ -98,7 +98,7 @@ function WorkCard({
             {project.metric}
           </p>
           <Link
-            href={project.href}
+            href={`/work/${project.slug}`}
             className="inline-flex items-center gap-1 text-sm text-foreground/80 transition-colors hover:text-foreground"
           >
             View case study

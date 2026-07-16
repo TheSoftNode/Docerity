@@ -1,15 +1,16 @@
+import { Suspense } from "react";
 import { CheckIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { siteConfig } from "@/lib/config/site";
 import { ContactBackground } from "@/components/sections/contact/contact-background";
-import { ContactForm } from "@/components/sections/contact/contact-form";
+import { ContactForm, ContactFormFallback } from "@/components/sections/contact/contact-form";
 import { steps } from "@/components/sections/contact/contact-data";
 
 function Contact() {
   return (
     <>
-      <section className="border-b border-border/80 bg-background pt-16 pb-14 sm:pt-20 sm:pb-16">
+      <section className="border-b border-border/80 bg-background pt-12 pb-10 sm:pt-14 sm:pb-12">
         <Container>
           <div className="mx-auto max-w-xl text-center">
             <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
@@ -27,9 +28,7 @@ function Contact() {
       </section>
 
       <section className="relative overflow-hidden bg-[#f3f1ea] py-16 sm:py-24">
-        <ContactBackground />
-
-        <Container className="relative">
+        <Container>
           <div className="grid gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-16">
             <div className="flex flex-col justify-center">
               <ol className="flex flex-col gap-6">
@@ -64,7 +63,12 @@ function Contact() {
               </div>
             </div>
 
-            <ContactForm />
+            <div className="relative">
+              <ContactBackground />
+              <Suspense fallback={<ContactFormFallback />}>
+                <ContactForm />
+              </Suspense>
+            </div>
           </div>
         </Container>
       </section>

@@ -14,7 +14,7 @@ test.describe("Footer", () => {
     const footer = page.locator("footer");
     await footer.scrollIntoViewIfNeeded();
 
-    for (const label of ["Work", "Mentorship", "Blog"]) {
+    for (const label of ["Work", "Web3", "Mentorship", "Blog"]) {
       await expect(footer.getByRole("link", { name: label, exact: true })).toHaveCount(1);
     }
     await expect(footer.getByText("All rights reserved.")).toBeVisible();

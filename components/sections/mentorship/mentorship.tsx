@@ -4,6 +4,7 @@ import { ArrowRightIcon } from "lucide-react";
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { GrowthPath } from "@/components/sections/mentorship/growth-path";
+import { checkpoints } from "@/components/sections/mentorship/mentorship-data";
 
 function Mentorship() {
   return (
@@ -26,19 +27,43 @@ function Mentorship() {
             </p>
           </div>
 
-          <Button
-            size="lg"
-            className="h-11 shrink-0 px-6 text-sm"
-            nativeButton={false}
-            render={<Link href="#contact" />}
-          >
-            Apply for mentorship
-            <ArrowRightIcon />
-          </Button>
+          <div className="flex shrink-0 flex-wrap items-center gap-4">
+            <Button
+              size="lg"
+              variant="outline"
+              className="h-11 px-6 text-sm"
+              nativeButton={false}
+              render={<Link href="/mentorship" />}
+            >
+              See the full program
+            </Button>
+            <Button
+              size="lg"
+              className="h-11 px-6 text-sm"
+              nativeButton={false}
+              render={<Link href="/contact?type=mentorship" />}
+            >
+              Apply for mentorship
+              <ArrowRightIcon />
+            </Button>
+          </div>
         </div>
 
-        <div className="mt-8 sm:mt-10">
+        <div className="mt-8 hidden sm:mt-10 sm:block">
           <GrowthPath />
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 sm:hidden">
+          {checkpoints.map((checkpoint, index) => (
+            <span key={checkpoint.label} className="flex items-center gap-2">
+              {index > 0 && (
+                <ArrowRightIcon className="size-3 shrink-0 text-primary/60" />
+              )}
+              <span className="font-mono text-xs text-foreground">
+                {checkpoint.label}
+              </span>
+            </span>
+          ))}
         </div>
       </Container>
     </section>

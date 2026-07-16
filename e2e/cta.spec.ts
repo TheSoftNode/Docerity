@@ -24,11 +24,4 @@ test.describe("Final CTA", () => {
     expect(errors).toEqual([]);
   });
 
-  test("navbar and hero CTAs scroll to the contact section", async ({ page }) => {
-    await page.goto("/");
-
-    await page.getByRole("button", { name: "Start a project" }).first().click();
-
-    await expect(page.locator("#contact")).toBeInViewport();
-  });
 });

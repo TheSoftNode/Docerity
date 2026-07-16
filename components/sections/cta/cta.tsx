@@ -47,7 +47,7 @@ function Cta() {
               size="lg"
               className="h-11 px-6 text-sm"
               nativeButton={false}
-              render={<Link href={`mailto:${siteConfig.email}`} />}
+              render={<Link href="/contact" />}
             >
               Start the conversation
               <ArrowRightIcon />

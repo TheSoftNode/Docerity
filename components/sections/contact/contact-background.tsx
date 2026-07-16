@@ -4,49 +4,42 @@ import { motion, useReducedMotion } from "framer-motion";
 
 const traces = [
   [
-    { x: 40, y: 0 },
-    { x: 40, y: 110 },
-    { x: 900, y: 110 },
-    { x: 900, y: 50 },
+    { x: 60, y: 0 },
+    { x: 60, y: 90 },
+    { x: 700, y: 90 },
+    { x: 700, y: 45 },
   ],
   [
-    { x: 160, y: 640 },
-    { x: 160, y: 430 },
-    { x: 950, y: 430 },
-    { x: 950, y: 80 },
+    { x: 940, y: 0 },
+    { x: 940, y: 120 },
+    { x: 760, y: 120 },
+    { x: 760, y: 50 },
   ],
   [
-    { x: 1400, y: 0 },
-    { x: 1400, y: 150 },
-    { x: 1150, y: 150 },
-    { x: 1150, y: 55 },
+    { x: 1000, y: 220 },
+    { x: 820, y: 220 },
+    { x: 820, y: 70 },
+    { x: 620, y: 70 },
   ],
   [
-    { x: 1300, y: 640 },
-    { x: 1300, y: 380 },
-    { x: 1080, y: 380 },
-    { x: 1080, y: 90 },
+    { x: 900, y: 700 },
+    { x: 900, y: 420 },
+    { x: 700, y: 420 },
+    { x: 700, y: 90 },
   ],
   [
-    { x: 0, y: 300 },
-    { x: 320, y: 300 },
-    { x: 320, y: 70 },
-    { x: 1020, y: 70 },
-    { x: 1020, y: 50 },
-  ],
-  [
-    { x: 1440, y: 260 },
-    { x: 1040, y: 260 },
-    { x: 1040, y: 80 },
-    { x: 860, y: 80 },
+    { x: 100, y: 700 },
+    { x: 100, y: 380 },
+    { x: 380, y: 380 },
+    { x: 380, y: 60 },
   ],
 ] as const;
 
 const signalPoints = [
-  { x: 1010, y: 640 },
-  { x: 1010, y: 300 },
-  { x: 960, y: 300 },
-  { x: 960, y: 50 },
+  { x: 520, y: 700 },
+  { x: 520, y: 260 },
+  { x: 560, y: 260 },
+  { x: 560, y: 45 },
 ] as const;
 
 function toPathD(points: readonly { x: number; y: number }[]) {
@@ -59,9 +52,12 @@ function ContactBackground() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+    <div
+      className="pointer-events-none absolute -inset-x-6 -top-16 -bottom-10 overflow-hidden sm:-inset-x-10 sm:-top-24 lg:-inset-x-16 lg:-top-28"
+      aria-hidden
+    >
       <svg
-        viewBox="0 0 1440 640"
+        viewBox="0 0 1000 700"
         preserveAspectRatio="none"
         className="h-full w-full"
       >
@@ -135,7 +131,9 @@ function ContactBackground() {
               : { opacity: [0.3, 0.8, 0.3], scale: [1, 1.6, 1] }
           }
           transition={{ duration: 2.6, ease: "easeInOut", repeat: Infinity }}
-          style={{ transformOrigin: `${signalPoints[signalPoints.length - 1].x}px ${signalPoints[signalPoints.length - 1].y}px` }}
+          style={{
+            transformOrigin: `${signalPoints[signalPoints.length - 1].x}px ${signalPoints[signalPoints.length - 1].y}px`,
+          }}
         />
       </svg>
     </div>

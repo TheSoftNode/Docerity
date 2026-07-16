@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
+import { siteConfig } from "@/lib/config/site";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -18,9 +20,29 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Docerity — Engineering, Mentorship & Tech Explainers",
-  description:
-    "Docerity builds production software, takes on ambitious projects, and mentors the next generation of engineers.",
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: "Docerity — Engineering, Mentorship & Tech Explainers",
+    template: `%s — ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  alternates: {
+    types: {
+      "application/rss+xml": `${siteConfig.url}/blog/rss.xml`,
+    },
+  },
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.name,
+    title: "Docerity — Engineering, Mentorship & Tech Explainers",
+    description: siteConfig.description,
+    url: siteConfig.url,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Docerity — Engineering, Mentorship & Tech Explainers",
+    description: siteConfig.description,
+  },
 };
 
 export default function RootLayout({

@@ -56,7 +56,7 @@ function Navbar() {
           <Button
             variant="default"
             nativeButton={false}
-            render={<Link href="#contact" />}
+            render={<Link href="/contact" />}
             className="group"
           >
             Start a project
@@ -91,7 +91,7 @@ function Navbar() {
             <div className="mt-2 px-4">
               <SheetClose
                 nativeButton={false}
-                render={<Link href="#contact" />}
+                render={<Link href="/contact" />}
                 className={buttonVariants({
                   variant: "default",
                   className: "w-full justify-center",
