@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
@@ -43,6 +43,11 @@ export const metadata: Metadata = {
     title: "Docerity — Engineering, Mentorship & Tech Explainers",
     description: siteConfig.description,
   },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "dark",
+  themeColor: "#0b1330",
 };
 
 export default function RootLayout({

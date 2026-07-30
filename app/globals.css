@@ -51,6 +51,11 @@
 }
 
 :root {
+  /* Explicit color-scheme so mobile browsers (Samsung Internet in particular)
+     don't apply their own auto-dark/color-adjustment heuristics to a page
+     that's already intentionally dark. */
+  color-scheme: dark;
+
   /* Brand — deep navy is the site's signature color; amber is a rare, functional accent. No gradients, no decorative shapes: solid fields only. */
   --brand-navy: #0b1330;
   --brand-amber: #c2660a;
@@ -70,8 +75,8 @@
   --accent: #1e2a5e;
   --accent-foreground: #f3f1ea;
   --destructive: #d84343;
-  --border: oklch(0.98 0.01 90 / 10%);
-  --input: oklch(0.98 0.01 90 / 14%);
+  --border: #f3f1ea1a;
+  --input: #f3f1ea24;
   --ring: #c2660a;
   --chart-1: #c2660a;
   --chart-2: #3d4fdb;
@@ -85,7 +90,7 @@
   --sidebar-primary-foreground: #0b1330;
   --sidebar-accent: #1a2450;
   --sidebar-accent-foreground: #f3f1ea;
-  --sidebar-border: oklch(0.98 0.01 90 / 10%);
+  --sidebar-border: #f3f1ea1a;
   --sidebar-ring: #c2660a;
 
   --nav-h: 5rem;
