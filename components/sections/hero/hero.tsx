@@ -10,8 +10,8 @@ function Hero() {
     <section className="border-b border-border/80 py-14 sm:h-[calc(100dvh-var(--nav-h)-72px)] sm:min-h-[560px] sm:py-0">
       <Container className="grid items-center gap-10 sm:h-full lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 2xl:gap-16">
         <div>
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-            Engineering · Mentorship · Tech Explainers
+          <p className="font-mono text-xs tracking-[0.12em] text-primary uppercase sm:tracking-[0.2em]">
+            Engineering · Mentorship · <span className="whitespace-nowrap">Tech Explainers</span>
           </p>
 
           <h1 className="mt-4 max-w-xl font-heading text-3xl font-medium leading-[1.15] tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem]">
@@ -24,10 +24,10 @@ function Hero() {
             complex ideas explained simply.
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button
               size="lg"
-              className="h-11 px-6 text-sm"
+              className="h-11 w-full px-6 text-sm sm:w-auto"
               nativeButton={false}
               render={<Link href="/contact" />}
             >
@@ -37,7 +37,7 @@ function Hero() {
             <Button
               size="lg"
               variant="outline"
-              className="h-11 px-6 text-sm"
+              className="h-11 w-full px-6 text-sm sm:w-auto"
               nativeButton={false}
               render={<Link href="#work" />}
             >
