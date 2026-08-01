@@ -3,7 +3,8 @@ import { ArrowRightIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
-import { WorkBackground } from "@/components/sections/work/work-background";
+import { WorkBackground, orbitIcons } from "@/components/sections/work/work-background";
+import { OrbitCluster } from "@/components/sections/work/work-orbit";
 import { WorkCard } from "@/components/sections/work/work-card";
 import { projects } from "@/components/sections/work/work-data";
 
@@ -40,6 +41,10 @@ function Work() {
             See all work
             <ArrowRightIcon />
           </Button>
+        </div>
+
+        <div className="mt-10 flex justify-center lg:hidden">
+          <OrbitCluster icons={orbitIcons} size={200} duration={26} badgeSize={40} />
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">

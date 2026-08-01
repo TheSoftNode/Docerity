@@ -114,4 +114,4 @@ function WorkBackground() {
   );
 }
 
-export { WorkBackground };
+export { WorkBackground, orbitIcons };
