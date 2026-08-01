@@ -16,7 +16,7 @@ export default function NotFound() {
     <>
       <Navbar />
       <main className="flex-1">
-        <section className="relative flex min-h-[calc(100dvh-var(--nav-h))] items-center overflow-hidden border-b border-border/80 bg-background">
+        <section className="relative flex items-center overflow-hidden border-b border-border/80 bg-background py-16 sm:min-h-[calc(100dvh-var(--nav-h))] sm:py-0">
           <span
             aria-hidden
             className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-heading text-[16rem] leading-none font-medium text-foreground/[0.03] select-none sm:text-[26rem]"
@@ -37,10 +37,10 @@ export default function NotFound() {
                 get you back on track.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
                 <Button
                   size="lg"
-                  className="h-11 px-6 text-sm"
+                  className="h-11 w-full px-6 text-sm sm:w-auto"
                   nativeButton={false}
                   render={<Link href="/" />}
                 >
@@ -50,7 +50,7 @@ export default function NotFound() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="h-11 px-6 text-sm"
+                  className="h-11 w-full px-6 text-sm sm:w-auto"
                   nativeButton={false}
                   render={<Link href="/blog" />}
                 >

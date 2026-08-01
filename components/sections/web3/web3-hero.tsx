@@ -24,10 +24,10 @@ function Web3Hero() {
             wins, not just prototypes.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
             <Button
               size="lg"
-              className="h-11 px-6 text-sm"
+              className="h-11 w-full px-6 text-sm sm:w-auto"
               nativeButton={false}
               render={<Link href="#projects" />}
             >
@@ -37,7 +37,7 @@ function Web3Hero() {
             <Button
               size="lg"
               variant="outline"
-              className="h-11 px-6 text-sm"
+              className="h-11 w-full px-6 text-sm sm:w-auto"
               nativeButton={false}
               render={<Link href="/contact" />}
             >

@@ -27,11 +27,11 @@ function Mentorship() {
             </p>
           </div>
 
-          <div className="flex shrink-0 flex-wrap items-center gap-4">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:shrink-0 sm:flex-row sm:items-center">
             <Button
               size="lg"
               variant="outline"
-              className="h-11 px-6 text-sm"
+              className="h-11 w-full px-6 text-sm sm:w-auto"
               nativeButton={false}
               render={<Link href="/mentorship" />}
             >
@@ -39,7 +39,7 @@ function Mentorship() {
             </Button>
             <Button
               size="lg"
-              className="h-11 px-6 text-sm"
+              className="h-11 w-full px-6 text-sm sm:w-auto"
               nativeButton={false}
               render={<Link href="/contact?type=mentorship" />}
             >
