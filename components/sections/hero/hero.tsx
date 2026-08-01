@@ -7,8 +7,8 @@ import { HeroIllustration } from "@/components/sections/hero/hero-illustration";
 
 function Hero() {
   return (
-    <section className="h-[calc(100dvh-var(--nav-h)-72px)] min-h-[560px] border-b border-border/80">
-      <Container className="grid h-full max-w-6xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 2xl:max-w-[86rem] 2xl:gap-16">
+    <section className="border-b border-border/80 py-14 sm:h-[calc(100dvh-var(--nav-h)-72px)] sm:min-h-[560px] sm:py-0">
+      <Container className="grid items-center gap-10 sm:h-full lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 2xl:gap-16">
         <div>
           <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
             Engineering · Mentorship · Tech Explainers
