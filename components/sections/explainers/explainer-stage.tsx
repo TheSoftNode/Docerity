@@ -124,7 +124,7 @@ function ExplainerStage() {
 
   return (
     <div>
-      <div className="relative rounded-3xl border border-border bg-card/40 px-6 py-8 backdrop-blur-sm sm:px-10 sm:py-10">
+      <div className="relative rounded-3xl border border-border bg-card/90 px-6 py-10 shadow-[0_30px_70px_-35px_rgba(0,0,0,0.8)] backdrop-blur-sm sm:px-10 sm:py-14">
         <CornerBrackets />
 
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-2">

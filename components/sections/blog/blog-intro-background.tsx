@@ -19,7 +19,7 @@ function BlogIntroBackground() {
           y1={32}
           x2={1440}
           y2={32}
-          stroke="#f3f1ea"
+          stroke="#f5f7fb"
           strokeOpacity={0.08}
           strokeWidth={1}
         />
@@ -29,7 +29,7 @@ function BlogIntroBackground() {
             cx={x}
             cy={32}
             r={2.5}
-            fill="#c2660a"
+            fill="#5b6ef5"
             initial={{ opacity: 0.15 }}
             animate={
               reduceMotion

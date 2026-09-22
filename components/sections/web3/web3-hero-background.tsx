@@ -28,7 +28,7 @@ function Web3HeroBackground() {
             y1={y}
             x2={blocks[index + 1] - r}
             y2={y}
-            stroke="#f3f1ea"
+            stroke="#f5f7fb"
             strokeOpacity={0.08}
             strokeWidth={1.5}
           />
@@ -39,14 +39,14 @@ function Web3HeroBackground() {
             <polygon
               points={hexPoints(x, y, r)}
               fill="none"
-              stroke={index === 3 ? "#c2660a" : "#f3f1ea"}
+              stroke={index === 3 ? "#5b6ef5" : "#f5f7fb"}
               strokeOpacity={index === 3 ? 0.5 : 0.1}
               strokeWidth={1.5}
             />
             {index === 3 && (
               <motion.polygon
                 points={hexPoints(x, y, r)}
-                fill="#c2660a"
+                fill="#5b6ef5"
                 initial={{ opacity: 0.08 }}
                 animate={
                   reduceMotion

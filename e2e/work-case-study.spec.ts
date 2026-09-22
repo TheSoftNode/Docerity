@@ -21,7 +21,7 @@ test.describe("Work case studies", () => {
     await page.goto("/");
     await page.locator("#work").scrollIntoViewIfNeeded();
 
-    await page.getByRole("link", { name: "View case study" }).first().click();
+    await page.getByRole("link", { name: /view case study/i }).first().click();
     await expect(page).toHaveURL("/work/ledger");
   });
 

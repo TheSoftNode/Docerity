@@ -22,7 +22,7 @@ function AiCapabilitiesBackground() {
             y1={stream.y}
             x2={1440}
             y2={stream.y}
-            stroke="#f3f1ea"
+            stroke="#f5f7fb"
             strokeOpacity={0.04}
             strokeWidth={1}
           />
@@ -33,7 +33,7 @@ function AiCapabilitiesBackground() {
             key={`dot-${stream.y}`}
             cy={stream.y}
             r={3}
-            fill="#c2660a"
+            fill="#5b6ef5"
             initial={{ opacity: 0, cx: 0 }}
             animate={
               reduceMotion

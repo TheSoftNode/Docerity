@@ -34,8 +34,8 @@ export default async function Image({
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#f3f1ea",
-          color: "#0b1330",
+          background: "#f5f7fb",
+          color: "#070b16",
           fontFamily: "sans-serif",
         }}
       >
@@ -45,7 +45,7 @@ export default async function Image({
             fontSize: 24,
             letterSpacing: 4,
             textTransform: "uppercase",
-            color: "#c2660a",
+            color: "#5b6ef5",
             fontWeight: 600,
           }}
         >
@@ -79,7 +79,7 @@ export default async function Image({
               width: 28,
               height: 28,
               borderRadius: 8,
-              background: "#0b1330",
+              background: "#070b16",
             }}
           />
           Docerity &middot; Tech Explainers

@@ -32,7 +32,7 @@ function Sidenote({ sidenote }: { sidenote: string }) {
       <p className="font-mono text-[11px] tracking-[0.15em] text-primary/80 uppercase">
         Like this
       </p>
-      <p className="mt-1 text-sm leading-relaxed text-[#0b1330]/70">
+      <p className="mt-1 text-sm leading-relaxed text-[#070b16]/70">
         {sidenote}
       </p>
     </div>
@@ -70,14 +70,14 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
         </Container>
       </section>
 
-      <section className="bg-[#f3f1ea] pt-10 pb-28 sm:pt-14 sm:pb-32">
+      <section className="bg-[#f5f7fb] pt-10 pb-28 sm:pt-14 sm:pb-32">
         <Container>
           <div className="mx-auto max-w-4xl">
-            <div className="flex flex-col gap-4 border-b border-[#0b1330]/10 pb-8 sm:flex-row sm:items-center sm:gap-5">
+            <div className="flex flex-col gap-4 border-b border-[#070b16]/10 pb-8 sm:flex-row sm:items-center sm:gap-5">
               {isExplainer ? (
                 <div className="flex shrink-0 items-center gap-2">
-                  <span className="flex size-11 items-center justify-center rounded-xl border border-[#0b1330]/15 bg-white/60">
-                    <entry.concept.Icon className="size-5 text-[#0b1330]" strokeWidth={1.75} />
+                  <span className="flex size-11 items-center justify-center rounded-xl border border-[#070b16]/15 bg-white/60">
+                    <entry.concept.Icon className="size-5 text-[#070b16]" strokeWidth={1.75} />
                   </span>
                   <span className="font-heading text-muted-foreground">&asymp;</span>
                   <span className="flex size-11 items-center justify-center rounded-xl border border-primary/30 bg-primary/10">
@@ -85,8 +85,8 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                   </span>
                 </div>
               ) : (
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[#0b1330]/15 bg-white/60">
-                  <entry.Icon className="size-5 text-[#0b1330]" strokeWidth={1.75} />
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[#070b16]/15 bg-white/60">
+                  <entry.Icon className="size-5 text-[#070b16]" strokeWidth={1.75} />
                 </span>
               )}
 
@@ -94,10 +94,10 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                 <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
                   {isExplainer ? entry.concept.label : entry.topic}
                 </p>
-                <h1 className="mt-1 font-heading text-2xl font-medium tracking-tight text-[#0b1330] sm:text-3xl">
+                <h1 className="mt-1 font-heading text-2xl font-medium tracking-tight text-[#070b16] sm:text-3xl">
                   {entryTitle(entry)}
                 </h1>
-                <p className="mt-1 text-xs text-[#0b1330]/50">
+                <p className="mt-1 text-xs text-[#070b16]/50">
                   {formatDate(entry.publishedAt)} &middot; {entry.readTime}
                 </p>
               </div>
@@ -106,7 +106,7 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                 {entry.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-[#0b1330]/10 px-3 py-1 text-xs text-[#0b1330]/60"
+                    className="rounded-full border border-[#070b16]/10 px-3 py-1 text-xs text-[#070b16]/60"
                   >
                     {tag}
                   </span>
@@ -121,13 +121,13 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                     {entry.body.map((section, index) => (
                       <Fragment key={section.heading}>
                         <div style={{ gridRow: index + 1 }} className="lg:col-start-1">
-                          <h2 className="font-heading text-xl font-medium text-[#0b1330] sm:text-2xl">
+                          <h2 className="font-heading text-xl font-medium text-[#070b16] sm:text-2xl">
                             {section.heading}
                           </h2>
                           {section.paragraphs.map((paragraph) => (
                             <p
                               key={paragraph.slice(0, 24)}
-                              className="mt-3 text-sm leading-relaxed text-[#0b1330]/75 sm:text-base"
+                              className="mt-3 text-sm leading-relaxed text-[#070b16]/75 sm:text-base"
                             >
                               {paragraph}
                             </p>
@@ -154,13 +154,13 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                   <div className="mx-auto max-w-2xl">
                     {entry.body.map((section) => (
                       <div key={section.heading} className="mb-8">
-                        <h2 className="font-heading text-xl font-medium text-[#0b1330] sm:text-2xl">
+                        <h2 className="font-heading text-xl font-medium text-[#070b16] sm:text-2xl">
                           {section.heading}
                         </h2>
                         {section.paragraphs.map((paragraph) => (
                           <p
                             key={paragraph.slice(0, 24)}
-                            className="mt-3 text-sm leading-relaxed text-[#0b1330]/75 sm:text-base"
+                            className="mt-3 text-sm leading-relaxed text-[#070b16]/75 sm:text-base"
                           >
                             {paragraph}
                           </p>
@@ -173,8 +173,8 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
               </div>
             </ReadingProgress>
 
-            <div className="mx-auto mt-14 flex max-w-2xl flex-col items-center gap-4 border-t border-[#0b1330]/10 pt-10 text-center">
-              <p className="text-sm text-[#0b1330]/70">
+            <div className="mx-auto mt-14 flex max-w-2xl flex-col items-center gap-4 border-t border-[#070b16]/10 pt-10 text-center">
+              <p className="text-sm text-[#070b16]/70">
                 {isExplainer
                   ? "Got a concept you want explained like this?"
                   : "Got a project or idea you want to talk through?"}
@@ -191,18 +191,18 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
             </div>
 
             {(prevPost || nextPost) && (
-              <div className="mx-auto mt-14 grid max-w-2xl grid-cols-2 gap-4 border-t border-[#0b1330]/10 pt-10">
+              <div className="mx-auto mt-14 grid max-w-2xl grid-cols-2 gap-4 border-t border-[#070b16]/10 pt-10">
                 <div>
                   {prevPost && (
                     <Link
                       href={`/blog/${prevPost.slug}`}
-                      className="group flex flex-col gap-1 rounded-xl border border-[#0b1330]/10 bg-white/60 p-4 transition-colors hover:bg-white"
+                      className="group flex flex-col gap-1 rounded-xl border border-[#070b16]/10 bg-white/60 p-4 transition-colors hover:bg-white"
                     >
-                      <span className="flex items-center gap-1 text-xs text-[#0b1330]/50">
+                      <span className="flex items-center gap-1 text-xs text-[#070b16]/50">
                         <ArrowLeftIcon className="size-3" />
                         Previous
                       </span>
-                      <span className="font-heading text-sm font-medium text-[#0b1330]">
+                      <span className="font-heading text-sm font-medium text-[#070b16]">
                         {entryTitle(prevPost)}
                       </span>
                     </Link>
@@ -212,13 +212,13 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                   {nextPost && (
                     <Link
                       href={`/blog/${nextPost.slug}`}
-                      className="group flex flex-col items-end gap-1 rounded-xl border border-[#0b1330]/10 bg-white/60 p-4 text-right transition-colors hover:bg-white"
+                      className="group flex flex-col items-end gap-1 rounded-xl border border-[#070b16]/10 bg-white/60 p-4 text-right transition-colors hover:bg-white"
                     >
-                      <span className="flex items-center gap-1 text-xs text-[#0b1330]/50">
+                      <span className="flex items-center gap-1 text-xs text-[#070b16]/50">
                         Next
                         <ArrowRightIcon className="size-3" />
                       </span>
-                      <span className="font-heading text-sm font-medium text-[#0b1330]">
+                      <span className="font-heading text-sm font-medium text-[#070b16]">
                         {entryTitle(nextPost)}
                       </span>
                     </Link>
@@ -228,7 +228,7 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
             )}
 
             {related.length > 0 && (
-              <div className="mx-auto mt-14 max-w-2xl border-t border-[#0b1330]/10 pt-10">
+              <div className="mx-auto mt-14 max-w-2xl border-t border-[#070b16]/10 pt-10">
                 <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
                   {isExplainer ? "Related explainers" : "More articles"}
                 </p>
@@ -237,26 +237,26 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                     <Link
                       key={relatedEntry.slug}
                       href={`/blog/${relatedEntry.slug}`}
-                      className="flex items-center gap-4 rounded-xl border border-[#0b1330]/10 bg-white/60 p-4 transition-colors hover:bg-white"
+                      className="flex items-center gap-4 rounded-xl border border-[#070b16]/10 bg-white/60 p-4 transition-colors hover:bg-white"
                     >
-                      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[#0b1330]/15 bg-[#f3f1ea]">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[#070b16]/15 bg-[#f5f7fb]">
                         {relatedEntry.type === "explainer" ? (
                           <relatedEntry.concept.Icon
-                            className="size-5 text-[#0b1330]"
+                            className="size-5 text-[#070b16]"
                             strokeWidth={1.75}
                           />
                         ) : (
                           <relatedEntry.Icon
-                            className="size-5 text-[#0b1330]"
+                            className="size-5 text-[#070b16]"
                             strokeWidth={1.75}
                           />
                         )}
                       </span>
                       <span>
-                        <span className="block font-heading text-base font-medium text-[#0b1330]">
+                        <span className="block font-heading text-base font-medium text-[#070b16]">
                           {entryTitle(relatedEntry)}
                         </span>
-                        <span className="mt-0.5 block font-mono text-xs text-[#0b1330]/50">
+                        <span className="mt-0.5 block font-mono text-xs text-[#070b16]/50">
                           {relatedEntry.type === "explainer"
                             ? relatedEntry.concept.label
                             : relatedEntry.topic}

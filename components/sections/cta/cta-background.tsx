@@ -20,9 +20,9 @@ function CtaBackground() {
         preserveAspectRatio="none"
         className="h-full w-full"
       >
-        <rect x={0} y={0} width={500} height={400} fill="#161d42" />
-        <rect x={500} y={0} width={500} height={400} fill="#241119" />
-        <rect x={498.5} y={0} width={3} height={400} className="fill-primary/50" />
+        {/* Two colour fields and an amber divider used to split this canvas
+            down the middle — the divider landed straight through the headline.
+            The section is one field now; only the rays remain. */}
 
         {rays.map((ray, index) => {
           const isCenter = index === Math.floor(RAY_COUNT / 2);

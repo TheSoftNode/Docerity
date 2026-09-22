@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { QuoteIcon } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { testimonials } from "@/components/sections/testimonials/testimonials-data";
 
 const INTERVAL = 5200;
@@ -17,46 +18,43 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
-function AvatarButton({
-  name,
-  isActive,
-  onClick,
-}: {
-  name: string;
-  isActive: boolean;
-  onClick: () => void;
-}) {
+function Avatar({ name, isActive }: { name: string; isActive: boolean }) {
   const reduceMotion = useReducedMotion();
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={`Show testimonial from ${name}`}
-      className="relative flex shrink-0 items-center justify-center"
-    >
+    <span className="relative flex size-10 shrink-0 items-center justify-center">
       {isActive && (
         <motion.span
           aria-hidden
-          className="absolute inset-0 -m-1.5 rounded-full border border-dashed border-primary/40"
+          className="absolute inset-0 -m-1 rounded-full border border-dashed border-primary/50"
           animate={reduceMotion ? undefined : { rotate: 360 }}
           transition={{ duration: 16, ease: "linear", repeat: Infinity }}
         />
       )}
       <span
-        className={
+        className={cn(
+          "flex size-10 items-center justify-center rounded-full border bg-card font-heading text-xs font-semibold transition-colors duration-300",
           isActive
-            ? "flex size-12 items-center justify-center rounded-full border-2 border-primary bg-card font-heading text-sm font-medium text-primary transition-all sm:size-14 sm:text-base"
-            : "flex size-9 items-center justify-center rounded-full border border-border bg-card font-heading text-xs font-medium text-muted-foreground transition-all hover:border-foreground/40 hover:text-foreground sm:size-10"
-        }
+            ? "border-primary text-primary"
+            : "border-border text-muted-foreground group-hover:text-foreground"
+        )}
       >
         {getInitials(name)}
       </span>
-    </button>
+    </span>
   );
 }
 
-function TestimonialSpotlight() {
+/**
+ * People on the left, their words on the right.
+ *
+ * The selector used to be a row of bare initials above a centred quote, which
+ * said nothing about who was speaking until you clicked. Each entry now shows
+ * a name and role, the list and the quote sit side by side from `lg`, and a
+ * progress bar makes the auto-advance legible instead of surprising.
+ */
+function TestimonialSpotlight({ header }: { header?: ReactNode }) {
+  const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -64,50 +62,103 @@ function TestimonialSpotlight() {
       setActive((current) => (current + 1) % testimonials.length);
     }, INTERVAL);
     return () => window.clearInterval(id);
-  }, []);
+  }, [active]);
 
   const testimonial = testimonials[active];
 
   return (
-    <div className="relative mx-auto max-w-2xl text-center">
-      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
-        {testimonials.map((t, index) => (
-          <AvatarButton
-            key={t.name + index}
-            name={t.name}
-            isActive={index === active}
-            onClick={() => setActive(index)}
-          />
-        ))}
+    <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-16">
+      <div>
+        {header}
+
+        <ul className="mt-8 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {testimonials.map((t, index) => {
+            const isActive = index === active;
+            return (
+              <li key={t.name + index}>
+                <button
+                  type="button"
+                  onClick={() => setActive(index)}
+                  aria-label={`Show testimonial from ${t.name}`}
+                  aria-pressed={isActive}
+                  className={cn(
+                    "group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors duration-300",
+                    isActive
+                      ? "border-primary/30 bg-card"
+                      : "border-transparent hover:border-border hover:bg-card/50"
+                  )}
+                >
+                  <Avatar name={t.name} isActive={isActive} />
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-semibold text-foreground">
+                      {t.name}
+                    </span>
+                    <span className="block truncate text-xs text-muted-foreground">
+                      {t.role}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
-      <div className="relative mt-10">
-        <QuoteIcon
-          aria-hidden
-          className="pointer-events-none absolute -top-8 left-1/2 size-28 -translate-x-1/2 text-primary/[0.08] sm:size-36"
-          strokeWidth={1}
-        />
+      {/* Framed like the Work and Mentorship cards. */}
+      <div className="rounded-3xl bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--brand-primary),transparent_55%),var(--border)_50%,color-mix(in_oklch,var(--brand-violet),transparent_60%))] p-px">
+        <figure className="relative overflow-hidden rounded-[calc(1.5rem-1px)] bg-card px-7 pt-10 pb-8 sm:px-10 sm:pt-12 sm:pb-10">
+          {/* Inside the frame. Hung off the corner it was clipped by the
+              card's rounded edge into a stray bracket shape. */}
+          <QuoteIcon
+            aria-hidden
+            className="pointer-events-none absolute top-6 right-6 size-16 text-primary/[0.12] sm:top-8 sm:right-8 sm:size-20"
+            strokeWidth={1.25}
+          />
 
-        <div className="relative min-h-[11rem] sm:min-h-[9rem]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              <blockquote className="line-clamp-4 font-heading text-xl leading-snug font-medium text-foreground sm:text-2xl lg:text-[1.75rem]">
-                &ldquo;{testimonial.quote}&rdquo;
-              </blockquote>
-              <p className="mt-5 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">{testimonial.name}</span>
-                {" — "}
-                {testimonial.role}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+          <div className="relative min-h-[12rem] sm:min-h-[10rem]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -14 }}
+                transition={{ duration: reduceMotion ? 0 : 0.4, ease: "easeOut" }}
+              >
+                <blockquote className="text-pretty font-heading text-xl leading-snug font-medium text-foreground sm:text-2xl lg:text-[1.75rem]">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </blockquote>
+                <figcaption className="mt-8 flex items-center gap-3">
+                  <Avatar name={testimonial.name} isActive />
+                  <span>
+                    <span className="block text-sm font-semibold text-foreground">
+                      {testimonial.name}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">
+                      {testimonial.role}
+                    </span>
+                  </span>
+                </figcaption>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Time left on this quote. Restarts whenever the quote changes,
+              including on a click, because the interval restarts too. */}
+          <div className="mt-8 flex items-center gap-4">
+            <span className="h-px flex-1 overflow-hidden bg-border">
+              <motion.span
+                key={active}
+                className="block h-full bg-[linear-gradient(to_right,var(--brand-primary),var(--brand-violet))]"
+                initial={{ width: "0%" }}
+                animate={{ width: reduceMotion ? "0%" : "100%" }}
+                transition={{ duration: INTERVAL / 1000, ease: "linear" }}
+              />
+            </span>
+            <span className="font-mono text-[0.6875rem] text-muted-foreground tabular-nums">
+              {String(active + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
+            </span>
+          </div>
+        </figure>
       </div>
     </div>
   );

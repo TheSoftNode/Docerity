@@ -24,7 +24,7 @@ function WorkHeroBackground() {
             y1={0}
             x2={x}
             y2={480}
-            stroke="#f3f1ea"
+            stroke="#f5f7fb"
             strokeOpacity={0.05}
             strokeWidth={1}
           />
@@ -36,7 +36,7 @@ function WorkHeroBackground() {
             y1={y}
             x2={1520}
             y2={y}
-            stroke="#f3f1ea"
+            stroke="#f5f7fb"
             strokeOpacity={0.05}
             strokeWidth={1}
           />
@@ -49,7 +49,7 @@ function WorkHeroBackground() {
               y1={node.y}
               x2={node.x + 14}
               y2={node.y}
-              stroke="#c2660a"
+              stroke="#5b6ef5"
               strokeOpacity={0.4}
               strokeWidth={1}
             />
@@ -58,7 +58,7 @@ function WorkHeroBackground() {
               y1={node.y - 14}
               x2={node.x}
               y2={node.y + 14}
-              stroke="#c2660a"
+              stroke="#5b6ef5"
               strokeOpacity={0.4}
               strokeWidth={1}
             />
@@ -66,7 +66,7 @@ function WorkHeroBackground() {
               cx={node.x}
               cy={node.y}
               r={4}
-              fill="#c2660a"
+              fill="#5b6ef5"
               initial={{ opacity: 0.3, scale: 1 }}
               animate={
                 reduceMotion
@@ -89,7 +89,7 @@ function WorkHeroBackground() {
           y1={0}
           x2={1520}
           y2={0}
-          stroke="#f3f1ea"
+          stroke="#f5f7fb"
           strokeOpacity={0.12}
           strokeWidth={2}
           initial={{ y1: 0, y2: 0 }}

@@ -1,5 +1,10 @@
 import type { Media } from "@/components/shared/media-placeholder";
 
+/** Real media for a project card — a screenshot, or a short looping clip. */
+export type ProjectMedia =
+  | { type: "image"; src: string; alt: string }
+  | { type: "video"; src: string; poster?: string; alt: string };
+
 type CaseStudySection = {
   heading: string;
   paragraphs: string[];
@@ -138,6 +143,22 @@ export const projects = [
     ] satisfies CaseStudySection[],
   },
 ] as const;
+
+export type ProjectSlug = (typeof projects)[number]["slug"];
+
+/**
+ * Drop real project media here — one entry per slug, keyed to the projects
+ * above. Files live in `public/`, so `/work/ledger.webp` means
+ * `public/work/ledger.webp`.
+ *
+ * Anything left out falls back to that project's generated SVG preview, so
+ * the section is presentable with no assets at all and each card upgrades
+ * independently as real media arrives. Nothing else needs editing.
+ *
+ *   ledger:    { type: "image", src: "/work/ledger.webp", alt: "The Ledger close dashboard" },
+ *   northwind: { type: "video", src: "/work/northwind.mp4", poster: "/work/northwind.webp", alt: "Northwind checkout flow" },
+ */
+export const projectMedia: Partial<Record<ProjectSlug, ProjectMedia>> = {};
 
 export function getProjectBySlug(slug: string) {
   return projects.find((project) => project.slug === slug);

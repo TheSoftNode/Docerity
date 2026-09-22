@@ -178,13 +178,20 @@ const previews = {
   list: ListPreview,
 } as const;
 
-function WorkPreview({ variant }: { variant: keyof typeof previews }) {
+type PreviewVariant = keyof typeof previews;
+
+/*
+  Fills whatever frame it is given. It used to carry its own fixed `h-44` and
+  rounded top edge; the media slot owns the aspect ratio and clipping now, so
+  a generated preview and a real screenshot occupy identical space.
+*/
+function WorkPreview({ variant }: { variant: PreviewVariant }) {
   const Preview = previews[variant];
   return (
-    <div className="h-44 w-full overflow-hidden rounded-t-2xl border-b border-border">
+    <div className="h-full w-full overflow-hidden">
       <Preview />
     </div>
   );
 }
 
-export { WorkPreview };
+export { WorkPreview, type PreviewVariant };

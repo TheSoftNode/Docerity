@@ -13,7 +13,7 @@ function WorkCapabilitiesBackground() {
           <polygon
             key={layer.offset}
             points={`${880 + layer.offset},${40 + layer.offset} ${1440},${10 + layer.offset} ${1440},${140 + layer.offset} ${880 + layer.offset},${170 + layer.offset}`}
-            fill="#f3f1ea"
+            fill="#f5f7fb"
             fillOpacity={layer.opacity}
           />
         ))}

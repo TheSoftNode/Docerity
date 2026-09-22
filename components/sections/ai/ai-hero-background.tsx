@@ -38,7 +38,7 @@ function AiHeroBackground() {
                 y1={node.y}
                 x2={nextNode.x}
                 y2={nextNode.y}
-                stroke="#f3f1ea"
+                stroke="#f5f7fb"
                 strokeOpacity={0.05}
                 strokeWidth={1}
               />
@@ -49,7 +49,7 @@ function AiHeroBackground() {
         <path
           d={`M ${highlightPath.map((p) => `${p.x},${p.y}`).join(" L ")}`}
           fill="none"
-          stroke="#c2660a"
+          stroke="#5b6ef5"
           strokeOpacity={0.4}
           strokeWidth={1.5}
         />
@@ -60,7 +60,7 @@ function AiHeroBackground() {
             cx={node.x}
             cy={node.y}
             r={4}
-            fill="#f3f1ea"
+            fill="#f5f7fb"
             fillOpacity={0.12}
           />
         ))}
@@ -71,14 +71,14 @@ function AiHeroBackground() {
             cx={node.x}
             cy={node.y}
             r={4}
-            fill="#c2660a"
+            fill="#5b6ef5"
             fillOpacity={0.5}
           />
         ))}
 
         <motion.circle
           r={5}
-          fill="#c2660a"
+          fill="#5b6ef5"
           initial={{ opacity: 0, cx: highlightPath[0].x, cy: highlightPath[0].y }}
           animate={
             reduceMotion

@@ -1,3 +1,5 @@
+import { MailIcon } from "lucide-react";
+
 import { Container } from "@/components/shared/container";
 import {
   Accordion,
@@ -5,29 +7,35 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { siteConfig } from "@/lib/config/site";
+import { Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipFaqBackground } from "@/components/sections/mentorship-program/mentorship-faq-background";
 import { faqs } from "@/components/sections/mentorship-program/mentorship-program-data";
 
 function MentorshipFaq() {
   return (
-    <section className="relative overflow-hidden border-b border-border/80 bg-card py-16 sm:py-20">
+    <section className="relative overflow-hidden border-b border-border/80 bg-[#0b1220] py-16 sm:py-20 lg:py-24">
       <MentorshipFaqBackground />
 
-      <Container className="relative">
-        <div className="mx-auto max-w-lg text-center">
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-            FAQ
-          </p>
-          <h2 className="mt-3 font-heading text-2xl font-medium tracking-tight text-foreground sm:text-3xl">
-            Questions before you apply.
-          </h2>
+      <Container className="relative grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
+          <Eyebrow>FAQ</Eyebrow>
+          <SectionTitle>Questions before you apply.</SectionTitle>
+          <Lede>The things people usually ask before a first call.</Lede>
+          <a
+            href={`mailto:${siteConfig.email}`}
+            className="mt-7 inline-flex items-center gap-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <MailIcon className="size-4 text-primary" />
+            Something else? <span className="font-medium text-foreground underline underline-offset-4">{siteConfig.email}</span>
+          </a>
         </div>
 
-        <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-border/80 bg-background px-6">
+        <FramedPanel innerClassName="px-6 sm:px-8">
           <Accordion>
             {faqs.map((faq) => (
               <AccordionItem key={faq.question} value={faq.question}>
-                <AccordionTrigger className="font-heading text-base font-medium text-foreground">
+                <AccordionTrigger className="py-5 font-heading text-base font-semibold text-foreground">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
@@ -36,7 +44,7 @@ function MentorshipFaq() {
               </AccordionItem>
             ))}
           </Accordion>
-        </div>
+        </FramedPanel>
       </Container>
     </section>
   );

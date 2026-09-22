@@ -9,7 +9,7 @@ function AiModelsBackground() {
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       <svg viewBox="0 0 1440 400" preserveAspectRatio="none" className="h-full w-full">
         {dots.map(([x, y], index) => (
-          <circle key={index} cx={x} cy={y} r={2} fill="#f3f1ea" fillOpacity={0.12} />
+          <circle key={index} cx={x} cy={y} r={2} fill="#f5f7fb" fillOpacity={0.12} />
         ))}
       </svg>
     </div>

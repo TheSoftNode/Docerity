@@ -5,14 +5,21 @@ const steps = [
   { x: 1080, width: 360, height: 360 },
 ] as const;
 
+/*
+  The rising staircase stays — it is the growth metaphor — but each step now
+  fades in from nothing at its top edge. Drawn as flat 3.5% blocks, their hard
+  top edges ran straight through the stage descriptions.
+*/
 function MentorshipPathBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <svg
-        viewBox="0 0 1440 400"
-        preserveAspectRatio="none"
-        className="h-full w-full"
-      >
+      <svg viewBox="0 0 1440 400" preserveAspectRatio="none" className="h-full w-full">
+        <defs>
+          <linearGradient id="step-fade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5f7fb" stopOpacity="0" />
+            <stop offset="100%" stopColor="#f5f7fb" stopOpacity="0.045" />
+          </linearGradient>
+        </defs>
         {steps.map((step) => (
           <rect
             key={step.x}
@@ -20,19 +27,10 @@ function MentorshipPathBackground() {
             y={400 - step.height}
             width={step.width}
             height={step.height}
-            fill="#f3f1ea"
-            fillOpacity={0.035}
+            fill="url(#step-fade)"
           />
         ))}
-        <line
-          x1={0}
-          y1={400}
-          x2={1440}
-          y2={400}
-          stroke="#c2660a"
-          strokeOpacity={0.2}
-          strokeWidth={2}
-        />
+        <line x1={0} y1={400} x2={1440} y2={400} stroke="#5b6ef5" strokeOpacity={0.2} strokeWidth={2} />
       </svg>
     </div>
   );

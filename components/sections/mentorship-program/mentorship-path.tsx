@@ -1,51 +1,68 @@
 import { Container } from "@/components/shared/container";
+import { Eyebrow, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipPathBackground } from "@/components/sections/mentorship-program/mentorship-path-background";
 import { stages } from "@/components/sections/mentorship-program/mentorship-program-data";
 
 function MentorshipPath() {
+  const last = stages.length - 1;
+
   return (
     <section
       id="how-it-works"
-      className="scroll-mt-[var(--nav-h)] relative overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20"
+      className="relative scroll-mt-[var(--nav-h)] overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20 lg:py-24"
     >
       <MentorshipPathBackground />
 
-      <Container className="relative">
-        <div className="mx-auto max-w-lg text-center">
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-            How it works
-          </p>
-          <h2 className="mt-3 font-heading text-2xl font-medium tracking-tight text-foreground sm:text-3xl">
-            One path, four stages.
-          </h2>
+      <Container className="relative grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
+          <Eyebrow>How it works</Eyebrow>
+          <SectionTitle>One path, four stages.</SectionTitle>
+          <Lede>
+            You start where you actually are, and move on when the work shows
+            you are ready &mdash; not when a calendar says so.
+          </Lede>
         </div>
 
-        <div className="relative mx-auto mt-12 max-w-2xl sm:mt-16">
-          <div
-            className="absolute top-5 bottom-5 left-5 w-px bg-border"
+        <ol className="relative">
+          {/* The rail, lit from sapphire to violet like the growth path. */}
+          <span
             aria-hidden
+            className="absolute top-5 bottom-5 left-5 w-px -translate-x-1/2 bg-[linear-gradient(to_bottom,var(--brand-primary),var(--brand-violet))] opacity-60"
           />
-          <ol className="flex flex-col gap-10">
-            {stages.map((stage, index) => (
-              <li key={stage.label} className="relative flex gap-5">
-                <span className="relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-background font-mono text-sm text-primary">
-                  {index + 1}
+          {stages.map((stage, index) => {
+            const isGoal = index === last;
+            return (
+              <li key={stage.label} className="relative grid grid-cols-[2.5rem_1fr] gap-5 pb-12 last:pb-0">
+                <span
+                  className={
+                    isGoal
+                      ? "relative z-10 flex size-10 items-center justify-center rounded-full border border-brand-violet/60 bg-background font-mono text-xs text-brand-violet shadow-[0_0_24px_-6px_var(--brand-violet)]"
+                      : "relative z-10 flex size-10 items-center justify-center rounded-full border border-primary/40 bg-background font-mono text-xs text-primary"
+                  }
+                >
+                  {String(index + 1).padStart(2, "0")}
                 </span>
                 <div className="pt-1">
-                  <p className="font-mono text-xs tracking-[0.15em] text-primary uppercase">
+                  <p
+                    className={
+                      isGoal
+                        ? "font-mono text-[0.6875rem] tracking-[0.15em] text-brand-violet uppercase"
+                        : "font-mono text-[0.6875rem] tracking-[0.15em] text-primary uppercase"
+                    }
+                  >
                     {stage.summary}
                   </p>
-                  <h3 className="mt-1 font-heading text-xl font-medium text-foreground">
+                  <h3 className="mt-1.5 font-heading text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
                     {stage.label}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  <p className="mt-2.5 max-w-[58ch] text-sm leading-relaxed text-muted-foreground sm:text-[0.9375rem]">
                     {stage.description}
                   </p>
                 </div>
               </li>
-            ))}
-          </ol>
-        </div>
+            );
+          })}
+        </ol>
       </Container>
     </section>
   );

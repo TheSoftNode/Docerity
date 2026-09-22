@@ -15,8 +15,8 @@ export default function Image() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "#0b1330",
-          color: "#f3f1ea",
+          background: "#070b16",
+          color: "#f5f7fb",
           fontFamily: "sans-serif",
         }}
       >
@@ -32,7 +32,7 @@ export default function Image() {
               width: 40,
               height: 40,
               borderRadius: 10,
-              background: "#c2660a",
+              background: "#5b6ef5",
             }}
           />
           <div style={{ fontSize: 32, fontWeight: 600 }}>Docerity</div>
@@ -54,7 +54,7 @@ export default function Image() {
           style={{
             marginTop: 28,
             fontSize: 26,
-            color: "#98a2c4",
+            color: "#98a4b8",
           }}
         >
           Engineering &middot; Mentorship &middot; Tech Explainers

@@ -3,27 +3,25 @@ import { ArrowRightIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
-import { GrowthPath } from "@/components/sections/mentorship/growth-path";
-import { stages } from "@/components/sections/mentorship-program/mentorship-program-data";
+import { Bloom, Eyebrow, FramedPanel, HeroTitle, Lede } from "@/components/shared/section-kit";
+import { GrowthTimeline } from "@/components/sections/mentorship/growth-timeline";
 
 function MentorshipProgramHero() {
   return (
-    <section className="border-b border-border/80 bg-background pt-16 pb-12 sm:pt-20 sm:pb-16">
-      <Container>
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-            Mentorship
-          </p>
-          <h1 className="mt-3 font-heading text-3xl font-medium tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-            A clear path to your next level.
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+    <section className="relative overflow-hidden border-b border-border/80 bg-background">
+      <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
+
+      <Container className="relative grid gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
+        <div>
+          <Eyebrow>Mentorship</Eyebrow>
+          <HeroTitle>A clear path to your next level.</HeroTitle>
+          <Lede className="mt-6 text-base">
             Weekly 1:1s, honest code review, and a real plan &mdash; not just
             office hours. For engineers who want someone invested in their
             growth, not a subscription to a video course.
-          </p>
+          </Lede>
 
-          <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">
             <Button
               size="lg"
               className="h-11 w-full px-6 text-sm sm:w-auto"
@@ -45,22 +43,17 @@ function MentorshipProgramHero() {
           </div>
         </div>
 
-        <div className="mx-auto mt-12 hidden max-w-4xl sm:mt-16 sm:block">
-          <GrowthPath />
-        </div>
-
-        <div className="mx-auto mt-10 flex max-w-xs flex-wrap items-center justify-center gap-x-2 gap-y-2 sm:hidden">
-          {stages.map((stage, index) => (
-            <span key={stage.label} className="flex items-center gap-2">
-              {index > 0 && (
-                <ArrowRightIcon className="size-3 shrink-0 text-primary/60" />
-              )}
-              <span className="font-mono text-xs text-foreground">
-                {stage.label}
-              </span>
-            </span>
-          ))}
-        </div>
+        {/* Same growth-path card as the homepage, so the program page opens
+            on the picture the visitor clicked through from. */}
+        <FramedPanel innerClassName="p-6 sm:p-8">
+          <div className="mb-7 flex items-center justify-between border-b border-border/80 pb-5">
+            <p className="font-mono text-[0.6875rem] tracking-[0.16em] text-muted-foreground uppercase">
+              Your growth path
+            </p>
+            <p className="font-mono text-[0.6875rem] text-muted-foreground">4 stages</p>
+          </div>
+          <GrowthTimeline />
+        </FramedPanel>
       </Container>
     </section>
   );

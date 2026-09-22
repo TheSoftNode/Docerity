@@ -11,7 +11,7 @@ function Web3CapabilitiesBackground() {
             y1={y}
             x2={1440}
             y2={y}
-            stroke="#f3f1ea"
+            stroke="#f5f7fb"
             strokeOpacity={0.04}
             strokeWidth={1}
           />
@@ -21,7 +21,7 @@ function Web3CapabilitiesBackground() {
           y1={0}
           x2={1180}
           y2={440}
-          stroke="#c2660a"
+          stroke="#5b6ef5"
           strokeOpacity={0.12}
           strokeWidth={2}
         />
