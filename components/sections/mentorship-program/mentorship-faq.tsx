@@ -14,10 +14,10 @@ import { faqs } from "@/components/sections/mentorship-program/mentorship-progra
 
 function MentorshipFaq() {
   return (
-    <section className="relative overflow-hidden border-b border-border/80 bg-[#0b1220] py-16 sm:py-20 lg:py-24">
+    <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       <MentorshipFaqBackground />
 
-      <Container className="relative grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
           <Eyebrow>FAQ</Eyebrow>
           <SectionTitle>Questions before you apply.</SectionTitle>

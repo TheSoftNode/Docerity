@@ -15,6 +15,10 @@
   --color-brand-violet: var(--brand-violet);
   --color-brand-iris: var(--brand-iris);
   --color-brand-teal: var(--brand-teal);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-step-a: var(--surface-step-a);
+  --color-surface-step-b: var(--surface-step-b);
+  --color-surface-deep: var(--surface-deep);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -53,32 +57,85 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ---------------------------------------------------------------
+   Two themes, one vocabulary.
+
+   `:root` is light, `.dark` is dark, and the dark values are the ones the
+   brand was designed around — obsidian ink, royal sapphire, muted violet and
+   soft pearl, with steel gray for secondary text.
+
+   The three accents are a vocabulary, not a palette to sprinkle:
+     sapphire  — the brand. Buttons, links, section labels, engineering.
+     violet    — rare. AI and Web3, selected words, metrics, illustration
+                 detail.
+     teal      — rarer still. Success, live, shipped, verified states.
+
+   The accents shift between themes rather than staying fixed: sapphire on
+   white needs to be darker than sapphire on obsidian to stay legible.
+
+   `--surface-*` are the section bands. Sections used to hardcode them
+   (#0b1220, #0d1424, #111a2e, #0a1020), which is exactly what made a light
+   theme impossible.
+   --------------------------------------------------------------- */
 :root {
-  /* Explicit color-scheme so mobile browsers (Samsung Internet in particular)
-     don't apply their own auto-dark/color-adjustment heuristics to a page
-     that's already intentionally dark. */
+  color-scheme: light;
+
+  --brand-navy: #0a1120;
+  --brand-primary: #4453d6;
+  --brand-violet: #6a4fd0;
+  /* Iris sits between sapphire and violet — small uppercase labels only. */
+  --brand-iris: #4f57d8;
+  --brand-teal: #0f8375;
+
+  --background: #f7f9fc;
+  --foreground: #0a1120;
+  --card: #ffffff;
+  --card-foreground: #0a1120;
+  --popover: #ffffff;
+  --popover-foreground: #0a1120;
+  --primary: #4453d6;
+  --primary-foreground: #ffffff;
+  --secondary: #eef2f8;
+  --secondary-foreground: #0a1120;
+  --muted: #eef2f8;
+  --muted-foreground: #55617a;
+  --accent: #e4ebf6;
+  --accent-foreground: #0a1120;
+  --destructive: #c8324a;
+  --border: #dbe3ee;
+  --input: #cfd9e8;
+  --ring: #4453d6;
+
+  --surface-raised: #eef2f8;
+  --surface-step-a: #f1f5fa;
+  --surface-step-b: #e7eef7;
+  --surface-deep: #e8edf6;
+
+  --chart-1: #4453d6;
+  --chart-2: #0f8375;
+  --chart-3: #6a4fd0;
+  --chart-4: #55617a;
+  --chart-5: #0a1120;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0a1120;
+  --sidebar-primary: #4453d6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef2f8;
+  --sidebar-accent-foreground: #0a1120;
+  --sidebar-border: #dbe3ee;
+  --sidebar-ring: #4453d6;
+
+  --radius: 0.5rem;
+  --nav-h: 5rem;
+}
+
+.dark {
   color-scheme: dark;
 
-  /* Brand — obsidian ink, royal sapphire, muted violet and soft pearl, with
-     steel gray for secondary text.
-
-     The three accents are a vocabulary, not a palette to sprinkle:
-       sapphire  — the brand. Buttons, links, section labels, engineering.
-       violet    — rare. AI and Web3, selected words, metrics, illustration
-                   detail.
-       teal      — rarer still. Success, live, shipped, verified states.
-
-     Two earlier colours are gone for good: the burnt orange (#c2660a) and the
-     champagne gold (#d0a85c) both read mustard at headline size and dominated
-     the composition, and the maroon (#241119) that split the Work and CTA
-     canvases made it a four-hue page. Alternate sections now get their
-     personality from depth — #070b16 / #0d1424 / #121b2e — rather than from
-     an unrelated background colour. */
   --brand-navy: #070b16;
   --brand-primary: #5b6ef5;
   --brand-violet: #8b72e8;
-  /* Iris sits between sapphire and violet — small uppercase labels only,
-     where full sapphire goes muddy at 12px. */
   --brand-iris: #7c83ff;
   --brand-teal: #45b8a5;
 
@@ -100,12 +157,18 @@
   --border: #243149;
   --input: #2a3750;
   --ring: #6b7cff;
+
+  --surface-raised: #0b1220;
+  --surface-step-a: #0d1424;
+  --surface-step-b: #111a2e;
+  --surface-deep: #0a1020;
+
   --chart-1: #5b6ef5;
   --chart-2: #45b8a5;
   --chart-3: #8b72e8;
   --chart-4: #98a4b8;
   --chart-5: #f5f7fb;
-  --radius: 0.5rem;
+
   --sidebar: #0a1020;
   --sidebar-foreground: #f5f7fb;
   --sidebar-primary: #5b6ef5;
@@ -114,9 +177,8 @@
   --sidebar-accent-foreground: #f5f7fb;
   --sidebar-border: #243149;
   --sidebar-ring: #6b7cff;
-
-  --nav-h: 5rem;
 }
+
 
 
 

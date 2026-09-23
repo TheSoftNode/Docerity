@@ -7,7 +7,7 @@ function WorkTestimonialsBackground() {
           y={260}
           fontFamily="Georgia, serif"
           fontSize={340}
-          fill="#f5f7fb"
+          fill="var(--foreground)"
           fillOpacity={0.04}
         >
           &ldquo;
@@ -17,7 +17,7 @@ function WorkTestimonialsBackground() {
           y={340}
           fontFamily="Georgia, serif"
           fontSize={340}
-          fill="#5b6ef5"
+          fill="var(--brand-primary)"
           fillOpacity={0.05}
         >
           &rdquo;

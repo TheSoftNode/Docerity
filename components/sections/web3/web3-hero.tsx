@@ -2,20 +2,25 @@ import Link from "next/link";
 import { ArrowRightIcon, TrophyIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
+import { HeroFrame } from "@/components/shared/hero-frame";
+import { HeroSpec } from "@/components/shared/hero-spec";
+import { ScrambleText } from "@/components/shared/scramble-text";
+import { ecosystems, stack } from "@/components/sections/web3/web3-data";
 import { Button } from "@/components/ui/button";
-import { Bloom, Eyebrow, FramedPanel, HeroTitle, Lede } from "@/components/shared/section-kit";
-import { Web3HeroBackground } from "@/components/sections/web3/web3-hero-background";
+import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
+import { HeroDeck } from "@/components/shared/hero-deck";
 import { projects } from "@/components/sections/web3/web3-data";
 
 function Web3Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
-      <Web3HeroBackground />
+      <HeroFrame />
       <Bloom tone="violet" className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
+      <Bloom className="bottom-0 left-0 -translate-x-1/3 translate-y-1/3" />
 
-      <Container className="relative grid gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
+      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
-          <Eyebrow>Web3 &amp; Blockchain</Eyebrow>
+          <Eyebrow><ScrambleText text="Web3 & Blockchain" /></Eyebrow>
           <HeroTitle>Hackathon-winning dApps, shipped on real chains.</HeroTitle>
           <Lede className="mt-6 text-base">
             Smart contract systems, DeFi automation, and real-world asset
@@ -43,36 +48,34 @@ function Web3Hero() {
               Start a project
             </Button>
           </div>
+
+          <HeroSpec
+            items={[
+              { label: "Protocols", value: String(projects.length).padStart(2, "0") },
+              { label: "Networks", value: String(ecosystems.length).padStart(2, "0") },
+              { label: "Stack", value: String(stack.length).padStart(2, "0") },
+            ]}
+          />
         </div>
 
-        <FramedPanel innerClassName="p-2">
-          <div className="flex items-center justify-between px-4 pt-4 pb-3">
-            <p className="font-mono text-[0.6875rem] tracking-[0.16em] text-muted-foreground uppercase">
-              Shipped &amp; recognised
-            </p>
-            <p className="font-mono text-[0.6875rem] text-muted-foreground">
-              {projects.length} protocols
-            </p>
-          </div>
-          <ul className="divide-y divide-border/70">
-            {projects.map((project) => (
-              <li key={project.slug} className="flex items-center gap-4 px-4 py-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-brand-violet">
-                  <project.Icon className="size-4.5" strokeWidth={1.75} />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold text-foreground">
-                    {project.name}
-                  </span>
-                  <span className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
-                    <TrophyIcon className="size-3.5 shrink-0 text-primary" />
-                    <span className="truncate">{project.badge}</span>
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </FramedPanel>
+        <HeroDeck
+          label="Shipped &amp; recognised"
+          countLabel={`${projects.length} protocols`}
+          accent="violet"
+          items={projects.map((project) => ({
+            key: project.slug,
+            icon: <project.Icon className="size-7" strokeWidth={1.5} />,
+            title: project.name,
+            meta: (
+              <span className="flex items-center gap-1.5">
+                <TrophyIcon className="size-3.5 shrink-0 text-primary" />
+                <span className="truncate">{project.badge}</span>
+              </span>
+            ),
+            tags: project.tags,
+            href: "#projects",
+          }))}
+        />
       </Container>
     </section>
   );

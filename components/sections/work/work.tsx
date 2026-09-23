@@ -20,7 +20,7 @@ function Work() {
         {/* The heading and its action share a baseline on wide screens and
             stack on narrow, rather than the action floating off on its own. */}
         <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
-          <div className="max-w-2xl">
+          <div className="max-w-3xl lg:flex-1">
             <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
               Selected Work
             </p>
@@ -29,7 +29,7 @@ function Work() {
             <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
               Recent work, real outcomes.
             </h2>
-            <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground">
+            <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[38rem]">
               A few production systems, picked for what they solved, not just
               how they look.
             </p>

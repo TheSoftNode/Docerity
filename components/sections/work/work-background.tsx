@@ -52,15 +52,15 @@ function WorkBackground() {
       className="pointer-events-none absolute inset-0 overflow-hidden"
       aria-hidden
     >
-      <div className="absolute inset-0 bg-[#0b1220]" />
+      <div className="absolute inset-0 bg-surface-raised" />
 
       <motion.div
         style={{ y: driftY, clipPath: LEFT_ZONE }}
-        className="absolute inset-[-3rem] bg-[#0d1424]"
+        className="absolute inset-[-3rem] bg-surface-step-a"
       />
       <motion.div
         style={{ y: driftY, clipPath: RIGHT_ZONE }}
-        className="absolute inset-[-3rem] bg-[#111a2e]"
+        className="absolute inset-[-3rem] bg-surface-step-b"
       />
 
       {/* The seam itself — a gradient hairline, brightest at the top. */}

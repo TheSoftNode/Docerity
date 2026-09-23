@@ -5,11 +5,11 @@ import { models } from "@/components/sections/ai/ai-data";
 
 function AiModels() {
   return (
-    <section className="relative overflow-hidden border-b border-border/80 bg-[#0b1220] py-16 sm:py-20 lg:py-24">
+    <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       <AiModelsBackground />
       <Bloom className="right-0 bottom-0 translate-x-1/3 translate-y-1/3" />
 
-      <Container className="relative grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
         <div>
           <Eyebrow>Models &amp; platforms</Eyebrow>
           <SectionTitle>Picked per task, not one model for everything.</SectionTitle>

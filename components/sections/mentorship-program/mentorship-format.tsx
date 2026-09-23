@@ -14,11 +14,11 @@ const icons = [VideoIcon, GitPullRequestIcon, RouteIcon, MessageCircleIcon];
 
 function MentorshipFormat() {
   return (
-    <section className="relative overflow-hidden border-b border-border/80 bg-[#0b1220] py-16 sm:py-20 lg:py-24">
+    <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       <MentorshipFormatBackground />
       <Bloom tone="violet" className="top-1/2 left-0 -translate-x-1/2 -translate-y-1/2" />
 
-      <Container className="relative grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
         <div>
           <Eyebrow>What you get</Eyebrow>
           <SectionTitle>Not just office hours.</SectionTitle>

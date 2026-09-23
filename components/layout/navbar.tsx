@@ -17,6 +17,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { useScrolled } from "@/hooks/use-scrolled";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 function Navbar() {
   const scrolled = useScrolled();
@@ -51,7 +52,8 @@ function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-5 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
+          <ThemeToggle />
           <div className="h-5 w-px bg-border" />
           <Button
             variant="default"
@@ -62,6 +64,10 @@ function Navbar() {
             Start a project
             <ArrowUpRightIcon className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Button>
+        </div>
+
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
         </div>
 
         <Sheet>

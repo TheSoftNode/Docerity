@@ -2,28 +2,33 @@ import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
+import { HeroFrame } from "@/components/shared/hero-frame";
+import { HeroSpec } from "@/components/shared/hero-spec";
+import { ScrambleText } from "@/components/shared/scramble-text";
+import { projects } from "@/components/sections/work/work-data";
+import { capabilities, process } from "@/components/sections/work-program/work-program-data";
 import { Button } from "@/components/ui/button";
-import { WorkHeroBackground } from "@/components/sections/work-program/work-hero-background";
+import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
+import { WorkHeroDeck } from "@/components/sections/work-program/work-hero-deck";
 
 function WorkHero() {
   return (
-    <section className="relative overflow-hidden border-b border-border/80 bg-background pt-16 pb-14 sm:pt-20 sm:pb-16">
-      <WorkHeroBackground />
+    <section className="relative overflow-hidden border-b border-border/80 bg-background">
+      <HeroFrame />
+      <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
+      <Bloom tone="violet" className="bottom-0 left-0 -translate-x-1/3 translate-y-1/3" />
 
-      <Container className="relative">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-            Selected Work
-          </p>
-          <h1 className="mt-3 font-heading text-3xl font-medium tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-            Software built for what happens after launch.
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
+        <div>
+          <Eyebrow><ScrambleText text="Selected Work" /></Eyebrow>
+          <HeroTitle>Software built for what happens after launch.</HeroTitle>
+          <Lede className="mt-6 text-base">
             A few production systems, picked for the problems they actually
-            solved — plus how projects like these usually go, start to finish.
-          </p>
+            solved &mdash; plus how projects like these usually go, start to
+            finish.
+          </Lede>
 
-          <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">
             <Button
               size="lg"
               className="h-11 w-full px-6 text-sm sm:w-auto"
@@ -43,7 +48,17 @@ function WorkHero() {
               Start a project
             </Button>
           </div>
+
+          <HeroSpec
+            items={[
+              { label: "Case studies", value: String(projects.length).padStart(2, "0") },
+              { label: "Capabilities", value: String(capabilities.length).padStart(2, "0") },
+              { label: "Process", value: `${process.length} stages` },
+            ]}
+          />
         </div>
+
+        <WorkHeroDeck />
       </Container>
     </section>
   );

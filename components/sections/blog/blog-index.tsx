@@ -1,15 +1,55 @@
 import { Container } from "@/components/shared/container";
+import { Bloom, Eyebrow } from "@/components/shared/section-kit";
 import { BlogConsole } from "@/components/sections/blog/blog-console";
+import { BlogPairTicker } from "@/components/sections/blog/blog-pair-ticker";
+import { ScrambleText } from "@/components/shared/scramble-text";
+import { entries } from "@/components/sections/blog/blog-data";
 
 function BlogIndex() {
   return (
-    <section className="border-b border-border/80 bg-background">
-      <div className="flex flex-col py-4 sm:py-6 lg:h-[calc(100dvh-var(--nav-h)+80px)]">
-        <Container className="flex flex-1 flex-col lg:min-h-0">
+    /*
+      An index page, not a landing page: the console is what people came for,
+      so the header stays compact and sits on one row. A full hero-scale title
+      stacked above its lede pushed the console's first article to 551px on a
+      900px viewport — most of the fold spent on a heading.
+    */
+    <section className="relative overflow-hidden border-b border-border/80 bg-background pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-20">
+      <Bloom tone="violet" className="top-0 right-0 translate-x-1/3 -translate-y-1/3" />
+      <Bloom className="bottom-0 left-0 -translate-x-1/3 translate-y-1/3" />
+
+      <Container className="relative">
+        {/* Title left, lede right — it fills the space the stacked layout left
+            empty and costs no extra height. */}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-end lg:gap-12">
+          <div>
+            <Eyebrow className="flex items-center gap-2.5">
+              <span className="relative flex size-1.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand-teal opacity-70" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-brand-teal" />
+              </span>
+              <ScrambleText text="Tech Explainers" />
+              <span className="text-muted-foreground">
+                {`/ ${String(entries.length).padStart(2, "0")} pieces`}
+              </span>
+            </Eyebrow>
+
+            <h1 className="mt-3 text-balance font-heading text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
+              Complex ideas, explained through{" "}
+              <span className="bg-[linear-gradient(120deg,var(--brand-primary),var(--brand-violet))] bg-clip-text text-transparent">
+                things you already know
+              </span>
+              .
+            </h1>
+          </div>
+
+          {/* The premise, shown rather than stated. */}
+          <BlogPairTicker />
+        </div>
+
+        <div className="mt-8 lg:mt-10">
           <BlogConsole />
-        </Container>
-      </div>
-      <div aria-hidden className="h-24 sm:h-28" />
+        </div>
+      </Container>
     </section>
   );
 }

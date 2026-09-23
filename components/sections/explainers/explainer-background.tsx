@@ -24,13 +24,13 @@ function ExplainerBackground() {
       >
         <motion.path
           d={LEFT_A}
-          className="fill-[#070b16]"
+          className="fill-background"
           animate={reduceMotion ? undefined : { d: [LEFT_A, LEFT_B, LEFT_A] }}
           transition={{ duration: 12, ease: "easeInOut", repeat: Infinity }}
         />
         <motion.path
           d={WAVE_A}
-          className="fill-[#121b2e]"
+          className="fill-[color:var(--surface-step-b)]"
           animate={reduceMotion ? undefined : { d: [WAVE_A, WAVE_B, WAVE_A] }}
           transition={{ duration: 12, ease: "easeInOut", repeat: Infinity }}
         />

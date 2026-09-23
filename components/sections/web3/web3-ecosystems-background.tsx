@@ -29,7 +29,7 @@ function Web3EcosystemsBackground() {
             y1={nodes[a].y}
             x2={nodes[b].x}
             y2={nodes[b].y}
-            stroke="#f5f7fb"
+            stroke="var(--foreground)"
             strokeOpacity={0.08}
             strokeWidth={1}
           />
@@ -40,7 +40,7 @@ function Web3EcosystemsBackground() {
             cx={node.x}
             cy={node.y}
             r={4}
-            fill="#f5f7fb"
+            fill="var(--foreground)"
             fillOpacity={0.15}
           />
         ))}

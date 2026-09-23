@@ -66,8 +66,8 @@ function ContactBackground() {
             key={index}
             d={toPathD(points)}
             fill="none"
-            stroke="#070b16"
-            strokeOpacity={0.1}
+            stroke="var(--foreground)"
+            strokeOpacity={0.07}
             strokeWidth={1.5}
           />
         ))}
@@ -79,8 +79,8 @@ function ContactBackground() {
               cx={end.x}
               cy={end.y}
               r={3.5}
-              fill="#070b16"
-              fillOpacity={0.15}
+              fill="var(--foreground)"
+              fillOpacity={0.18}
             />
           );
         })}
@@ -88,14 +88,14 @@ function ContactBackground() {
         <path
           d={signalPath}
           fill="none"
-          stroke="#5b6ef5"
+          stroke="var(--brand-primary)"
           strokeOpacity={0.45}
           strokeWidth={2}
         />
 
         <motion.circle
           r={6}
-          fill="#5b6ef5"
+          fill="var(--brand-primary)"
           initial={{ opacity: 0, cx: signalPoints[0].x, cy: signalPoints[0].y }}
           animate={
             reduceMotion
@@ -123,7 +123,7 @@ function ContactBackground() {
           cx={signalPoints[signalPoints.length - 1].x}
           cy={signalPoints[signalPoints.length - 1].y}
           r={5}
-          fill="#5b6ef5"
+          fill="var(--brand-primary)"
           initial={{ opacity: 0.4, scale: 1 }}
           animate={
             reduceMotion

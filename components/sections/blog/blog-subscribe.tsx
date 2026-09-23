@@ -33,21 +33,21 @@ function BlogSubscribe() {
   }
 
   return (
-    <div className="rounded-xl border border-[#070b16]/10 bg-white/60 p-6 sm:p-8">
+    <div className="rounded-xl border border-border/80 bg-card p-6 sm:p-8">
       <div className="mx-auto flex max-w-md flex-col items-center gap-1 text-center">
         <span className="flex size-9 items-center justify-center rounded-full bg-primary/15 text-primary">
           <MailIcon className="size-4" />
         </span>
-        <p className="mt-1 font-heading text-lg font-medium text-[#070b16]">
+        <p className="mt-1 font-heading text-lg font-medium text-foreground">
           New explainers, straight to your inbox
         </p>
-        <p className="text-sm text-[#070b16]/60">
+        <p className="text-sm text-muted-foreground">
           One email whenever a new concept goes up. No spam, unsubscribe anytime.
         </p>
       </div>
 
       {status === "success" ? (
-        <p className="mt-4 text-center text-sm text-[#070b16]/70">
+        <p className="mt-4 text-center text-sm text-muted-foreground">
           You&apos;re on the list — thanks for subscribing.
         </p>
       ) : (
@@ -64,7 +64,7 @@ function BlogSubscribe() {
             type="email"
             required
             placeholder="you@example.com"
-            className="h-11 flex-1 border-[#070b16]/15 bg-white text-[#070b16] placeholder:text-[#070b16]/40"
+            className="h-11 flex-1 border-border/80 bg-card text-foreground placeholder:text-muted-foreground"
           />
           <Button
             type="submit"

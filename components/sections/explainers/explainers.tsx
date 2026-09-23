@@ -31,7 +31,7 @@ function Explainers() {
           <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
             Complex ideas, explained through things you already know.
           </h2>
-          <p className="mt-4 max-w-[44ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground">
+          <p className="mt-4 max-w-[44ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[32rem]">
             Every post pairs a real technical concept with an everyday analogy
             &mdash; so it actually sticks.
           </p>

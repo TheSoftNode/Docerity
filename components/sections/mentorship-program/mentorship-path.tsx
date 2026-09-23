@@ -13,7 +13,7 @@ function MentorshipPath() {
     >
       <MentorshipPathBackground />
 
-      <Container className="relative grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
           <Eyebrow>How it works</Eyebrow>
           <SectionTitle>One path, four stages.</SectionTitle>

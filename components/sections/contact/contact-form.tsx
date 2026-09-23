@@ -55,7 +55,7 @@ function ContactForm() {
 
   if (status === "success") {
     return (
-      <Card className="relative border border-white/10 bg-card p-2 shadow-2xl shadow-black/30">
+      <Card className="relative border border-border bg-card p-2 shadow-2xl shadow-black/30">
         <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
           <span className="flex size-11 items-center justify-center rounded-full bg-primary/15 text-primary">
             <CheckIcon className="size-5" />
@@ -73,7 +73,7 @@ function ContactForm() {
   }
 
   return (
-    <Card className="relative border border-white/10 bg-card p-2 shadow-2xl shadow-black/30">
+    <Card className="relative border border-border bg-card p-2 shadow-2xl shadow-black/30">
       <CardContent className="pt-2">
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -154,7 +154,7 @@ function ContactForm() {
 
 function ContactFormFallback() {
   return (
-    <Card className="relative border border-white/10 bg-card p-2 shadow-2xl shadow-black/30">
+    <Card className="relative border border-border bg-card p-2 shadow-2xl shadow-black/30">
       <CardContent className="pt-2">
         <div aria-hidden className="flex flex-col gap-5 opacity-50">
           <div className="grid gap-4 sm:grid-cols-2">

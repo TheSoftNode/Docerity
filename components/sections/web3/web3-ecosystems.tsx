@@ -8,7 +8,7 @@ function Web3Ecosystems() {
     <section className="relative overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20 lg:py-24">
       <Web3EcosystemsBackground />
 
-      <Container className="relative grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
         <div>
           <Eyebrow>Ecosystems</Eyebrow>
           <SectionTitle>Cross-chain, not locked to one network.</SectionTitle>

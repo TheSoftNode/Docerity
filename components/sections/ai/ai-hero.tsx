@@ -2,20 +2,25 @@ import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
+import { HeroFrame } from "@/components/shared/hero-frame";
+import { HeroSpec } from "@/components/shared/hero-spec";
+import { ScrambleText } from "@/components/shared/scramble-text";
+import { capabilities, models } from "@/components/sections/ai/ai-data";
 import { Button } from "@/components/ui/button";
-import { Bloom, Eyebrow, FramedPanel, HeroTitle, Lede, MetricDot } from "@/components/shared/section-kit";
-import { AiHeroBackground } from "@/components/sections/ai/ai-hero-background";
+import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
+import { HeroDeck } from "@/components/shared/hero-deck";
 import { projects } from "@/components/sections/ai/ai-data";
 
 function AiHero() {
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
-      <AiHeroBackground />
+      <HeroFrame />
       <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
+      <Bloom tone="violet" className="bottom-0 left-0 -translate-x-1/3 translate-y-1/3" />
 
-      <Container className="relative grid gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
+      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
-          <Eyebrow>AI &amp; LLM Engineering</Eyebrow>
+          <Eyebrow><ScrambleText text="AI & LLM Engineering" /></Eyebrow>
           <HeroTitle>AI systems that run in production, not a demo.</HeroTitle>
           <Lede className="mt-6 text-base">
             LLM routing, RAG, multi-modal pipelines, and conversational agents
@@ -43,39 +48,29 @@ function AiHero() {
               Start a project
             </Button>
           </div>
+
+          <HeroSpec
+            items={[
+              { label: "Systems", value: String(projects.length).padStart(2, "0") },
+              { label: "Models", value: String(models.length).padStart(2, "0") },
+              { label: "Capabilities", value: String(capabilities.length).padStart(2, "0") },
+            ]}
+          />
         </div>
 
-        {/* The proof, up front: every system below with the one number that
-            matters for it. */}
-        <FramedPanel innerClassName="p-2">
-          <div className="flex items-center justify-between px-4 pt-4 pb-3">
-            <p className="font-mono text-[0.6875rem] tracking-[0.16em] text-muted-foreground uppercase">
-              In production
-            </p>
-            <p className="flex items-center gap-2 font-mono text-[0.6875rem] text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-brand-teal shadow-[0_0_8px_var(--brand-teal)]" />
-              {projects.length} systems
-            </p>
-          </div>
-          <ul className="divide-y divide-border/70">
-            {projects.map((project) => (
-              <li key={project.slug} className="flex items-center gap-4 px-4 py-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-primary">
-                  <project.Icon className="size-4.5" strokeWidth={1.75} />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold text-foreground">
-                    {project.name}
-                  </span>
-                  <span className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
-                    <MetricDot />
-                    <span className="truncate">{project.stat}</span>
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </FramedPanel>
+        <HeroDeck
+          label="In production"
+          countLabel={`${projects.length} systems`}
+          accent="primary"
+          items={projects.map((project) => ({
+            key: project.slug,
+            icon: <project.Icon className="size-7" strokeWidth={1.5} />,
+            title: project.name,
+            meta: project.stat,
+            tags: project.tags,
+            href: "#projects",
+          }))}
+        />
       </Container>
     </section>
   );

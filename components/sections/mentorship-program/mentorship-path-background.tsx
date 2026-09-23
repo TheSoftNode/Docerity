@@ -16,8 +16,8 @@ function MentorshipPathBackground() {
       <svg viewBox="0 0 1440 400" preserveAspectRatio="none" className="h-full w-full">
         <defs>
           <linearGradient id="step-fade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f5f7fb" stopOpacity="0" />
-            <stop offset="100%" stopColor="#f5f7fb" stopOpacity="0.045" />
+            <stop offset="0%" stopColor="var(--foreground)" stopOpacity="0" />
+            <stop offset="100%" stopColor="var(--foreground)" stopOpacity="0.045" />
           </linearGradient>
         </defs>
         {steps.map((step) => (
@@ -30,7 +30,7 @@ function MentorshipPathBackground() {
             fill="url(#step-fade)"
           />
         ))}
-        <line x1={0} y1={400} x2={1440} y2={400} stroke="#5b6ef5" strokeOpacity={0.2} strokeWidth={2} />
+        <line x1={0} y1={400} x2={1440} y2={400} stroke="var(--brand-primary)" strokeOpacity={0.2} strokeWidth={2} />
       </svg>
     </div>
   );

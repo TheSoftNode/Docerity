@@ -1,38 +1,53 @@
+import { QuoteIcon } from "lucide-react";
+
 import { Container } from "@/components/shared/container";
+import { Eyebrow, HoverCard, SectionTitle } from "@/components/shared/section-kit";
 import { WorkTestimonialsBackground } from "@/components/sections/work-program/work-testimonials-background";
 import { testimonials } from "@/components/sections/testimonials/testimonials-data";
 
 const clientTestimonials = testimonials.filter((t) => t.role.includes("Company"));
 
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
 function WorkTestimonials() {
   return (
-    <section className="relative overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20">
+    <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       <WorkTestimonialsBackground />
 
       <Container className="relative">
-        <div className="mx-auto max-w-lg text-center">
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-            From clients
-          </p>
-          <h2 className="mt-3 font-heading text-2xl font-medium tracking-tight text-foreground sm:text-3xl">
-            What it&apos;s like to work together.
-          </h2>
+        <div className="max-w-2xl">
+          <Eyebrow>From clients</Eyebrow>
+          <SectionTitle>What it&apos;s like to work together.</SectionTitle>
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 sm:gap-6">
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:mt-14 lg:gap-6">
           {clientTestimonials.map((testimonial) => (
-            <figure
-              key={testimonial.name + testimonial.role}
-              className="rounded-xl border border-border/80 bg-card p-6"
-            >
-              <blockquote className="text-sm leading-relaxed text-foreground/90 sm:text-base">
-                &ldquo;{testimonial.quote}&rdquo;
-              </blockquote>
-              <figcaption className="mt-4 border-t border-border/60 pt-3 text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">{testimonial.name}</span>{" "}
-                &middot; {testimonial.role}
-              </figcaption>
-            </figure>
+            <HoverCard key={testimonial.name + testimonial.role} innerClassName="p-6 sm:p-8">
+              <figure className="flex h-full flex-col">
+                <QuoteIcon className="size-7 text-primary/50" strokeWidth={1.25} />
+                <blockquote className="mt-5 flex-1 font-heading text-lg leading-snug font-medium text-foreground sm:text-xl">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </blockquote>
+                <figcaption className="mt-6 flex items-center gap-3 border-t border-border/80 pt-5">
+                  <span className="flex size-9 items-center justify-center rounded-full border border-primary/40 bg-background font-heading text-xs font-semibold text-primary">
+                    {getInitials(testimonial.name)}
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold text-foreground">
+                      {testimonial.name}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">{testimonial.role}</span>
+                  </span>
+                </figcaption>
+              </figure>
+            </HoverCard>
           ))}
         </div>
       </Container>

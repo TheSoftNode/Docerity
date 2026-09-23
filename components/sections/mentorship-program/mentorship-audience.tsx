@@ -10,7 +10,7 @@ const icons = [SproutIcon, RepeatIcon, TrendingUpIcon];
 
 function MentorshipAudience() {
   return (
-    <section className="relative overflow-hidden border-b border-border/80 bg-[#0b1220] py-16 sm:py-20 lg:py-24">
+    <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       <MentorshipAudienceBackground />
 
       <Container className="relative">

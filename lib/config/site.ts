@@ -1,10 +1,10 @@
 export const siteConfig = {
   name: "Docerity",
-  url: "https://docerity.dev",
+  url: "https://docerity.com",
   tagline: "Engineering · Mentorship · Tech Explainers",
   description:
     "Docerity builds production software, takes on ambitious projects, and mentors the next generation of engineers.",
-  email: "hello@docerity.dev",
+  email: "thesoftnode@gmail.com",
   socials: {
     github: "https://github.com",
     linkedin: "https://linkedin.com",

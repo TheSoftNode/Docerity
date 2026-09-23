@@ -24,7 +24,7 @@ function WorkStackBackground() {
             key={`${hex.cx}-${hex.cy}`}
             points={hexPoints(hex.cx, hex.cy, hex.r)}
             fill="none"
-            stroke="#f5f7fb"
+            stroke="var(--foreground)"
             strokeOpacity={0.06}
             strokeWidth={1.5}
           />

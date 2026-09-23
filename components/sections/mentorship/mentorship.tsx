@@ -38,7 +38,7 @@ function Mentorship() {
           <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
             A clear path to your next level.
           </h2>
-          <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground">
+          <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[34rem]">
             Weekly 1:1s, honest code review, and a real plan &mdash; not just
             office hours.
           </p>

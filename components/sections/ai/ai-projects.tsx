@@ -6,7 +6,7 @@ function AiProjects() {
   return (
     <section
       id="projects"
-      className="relative scroll-mt-[var(--nav-h)] overflow-hidden border-b border-border/80 bg-[#0b1220] py-16 sm:py-20 lg:py-24"
+      className="relative scroll-mt-[var(--nav-h)] overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24"
     >
       <Bloom tone="violet" className="top-0 left-0 -translate-x-1/3 -translate-y-1/3" />
 

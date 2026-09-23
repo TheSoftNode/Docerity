@@ -18,7 +18,7 @@ test.describe("Final CTA", () => {
       page.getByRole("button", { name: "Start the conversation" })
     ).toBeVisible();
     await expect(
-      page.locator("#contact").getByRole("link", { name: "hello@docerity.dev" })
+      page.locator("#contact").getByRole("link", { name: "thesoftnode@gmail.com" })
     ).toBeVisible();
 
     expect(errors).toEqual([]);
