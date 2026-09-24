@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeftIcon,
   CheckIcon,
@@ -53,9 +53,21 @@ function PostEditor({
   postId?: string;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [post, setPost] = useState<PostInput>(initial);
   const [errors, setErrors] = useState<PostFieldErrors>({});
-  const [saved, setSaved] = useState(false);
+  /*
+    Seeded from the URL.
+
+    Creating a post replaces /admin/posts/new with /admin/posts/<id>, and that is
+    a different route, so this component unmounts and a fresh one mounts in its
+    place. A `saved` flag held only in state is lost in that gap, which left the
+    first save of a new post with no confirmation at all: the URL changed and
+    nothing said it had worked. The flag travels in the URL so it survives the
+    remount, and is dropped as soon as anything is edited.
+  */
+  const [saved, setSaved] = useState(searchParams.get("saved") === "1");
   const [pending, startTransition] = useTransition();
 
   /*
@@ -98,8 +110,9 @@ function PostEditor({
 
       if (!postId) {
         /* A new post becomes an existing one, so the URL has to change or the
-           next save would create a second copy. */
-        router.replace(`/admin/posts/${result.id}`);
+           next save would create a second copy. `saved=1` carries the
+           confirmation across the remount that comes with it. */
+        router.replace(`/admin/posts/${result.id}?saved=1`);
       }
     });
   }
