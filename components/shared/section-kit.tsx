@@ -20,7 +20,7 @@ function HeroTitle({ children, className }: { children: ReactNode; className?: s
   return (
     <h1
       className={cn(
-        "mt-5 text-balance font-heading text-[clamp(2rem,6vw,3rem)] font-semibold leading-[1.06] tracking-tight text-foreground lg:text-[clamp(2.4rem,3.3vw,3.4rem)]",
+        "mt-5 text-balance font-heading text-[clamp(2rem,6vw,3rem)] font-semibold leading-[1.06] tracking-tight text-foreground md:text-[clamp(1.9rem,3.4vw,3.4rem)] lg:text-[clamp(2.4rem,3.3vw,3.4rem)]",
         className
       )}
     >

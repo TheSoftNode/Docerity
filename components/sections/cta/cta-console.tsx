@@ -135,7 +135,7 @@ function CtaConsole() {
                 <span className="block truncate text-sm font-semibold text-foreground">
                   {label}
                 </span>
-                <span className="mt-0.5 block truncate text-sm text-muted-foreground">
+                <span className="mt-0.5 block text-sm text-muted-foreground">
                   {body}
                 </span>
               </span>

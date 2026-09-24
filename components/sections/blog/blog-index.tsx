@@ -20,7 +20,7 @@ function BlogIndex() {
       <Container className="relative">
         {/* Title left, lede right — it fills the space the stacked layout left
             empty and costs no extra height. */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-end lg:gap-12">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:items-end lg:gap-12">
           <div>
             <Eyebrow className="flex items-center gap-2.5">
               <span className="relative flex size-1.5">

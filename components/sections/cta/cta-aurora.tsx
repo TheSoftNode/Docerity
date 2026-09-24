@@ -28,18 +28,6 @@ function CtaAurora() {
         />
       ))}
 
-      {/* Fine grid, faded out towards the edges so it never ends on a hard line. */}
-      <div
-        className="absolute inset-0 opacity-[0.5]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, var(--foreground) 1px, transparent 1px), linear-gradient(to bottom, var(--foreground) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage: "radial-gradient(90% 70% at 50% 40%, black 0%, transparent 78%)",
-          WebkitMaskImage: "radial-gradient(90% 70% at 50% 40%, black 0%, transparent 78%)",
-          opacity: 0.045,
-        }}
-      />
     </div>
   );
 }

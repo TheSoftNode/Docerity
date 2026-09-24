@@ -23,7 +23,7 @@ function Explainers() {
           used to cut straight through the stage card. */}
       <ExplainerBackground />
 
-      <Container className="relative grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+      <Container className="relative grid gap-12 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:gap-16">
         <div>
           <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
             Tech Explainers
@@ -36,7 +36,7 @@ function Explainers() {
             &mdash; so it actually sticks.
           </p>
 
-          <dl className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+          <dl className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
             {format.map((item) => (
               <div
                 key={item.step}

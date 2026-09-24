@@ -2,10 +2,7 @@ import Link from "next/link";
 import { ArrowRightIcon, TrophyIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
-import { HeroFrame } from "@/components/shared/hero-frame";
-import { HeroSpec } from "@/components/shared/hero-spec";
 import { ScrambleText } from "@/components/shared/scramble-text";
-import { ecosystems, stack } from "@/components/sections/web3/web3-data";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { HeroDeck } from "@/components/shared/hero-deck";
@@ -14,11 +11,10 @@ import { projects } from "@/components/sections/web3/web3-data";
 function Web3Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
-      <HeroFrame />
       <Bloom tone="violet" className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
       <Bloom className="bottom-0 left-0 -translate-x-1/3 translate-y-1/3" />
 
-      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
+      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
           <Eyebrow><ScrambleText text="Web3 & Blockchain" /></Eyebrow>
           <HeroTitle>Hackathon-winning dApps, shipped on real chains.</HeroTitle>
@@ -48,14 +44,6 @@ function Web3Hero() {
               Start a project
             </Button>
           </div>
-
-          <HeroSpec
-            items={[
-              { label: "Protocols", value: String(projects.length).padStart(2, "0") },
-              { label: "Networks", value: String(ecosystems.length).padStart(2, "0") },
-              { label: "Stack", value: String(stack.length).padStart(2, "0") },
-            ]}
-          />
         </div>
 
         <HeroDeck

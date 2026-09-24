@@ -67,11 +67,11 @@ function TestimonialSpotlight({ header }: { header?: ReactNode }) {
   const testimonial = testimonials[active];
 
   return (
-    <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-16">
+    <div className="grid grid-cols-1 gap-12 md:grid-cols-[0.85fr_1.15fr] md:items-center lg:gap-16">
       <div>
         {header}
 
-        <ul className="mt-8 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <ul className="mt-8 grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
           {testimonials.map((t, index) => {
             const isActive = index === active;
             return (

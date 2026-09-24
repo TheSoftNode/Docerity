@@ -236,6 +236,10 @@
       padding-inline: 3rem;
     }
   }
+  /*
+    Caps are in `rem` and the root size grows on large displays (17px at 1800,
+    18.5px at 2300), so these steps are wider in pixels than they look.
+  */
   @media (min-width: 1800px) {
     .doc-shell {
       max-width: 96rem;

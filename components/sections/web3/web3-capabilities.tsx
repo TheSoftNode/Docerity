@@ -9,7 +9,7 @@ function Web3Capabilities() {
       <Web3CapabilitiesBackground />
       <Bloom tone="violet" className="right-0 bottom-0 translate-x-1/3 translate-y-1/3" />
 
-      <Container className="relative grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
           <Eyebrow>What I build</Eyebrow>
           <SectionTitle>On-chain systems that hold up under real use.</SectionTitle>

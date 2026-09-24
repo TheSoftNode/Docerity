@@ -27,7 +27,7 @@ function Cta() {
 
       <Container className="relative">
         <CtaPanel>
-          <div className="grid grid-cols-1 gap-10 p-7 sm:p-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14 lg:p-14">
+          <div className="grid grid-cols-1 gap-10 p-7 sm:p-10 md:grid-cols-[1.05fr_0.95fr] md:items-center lg:gap-14 lg:p-14">
             <div>
               <p className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 font-mono text-[0.6875rem] tracking-[0.16em] text-primary uppercase backdrop-blur-sm">
                 <span className="relative flex size-1.5">

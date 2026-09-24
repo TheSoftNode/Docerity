@@ -2,10 +2,7 @@ import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
-import { HeroFrame } from "@/components/shared/hero-frame";
-import { HeroSpec } from "@/components/shared/hero-spec";
 import { ScrambleText } from "@/components/shared/scramble-text";
-import { audiences, formatSteps, stages } from "@/components/sections/mentorship-program/mentorship-program-data";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, FramedPanel, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { GrowthTimeline } from "@/components/sections/mentorship/growth-timeline";
@@ -13,10 +10,9 @@ import { GrowthTimeline } from "@/components/sections/mentorship/growth-timeline
 function MentorshipProgramHero() {
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
-      <HeroFrame />
       <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
 
-      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
+      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
           <Eyebrow><ScrambleText text="Mentorship" /></Eyebrow>
           <HeroTitle>A clear path to your next level.</HeroTitle>
@@ -46,14 +42,6 @@ function MentorshipProgramHero() {
               See how it works
             </Button>
           </div>
-
-          <HeroSpec
-            items={[
-              { label: "Stages", value: String(stages.length).padStart(2, "0") },
-              { label: "What you get", value: String(formatSteps.length).padStart(2, "0") },
-              { label: "Who it's for", value: String(audiences.length).padStart(2, "0") },
-            ]}
-          />
         </div>
 
         {/* Same growth-path card as the homepage, so the program page opens

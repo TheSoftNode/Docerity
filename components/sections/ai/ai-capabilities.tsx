@@ -8,7 +8,7 @@ function AiCapabilities() {
     <section className="relative overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20 lg:py-24">
       <AiCapabilitiesBackground />
 
-      <Container className="relative grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         {/* The heading holds its place while the list scrolls past. */}
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
           <Eyebrow>What I build</Eyebrow>

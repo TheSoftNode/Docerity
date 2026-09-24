@@ -1,41 +1,29 @@
 /**
- * Blueprint framing for a page hero: a measurement rule down each side and
- * registration marks at the corners, like a technical drawing.
+ * A measurement rule down the right edge of the landing hero, with a
+ * registration mark at each end — a nod to a technical drawing.
  *
- * Purely decorative and server-rendered — no state, no motion. It exists to
- * make the hero read as a drafted plate rather than a content box.
+ * Deliberately right-side only and used on the landing hero alone. Mirrored
+ * down both edges and repeated on every page hero it stopped reading as an
+ * accent and started looking like chrome bolted to the viewport.
  */
 function HeroFrame() {
   const ticks = Array.from({ length: 13 });
 
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
-      {/* Side rules with graduated ticks. Every fourth tick is longer, the way
-          a ruler marks its major divisions. */}
-      {(["left-6", "right-6"] as const).map((side) => (
-        <div key={side} className={`absolute top-16 bottom-16 ${side} flex flex-col justify-between`}>
-          {ticks.map((_, index) => (
-            <span
-              key={index}
-              className={
-                index % 4 === 0
-                  ? "block h-px w-4 bg-border"
-                  : "block h-px w-2 bg-border/60"
-              }
-            />
-          ))}
-        </div>
-      ))}
+      <div className="absolute top-16 right-6 bottom-16 flex flex-col justify-between">
+        {ticks.map((_, index) => (
+          <span
+            key={index}
+            className={
+              index % 4 === 0 ? "block h-px w-4 bg-border" : "block h-px w-2 bg-border/60"
+            }
+          />
+        ))}
+      </div>
 
-      {/* Registration marks. */}
-      {[
-        "top-8 left-12 border-t border-l",
-        "top-8 right-12 border-t border-r",
-        "bottom-8 left-12 border-b border-l",
-        "bottom-8 right-12 border-b border-r",
-      ].map((corner) => (
-        <span key={corner} className={`absolute size-4 border-primary/30 ${corner}`} />
-      ))}
+      <span className="absolute top-8 right-12 size-4 border-t border-r border-primary/30" />
+      <span className="absolute right-12 bottom-8 size-4 border-r border-b border-primary/30" />
     </div>
   );
 }

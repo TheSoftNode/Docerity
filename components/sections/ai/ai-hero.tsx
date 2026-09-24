@@ -2,10 +2,7 @@ import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
-import { HeroFrame } from "@/components/shared/hero-frame";
-import { HeroSpec } from "@/components/shared/hero-spec";
 import { ScrambleText } from "@/components/shared/scramble-text";
-import { capabilities, models } from "@/components/sections/ai/ai-data";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { HeroDeck } from "@/components/shared/hero-deck";
@@ -14,11 +11,10 @@ import { projects } from "@/components/sections/ai/ai-data";
 function AiHero() {
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
-      <HeroFrame />
       <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
       <Bloom tone="violet" className="bottom-0 left-0 -translate-x-1/3 translate-y-1/3" />
 
-      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:pt-20 lg:pb-24">
+      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
           <Eyebrow><ScrambleText text="AI & LLM Engineering" /></Eyebrow>
           <HeroTitle>AI systems that run in production, not a demo.</HeroTitle>
@@ -48,14 +44,6 @@ function AiHero() {
               Start a project
             </Button>
           </div>
-
-          <HeroSpec
-            items={[
-              { label: "Systems", value: String(projects.length).padStart(2, "0") },
-              { label: "Models", value: String(models.length).padStart(2, "0") },
-              { label: "Capabilities", value: String(capabilities.length).padStart(2, "0") },
-            ]}
-          />
         </div>
 
         <HeroDeck

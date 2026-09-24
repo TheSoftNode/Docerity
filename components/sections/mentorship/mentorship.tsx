@@ -30,7 +30,7 @@ function Mentorship() {
         className="pointer-events-none absolute top-1/2 right-0 hidden h-[38rem] w-[38rem] translate-x-1/4 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--brand-primary)_0%,transparent_68%)] opacity-[0.07] blur-3xl lg:block"
       />
 
-      <Container className="relative grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16">
+      <Container className="relative grid gap-12 md:grid-cols-[1.05fr_0.95fr] md:items-center lg:gap-16">
         <div>
           <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
             Mentorship
@@ -43,7 +43,7 @@ function Mentorship() {
             office hours.
           </p>
 
-          <ul className="mt-8 grid gap-5 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+          <ul className="mt-8 grid gap-5 sm:grid-cols-3 md:grid-cols-1 xl:grid-cols-3">
             {pillars.map(({ Icon, title, body }) => (
               <li key={title} className="flex gap-3 xl:flex-col">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-primary">

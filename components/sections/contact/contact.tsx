@@ -18,7 +18,7 @@ function Contact() {
     <section className="relative overflow-hidden border-b border-border/80 bg-background py-12 sm:py-16 lg:py-20">
       <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
 
-      <Container className="relative grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-12 md:grid-cols-[0.85fr_1fr] lg:gap-16">
         <div className="flex flex-col">
           <Eyebrow>New project</Eyebrow>
           <HeroTitle>Tell me what you&apos;re building.</HeroTitle>

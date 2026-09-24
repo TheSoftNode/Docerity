@@ -19,8 +19,8 @@ function Work() {
       <Container className="relative">
         {/* The heading and its action share a baseline on wide screens and
             stack on narrow, rather than the action floating off on its own. */}
-        <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
-          <div className="max-w-3xl lg:flex-1">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row lg:items-end">
+          <div className="max-w-3xl md:flex-1">
             <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
               Selected Work
             </p>
@@ -50,7 +50,7 @@ function Work() {
         {/* The small orbit stands in for the wide-screen background one, so it
             only runs where that is absent. Carrying it up to `2xl` stranded it
             in a ~220px empty band between the heading and the cards. */}
-        <div className="mt-10 flex justify-center lg:hidden">
+        <div className="mt-10 flex justify-center md:hidden">
           <OrbitCluster icons={orbitIcons} size={200} duration={26} badgeSize={40} />
         </div>
 

@@ -18,7 +18,7 @@ function MentorshipFormat() {
       <MentorshipFormatBackground />
       <Bloom tone="violet" className="top-1/2 left-0 -translate-x-1/2 -translate-y-1/2" />
 
-      <Container className="relative grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
+      <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:gap-16">
         <div>
           <Eyebrow>What you get</Eyebrow>
           <SectionTitle>Not just office hours.</SectionTitle>
