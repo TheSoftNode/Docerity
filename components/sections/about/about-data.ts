@@ -23,10 +23,16 @@ export const founder = {
 } as const;
 
 /** The narrative. Three beats: where I came from, what I do, why Docerity. */
+/*
+  Rewritten against the CVs. The previous version opened on a career in power
+  technology — tracing faults through UPS systems — which came from the old
+  portfolio and appears in none of the six CVs. It was load-bearing for the
+  whole narrative, so the arc is redrawn from what the CVs actually record.
+*/
 export const story = [
-  "I started out as a power technology engineer, tracing faults through UPS systems and leading maintenance teams on installations where being wrong was expensive. That work taught me the habit I still lean on hardest: find the actual cause before touching anything, and document what you found so the next person isn't guessing.",
-  "Software became the thing I did after hours until it became the thing I did. I went deep through ALX's software engineering and data science programmes, then into production work — architecting microservices in Python, FastAPI, NestJS and Node, building the interfaces on top in React and Next.js, and shipping the whole thing rather than handing off a half-finished piece. Most recently as full-stack lead at HitoAI, where I ran the development lifecycle end to end and mentored the juniors on the team.",
-  "Docerity exists because those three things — building software, explaining it clearly, and growing the engineers who will maintain it — are the same skill wearing different clothes. I have been teaching since 2016, long before I had a company to put around it. This is the version with the structure it always needed.",
+  "I started on contract work: .NET middleware for Nigerian banking rails, NIBSS BVN validation and IBPS integrations, then a run of client systems across financial services, real estate and education. Unglamorous, and the best possible training — when the thing you built handles someone's identity verification, you learn quickly that correctness is not a matter of taste.",
+  "Backend engineering at ALX came next, then AI products at HitoAI, where two of the things I built went on to raise €123K and €100K. Since then it has been three engagements at once: leading QwikPass end to end as its only engineer, taking three SaaS products at URI from pre-user development into real adoption, and pulling a security scanner out of a Django monolith at SmartComply. Along the way, three Web3 hackathon wins.",
+  "The explaining came from an unexpected direction. Years of evaluating AI models — writing rubrics, calibrating prompts to the point where models fail, checking whether an answer is correct or merely plausible — turn out to be the same discipline as explaining a system to a junior engineer. You have to know exactly what you know, and exactly how you know it. Docerity is the company around all three: building software, explaining it clearly, and growing the engineers who will maintain it.",
 ] as const;
 
 /*
@@ -37,17 +43,23 @@ export const story = [
   reconcile with the work page is worth less than no number at all.
 */
 export const facts = [
-  { value: "9+", label: "Years teaching and mentoring", since: "since 2016" },
-  { value: "4", label: "Hackathon wins", since: "Web3 competitions" },
+  {
+    value: "6+",
+    label: "Years building production software",
+    since: "the figure every CV leads with",
+  },
+  /* Three, not four. Every one of the CVs says "won 3 blockchain hackathons";
+     the four came from the old portfolio page and was never corrected. */
+  { value: "3", label: "Hackathon wins", since: "MetaPilot and VeriAI among them" },
   {
     value: String(projects.length),
     label: "Shipped projects",
     since: "every one listed on the work page",
   },
   {
-    value: "6",
+    value: "7",
     label: "Blockchain ecosystems",
-    since: "Ethereum, Stacks, Hedera, NEAR, Stellar, ICP",
+    since: "Solana, Ethereum, Stacks, Hedera, NEAR, Stellar, ICP",
   },
 ] as const;
 
@@ -56,118 +68,168 @@ export const facts = [
   ran 120+ words each, which reads as a wall on a company About page; each one
   here keeps the specifics and drops the restatement.
 */
+/*
+  Taken from the CVs rather than the old portfolio page, which had gone stale:
+  it still led with HitoAI as the current role and carried two entries — an IT
+  tutoring thread since 2016 and a field-engineering post at Integrated Power
+  Technology — that appear in no CV. Both are left out here rather than
+  carried forward on the strength of an older source.
+
+  The four ApplyLoop contracts are folded into one entry. Listed separately
+  they read as four jobs when they are one ongoing engagement that changed
+  shape, and they overlap the Coretrix and URI dates, which makes a
+  chronological list look like a contradiction.
+*/
 export const experience = [
   {
-    role: "Full-stack Development Lead",
-    org: "HitoAI",
+    role: "Senior Full-Stack Software Engineer",
+    org: "SmartComply",
+    period: "2026 — present",
+    summary:
+      "Pulled API security scanning out of the Django monolith and into a service of its own.",
+    points: [
+      "Extracted scanning into a standalone FastAPI service running OWASP ZAP, Nuclei and Schemathesis across three sibling containers, isolating CPU-heavy work from the web servers.",
+      "Diagnosed thread-pool exhaustion at around 40 queued scans and replaced background tasks with a bounded worker queue and HTTP 429 backpressure.",
+      "Made result delivery idempotent with an atomic compare-and-clear claim, so repeated callbacks during slow PDF rendering stopped producing duplicate reports.",
+      "Cut the results payload roughly 170× and the scanner image from 411MB to 217MB.",
+      "Built a bulk-import workflow across six formats with deduplication and a 100-endpoint limit, covered by 23 tests spanning the React and Django boundary.",
+    ],
+  },
+  {
+    role: "Lead Engineer",
+    org: "Coretrix Technologies",
+    period: "2026 — present",
+    summary:
+      "Sole engineer on QwikPass, across five product surfaces and three business lines.",
+    points: [
+      "Owned access control, payments, communications, compliance, analytics and operations end to end — Flutter mobile, a Guard APK, Next.js management, React events and the public web.",
+      "Built backend workflows across 15+ Firebase Functions categories, including a Gemini integration.",
+      "Implemented security with Firebase Auth custom claims, 42 Firestore rules, 40+ tamper-evident audit actions and RFC 6238 offline TOTP for low-connectivity gates.",
+      "Established 488+ passing tests at 80%+ critical-path coverage, holding gate requests under 307ms and webhook processing under 328ms at p95.",
+      "Automated Android and iOS delivery through Codemagic across App Bundle, IPA, TestFlight and Google Play.",
+    ],
+  },
+  {
+    role: "Lead Full-Stack Software Engineer",
+    org: "URI Creative",
+    period: "2025 — present",
+    summary:
+      "Led three SaaS products from pre-user development into active adoption.",
+    points: [
+      "Architected microservices across FastAPI, NestJS, .NET 8, MongoDB and Redis for social publishing, lead generation, analytics and a public developer API.",
+      "Built a three-tier SmartLLMRouter over GPT-4o, Gemini and a rule-based fallback, processing millions of posts at 90% lower routing cost and above 99.99% uptime.",
+      "Shipped a production RAG pipeline on 1,536-dimension embeddings and MongoDB Atlas Vector Search with cosine similarity and metadata filtering.",
+      "Engineered a 2,800-line multimodal vision service using GPT-4o Vision and DALL·E 3, with blur, exposure and platform-specific quality gates.",
+      "Deployed a nine-container WhatsApp architecture — three FastAPI webhook servers, three Celery workers, Redis, Flower and Nginx — then migrated production from Azure to AWS.",
+    ],
+  },
+  {
+    role: "AI & frontend engineering, on contract",
+    org: "ApplyLoop",
     period: "2024 — present",
     summary:
-      "Led the team building AI-powered products end to end, from architecture to deployment.",
+      "Four engagements: RLHF evaluation, training-data design, prompt engineering, and a React build.",
     points: [
-      "Architected scalable microservices in Python, FastAPI, NestJS and Node, with React, Next.js and TypeScript on the front.",
-      "Set the engineering standards — code review process and testing strategy — that lifted code quality by 35%.",
-      "Worked alongside the data science team to move machine learning models into production, including NLP capability.",
-      "Cut API response times 40% through database design and Redis caching.",
-      "Ran sprint planning, standups and retrospectives, and mentored the junior engineers.",
+      "Evaluated 150+ technical model responses and produced golden annotations, verifying claims by executing the code rather than reading it.",
+      "Designed 207+ training samples across eight application categories, with rubrics spanning five verification dimensions and three difficulty bands.",
+      "Built repository-comprehension prompts carrying 20–40 weighted criteria each, calibrated to a 50% model failure rate to find where models fabricate fields, operators and source locations.",
+      "Built LeaguesFun in React 19 and TypeScript — live leaderboards, a drag-and-drop lineup editor and wallet auth over Ethers.js, Wagmi, Viem and Privy.",
     ],
   },
   {
-    role: "Web3 & Blockchain Engineer",
-    org: "Open source contributor",
-    period: "2023 — present",
+    role: "Blockchain Developer",
+    org: "Web3 hackathons",
+    period: "2024 — present",
     summary:
-      "Smart contracts and decentralised applications across five ecosystems, in TypeScript, Rust and Solidity.",
+      "Three hackathon wins, across Solana, Stacks, NEAR, Stellar and MetaMask.",
     points: [
-      "Built and deployed contracts implementing token standards on Ethereum and Stacks, with security and gas efficiency as the constraint.",
-      "Shipped dApps across NEAR, Stellar and Stacks — the Bitcoin layer — from DeFi to NFT platforms.",
-      "Led teams to four hackathon wins.",
-      "Contributed upstream, mostly on cross-chain compatibility and the user experience gap that keeps Web3 niche.",
+      "Built MetaPilot, a MetaMask × Solana winner: a four-program DeFi automation protocol in 2,000+ lines of Rust and Anchor for DAO voting, scheduling and AI-guided workflows.",
+      "Built VeriAI, also a MetaMask × Solana winner, turning AI outputs into immutable verification certificates through Solana's oracle network.",
+      "Engineered RealPayTag as a 9,700-line Rust multi-program system for real-world asset tokenisation — asset registry, identity, asset-backed stablecoin and payroll.",
+      "Worked across Solidity, Clarity and Rust, including Hedera Consensus and Smart Contract Services for governance and event ordering.",
     ],
   },
   {
-    role: "Software Engineering Intern, then contractor",
-    org: "ALX · Holberton",
+    role: "Fullstack Software Engineer",
+    org: "HitoAI",
+    period: "2024",
+    summary:
+      "Six AI products across education, energy, trading and assessment.",
+    points: [
+      "Built EEP, a microservice learning platform on Firebase, GCP, Node and Next.js with RabbitMQ carrying inter-service events.",
+      "Built HyQ for gas-quality analytics and the SusNet MVP for household energy — products that secured €123K and €100K in funding.",
+      "Integrated Selwell across Next.js, Django REST and Flask to connect a trading interface to a trained bot.",
+      "Delivered Easmark for AI-assisted thesis grading, plus the HitoAI and Biasadra web experiences.",
+    ],
+  },
+  {
+    role: "Backend Engineer",
+    org: "ALX Africa",
     period: "2023 — 2024",
     summary:
-      "Twelve months of intensive full-stack work, from a shell written in C to production web applications.",
+      "Co-architected the ALX Connect API in a two-person backend team.",
     points: [
-      "Built a custom shell in C, an AirBnB clone in Python and Flask, a doctor appointment system in React and Node, and an inventory system in C#, .NET and Blazor Server.",
-      "Went deep on system design, data structures and algorithms.",
-      "Picked up the DevOps toolchain in anger: Docker, Kubernetes, Terraform, Ansible, Puppet, Datadog.",
-      "Mentored peers across frameworks — the part I kept doing after the programme ended.",
+      "Built developer matching, mentorship connections, CV review and profile management as documented REST endpoints on Django REST Framework and Swagger.",
+      "Implemented JWT authentication, WebSockets and SMTP email for access, notifications and verification.",
+      "Coordinated schema and API behaviour with the second backend engineer across four workflow areas.",
     ],
   },
   {
-    role: "Freelance software developer",
-    org: "Independent",
-    period: "2020 — 2024",
+    role: "Full-Stack Software Developer",
+    org: "Freelance & collaborative projects",
+    period: "2020 — 2023",
     summary:
-      "Four years of contract delivery across industries, backend through frontend.",
+      "Contract delivery across financial services, real estate, tournaments and education.",
     points: [
-      "E-commerce platforms with Stripe, employee and school management systems, real estate applications, tournament trackers.",
-      "Backends in C#, .NET, Node and NestJS; frontends in React, Next.js and Blazor.",
-      "Infrastructure with Docker, Kubernetes, SQL and NoSQL, Ansible and Terraform.",
-    ],
-  },
-  {
-    role: "IT tutor and mentor",
-    org: "Individuals and groups",
-    period: "2016 — present",
-    summary:
-      "Teaching programming, web development, Web3, networking and data science, from absolute beginners to working engineers.",
-    points: [
-      "Nine years of one-to-one and group teaching, adjusting the explanation until it lands rather than repeating it louder.",
-      "Covers CCNA and IT fundamentals as well as application development.",
-      "This is the thread that became Docerity's mentorship work.",
-    ],
-  },
-  {
-    role: "Lead IT support & field engineer",
-    org: "Integrated Power Technology",
-    period: "2021 — 2023",
-    summary:
-      "Where the debugging instinct came from: UPS maintenance, fault tracing and technical documentation at scale.",
-    points: [
-      "Led teams on large-scale UPS maintenance projects.",
-      "Fault tracing on live systems, where reliability is not a nice-to-have.",
-      "Wrote the technical documentation — the habit that still shows up in every codebase I touch.",
+      "Developed .NET 6 middleware for NIBSS BVN validation and IBPS integration, with cryptographic controls and application-facing API contracts.",
+      "Modernised legacy systems while implementing authentication, third-party integrations and performance analytics.",
+      "Provided technical mentorship and training, mostly around the .NET ecosystem and web development.",
     ],
   },
 ] as const;
 
 /** Grouped, because the portfolio's flat 36-item list read as a keyword dump. */
+/*
+  Taken from the CVs' technical-skills sections, which are considerably more
+  specific than the portfolio's flat 36-item list — that one ended in "and
+  even more" and put CCNA beside React. Grouped by what each thing is for, so
+  someone can scan for the part they care about.
+
+  Mobile and AI are their own groups now because both carry real weight in the
+  CVs and neither had anywhere to live before.
+*/
 export const skillGroups = [
   {
     title: "Frontend",
-    items: ["TypeScript", "React", "Next.js", "Redux", "Tailwind CSS", "Blazor", "HTML & CSS"],
+    items: ["TypeScript", "React", "Next.js", "Vite", "Tailwind CSS", "shadcn/ui", "Material UI", "Recharts"],
   },
   {
     title: "Backend",
-    items: ["Node.js", "NestJS", "Python", "FastAPI", "Django", "C#", ".NET", "C"],
+    items: ["Python", "FastAPI", "Django", "NestJS", "Node.js", "C#", ".NET", "Celery"],
   },
   {
-    title: "Data & AI",
-    items: ["Data science", "Prompt engineering", "ML model integration", "Pandas & NumPy"],
+    title: "AI & LLM",
+    items: ["GPT-4o", "Claude", "Gemini", "RAG", "Vector search", "DALL·E 3", "RLHF", "Prompt engineering"],
   },
   {
-    title: "Databases",
-    items: ["PostgreSQL", "MongoDB", "MySQL", "Redis", "SQLite", "Firebase"],
+    title: "Mobile",
+    items: ["Flutter", "Dart", "Riverpod", "GoRouter", "SQLite sync", "Push notifications", "Codemagic"],
+  },
+  {
+    title: "Data & messaging",
+    items: ["PostgreSQL", "MongoDB", "MySQL", "Redis", "Firebase", "RabbitMQ", "Azure Service Bus"],
   },
   {
     title: "Web3",
-    items: ["Solidity", "Rust", "Clarity", "Ethereum", "Stacks", "NEAR", "Stellar"],
+    items: ["Solidity", "Rust", "Anchor", "Clarity", "Ethers.js", "Wagmi", "Viem", "Hedera"],
   },
   {
-    title: "Infrastructure",
-    items: ["Docker", "Kubernetes", "AWS", "GCP", "Terraform", "Ansible", "CI/CD", "Bash"],
+    title: "Cloud & DevOps",
+    items: ["Docker", "Kubernetes", "AWS", "GCP", "Azure", "GitHub Actions", "Nginx", "CI/CD"],
   },
   {
-    title: "Practice",
-    items: ["System design", "Microservices", "Data structures & algorithms", "Code review", "Agile delivery", "Technical writing"],
-  },
-  {
-    title: "Also",
-    items: ["CCNA", "IT support", "Automation", "Datadog", "Prometheus", "Grafana"],
+    title: "APIs & security",
+    items: ["REST", "GraphQL", "WebSockets", "OAuth 2.0", "JWT", "Swagger", "OWASP ZAP", "Nuclei"],
   },
 ] as const;
 

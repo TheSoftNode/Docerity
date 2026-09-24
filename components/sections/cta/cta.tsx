@@ -21,13 +21,13 @@ function Cta() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-surface-deep pt-16 pb-32 sm:pt-20 sm:pb-36 lg:pt-24 lg:pb-40"
+      className="relative overflow-hidden bg-surface-deep pt-14 pb-20 sm:pt-16 sm:pb-24 lg:pt-16 lg:pb-28"
     >
       <CtaAurora />
 
       <Container className="relative">
         <CtaPanel>
-          <div className="grid grid-cols-1 gap-10 p-7 sm:p-10 md:grid-cols-[1.05fr_0.95fr] md:items-center lg:gap-14 lg:p-14">
+          <div className="grid grid-cols-1 gap-8 p-6 sm:p-8 md:grid-cols-[1.05fr_0.95fr] md:items-center lg:gap-12 lg:p-10">
             <div>
               <p className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/60 px-3 py-1 font-mono text-[0.6875rem] tracking-[0.16em] text-primary uppercase backdrop-blur-sm">
                 <span className="relative flex size-1.5">
@@ -37,7 +37,7 @@ function Cta() {
                 Let&apos;s talk
               </p>
 
-              <h2 className="mt-5 text-balance font-heading text-[clamp(2rem,4.2vw,3.4rem)] font-semibold leading-[1.04] tracking-tight text-foreground">
+              <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.4vw,2.65rem)] font-semibold leading-[1.06] tracking-tight text-foreground">
                 Got something{" "}
                 <span className="bg-[linear-gradient(120deg,var(--brand-primary),var(--brand-violet))] bg-clip-text text-transparent">
                   worth building
@@ -45,15 +45,18 @@ function Cta() {
                 ?
               </h2>
 
-              <p className="mt-5 max-w-[42ch] text-pretty text-base leading-[1.75] text-muted-foreground lg:max-w-[34rem]">
+              <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground">
                 A project, mentorship, or just a question &mdash; I read every
                 email myself.
               </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button
                   size="lg"
-                  className="h-12 w-full px-7 text-sm shadow-[0_18px_40px_-18px_var(--brand-primary)] transition-shadow duration-300 hover:shadow-[0_22px_50px_-16px_var(--brand-primary)] sm:w-auto"
+                  /* A filter, not a box-shadow: the chamfer clips anything
+                     painted outside the element, so the old glow stopped
+                     rendering the moment the silhouette changed. */
+                  className="h-11 w-full px-6 text-sm [filter:drop-shadow(0_10px_22px_color-mix(in_oklch,var(--brand-primary),transparent_62%))] hover:[filter:drop-shadow(0_14px_28px_color-mix(in_oklch,var(--brand-primary),transparent_50%))] sm:w-auto"
                   nativeButton={false}
                   render={<Link href="/contact" />}
                 >
@@ -62,7 +65,7 @@ function Cta() {
                 </Button>
               </div>
 
-              <ul className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2">
+              <ul className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
                 {assurances.map(({ Icon, label }) => (
                   <li
                     key={label}
