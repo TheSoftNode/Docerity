@@ -18,7 +18,11 @@ const reviewSchema = new Schema(
     title: { type: String, required: true, trim: true, maxlength: 160 },
     body: { type: String, required: true, trim: true, maxlength: 2000 },
     rating: { type: Number, min: 1, max: 5, required: true },
-    photoUrl: { type: String, default: "" },
+    /* A Cloudinary public_id, not a URL — the same reasoning as enquiry
+       attachments: the durable fact is the identifier, and a delivery URL is
+       derived from it. Empty means no photo, and the UI falls back to
+       initials rather than to a "default.jpg" that may not exist. */
+    photoPublicId: { type: String, default: "" },
     links: { type: [reviewLinkSchema], default: [] },
 
     /*
@@ -36,8 +40,9 @@ const reviewSchema = new Schema(
       required: true,
     },
 
-    /* Contact address for the submitter, never rendered publicly. Lets you
-       verify a testimonial is real before approving it. */
+    /* Contact address for the submitter, never rendered publicly and never
+       included in `listPublished`'s projection. Lets you verify a testimonial
+       is real before approving it. */
     contactEmail: { type: String, default: "", lowercase: true, trim: true },
 
     moderatedAt: { type: Date, default: null },

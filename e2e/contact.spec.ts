@@ -51,7 +51,7 @@ test.describe("Contact page", () => {
       route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify({ ok: true }),
+        body: JSON.stringify({ ok: true, data: { reference: "DOC-ABC-123" } }),
       })
     );
 
@@ -75,7 +75,12 @@ test.describe("Contact page", () => {
         contentType: "application/json",
         body: JSON.stringify({
           ok: false,
-          errors: { email: "That email address doesn't look right." },
+          error: {
+            code: "validation_failed",
+            message: "Some details need correcting.",
+            fields: { email: "That email address doesn't look right." },
+          },
+          requestId: "test-request-id",
         }),
       })
     );

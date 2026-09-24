@@ -1,74 +1,64 @@
-import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
-import { NextResponse } from "next/server";
-
-import { ACCEPTED_FILE_TYPES, FILE_LIMITS } from "@/lib/contact/schema";
+import { withRoute } from "@/lib/http/handler";
+import { success } from "@/lib/http/responses";
+import { ValidationError } from "@/lib/core/errors";
+import { storage } from "@/lib/config/env";
+import { createUploadSignature, resourceTypeFor } from "@/lib/storage/cloudinary";
+import { ACCEPTED_FILE_TYPES, FILE_LIMITS, formatBytes } from "@/lib/contact/schema";
 
 /*
-  Issues short-lived, scoped tokens so the browser can upload attachments
-  directly to Blob storage.
+  Issues a short-lived, scoped signature so the browser can upload one
+  attachment directly to Cloudinary.
 
-  Why not keep posting files through the enquiry route? Two reasons.
+  Why the file never passes through here: a serverless function receives the
+  whole request body in memory and Vercel caps that at 4.5MB, so a 10MB PRD
+  could not arrive no matter what the form promised. The alternative the
+  portfolio backend uses — multer writing to local disk — is worse on a
+  platform with an ephemeral filesystem, because those files are deleted on the
+  next deploy. That is why attachment links in already-sent portfolio contact
+  emails now 404.
 
-  A serverless function receives the entire request body in memory and Vercel
-  caps that at 4.5MB, so a 10MB PRD could never arrive no matter what the form
-  claimed. And the portfolio backend's alternative — multer writing to local
-  disk — is worse on a platform with an ephemeral filesystem: those files are
-  deleted on the next deploy, which is why the attachment links in already-sent
-  portfolio contact emails now 404.
-
-  The trade-off is that the file never passes through our code, so the
-  constraints have to be declared up front in the token. `allowedContentTypes`
-  and `maximumSizeInBytes` are enforced by Blob itself. A client that skips our
-  form and calls the API directly still cannot store a 2GB executable.
+  Why signed rather than an unsigned preset: an unsigned preset name lives in
+  the browser bundle, and anyone who reads it can upload anything to the
+  account. A signature is generated here from the API secret, which never
+  reaches the client, and is bound to a folder and a timestamp.
 */
 
 export const runtime = "nodejs";
 
-export async function POST(request: Request): Promise<NextResponse> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    /*
-      Surfaced as a clear message rather than a generic 500: without this the
-      failure reads as "upload broke" when the real cause is an unset variable.
-      The form treats it as an attachment-only failure and still lets the
-      enquiry through without files.
-    */
-    return NextResponse.json(
-      {
-        error:
-          "File uploads are not configured on this deployment. Send your enquiry without attachments and I'll follow up by email.",
-      },
-      { status: 503 }
-    );
-  }
+export const POST = withRoute("api.contact.upload", async (request) => {
+  const body = (await request.json().catch(() => null)) as Record<string, unknown> | null;
 
-  const body = (await request.json()) as HandleUploadBody;
+  const contentType = typeof body?.contentType === "string" ? body.contentType : "";
+  const bytes = typeof body?.bytes === "number" ? body.bytes : 0;
 
-  try {
-    const result = await handleUpload({
-      body,
-      request,
-      onBeforeGenerateToken: async () => ({
-        allowedContentTypes: [...ACCEPTED_FILE_TYPES],
-        maximumSizeInBytes: FILE_LIMITS.maxBytesPerFile,
-        /* Two visitors both attaching "prd.pdf" must not collide, and the
-           random suffix also stops anyone guessing another enquiry's URL. */
-        addRandomSuffix: true,
-        /* Tokens are for one submission, not a standing upload grant. */
-        validUntil: Date.now() + 60 * 60 * 1000,
-      }),
-      /*
-        No `onUploadCompleted`: the enquiry route records the attachment
-        metadata when the form is submitted, so there is nothing to reconcile
-        here. It would also never fire in local development, since Vercel
-        cannot call back to localhost.
-      */
+  /*
+    Checked before a signature is issued rather than after the upload. Once a
+    signature exists the file goes straight to Cloudinary, so this is the last
+    point at which an unwanted type can be refused without paying to store it.
+  */
+  if (!ACCEPTED_FILE_TYPES.includes(contentType as (typeof ACCEPTED_FILE_TYPES)[number])) {
+    throw new ValidationError("That file type isn't supported.", {
+      fields: { files: "That file type isn't supported." },
+      context: { contentType },
     });
-
-    return NextResponse.json(result);
-  } catch (reason) {
-    const message =
-      reason instanceof Error ? reason.message : "Could not prepare the upload.";
-    console.error("[contact/upload]", reason);
-    return NextResponse.json({ error: message }, { status: 400 });
   }
-}
+
+  if (bytes <= 0 || bytes > FILE_LIMITS.maxBytesPerFile) {
+    throw new ValidationError("That file is too large.", {
+      fields: {
+        files: `Each file has to be under ${formatBytes(FILE_LIMITS.maxBytesPerFile)}.`,
+      },
+      context: { bytes },
+    });
+  }
+
+  /* Throws ServiceUnavailableError when Cloudinary isn't configured, which the
+     form reports against the attachments field and still lets the enquiry
+     through without files. */
+  const signature = createUploadSignature({
+    folder: storage.enquiryFolder,
+    resourceType: resourceTypeFor(contentType),
+  });
+
+  return success(signature);
+});

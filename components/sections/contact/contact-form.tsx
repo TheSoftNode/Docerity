@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
+import { uploadAttachment, type UploadedAttachment } from "@/lib/storage/upload-client";
 import {
   ACCEPTED_FILE_EXTENSIONS,
   FILE_LIMITS,
@@ -126,46 +127,35 @@ function ContactForm() {
     setStatus("submitting");
 
     /*
-      Attachments go from the browser straight to Blob storage, and only their
-      URLs are posted to the enquiry route. A route handler receives the whole
-      body in memory and the platform caps that at 4.5MB, so posting the bytes
-      through it put a hard ceiling on file size — a PRD exported to PDF with
-      screenshots clears that easily. This path has no such limit.
+      Attachments go from the browser straight to Cloudinary, and only their
+      identifiers are posted to the enquiry route. A route handler receives the
+      whole body in memory and the platform caps that at 4.5MB, so posting the
+      bytes through it put a hard ceiling on file size — a PRD exported to PDF
+      with screenshots clears that easily. This path has no such limit.
     */
-    let attachments: { name: string; url: string; contentType: string; size: number }[] = [];
+    const attachments: UploadedAttachment[] = [];
 
     try {
       if (files.length > 0) {
         setStatus("uploading");
-        const { upload } = await import("@vercel/blob/client");
-
-        attachments = await Promise.all(
-          files.map(async (file) => {
-            const blob = await upload(file.name, file, {
-              access: "public",
-              handleUploadUrl: "/api/contact/upload",
-            });
-            return {
-              name: file.name,
-              url: blob.url,
-              contentType: file.type,
-              size: file.size,
-            };
-          })
-        );
+        /* Uploaded one at a time so a partial failure names the file that
+           failed, and so several large files do not contend for bandwidth. */
+        for (const file of files) {
+          attachments.push(await uploadAttachment(file));
+        }
         setStatus("submitting");
       }
     } catch (reason) {
       /*
         An upload failure must not cost the whole enquiry. It is reported
-        against the attachments field, with the rest of the form untouched, so
+        against the attachments field with the rest of the form untouched, so
         the person can remove the files and still send their message.
       */
       const message =
-        reason instanceof Error
-          ? reason.message
-          : "Those files couldn't be uploaded.";
-      setErrors({ files: `${message} You can remove the files and send the enquiry without them.` });
+        reason instanceof Error ? reason.message : "Those files couldn't be uploaded.";
+      setErrors({
+        files: `${message} You can remove the files and send the enquiry without them.`,
+      });
       setStatus("idle");
       return;
     }
@@ -181,14 +171,21 @@ function ContactForm() {
         }),
       });
       const payload = (await res.json().catch(() => null)) as
-        | { ok: boolean; errors?: FieldErrors }
+        | { ok: true; data: { reference: string | null } }
+        | { ok: false; error: { message: string; fields?: FieldErrors } }
         | null;
 
-      if (!res.ok) {
-        // The server is the authority: surface its field errors rather than
-        // a generic failure, so the person knows what to change.
-        if (payload?.errors) {
-          setErrors(payload.errors);
+      if (!res.ok || !payload?.ok) {
+        /* The server is the authority: surface its per-field messages rather
+           than a generic failure, so the person knows what to change. */
+        const failure = payload && !payload.ok ? payload.error : null;
+        if (failure?.fields) {
+          setErrors(failure.fields);
+          setStatus("idle");
+          return;
+        }
+        if (failure?.message) {
+          setErrors({ form: failure.message });
           setStatus("idle");
           return;
         }
