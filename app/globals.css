@@ -218,8 +218,25 @@
 }
 
 @layer utilities {
-  /* The page shell. One definition, so the navbar, every section and the
-     footer share the same edge at every viewport width. */
+  /*
+    The page shell. One definition, so the navbar, every section and the
+    footer share the same edge at every viewport width.
+
+    Below `lg` the gutter is a fixed step, which is right when the viewport is
+    barely wider than the content: there is nothing to distribute.
+
+    From `lg` the mechanism changes. It used to cap the content at 84rem and
+    let every extra pixel of viewport become margin, which meant the gutter
+    grew five times faster than the screen did — 48px at 1280, 96px at 1440,
+    240px at 1728, while the content sat frozen at 1248px the whole way. It
+    was not even monotonic: the rem-based cap combined with the root-size step
+    at 1800 made 1920 *narrower*-gutted than 1728.
+
+    So above `lg` the gutter itself is the fluid value and the content takes
+    whatever is left. The cap is in pixels, not rem, so the root-size steps
+    that scale typography cannot move the shell edge sideways at the same
+    time.
+  */
   .doc-shell {
     width: 100%;
     margin-inline: auto;
@@ -233,23 +250,27 @@
   }
   @media (min-width: 1024px) {
     .doc-shell {
-      padding-inline: 3rem;
+      /* 3rem floor keeps 1024–1333 exactly where it was; 3.6vw then takes
+         over, so the edge tracks the screen instead of outrunning it. */
+      --doc-gutter: clamp(3rem, 3.6vw, 6rem);
+      /* Sized so the knee lands past every laptop: the cap only engages once
+         the viewport clears ~1810px. */
+      --doc-max: 1680px;
+      max-width: none;
+      padding-inline: 0;
+      width: min(100% - 2 * var(--doc-gutter), var(--doc-max));
     }
   }
-  /*
-    Caps are in `rem` and the root size grows on large displays (17px at 1800,
-    18.5px at 2300), so these steps are wider in pixels than they look.
-  */
+  /* Desktop monitors. The content is allowed to grow further here rather than
+     stranding a 1680px column in the middle of a 27" display. */
   @media (min-width: 1800px) {
     .doc-shell {
-      max-width: 96rem;
-      padding-inline: 4rem;
+      --doc-max: 1800px;
     }
   }
   @media (min-width: 2300px) {
     .doc-shell {
-      max-width: 104rem;
-      padding-inline: 5rem;
+      --doc-max: 2100px;
     }
   }
 }

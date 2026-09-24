@@ -32,7 +32,14 @@ function Hero() {
         Height comes from the content. Pinning the hero to `100dvh` minus the
         nav stretched it on tall screens and left dead bands around the text.
       */}
-      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-10 lg:pt-20 lg:pb-24 xl:gap-12">
+      {/*
+        Top padding stays at one value rather than stepping up to `pt-20` at
+        `lg`. The column is centred against the artwork, which is a fixed
+        480px tall while the copy is 360–400px, so centring already adds
+        40–60px above the eyebrow — the larger step landed the headline
+        ~140px below the nav and read as the hero being pushed down the page.
+      */}
+      <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-10 lg:pb-24 xl:gap-12">
         <div className="flex flex-col">
           {/* No leading rule here: it indented the label ~44px while the
               headline began at the column edge, which read as a misalignment

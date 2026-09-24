@@ -54,7 +54,15 @@ function AboutExperience() {
                     </p>
                   </div>
 
-                  <div className="min-w-0">
+                  {/* Capped at a readable measure. The shell now grows with the
+                      viewport, so without this the bullets run past 90
+                      characters on a 16" screen.
+
+                      The cap is in `rem`, not `ch`: the bullets are `text-sm`
+                      while this container is not, and `ch` resolves against
+                      the container's font — so a `ch` cap here let the smaller
+                      text run several characters longer than it claimed. */}
+                  <div className="min-w-0 lg:max-w-[44rem]">
                     <p className="text-pretty text-[0.9375rem] leading-relaxed text-foreground">
                       {job.summary}
                     </p>
