@@ -8,6 +8,8 @@
   the one place that should collect a conversation.
 */
 
+import { projects } from "@/components/sections/work/work-data";
+
 export const founder = {
   name: "Theophilus Uchechukwu",
   role: "Founder · Full-stack & Web3 Engineer",
@@ -24,12 +26,26 @@ export const story = [
   "Docerity exists because those three things — building software, explaining it clearly, and growing the engineers who will maintain it — are the same skill wearing different clothes. I have been teaching since 2016, long before I had a company to put around it. This is the version with the structure it always needed.",
 ] as const;
 
-/** Headline numbers. Every one of these is checkable against the work below. */
+/*
+  Headline numbers, every one checkable against something else on the site.
+
+  The project count is derived rather than typed, because a hand-written "20+"
+  drifts the moment a project is added or removed — and a number nobody can
+  reconcile with the work page is worth less than no number at all.
+*/
 export const facts = [
   { value: "9+", label: "Years teaching and mentoring", since: "since 2016" },
   { value: "4", label: "Hackathon wins", since: "Web3 competitions" },
-  { value: "20+", label: "Shipped projects", since: "client and open source" },
-  { value: "5", label: "Blockchain ecosystems", since: "Ethereum, Stacks, NEAR, Stellar, Bitcoin" },
+  {
+    value: String(projects.length),
+    label: "Shipped projects",
+    since: "every one listed on the work page",
+  },
+  {
+    value: "6",
+    label: "Blockchain ecosystems",
+    since: "Ethereum, Stacks, Hedera, NEAR, Stellar, ICP",
+  },
 ] as const;
 
 /*
@@ -152,6 +168,30 @@ export const skillGroups = [
   },
 ] as const;
 
+/*
+  The day-to-day toolchain, shown as marks rather than more text.
+
+  The skill groups above are already eight lists of words; repeating the same
+  format for tools would make the section one long wall. Logos are scannable
+  in a way a nineteenth text chip is not.
+*/
+export const tools = [
+  { name: "VS Code", src: "/about/tools/vscode.svg" },
+  { name: "Docker", src: "/about/tools/docker.svg" },
+  { name: "Kubernetes", src: "/about/tools/kubernetes.svg" },
+  { name: "AWS", src: "/about/tools/aws.svg" },
+  { name: "GitHub", src: "/about/tools/github.svg" },
+  { name: "Postman", src: "/about/tools/postman.svg" },
+  { name: "MongoDB", src: "/about/tools/mongodb.svg" },
+  { name: "PostgreSQL", src: "/about/tools/postgres.svg" },
+  { name: "Firebase", src: "/about/tools/firebase.svg" },
+  { name: "Grafana", src: "/about/tools/grafana.svg" },
+  { name: "Prometheus", src: "/about/tools/prometheus.svg" },
+  { name: "Jira", src: "/about/tools/jira.svg" },
+  { name: "Figma", src: "/about/tools/figma.svg" },
+  { name: "LeetCode", src: "/about/tools/leetcode.svg" },
+] as const;
+
 export const education = [
   {
     qualification: "Software Engineering",
@@ -191,34 +231,49 @@ export const education = [
 ] as const;
 
 /*
-  `image` is intentionally absent for now. The portfolio ships 7.4MB of
-  certificate scans in `public/certificates`, which would bloat every clone and
-  deploy of this repo; they belong in Blob storage, referenced by URL. The
-  section renders from the text alone until those are uploaded.
+  The scans themselves, converted to WebP at 640px — 6.4MB of PNG and JPEG in
+  the portfolio comes to about 250KB here. A certificate you can actually look
+  at is worth more than a line of text claiming it exists.
+
+  The engineering degree has no scan of its own in the source set, so it
+  carries no `image` and the card falls back to text.
 */
-export const certifications = [
+export type Certification = {
+  name: string;
+  issuer: string;
+  detail: string;
+  /** Optional: the engineering degree has no scan in the source set. */
+  image?: string;
+};
+
+export const certifications: Certification[] = [
   {
     name: "Fullstack Software Engineering",
+    image: "/about/certificates/software-engineering.webp",
     issuer: "ALX in partnership with Holberton",
     detail: "12-month intensive engineering internship.",
   },
   {
     name: "Data Science",
+    image: "/about/certificates/data-science.webp",
     issuer: "ALX · ExploreAI Academy",
     detail: "13-month intensive programme with professional development.",
   },
   {
     name: "Google IT Support Specialist",
+    image: "/about/certificates/google-it-support.webp",
     issuer: "Google via Coursera",
     detail: "Six-month professional certification.",
   },
   {
     name: "Google IT Automation with Python",
+    image: "/about/certificates/google-automation.webp",
     issuer: "Google via Coursera",
     detail: "Six-month professional certification.",
   },
   {
     name: "AI Career Essentials",
+    image: "/about/certificates/ai-career-essentials.webp",
     issuer: "ALX",
     detail: "Eight-week AI-augmented professional development.",
   },
@@ -229,17 +284,20 @@ export const certifications = [
   },
   {
     name: "Socomec Level-1 Maintenance Engineer",
+    image: "/about/certificates/socomec-maintenance.webp",
     issuer: "Socomec",
     detail: "UPS systems maintenance certification.",
   },
   {
     name: "Customer Service Fundamentals",
+    image: "/about/certificates/customer-service.webp",
     issuer: "Knowledge Accelerators via Coursera",
     detail: "Online non-credit course.",
   },
   {
     name: "Fundamentals of Digital Marketing",
+    image: "/about/certificates/digital-marketing.webp",
     issuer: "Google Digital Garage",
     detail: "Certification in digital marketing fundamentals.",
   },
-] as const;
+];

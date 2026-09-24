@@ -10,7 +10,7 @@ import {
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { MediaPlaceholder } from "@/components/shared/media-placeholder";
-import { WorkPreview } from "@/components/sections/work/work-preview";
+import { WorkMedia } from "@/components/sections/work/work-media";
 import { projects, type Project } from "@/components/sections/work/work-data";
 
 function WorkCaseStudy({ project }: { project: Project }) {
@@ -113,8 +113,17 @@ function WorkCaseStudy({ project }: { project: Project }) {
             </div>
           </div>
 
+          {/* The same component the cards use, so a project page shows the
+              screenshot the card promised. It was rendering the generated
+              placeholder, which meant clicking a real screenshot took you to
+              an abstract one. */}
           <div className="mt-10 overflow-hidden rounded-2xl border border-border">
-            <WorkPreview variant={project.preview} />
+            <WorkMedia
+              slug={project.slug}
+              variant={project.preview}
+              /* Wider than a card here, so it asks for a bigger source. */
+              sizes="(min-width: 1024px) 56rem, 100vw"
+            />
           </div>
 
           {project.body ? (

@@ -13,7 +13,7 @@ import { WorkPreview, type PreviewVariant } from "@/components/sections/work/wor
   on a phone, half on a tablet and a third on desktop. Telling the browser
   that up front stops it downloading a 3x-too-large image on mobile.
 */
-const SIZES = "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw";
+const CARD_SIZES = "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw";
 
 /**
  * The card's media slot.
@@ -27,10 +27,15 @@ function WorkMedia({
   slug,
   variant,
   className,
+  /* Defaults to the card grid's geometry; a project page overrides it,
+     because the same default would have it download a third-width source for
+     a full-width frame. */
+  sizes = CARD_SIZES,
 }: {
   slug: ProjectSlug;
   variant: PreviewVariant;
   className?: string;
+  sizes?: string;
 }) {
   const reduceMotion = useReducedMotion();
   const media = projectMedia[slug];
@@ -55,8 +60,13 @@ function WorkMedia({
             src={media.src}
             alt={media.alt}
             fill
-            sizes={SIZES}
-            className="object-cover"
+            sizes={sizes}
+            /* Anchored to the top. These are full-page captures with ratios
+               from 1.06 to 2.38 against a 16:10 frame, so the tall ones crop
+               vertically — centred, that discards the header and shows an
+               anonymous slice of mid-page. The top of a product page is the
+               part anyone recognises. */
+            className="object-cover object-top"
           />
         ) : (
           <video

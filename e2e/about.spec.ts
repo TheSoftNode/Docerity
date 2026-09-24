@@ -82,3 +82,24 @@ test.describe("About page", () => {
     }
   });
 });
+
+test.describe("About page claims", () => {
+  test("the project count matches the work page", async ({ page }) => {
+    /*
+      The About hero claims a number of shipped projects. It is derived from
+      the same array the work page renders, and this asserts the two agree —
+      a headline figure nobody can reconcile with the work is worth less than
+      no figure at all.
+    */
+    await page.goto("/work");
+    await page.locator("#showcase").scrollIntoViewIfNeeded();
+    const actual = await page.locator("#showcase h3 a").count();
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/about");
+
+    await expect(
+      page.getByText("Shipped projects").locator("xpath=preceding-sibling::p[1]")
+    ).toHaveText(String(actual));
+  });
+});

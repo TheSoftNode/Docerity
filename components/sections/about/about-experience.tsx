@@ -37,9 +37,31 @@ function AboutExperience() {
           </Lede>
         </div>
 
-        <ol className="mt-12 flex flex-col gap-5">
-          {experience.map((job) => (
-            <li key={`${job.org}-${job.role}`}>
+        {/*
+          A spine down the left, with a node per role.
+
+          Six unconnected cards read as six unrelated facts; the rule and the
+          nodes say "these happened in this order", which is the whole point of
+          listing them chronologically. It only appears from `lg`, where there
+          is room for it outside the card.
+        */}
+        <ol className="relative mt-12 flex flex-col gap-5 lg:pl-10">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute top-3 bottom-3 left-[3px] hidden w-px bg-[linear-gradient(to_bottom,transparent,var(--border)_12%,var(--border)_88%,transparent)] lg:block"
+          />
+
+          {experience.map((job, index) => (
+            <li key={`${job.org}-${job.role}`} className="relative">
+              <span
+                aria-hidden
+                className={
+                  "absolute top-8 -left-10 hidden size-[7px] rounded-full lg:block " +
+                  (index === 0
+                    ? "bg-primary shadow-[0_0_10px_var(--brand-primary)]"
+                    : "bg-border ring-4 ring-background")
+                }
+              />
               <HoverCard>
                 <div className="grid grid-cols-1 gap-x-10 gap-y-5 p-6 lg:grid-cols-[minmax(0,17rem)_1fr] lg:p-8">
                   {/* Identity column. `min-w-0` so a long role can wrap rather

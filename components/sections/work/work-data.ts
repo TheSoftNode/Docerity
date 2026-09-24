@@ -18,6 +18,8 @@ export type Project = {
   slug: string;
   name: string;
   category: string;
+  /** Filter buckets for the work page. A project can sit in more than one. */
+  groups: readonly string[];
   description: string;
   tags: readonly string[];
   status: ProjectStatus;
@@ -56,6 +58,7 @@ export const projects: readonly Project[] = [
     slug: "eep",
     name: "EEP",
     category: "AI · Learning platform",
+    groups: ["AI", "Full-stack"],
     description:
       "An AI-assisted learning and mentorship platform: structured project management, real-time collaboration, and guided feedback for developers building toward industry work.",
     tags: ["Next.js", "TypeScript", "Node.js", "Firebase", "GCP", "Stripe"],
@@ -69,6 +72,7 @@ export const projects: readonly Project[] = [
     slug: "hitoai",
     name: "HitoAI",
     category: "AI · Corporate platform",
+    groups: ["AI", "Full-stack"],
     description:
       "The corporate platform for HitoAI's educational technology, covering the assessment tooling institutions use to streamline marking and reporting.",
     tags: ["React", "Vite", "Node.js", "MongoDB", "Tailwind CSS"],
@@ -82,6 +86,7 @@ export const projects: readonly Project[] = [
     slug: "easmark",
     name: "Easmark",
     category: "AI · EdTech",
+    groups: ["AI", "Full-stack"],
     description:
       "Grading support for educators: an AI-assisted pass over thesis papers and code submissions that shortens the turnaround without taking the judgement call away from the marker.",
     tags: ["Next.js", "TypeScript", "Django", "PostgreSQL", "Stripe"],
@@ -95,6 +100,7 @@ export const projects: readonly Project[] = [
     slug: "talentchain-pro",
     name: "TalentChainPro",
     category: "Web3 · Hedera",
+    groups: ["Web3", "Hackathon"],
     description:
       "Verifiable skill credentials as soulbound tokens, with AI-assisted talent matching on top — professional reputation that a candidate carries rather than re-proves.",
     tags: ["Next.js", "Hedera SDK", "Hashgraph", "Tailwind CSS"],
@@ -109,6 +115,7 @@ export const projects: readonly Project[] = [
     slug: "metapilot",
     name: "MetaPilot",
     category: "Web3 · Automation",
+    groups: ["Web3", "Hackathon"],
     description:
       "Automates the routine parts of holding a governance position — DAO voting, reward claiming, scheduled token purchases — against rules the holder sets once.",
     tags: ["Next.js", "MetaMask SDK", "Tailwind CSS", "shadcn/ui"],
@@ -123,6 +130,7 @@ export const projects: readonly Project[] = [
     slug: "stacktip",
     name: "StackTip",
     category: "Web3 · Bitcoin",
+    groups: ["Web3", "Full-stack", "Hackathon"],
     description:
       "Instant tipping and rewards on the Stacks layer, built so a creator can be paid across borders without the transfer fees eating the tip.",
     tags: ["Clarity", "Next.js", "Node.js", "Smart contracts"],
@@ -137,6 +145,7 @@ export const projects: readonly Project[] = [
     slug: "eep-admin",
     name: "EEP Admin",
     category: "AI · Admin dashboard",
+    groups: ["AI", "Full-stack"],
     description:
       "The administrative side of EEP: user management, analytics and system configuration behind two-factor authentication.",
     tags: ["Next.js", "TypeScript", "Node.js", "Firebase", "GCP", "2FA"],
@@ -149,6 +158,7 @@ export const projects: readonly Project[] = [
     slug: "neuraltradex",
     name: "NeuralTradeX",
     category: "Web3 · AI trading",
+    groups: ["Web3", "AI", "Hackathon"],
     description:
       "Algorithmic trading strategies packaged for individual traders, running continuously on NEAR without requiring the user to write or tune the models.",
     tags: ["NEAR Protocol", "NEAR AI", "Next.js", "TypeScript"],
@@ -162,6 +172,7 @@ export const projects: readonly Project[] = [
     slug: "yieldnexus",
     name: "YieldNexus",
     category: "Web3 · Bitcoin DeFi",
+    groups: ["Web3", "Hackathon"],
     description:
       "A single surface for Bitcoin-based DeFi across Stacks protocols, built so the beginner path and the advanced path are the same interface at different depths.",
     tags: ["sBTC", "Clarity", "Stacks", "Next.js", "Hiro"],
@@ -175,6 +186,7 @@ export const projects: readonly Project[] = [
     slug: "icplearn",
     name: "ICPLearn",
     category: "Web3 · Internet Computer",
+    groups: ["Web3", "Hackathon"],
     description:
       "Ties staking rewards to completed coursework on ICP, so the incentive to learn the protocol and the incentive to hold it point the same way.",
     tags: ["Next.js", "FastAPI", "Kybra SDK", "Internet Identity"],
@@ -188,6 +200,7 @@ export const projects: readonly Project[] = [
     slug: "realpaytag",
     name: "RealPayTag",
     category: "Web3 · Payments",
+    groups: ["Web3", "Hackathon"],
     description:
       "Payments backed by real-world assets, aimed at the gap between slow bank transfers and volatile crypto rails.",
     tags: ["Next.js", "MetaMask SDK", "Tailwind CSS", "shadcn/ui"],
@@ -201,6 +214,7 @@ export const projects: readonly Project[] = [
     slug: "cryptopilot",
     name: "CryptoPilot",
     category: "Web3 · AI",
+    groups: ["Web3", "AI", "Hackathon"],
     description:
       "Wallet operations driven by natural language instead of transaction forms, wired through MetaMask so the signing step stays where the user expects it.",
     tags: ["Next.js", "Solidity", "Ethereum", "MetaMask SDK", "ML"],
@@ -214,6 +228,7 @@ export const projects: readonly Project[] = [
     slug: "crossflow",
     name: "CrossFlow",
     category: "Web3 · Stellar",
+    groups: ["Web3", "Hackathon"],
     description:
       "Low-fee USDC transfers between Ethereum and Stellar, with fiat on- and off-ramps for African currencies at both ends.",
     tags: ["Next.js", "Stellar SDK", "Tailwind CSS", "shadcn/ui"],
@@ -226,6 +241,7 @@ export const projects: readonly Project[] = [
     slug: "susnet",
     name: "SusNet",
     category: "AI · Energy",
+    groups: ["AI", "Full-stack"],
     description:
       "Energy management with predictive analytics and automation, turning meter data into decisions a building operator can act on.",
     tags: ["React", "Vite", "Django", "Tailwind CSS"],
@@ -239,6 +255,7 @@ export const projects: readonly Project[] = [
     slug: "ai4energy",
     name: "AI4Energy",
     category: "AI · Forecasting",
+    groups: ["AI", "Full-stack"],
     description:
       "Pricing optimisation for fuel stations, combining predictive analytics with market and competitor trend analysis.",
     tags: ["Python", "TensorFlow", "Django", "PostgreSQL", "AWS", "Docker"],
@@ -251,6 +268,7 @@ export const projects: readonly Project[] = [
     slug: "biasadra",
     name: "Biasadra",
     category: "AI · Education",
+    groups: ["AI", "Full-stack"],
     description:
       "An enterprise AI academy connecting universities and businesses, with an application path into partner institutions.",
     tags: ["Next.js", "Tailwind CSS", "shadcn/ui"],
@@ -263,6 +281,7 @@ export const projects: readonly Project[] = [
     slug: "smart-treasures",
     name: "Smart Treasures",
     category: "Fintech · Investment",
+    groups: ["Fintech", "Full-stack"],
     description:
       "The public platform for a global investment group, covering their network and the programmes they run across regions.",
     tags: ["Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
@@ -275,6 +294,7 @@ export const projects: readonly Project[] = [
     slug: "loan-me",
     name: "Loan App",
     category: "Fintech · Lending",
+    groups: ["Fintech", "Full-stack"],
     description:
       "Personal and business lending with a short application path, credit assessment and repayment tracking built in.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Stripe", "RTK Query"],
@@ -288,6 +308,7 @@ export const projects: readonly Project[] = [
     slug: "softmeet",
     name: "SoftMeet",
     category: "Platform · Video",
+    groups: ["Full-stack"],
     description:
       "Video conferencing with screen sharing and persistent virtual rooms, built on Stream with Clerk handling identity.",
     tags: ["Next.js", "Stream API", "Clerk", "Tailwind CSS", "shadcn/ui"],
@@ -301,6 +322,7 @@ export const projects: readonly Project[] = [
     slug: "docmeet",
     name: "DocMeet",
     category: "Platform · Healthcare",
+    groups: ["Full-stack"],
     description:
       "Appointment scheduling between patients and healthcare providers, including booking, management and virtual consultation.",
     tags: ["React", "Vite", "Node.js", "MongoDB", "Mongoose"],
@@ -314,6 +336,7 @@ export const projects: readonly Project[] = [
     slug: "easmark-api",
     name: "Easmark API",
     category: "Backend · API",
+    groups: ["Backend / API"],
     description:
       "The service behind Easmark: authentication, submission handling and the grading pipeline, documented through Swagger.",
     tags: ["Django", "JWT", "SQLite", "WebSockets", "Swagger"],
@@ -326,6 +349,7 @@ export const projects: readonly Project[] = [
     slug: "alx-connect-api",
     name: "ALX Connect API",
     category: "Backend · API",
+    groups: ["Backend / API"],
     description:
       "Developer matching by skill, experience and learning goal — authentication, the matching algorithm, mentorship connections and CV review, behind one API.",
     tags: ["Django", "JWT", "SQLite", "WebSockets", "Swagger"],
@@ -338,6 +362,7 @@ export const projects: readonly Project[] = [
     slug: "tours-api",
     name: "Tours API",
     category: "Backend · API",
+    groups: ["Backend / API"],
     description:
       "A REST service for tour management: listings, booking, authentication, payments and reviews, with Swagger documentation.",
     tags: ["Node.js", "Express", "MongoDB", "JWT", "Stripe", "Swagger"],
@@ -350,6 +375,7 @@ export const projects: readonly Project[] = [
     slug: "softinven",
     name: "SoftInven",
     category: "Platform · Inventory",
+    groups: ["Full-stack"],
     description:
       "Inventory management for production firms supplying retailers: live stock tracking, order processing and sales reporting, pushed to clients over SignalR.",
     tags: ["C#", ".NET Core", "Blazor Server", "SQL Server", "SignalR", "Docker"],
@@ -362,6 +388,7 @@ export const projects: readonly Project[] = [
     slug: "lms-api",
     name: "LMS API",
     category: "Backend · API",
+    groups: ["Backend / API"],
     description:
       "Course delivery, enrolment and progress tracking as a documented service, built to sit behind more than one front end.",
     tags: ["Django", "JWT", "SQLite", "Swagger"],
@@ -391,7 +418,33 @@ export const featuredProjects = projects.filter((project) => project.featured);
  *   eep:       { type: "image", src: "/work/eep.webp", alt: "The EEP dashboard" },
  *   metapilot: { type: "video", src: "/work/metapilot.mp4", poster: "/work/metapilot.webp", alt: "MetaPilot rule builder" },
  */
-export const projectMedia: Partial<Record<string, ProjectMedia>> = {};
+export const projectMedia: Partial<Record<string, ProjectMedia>> = {
+  "eep": { type: "image", src: "/work/eep.webp", alt: "The EEP learning dashboard" },
+  "hitoai": { type: "image", src: "/work/hitoai.webp", alt: "The HitoAI platform home page" },
+  "easmark": { type: "image", src: "/work/easmark.webp", alt: "Easmark's grading workspace" },
+  "talentchain-pro": { type: "image", src: "/work/talentchain-pro.webp", alt: "TalentChainPro skill credentials" },
+  "metapilot": { type: "image", src: "/work/metapilot.webp", alt: "MetaPilot's automation rule builder" },
+  "stacktip": { type: "image", src: "/work/stacktip.webp", alt: "StackTip's tipping interface" },
+  "eep-admin": { type: "image", src: "/work/eep-admin.webp", alt: "The EEP admin dashboard" },
+  "neuraltradex": { type: "image", src: "/work/neuraltradex.webp", alt: "NeuralTradeX strategy view" },
+  "yieldnexus": { type: "image", src: "/work/yieldnexus.webp", alt: "YieldNexus Bitcoin DeFi dashboard" },
+  "icplearn": { type: "image", src: "/work/icplearn.webp", alt: "ICPLearn course and staking view" },
+  "realpaytag": { type: "image", src: "/work/realpaytag.webp", alt: "RealPayTag payments interface" },
+  "cryptopilot": { type: "image", src: "/work/cryptopilot.webp", alt: "CryptoPilot's natural-language wallet" },
+  "crossflow": { type: "image", src: "/work/crossflow.webp", alt: "CrossFlow cross-chain transfer screen" },
+  "susnet": { type: "image", src: "/work/susnet.webp", alt: "SusNet energy analytics" },
+  "ai4energy": { type: "image", src: "/work/ai4energy.webp", alt: "AI4Energy pricing forecasts" },
+  "biasadra": { type: "image", src: "/work/biasadra.webp", alt: "The Biasadra academy site" },
+  "smart-treasures": { type: "image", src: "/work/smart-treasures.webp", alt: "Smart Treasures investment platform" },
+  "loan-me": { type: "image", src: "/work/loan-me.webp", alt: "The loan application flow" },
+  "softmeet": { type: "image", src: "/work/softmeet.webp", alt: "SoftMeet video conferencing" },
+  "docmeet": { type: "image", src: "/work/docmeet.webp", alt: "DocMeet appointment booking" },
+  "easmark-api": { type: "image", src: "/work/easmark-api.webp", alt: "The Easmark API documentation" },
+  "alx-connect-api": { type: "image", src: "/work/alx-connect-api.webp", alt: "ALX Connect API documentation" },
+  "tours-api": { type: "image", src: "/work/tours-api.webp", alt: "The Tours API documentation" },
+  "softinven": { type: "image", src: "/work/softinven.webp", alt: "SoftInven inventory dashboard" },
+  "lms-api": { type: "image", src: "/work/lms-api.webp", alt: "The LMS API documentation" },
+};
 
 export function getProjectBySlug(slug: string) {
   return projects.find((project) => project.slug === slug);

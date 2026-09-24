@@ -127,12 +127,51 @@ test.describe("Blog article", () => {
   });
 
   test("subscribe form submits successfully", async ({ page }) => {
+    /*
+      The endpoint is stubbed so this stays a test of the form. Since the
+      route began writing to MongoDB, letting it run for real would make the
+      result depend on a reachable database and would write a subscriber row
+      on every run.
+    */
+    await page.route("**/api/subscribe", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ ok: true, data: { subscribed: true } }),
+      })
+    );
+
     await page.goto("/blog/caching");
 
     await page.getByLabel("Email address").fill("reader@example.com");
     await page.getByRole("button", { name: "Subscribe" }).click();
 
     await expect(page.getByText("You're on the list")).toBeVisible();
+  });
+
+  test("a failed subscribe surfaces the error rather than claiming success", async ({
+    page,
+  }) => {
+    /* The write endpoint can be down — 503 when the database is unreachable —
+       and the form must not report success in that case. */
+    await page.route("**/api/subscribe", (route) =>
+      route.fulfill({
+        status: 503,
+        contentType: "application/json",
+        body: JSON.stringify({
+          ok: false,
+          error: { code: "service_unavailable", message: "Please try again shortly." },
+          requestId: "test-request-id",
+        }),
+      })
+    );
+
+    await page.goto("/blog/caching");
+
+    await page.getByLabel("Email address").fill("reader@example.com");
+    await page.getByRole("button", { name: "Subscribe" }).click();
+
+    await expect(page.getByText("You're on the list")).toBeHidden();
   });
 });
 
