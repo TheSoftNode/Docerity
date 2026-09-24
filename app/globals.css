@@ -219,6 +219,34 @@
 
 @layer utilities {
   /*
+    The button silhouette: two opposite corners cut away.
+
+    A chamfer rather than a rounded rectangle, because the site already speaks
+    this language — registration marks on the About panel, corner brackets on
+    the explainer stage, hairline rules everywhere. A cut corner belongs to
+    that vocabulary in a way a pill or a leaf shape would not.
+
+    Cutting the diagonal opposites rather than all four keeps it directional:
+    the shape leans the way the text reads instead of looking like a hexagon.
+
+    `clip-path` cuts through anything painted on the element, which is why the
+    outline variant drops its border for a translucent fill, and why the focus
+    ring is drawn inside with an inset shadow — an outer ring would simply be
+    clipped away, leaving keyboard users nothing to see.
+  */
+  .btn-shape {
+    --btn-chamfer: 0.55rem;
+    clip-path: polygon(
+      var(--btn-chamfer) 0,
+      100% 0,
+      100% calc(100% - var(--btn-chamfer)),
+      calc(100% - var(--btn-chamfer)) 100%,
+      0 100%,
+      0 var(--btn-chamfer)
+    );
+  }
+
+  /*
     The page shell. One definition, so the navbar, every section and the
     footer share the same edge at every viewport width.
 
