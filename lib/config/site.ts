@@ -18,4 +18,5 @@ export const navLinks = [
   { label: "Web3", href: "/web3" },
   { label: "Mentorship", href: "/mentorship" },
   { label: "Blog", href: "/blog" },
+  { label: "About", href: "/about" },
 ] as const;

@@ -1,0 +1,87 @@
+import { Container } from "@/components/shared/container";
+import {
+  Bloom,
+  Eyebrow,
+  HoverCard,
+  Lede,
+  SectionTitle,
+} from "@/components/shared/section-kit";
+import { experience } from "@/components/sections/about/about-data";
+
+/*
+  Each card is a two-column split from `lg`: the role identity on the left, the
+  detail on the right.
+
+  A single stacked column looked plausible in isolation but wasted roughly half
+  the card — prose is capped near 64 characters for readability, so on a 1245px
+  shell the right-hand 45% of every card was empty while the text wrapped
+  early. Splitting the identity out fills the measure without lengthening the
+  line.
+*/
+function AboutExperience() {
+  return (
+    <section
+      id="experience"
+      className="relative overflow-hidden border-b border-border/80 bg-background py-16 lg:py-24"
+    >
+      <Bloom className="top-1/3 left-0 -translate-x-1/2" />
+
+      <Container className="relative">
+        <div className="max-w-2xl">
+          <Eyebrow>Track record</Eyebrow>
+          <SectionTitle>Where the experience comes from.</SectionTitle>
+          <Lede className="mt-5">
+            Six roles, in the order they happened. The engineering came after
+            the field work, which is why the debugging habits are the ones that
+            stuck.
+          </Lede>
+        </div>
+
+        <ol className="mt-12 flex flex-col gap-5">
+          {experience.map((job) => (
+            <li key={`${job.org}-${job.role}`}>
+              <HoverCard>
+                <div className="grid grid-cols-1 gap-x-10 gap-y-5 p-6 lg:grid-cols-[minmax(0,17rem)_1fr] lg:p-8">
+                  {/* Identity column. `min-w-0` so a long role can wrap rather
+                      than forcing the track wider than its declared max. */}
+                  <div className="min-w-0 lg:border-r lg:border-border/70 lg:pr-8">
+                    <h3 className="font-heading text-lg leading-snug font-semibold text-foreground">
+                      {job.role}
+                    </h3>
+                    <p className="mt-1.5 text-sm text-primary">{job.org}</p>
+                    <p className="mt-3 font-mono text-xs tracking-wider text-muted-foreground uppercase">
+                      {job.period}
+                    </p>
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-pretty text-[0.9375rem] leading-relaxed text-foreground">
+                      {job.summary}
+                    </p>
+
+                    <ul className="mt-4 flex flex-col gap-2">
+                      {job.points.map((point) => (
+                        <li
+                          key={point}
+                          className="flex gap-3 text-sm leading-relaxed text-muted-foreground"
+                        >
+                          <span
+                            aria-hidden
+                            className="mt-[0.5rem] size-1 shrink-0 rounded-full bg-primary/70"
+                          />
+                          <span className="min-w-0">{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </HoverCard>
+            </li>
+          ))}
+        </ol>
+      </Container>
+    </section>
+  );
+}
+
+export { AboutExperience };
