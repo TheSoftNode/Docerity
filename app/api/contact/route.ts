@@ -1,38 +1,69 @@
 import { NextResponse } from "next/server";
 
+import { validateEnquiry, type EnquiryInput } from "@/lib/contact/schema";
+import { connectDB } from "@/lib/db/connect";
+import { EnquiryModel } from "@/lib/db/models/enquiry";
+import { OWNER, sendEmail } from "@/lib/email/client";
 import {
-  formatBytes,
-  validateEnquiry,
-  type EnquiryInput,
-} from "@/lib/contact/schema";
+  renderEnquiryAcknowledgement,
+  renderEnquiryNotification,
+} from "@/lib/email/templates/enquiry";
+import { clientIp, tooManyRecently } from "@/lib/api/rate-limit";
 
 /*
-  Enquiries arrive as multipart/form-data so a PRD or spec can come with them.
+  Enquiries arrive as JSON. Attachments are uploaded by the browser straight to
+  Blob storage first (see `./upload/route.ts`) and only their URLs are posted
+  here, so the request body stays small no matter how large the files are.
 
-  ── Delivery is not wired up yet ────────────────────────────────────────────
-  Everything below validates the submission and then logs it. Nothing is
-  emailed and no file is stored, so an enquiry sent in production reaches the
-  function logs and nowhere else. Two integrations close that gap:
-
-    1. Email — Resend (or similar) where `deliver()` is called below.
-    2. Files — a route handler receives the whole body in memory and Vercel
-       caps serverless request bodies at 4.5MB, which is why the limits in
-       `lib/contact/schema.ts` sit under it. For larger documents the browser
-       should upload straight to object storage (e.g. Vercel Blob's client
-       upload) and post the resulting URLs here instead of the bytes.
-  ────────────────────────────────────────────────────────────────────────────
+  Order matters below: the enquiry is written to the database *before* any email
+  is attempted. Notification is best-effort — a Resend outage or a bad API key
+  costs you an inbox alert you can recover from the admin list, whereas the
+  reverse order would lose the lead entirely.
 */
 
-function field(form: FormData, key: string) {
-  const value = form.get(key);
+export const runtime = "nodejs";
+export const maxDuration = 20;
+
+type Attachment = { name: string; url: string; contentType: string; size: number };
+
+function text(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
 
+/* Attachment metadata is client-supplied, so it is re-validated rather than
+   trusted. A URL that is not on Blob's domain is dropped: without this check a
+   caller could store a link to anywhere and have it rendered, as a Docerity
+   email, to you. */
+function parseAttachments(value: unknown): Attachment[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.flatMap((entry): Attachment[] => {
+    if (typeof entry !== "object" || entry === null) return [];
+    const record = entry as Record<string, unknown>;
+    const url = text(record.url);
+    const name = text(record.name);
+    const size = typeof record.size === "number" ? record.size : 0;
+
+    let host: string;
+    try {
+      host = new URL(url).hostname;
+    } catch {
+      return [];
+    }
+    if (!host.endsWith(".blob.vercel-storage.com")) return [];
+    if (!name) return [];
+
+    return [{ name, url, contentType: text(record.contentType), size }];
+  });
+}
+
 export async function POST(request: Request) {
-  let form: FormData;
-  try {
-    form = await request.formData();
-  } catch {
+  const body = (await request.json().catch(() => null)) as Record<
+    string,
+    unknown
+  > | null;
+
+  if (!body) {
     return NextResponse.json(
       { ok: false, errors: { form: "That submission couldn't be read." } },
       { status: 400 }
@@ -40,55 +71,103 @@ export async function POST(request: Request) {
   }
 
   // Bots fill in every field they find; people never see this one.
-  if (field(form, "website").trim().length > 0) {
+  if (text(body.website).trim().length > 0) {
     // Answer as though it worked, so the bot has nothing to learn from.
     return NextResponse.json({ ok: true });
   }
 
   const input: EnquiryInput = {
-    name: field(form, "name"),
-    email: field(form, "email"),
-    company: field(form, "company"),
-    role: field(form, "role"),
-    projectType: field(form, "projectType"),
-    budget: field(form, "budget"),
-    timeline: field(form, "timeline"),
-    message: field(form, "message"),
+    name: text(body.name),
+    email: text(body.email),
+    company: text(body.company),
+    role: text(body.role),
+    projectType: text(body.projectType),
+    budget: text(body.budget),
+    timeline: text(body.timeline),
+    message: text(body.message),
   };
 
-  const files = form
-    .getAll("files")
-    .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+  const attachments = parseAttachments(body.attachments);
 
   const errors = validateEnquiry(
     input,
-    files.map((f) => ({ name: f.name, size: f.size, type: f.type }))
+    attachments.map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.contentType,
+    }))
   );
 
   if (Object.keys(errors).length > 0) {
     return NextResponse.json({ ok: false, errors }, { status: 400 });
   }
 
-  const attachments = files.map((file) => ({
-    name: file.name,
-    type: file.type,
-    size: formatBytes(file.size),
-  }));
+  const ip = clientIp(request);
 
-  console.log("[contact]", {
+  try {
+    await connectDB();
+  } catch (reason) {
+    console.error("[contact] database unavailable:", reason);
+    return NextResponse.json(
+      {
+        ok: false,
+        errors: {
+          form: "Something went wrong saving your enquiry. Please try again, or email me directly.",
+        },
+      },
+      { status: 503 }
+    );
+  }
+
+  /* The honeypot stops naive bots; this stops someone holding the submit button
+     down. Counted in the database rather than in memory because each serverless
+     instance has its own memory and would each allow the full quota. */
+  if (await tooManyRecently(EnquiryModel, ip, 5, 60)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        errors: { form: "That's several enquiries in a row — please give it an hour." },
+      },
+      { status: 429 }
+    );
+  }
+
+  const enquiry = await EnquiryModel.create({
     ...input,
     attachments,
-    attachmentCount: attachments.length,
-    receivedAt: new Date().toISOString(),
+    userAgent: request.headers.get("user-agent")?.slice(0, 400) ?? "",
+    submittedFromIp: ip,
   });
+
+  /* Both sends run together; neither blocks the response on the other. */
+  const emailData = { ...input, attachments };
+
+  const [notification] = await Promise.all([
+    sendEmail({
+      to: OWNER,
+      subject: `New enquiry — ${input.name}${input.company ? ` (${input.company})` : ""}`,
+      html: renderEnquiryNotification(emailData),
+      /* So replying in your mail client answers the sender directly. */
+      replyTo: input.email,
+    }),
+    sendEmail({
+      to: input.email,
+      subject: "Thanks — your enquiry reached Docerity",
+      html: renderEnquiryAcknowledgement(emailData),
+      replyTo: OWNER,
+    }),
+  ]);
+
+  /* Recorded so a silently undelivered notification is visible in the admin
+     list rather than looking like an enquiry you simply missed. */
+  if (!notification.ok) {
+    await EnquiryModel.updateOne(
+      { _id: enquiry._id },
+      { delivered: false, deliveryError: notification.error }
+    );
+  } else {
+    await EnquiryModel.updateOne({ _id: enquiry._id }, { delivered: true });
+  }
 
   return NextResponse.json({ ok: true });
 }
-
-/*
-  `export const config = { api: { bodyParser } }` is a Pages Router API and is
-  ignored here, so the size ceiling is enforced in `validateEnquiry` instead —
-  and by the platform, which rejects an oversized body before this code runs.
-*/
-export const runtime = "nodejs";
-export const maxDuration = 15;

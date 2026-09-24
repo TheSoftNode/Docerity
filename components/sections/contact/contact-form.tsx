@@ -24,7 +24,10 @@ import {
   type ProjectType,
 } from "@/lib/contact/schema";
 
-type Status = "idle" | "submitting" | "success" | "error";
+/* "uploading" is distinct from "submitting" because attachments can now be
+   tens of megabytes: a single "Sending…" label for a 20MB upload reads as a
+   hung form. */
+type Status = "idle" | "uploading" | "submitting" | "success" | "error";
 
 const selectClass =
   "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
@@ -122,13 +125,61 @@ function ContactForm() {
     setErrors({});
     setStatus("submitting");
 
-    const body = new FormData();
-    Object.entries(input).forEach(([key, value]) => body.append(key, value));
-    body.append("website", String(data.get("website") ?? ""));
-    files.forEach((file) => body.append("files", file));
+    /*
+      Attachments go from the browser straight to Blob storage, and only their
+      URLs are posted to the enquiry route. A route handler receives the whole
+      body in memory and the platform caps that at 4.5MB, so posting the bytes
+      through it put a hard ceiling on file size — a PRD exported to PDF with
+      screenshots clears that easily. This path has no such limit.
+    */
+    let attachments: { name: string; url: string; contentType: string; size: number }[] = [];
 
     try {
-      const res = await fetch("/api/contact", { method: "POST", body });
+      if (files.length > 0) {
+        setStatus("uploading");
+        const { upload } = await import("@vercel/blob/client");
+
+        attachments = await Promise.all(
+          files.map(async (file) => {
+            const blob = await upload(file.name, file, {
+              access: "public",
+              handleUploadUrl: "/api/contact/upload",
+            });
+            return {
+              name: file.name,
+              url: blob.url,
+              contentType: file.type,
+              size: file.size,
+            };
+          })
+        );
+        setStatus("submitting");
+      }
+    } catch (reason) {
+      /*
+        An upload failure must not cost the whole enquiry. It is reported
+        against the attachments field, with the rest of the form untouched, so
+        the person can remove the files and still send their message.
+      */
+      const message =
+        reason instanceof Error
+          ? reason.message
+          : "Those files couldn't be uploaded.";
+      setErrors({ files: `${message} You can remove the files and send the enquiry without them.` });
+      setStatus("idle");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...input,
+          website: String(data.get("website") ?? ""),
+          attachments,
+        }),
+      });
       const payload = (await res.json().catch(() => null)) as
         | { ok: boolean; errors?: FieldErrors }
         | null;
@@ -365,9 +416,13 @@ function ContactForm() {
               type="submit"
               size="lg"
               className="h-11 w-full text-sm"
-              disabled={status === "submitting"}
+              disabled={status === "submitting" || status === "uploading"}
             >
-              {status === "submitting" ? "Sending…" : "Send message"}
+              {status === "uploading"
+                ? "Uploading files…"
+                : status === "submitting"
+                  ? "Sending…"
+                  : "Send message"}
               <SendIcon />
             </Button>
 

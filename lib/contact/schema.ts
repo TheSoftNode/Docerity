@@ -41,15 +41,21 @@ export const roles = [
 ] as const;
 
 /*
-  A route handler on Vercel receives the whole request body in memory, and
-  serverless functions cap that at 4.5MB. Anything larger has to go straight
-  from the browser to object storage — see the note in the route handler — so
-  the limits here stay comfortably under that ceiling.
+  These limits are a product decision, not a platform one.
+
+  They used to sit under 4.5MB because the files were posted through the route
+  handler, and a serverless function receives the whole request body in memory
+  under that cap. Attachments now go from the browser straight to Blob storage
+  and only their URLs are posted, so the request body is a few hundred bytes
+  regardless of file size and the ceiling no longer applies.
+
+  A PRD exported to PDF with screenshots in it lands in the 5–15MB range, which
+  the old limit rejected outright.
 */
 export const FILE_LIMITS = {
   maxFiles: 5,
-  maxBytesPerFile: 4 * 1024 * 1024,
-  maxBytesTotal: 4 * 1024 * 1024,
+  maxBytesPerFile: 20 * 1024 * 1024,
+  maxBytesTotal: 50 * 1024 * 1024,
 } as const;
 
 export const ACCEPTED_FILE_TYPES = [

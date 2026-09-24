@@ -41,6 +41,20 @@ test.describe("Contact page", () => {
   });
 
   test("submitting the form shows a success state", async ({ page }) => {
+    /*
+      The endpoint is stubbed so this stays a test of the form. Since the route
+      began persisting to MongoDB and sending mail, letting it run for real
+      would make the result depend on a reachable database and would write a
+      test row on every run.
+    */
+    await page.route("**/api/contact", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ ok: true }),
+      })
+    );
+
     await page.goto("/contact");
 
     await page.getByLabel("Name").fill("Ada Lovelace");
@@ -50,5 +64,32 @@ test.describe("Contact page", () => {
     await page.getByRole("button", { name: "Send message" }).click();
 
     await expect(page.getByText("Message sent.")).toBeVisible();
+  });
+
+  test("a server-side field error is shown against its field", async ({ page }) => {
+    /* The server is the authority on validity, so a rejection it reports has to
+       reach the right input rather than surfacing as a generic failure. */
+    await page.route("**/api/contact", (route) =>
+      route.fulfill({
+        status: 400,
+        contentType: "application/json",
+        body: JSON.stringify({
+          ok: false,
+          errors: { email: "That email address doesn't look right." },
+        }),
+      })
+    );
+
+    await page.goto("/contact");
+
+    await page.getByLabel("Name").fill("Ada Lovelace");
+    await page.getByLabel("Email").fill("ada@example.com");
+    await page.getByLabel("Message").fill("I'd love to learn backend engineering.");
+    await page.getByRole("button", { name: "Send message" }).click();
+
+    await expect(
+      page.getByText("That email address doesn't look right.")
+    ).toBeVisible();
+    await expect(page.getByText("Message sent.")).toBeHidden();
   });
 });
