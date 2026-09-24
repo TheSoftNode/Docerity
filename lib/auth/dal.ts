@@ -4,7 +4,7 @@ import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { SESSION_COOKIE, readSession, type SessionPayload } from "@/lib/auth/session";
+import { SESSION_COOKIE, readSession, type SessionPayload } from "@/lib/auth/token";
 import { findSessionUser } from "@/lib/repositories/user.repository";
 import { ForbiddenError, UnauthorizedError } from "@/lib/core/errors";
 import { createLogger } from "@/lib/core/logger";

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { getEntryBySlug } from "@/components/sections/blog/blog-data";
+import { getEntry } from "@/lib/content/posts";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -11,7 +11,7 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const entry = getEntryBySlug(slug);
+  const entry = await getEntry(slug);
 
   const eyebrow = entry
     ? entry.type === "explainer"

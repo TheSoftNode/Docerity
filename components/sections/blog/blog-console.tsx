@@ -8,12 +8,8 @@ import { ArrowRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FramedPanel } from "@/components/shared/section-kit";
-import {
-  articlePosts,
-  explainerPosts,
-  type ArticlePost,
-  type ExplainerPost,
-} from "@/components/sections/blog/blog-data";
+import { ContentIcon } from "@/components/shared/content-icon";
+import type { ArticleView, EntryView, ExplainerView } from "@/lib/content/entry-view";
 
 type Tab = "explainers" | "articles";
 
@@ -48,7 +44,7 @@ function TranslationConnector() {
   );
 }
 
-function ExplainerDetail({ post }: { post: ExplainerPost }) {
+function ExplainerDetail({ post }: { post: ExplainerView }) {
   return (
     <motion.div
       key={post.slug}
@@ -59,11 +55,19 @@ function ExplainerDetail({ post }: { post: ExplainerPost }) {
     >
       <div className="flex items-center gap-4">
         <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-background">
-          <post.concept.Icon className="size-6 text-foreground" strokeWidth={1.75} />
+          <ContentIcon
+            name={post.concept.iconName}
+            className="size-6 text-foreground"
+            strokeWidth={1.75}
+          />
         </span>
         <TranslationConnector />
         <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10">
-          <post.analogy.Icon className="size-6 text-primary" strokeWidth={1.75} />
+          <ContentIcon
+            name={post.analogy.iconName}
+            className="size-6 text-primary"
+            strokeWidth={1.75}
+          />
         </span>
       </div>
 
@@ -93,7 +97,7 @@ function ExplainerDetail({ post }: { post: ExplainerPost }) {
   );
 }
 
-function ArticleDetail({ post }: { post: ArticlePost }) {
+function ArticleDetail({ post }: { post: ArticleView }) {
   return (
     <motion.div
       key={post.slug}
@@ -103,7 +107,11 @@ function ArticleDetail({ post }: { post: ArticlePost }) {
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-background">
-        <post.Icon className="size-6 text-foreground" strokeWidth={1.75} />
+        <ContentIcon
+          name={post.iconName}
+          className="size-6 text-foreground"
+          strokeWidth={1.75}
+        />
       </span>
 
       <p className="mt-5 font-mono text-xs tracking-[0.15em] text-muted-foreground uppercase">
@@ -132,16 +140,52 @@ function ArticleDetail({ post }: { post: ArticlePost }) {
   );
 }
 
-function BlogConsole() {
-  const [activeTab, setActiveTab] = useState<Tab>("explainers");
-  const [activeExplainer, setActiveExplainer] = useState(explainerPosts[0].slug);
-  const [activeArticle, setActiveArticle] = useState(articlePosts[0].slug);
+/**
+ * Posts arrive as props rather than being imported.
+ *
+ * They now come from the database, and this is a Client Component, so it cannot
+ * read them itself. `blog-index.tsx` fetches on the server and passes them
+ * down.
+ */
+function BlogConsole({
+  explainers,
+  articles,
+}: {
+  explainers: ExplainerView[];
+  articles: ArticleView[];
+}) {
+  const [activeTab, setActiveTab] = useState<Tab>(
+    /* Opens on whichever tab has something in it. With no explainers published,
+       defaulting to that tab would show an empty panel next to a populated
+       Articles tab nobody thought to click. */
+    explainers.length > 0 ? "explainers" : "articles"
+  );
+  const [activeExplainer, setActiveExplainer] = useState(explainers[0]?.slug ?? "");
+  const [activeArticle, setActiveArticle] = useState(articles[0]?.slug ?? "");
 
-  const list = activeTab === "explainers" ? explainerPosts : articlePosts;
+  const list: EntryView[] = activeTab === "explainers" ? explainers : articles;
   const activeSlug = activeTab === "explainers" ? activeExplainer : activeArticle;
   const setActiveSlug =
     activeTab === "explainers" ? setActiveExplainer : setActiveArticle;
   const activeEntry = list.find((entry) => entry.slug === activeSlug) ?? list[0];
+
+  /* Nothing published in either tab. Only reachable with a database connected
+     and every post still a draft, since the static fallback is never empty. */
+  if (!activeEntry) {
+    return (
+      <FramedPanel innerClassName="overflow-hidden">
+        <div className="rounded-[calc(1rem-1px)] bg-card px-6 py-12 text-center">
+          <p className="font-heading text-sm font-semibold text-foreground">
+            Nothing published yet
+          </p>
+          <p className="mx-auto mt-1.5 max-w-[42ch] text-sm text-muted-foreground">
+            The first explainers are being written. Subscribe below and they will
+            reach you before they reach anyone else.
+          </p>
+        </div>
+      </FramedPanel>
+    );
+  }
 
   return (
     <FramedPanel innerClassName="overflow-hidden">
@@ -226,9 +270,17 @@ function BlogConsole() {
           >
             <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-border bg-card">
               {entry.type === "explainer" ? (
-                <entry.concept.Icon className="size-5 text-primary" strokeWidth={1.75} />
+                <ContentIcon
+                  name={entry.concept.iconName}
+                  className="size-5 text-primary"
+                  strokeWidth={1.75}
+                />
               ) : (
-                <entry.Icon className="size-5 text-primary" strokeWidth={1.75} />
+                <ContentIcon
+                  name={entry.iconName}
+                  className="size-5 text-primary"
+                  strokeWidth={1.75}
+                />
               )}
             </span>
             <span className="flex-1">

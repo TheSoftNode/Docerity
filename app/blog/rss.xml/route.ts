@@ -1,5 +1,5 @@
 import { siteConfig } from "@/lib/config/site";
-import { entries } from "@/components/sections/blog/blog-data";
+import { getPublishedEntries } from "@/lib/content/posts";
 
 function escapeXml(value: string) {
   return value
@@ -10,7 +10,12 @@ function escapeXml(value: string) {
     .replace(/'/g, "&apos;");
 }
 
+/* The feed is regenerated on the same window as the blog itself. */
+export const revalidate = 300;
+
 export async function GET() {
+  const entries = await getPublishedEntries();
+
   const items = [...entries]
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
     .map((entry) => {

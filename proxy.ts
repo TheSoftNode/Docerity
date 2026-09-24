@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { SESSION_COOKIE } from "@/lib/auth/session";
+import { SESSION_COOKIE } from "@/lib/auth/token";
 
 /**
  * An optimistic gate on /admin, and nothing more.
@@ -28,13 +28,22 @@ export function proxy(request: NextRequest) {
 
   const isLoginPage = pathname === "/admin/login";
 
-  /* Someone already carrying a session should not land on the login form.
-     The DAL still runs on /admin, so a stale cookie ends up back here with the
-     cookie cleared rather than in a loop. */
-  if (isLoginPage && hasSessionCookie) {
-    return NextResponse.redirect(new URL("/admin", request.url));
-  }
+  /*
+    This file only ever redirects *to* the login page, never away from it.
 
+    An earlier version also bounced a request carrying a cookie off the login
+    page towards /admin, which looked harmless and was an infinite redirect: an
+    expired or forged cookie is enough to get past the check here, the Data
+    Access Layer then rejects it and redirects back to the login page, and this
+    file bounced it to /admin again. The browser gave up with
+    ERR_TOO_MANY_REDIRECTS, which is what anybody whose session had expired
+    would have seen instead of a login form.
+
+    Sending an already-authenticated visitor from the login page to the
+    dashboard is still worth doing, but it has to be decided by something that
+    can verify the session. The login page does it, with the same DAL call as
+    everything else.
+  */
   if (!isLoginPage && !hasSessionCookie) {
     const login = new URL("/admin/login", request.url);
     /* Carried so signing in returns to the page that was asked for. The action

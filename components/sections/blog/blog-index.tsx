@@ -3,9 +3,32 @@ import { Bloom, Eyebrow } from "@/components/shared/section-kit";
 import { BlogConsole } from "@/components/sections/blog/blog-console";
 import { BlogPairTicker } from "@/components/sections/blog/blog-pair-ticker";
 import { ScrambleText } from "@/components/shared/scramble-text";
-import { entries } from "@/components/sections/blog/blog-data";
+import type { ArticlePost, ExplainerPost } from "@/components/sections/blog/blog-data";
+import { toArticleView, toExplainerView } from "@/lib/content/entry-view";
+import { getPublishedEntries } from "@/lib/content/posts";
 
-function BlogIndex() {
+/**
+ * A Server Component, so posts are read during the render.
+ *
+ * The console and the ticker below animate and so have to stay Client
+ * Components; they receive the posts as props rather than importing them,
+ * because the source is now the database.
+ */
+async function BlogIndex() {
+  const entries = await getPublishedEntries();
+
+  /*
+    Converted to the serialisable view before crossing into the console and the
+    ticker, both of which are Client Components. A `BlogEntry` carries `Icon` as
+    a component, and React refuses to serialise a function across that boundary.
+  */
+  const explainers = entries
+    .filter((entry): entry is ExplainerPost => entry.type === "explainer")
+    .map(toExplainerView);
+  const articles = entries
+    .filter((entry): entry is ArticlePost => entry.type === "article")
+    .map(toArticleView);
+
   return (
     /*
       An index page, not a landing page: the console is what people came for,
@@ -43,11 +66,11 @@ function BlogIndex() {
           </div>
 
           {/* The premise, shown rather than stated. */}
-          <BlogPairTicker />
+          <BlogPairTicker explainerPosts={explainers} />
         </div>
 
         <div className="mt-8 lg:mt-10">
-          <BlogConsole />
+          <BlogConsole explainers={explainers} articles={articles} />
         </div>
       </Container>
     </section>

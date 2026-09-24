@@ -5,10 +5,25 @@ import { siteConfig } from "@/lib/config/site";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { BlogArticle } from "@/components/sections/blog/blog-article";
-import { entries, getEntryBySlug } from "@/components/sections/blog/blog-data";
+import { getEntry, getEntrySlugs } from "@/lib/content/posts";
 
-export function generateStaticParams() {
-  return entries.map((entry) => ({ slug: entry.slug }));
+/*
+  Revalidated, because posts come from the database now.
+
+  Without it a published post is baked in at build time and editing one would
+  need a redeploy to show. Publishing also calls `revalidatePath`, so an edit
+  appears immediately; this is the ceiling on staleness if that invalidation
+  never lands.
+*/
+export const revalidate = 300;
+
+/* Slugs that exist at build time are prerendered; anything published later is
+   rendered on demand and then cached, rather than 404ing. */
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const slugs = await getEntrySlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -17,7 +32,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const entry = getEntryBySlug(slug);
+  const entry = await getEntry(slug);
 
   if (!entry) return { title: "Not found" };
 
@@ -47,7 +62,7 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const entry = getEntryBySlug(slug);
+  const entry = await getEntry(slug);
 
   if (!entry) notFound();
 

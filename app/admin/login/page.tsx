@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowLeftIcon } from "lucide-react";
 
 import { BrandMark } from "@/components/shared/brand-mark";
 import { LoginForm } from "@/components/admin/login-form";
+import { getCurrentUser } from "@/lib/auth/dal";
 import { database } from "@/lib/config/env";
 
 export const metadata: Metadata = {
@@ -22,6 +24,18 @@ export default async function AdminLoginPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const { next } = await searchParams;
+
+  /*
+    Sending an already-signed-in visitor to the dashboard, decided here rather
+    than in `proxy.ts`.
+
+    The proxy can only see that a cookie exists. Acting on that was an infinite
+    redirect, because an expired cookie satisfied it and the Data Access Layer
+    sent the request straight back. `getCurrentUser` verifies the signature and
+    checks the account, so this only fires for a session that is genuinely
+    valid.
+  */
+  if (await getCurrentUser()) redirect("/admin");
 
   return (
     <main className="flex min-h-svh flex-col items-center justify-center bg-background px-5 py-12">

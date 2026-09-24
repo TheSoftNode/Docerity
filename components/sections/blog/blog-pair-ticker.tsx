@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-import { explainerPosts } from "@/components/sections/blog/blog-data";
+import { ContentIcon } from "@/components/shared/content-icon";
+import type { ExplainerView } from "@/lib/content/entry-view";
 
 const INTERVAL = 3400;
 
@@ -14,20 +15,30 @@ const INTERVAL = 3400;
  * Replaces a static paragraph that said the same thing in words. Each pair is
  * read from `explainerPosts`, so it can never drift from the published set.
  */
-function BlogPairTicker() {
+function BlogPairTicker({ explainerPosts }: { explainerPosts: ExplainerView[] }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     if (reduceMotion) return;
+    if (explainerPosts.length < 2) return;
     const id = window.setInterval(
       () => setActive((current) => (current + 1) % explainerPosts.length),
       INTERVAL
     );
     return () => window.clearInterval(id);
-  }, [reduceMotion, active]);
+    /* `.length`, not the array: the parent maps a fresh array on every render,
+       so depending on its identity would clear and restart the interval each
+       time and the ticker would never advance. */
+  }, [reduceMotion, active, explainerPosts.length]);
 
-  const post = explainerPosts[active];
+  /* `active` can point past the end after a post is unpublished and the list
+     re-renders shorter, so the index is clamped rather than indexed blindly. */
+  const post = explainerPosts[active] ?? explainerPosts[0];
+
+  /* No explainers published. The parent renders its own heading, so returning
+     nothing here leaves the row intact rather than throwing. */
+  if (!post) return null;
 
   return (
     <div className="flex flex-col gap-3">
@@ -42,7 +53,7 @@ function BlogPairTicker() {
             className="flex items-center gap-3"
           >
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-foreground">
-              <post.concept.Icon className="size-4" strokeWidth={1.75} />
+              <ContentIcon name={post.concept.iconName} className="size-4" strokeWidth={1.75} />
             </span>
             <span className="min-w-0">
               <span className="block truncate font-mono text-[0.6875rem] tracking-[0.12em] text-muted-foreground uppercase">
@@ -63,7 +74,7 @@ function BlogPairTicker() {
               ))}
             </span>
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 text-primary">
-              <post.analogy.Icon className="size-4" strokeWidth={1.75} />
+              <ContentIcon name={post.analogy.iconName} className="size-4" strokeWidth={1.75} />
             </span>
           </motion.div>
         </AnimatePresence>
