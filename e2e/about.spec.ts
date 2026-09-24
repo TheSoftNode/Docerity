@@ -108,6 +108,46 @@ test.describe("About page", () => {
     }
   });
 
+  test("the hero carries a portrait, not an empty column", async ({ page, request }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/about");
+
+    const portrait = page.locator('img[alt*="founder of Docerity"]');
+    await expect(portrait).toBeVisible();
+
+    /* Fetched rather than waiting on decode, for the same reason as the
+       certificates: the dev image optimiser is unreliable under load. */
+    const source = await portrait.getAttribute("src");
+    const url = new URL(source!, "http://localhost");
+    const response = await request.get(url.searchParams.get("url") ?? url.pathname);
+    expect(response.status()).toBe(200);
+  });
+
+  test("the hero has no background grid", async ({ page }) => {
+    /*
+      A 64px graph-paper tile was added to this band and removed again: it
+      reads as scaffolding, and a headline on visible grid lines looks like a
+      wireframe. This asserts it stays gone, since it is the kind of thing
+      that gets reintroduced as "texture".
+    */
+    await page.goto("/about");
+
+    const hasTiledGradient = await page
+      .locator("section")
+      .first()
+      .evaluate((section) =>
+        Array.from(section.querySelectorAll("*")).some((node) => {
+          const style = getComputedStyle(node);
+          return (
+            style.backgroundImage.includes("linear-gradient") &&
+            /^\d+px \d+px$/.test(style.backgroundSize)
+          );
+        })
+      );
+
+    expect(hasTiledGradient, "a tiled background grid is back in the hero").toBe(false);
+  });
+
   test("navbar 'About' link navigates to the page", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("navigation").getByRole("link", { name: "About" }).first().click();
