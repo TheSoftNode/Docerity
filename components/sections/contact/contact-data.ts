@@ -1,10 +1,3 @@
-export const projectTypes = [
-  { value: "software", label: "Software project" },
-  { value: "mentorship", label: "Mentorship" },
-  { value: "speaking", label: "Speaking / workshop" },
-  { value: "other", label: "Something else" },
-] as const;
-
 export const steps = [
   {
     title: "You send the details",
