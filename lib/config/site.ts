@@ -20,3 +20,13 @@ export const navLinks = [
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
 ] as const;
+
+/*
+  The footer carries one more than the header.
+
+  Reviews is deliberately not in `navLinks`: the header is already six items
+  wide and a seventh pushes the row into the primary button at the widths the
+  layout tests cover. The page is reached from the testimonials section, which
+  is where somebody is already reading reviews when they want more of them.
+*/
+export const footerLinks = [...navLinks, { label: "Reviews", href: "/reviews" }] as const;

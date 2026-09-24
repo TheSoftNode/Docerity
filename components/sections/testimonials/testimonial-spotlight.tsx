@@ -1,11 +1,27 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { QuoteIcon } from "lucide-react";
+import { ArrowRightIcon, QuoteIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
-import { testimonials } from "@/components/sections/testimonials/testimonials-data";
+import { testimonials as placeholderTestimonials } from "@/components/sections/testimonials/testimonials-data";
+
+/**
+ * The shape this renders, which approved reviews are mapped into.
+ *
+ * Structural, not `typeof testimonials[number]`: that one is a readonly tuple
+ * from an `as const` array, so a mapped array of real reviews would not satisfy
+ * it.
+ */
+export type SpotlightQuote = {
+  quote: string;
+  name: string;
+  role: string;
+};
 
 const INTERVAL = 5200;
 
@@ -53,9 +69,24 @@ function Avatar({ name, isActive }: { name: string; isActive: boolean }) {
  * a name and role, the list and the quote sit side by side from `lg`, and a
  * progress bar makes the auto-advance legible instead of surprising.
  */
-function TestimonialSpotlight({ header }: { header?: ReactNode }) {
+function TestimonialSpotlight({
+  header,
+  quotes,
+}: {
+  header?: ReactNode;
+  /**
+   * Approved reviews from the database. Omitted or empty falls back to the
+   * placeholder set, so the section renders on a clone with no MONGODB_URI and
+   * before the first review is approved. Without the fallback the homepage
+   * would show an empty band rather than a section.
+   */
+  quotes?: SpotlightQuote[];
+}) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
+
+  const testimonials: SpotlightQuote[] =
+    quotes && quotes.length > 0 ? quotes : [...placeholderTestimonials];
 
   useEffect(() => {
     /*
@@ -71,7 +102,10 @@ function TestimonialSpotlight({ header }: { header?: ReactNode }) {
       setActive((current) => (current + 1) % testimonials.length);
     }, INTERVAL);
     return () => window.clearInterval(id);
-  }, [active, reduceMotion]);
+    /* `testimonials.length` rather than the array: a new array identity on
+       every render would restart the timer on every render, which is the bug
+       the About page's CountUp had. */
+  }, [active, reduceMotion, testimonials.length]);
 
   const testimonial = testimonials[active];
 
@@ -111,6 +145,28 @@ function TestimonialSpotlight({ header }: { header?: ReactNode }) {
             );
           })}
         </ul>
+
+        {/* The way to the full set, and to the form. Without it the section is
+            a dead end and nobody finds the reviews page from the homepage. */}
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            nativeButton={false}
+            render={<Link href="/reviews" />}
+          >
+            Read all reviews
+            <ArrowRightIcon />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            render={<Link href="/reviews#leave-a-review" />}
+          >
+            Leave one
+          </Button>
+        </div>
       </div>
 
       {/* Framed like the Work and Mentorship cards. */}

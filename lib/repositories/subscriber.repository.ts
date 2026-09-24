@@ -44,3 +44,30 @@ export async function countSubscribers() {
   await connectDB();
   return SubscriberModel.countDocuments({ status: "subscribed" });
 }
+
+export async function listSubscribers(limit = 200) {
+  await connectDB();
+  return SubscriberModel.find()
+    .sort({ createdAt: -1 })
+    .limit(Math.min(limit, 1000))
+    .select("email status source createdAt unsubscribedAt")
+    .lean();
+}
+
+/** Every subscribed address, for the CSV export. No limit: it is the point. */
+export async function listAllSubscribedEmails() {
+  await connectDB();
+  return SubscriberModel.find({ status: "subscribed" })
+    .sort({ createdAt: 1 })
+    .select("email createdAt source")
+    .lean();
+}
+
+export async function countSubscribersByStatus() {
+  await connectDB();
+  const [subscribed, unsubscribed] = await Promise.all([
+    SubscriberModel.countDocuments({ status: "subscribed" }),
+    SubscriberModel.countDocuments({ status: "unsubscribed" }),
+  ]);
+  return { subscribed, unsubscribed, total: subscribed + unsubscribed };
+}

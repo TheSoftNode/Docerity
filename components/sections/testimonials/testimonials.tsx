@@ -1,8 +1,30 @@
 import { Container } from "@/components/shared/container";
 import { TestimonialsBackground } from "@/components/sections/testimonials/testimonials-background";
-import { TestimonialSpotlight } from "@/components/sections/testimonials/testimonial-spotlight";
+import {
+  TestimonialSpotlight,
+  type SpotlightQuote,
+} from "@/components/sections/testimonials/testimonial-spotlight";
+import { getPublicReviews } from "@/lib/reviews/display";
 
-function Testimonials() {
+/**
+ * A Server Component, so the approved reviews are read during the render rather
+ * than fetched from the browser. The spotlight below it stays a Client
+ * Component because it animates, and receives the quotes as props.
+ */
+async function Testimonials() {
+  /*
+    Six, not all of them. The selector is a list of names beside the quote, and
+    beyond about six it stops being a list and becomes a column of names.
+    `/reviews` is where the full set lives.
+  */
+  const reviews = await getPublicReviews(6);
+
+  const quotes: SpotlightQuote[] = reviews.map((review) => ({
+    quote: review.body,
+    name: review.fullName,
+    role: review.title,
+  }));
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       {/* The pulsing rings sit behind the quote card rather than the middle of
@@ -17,6 +39,7 @@ function Testimonials() {
 
       <Container className="relative">
         <TestimonialSpotlight
+          quotes={quotes}
           header={
             <>
               <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">

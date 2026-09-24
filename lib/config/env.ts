@@ -134,6 +134,49 @@ export const storage = {
   reviewFolder: read("CLOUDINARY_REVIEW_FOLDER") ?? "docerity/reviews",
 };
 
+/* ── Auth ─────────────────────────────────────────────────────────────── */
+
+/*
+  The session signing secret.
+
+  In production a missing SESSION_SECRET throws, because the alternative is
+  worse than being down: a generated-at-startup fallback would sign tokens that
+  every deployment and every serverless instance rejects, so people would be
+  logged out at random with nothing in the logs to explain it. And a hard-coded
+  fallback would mean anyone reading this repository can mint a valid admin
+  session.
+
+  Generate one with `openssl rand -base64 32`.
+*/
+const DEV_SESSION_SECRET = "docerity-development-secret-not-for-production-use";
+
+export const auth = {
+  get isConfigured() {
+    return Boolean(read("SESSION_SECRET"));
+  },
+  get sessionSecret() {
+    const value = read("SESSION_SECRET");
+    if (value) {
+      if (value.length < 32) {
+        throw new MissingConfigError(["SESSION_SECRET (must be at least 32 characters)"]);
+      }
+      return value;
+    }
+
+    if (process.env.NODE_ENV === "production") {
+      throw new MissingConfigError(["SESSION_SECRET"]);
+    }
+
+    /* Development and test only, so `npm run dev` works on a fresh clone with
+       no .env.local and the e2e suite needs no secret. */
+    return DEV_SESSION_SECRET;
+  },
+  /** Guards the one-time bootstrap route; unset means the route is disabled. */
+  get setupToken() {
+    return read("ADMIN_SETUP_TOKEN");
+  },
+};
+
 /* ── Runtime ──────────────────────────────────────────────────────────── */
 
 export const runtime = {

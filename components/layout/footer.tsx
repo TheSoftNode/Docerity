@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { navLinks, siteConfig } from "@/lib/config/site";
+import { footerLinks, siteConfig } from "@/lib/config/site";
 import { Container } from "@/components/shared/container";
 import { BrandMark } from "@/components/shared/brand-mark";
 import { GithubIcon, LinkedinIcon, XIcon } from "@/components/shared/social-icons";
@@ -24,7 +24,7 @@ function Footer() {
             </Link>
 
             <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              {navLinks.map((link) => (
+              {footerLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}

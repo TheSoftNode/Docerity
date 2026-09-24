@@ -143,3 +143,42 @@ export async function findEnquiryByReference(reference: string) {
   await connectDB();
   return EnquiryModel.findOne({ reference: reference.toUpperCase() }).lean();
 }
+
+/** Counts per status in one round trip, for the admin overview and the rail. */
+export async function countEnquiriesByStatus() {
+  await connectDB();
+  const rows = await EnquiryModel.aggregate<{ _id: string; count: number }>([
+    { $group: { _id: "$status", count: { $sum: 1 } } },
+  ]);
+
+  const counts = { new: 0, read: 0, replied: 0, archived: 0, spam: 0, total: 0 };
+  for (const row of rows) {
+    if (row._id in counts) counts[row._id as keyof typeof counts] = row.count;
+    counts.total += row.count;
+  }
+  return counts;
+}
+
+export async function findEnquiryById(id: string) {
+  await connectDB();
+  return EnquiryModel.findById(id).lean();
+}
+
+/**
+ * Reading an enquiry promotes it out of "new", but only from "new". Opening
+ * something already archived or marked spam must not quietly resurrect it into
+ * the inbox.
+ */
+export async function markEnquiryRead(id: string) {
+  await connectDB();
+  await EnquiryModel.updateOne({ _id: id, status: "new" }, { $set: { status: "read" } });
+}
+
+export async function setEnquiryStatus(
+  id: string,
+  status: EnquiryDocument["status"]
+) {
+  await connectDB();
+  const result = await EnquiryModel.updateOne({ _id: id }, { $set: { status } });
+  return result.matchedCount > 0;
+}

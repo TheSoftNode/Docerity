@@ -58,3 +58,29 @@ export async function countRecentFromIp(ip: string, windowMinutes: number) {
   const since = new Date(Date.now() - windowMinutes * 60_000);
   return ReviewModel.countDocuments({ submittedFromIp: ip, createdAt: { $gte: since } });
 }
+
+/** Counts per status in one round trip, for the moderation tabs. */
+export async function countReviewsByStatus() {
+  await connectDB();
+  const rows = await ReviewModel.aggregate<{ _id: string; count: number }>([
+    { $group: { _id: "$status", count: { $sum: 1 } } },
+  ]);
+
+  const counts = { pending: 0, approved: 0, rejected: 0, total: 0 };
+  for (const row of rows) {
+    if (row._id in counts) counts[row._id as keyof typeof counts] = row.count;
+    counts.total += row.count;
+  }
+  return counts;
+}
+
+export async function findReviewById(id: string) {
+  await connectDB();
+  return ReviewModel.findById(id).lean();
+}
+
+export async function deleteReview(id: string) {
+  await connectDB();
+  const result = await ReviewModel.deleteOne({ _id: id });
+  return result.deletedCount > 0;
+}

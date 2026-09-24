@@ -32,13 +32,22 @@ type SignatureResponse = {
 
 export class UploadError extends Error {}
 
+/**
+ * Which endpoint signs the upload.
+ *
+ * A parameter rather than one shared route, because the two differ in folder,
+ * accepted types and size ceiling. Sharing them would mean one endpoint that
+ * signs a PDF as a headshot.
+ */
+export type UploadEndpoint = "/api/contact/upload" | "/api/reviews/upload";
+
 export async function uploadAttachment(
   file: File,
-  options: { signal?: AbortSignal } = {}
+  options: { signal?: AbortSignal; endpoint?: UploadEndpoint } = {}
 ): Promise<UploadedAttachment> {
   /* Step one: ask our server to sign this specific upload. It re-checks the
      type and size here, which is the last point before the bytes leave. */
-  const signatureResponse = await fetch("/api/contact/upload", {
+  const signatureResponse = await fetch(options.endpoint ?? "/api/contact/upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ contentType: file.type, bytes: file.size }),

@@ -49,6 +49,17 @@ export function resourceTypeFor(contentType: string): ResourceType {
   return contentType.startsWith("image/") ? "image" : "raw";
 }
 
+/**
+ * How the asset is delivered once uploaded.
+ *
+ * `authenticated` refuses unsigned requests, so the URL has to be minted with
+ * an expiry. That is right for a client's product requirements and wrong for a
+ * review photo, which is published on a page anyone can read: an expiring URL
+ * there would 401 the moment the expiry passed, and could not be cached by a
+ * CDN in the meantime.
+ */
+export type DeliveryType = "authenticated" | "upload";
+
 export type SignedUploadParams = {
   cloudName: string;
   apiKey: string;
@@ -57,25 +68,29 @@ export type SignedUploadParams = {
   folder: string;
   resourceType: ResourceType;
   uploadUrl: string;
-  type: "authenticated";
+  type: DeliveryType;
 };
 
 /**
  * Parameters the browser needs to upload one file.
  *
- * `type: "authenticated"` is the important part. A default Cloudinary upload
- * is served from a permanent public URL: anyone holding it, forever, can read
- * the file. A client's product requirements are not public, so these are
- * stored under a delivery type that refuses unsigned requests, and read back
- * through `signedUrlFor` with an expiry.
+ * The delivery type is the important part. A default Cloudinary upload is
+ * served from a permanent public URL: anyone holding it, forever, can read the
+ * file. A client's product requirements are not public, so enquiry attachments
+ * default to `authenticated`, which refuses unsigned requests and is read back
+ * through `signedUrlFor` with an expiry. A review photo passes `upload`,
+ * because being publicly readable is the whole point of it.
  */
 export function createUploadSignature(params: {
   folder: string;
   resourceType: ResourceType;
+  /** Defaults to `authenticated`, the safer of the two. */
+  deliveryType?: DeliveryType;
 }): SignedUploadParams {
   const api = client();
   const { cloudName, apiKey, apiSecret } = storage.credentials;
 
+  const deliveryType = params.deliveryType ?? "authenticated";
   const timestamp = Math.round(Date.now() / 1000);
 
   /*
@@ -89,7 +104,7 @@ export function createUploadSignature(params: {
     {
       timestamp,
       folder: params.folder,
-      type: "authenticated",
+      type: deliveryType,
     },
     apiSecret
   );
@@ -101,7 +116,7 @@ export function createUploadSignature(params: {
     timestamp,
     folder: params.folder,
     resourceType: params.resourceType,
-    type: "authenticated",
+    type: deliveryType,
     uploadUrl: `https://api.cloudinary.com/v1_1/${cloudName}/${params.resourceType}/upload`,
   };
 }
@@ -138,12 +153,16 @@ export function signedUrlFor(params: {
 export async function describeAsset(params: {
   publicId: string;
   resourceType: ResourceType;
+  deliveryType?: DeliveryType;
 }): Promise<{ bytes: number; format: string; createdAt: string } | null> {
   try {
     const api = client();
     const asset = await api.api.resource(params.publicId, {
       resource_type: params.resourceType,
-      type: "authenticated",
+      /* Has to match how the asset was uploaded: Cloudinary keeps separate
+         namespaces per delivery type, so asking for an `upload` asset under
+         `authenticated` reports it as missing. */
+      type: params.deliveryType ?? "authenticated",
     });
 
     return {
@@ -166,12 +185,13 @@ export async function describeAsset(params: {
 export async function destroyAsset(params: {
   publicId: string;
   resourceType: ResourceType;
+  deliveryType?: DeliveryType;
 }): Promise<boolean> {
   try {
     const api = client();
     const result = await api.uploader.destroy(params.publicId, {
       resource_type: params.resourceType,
-      type: "authenticated",
+      type: params.deliveryType ?? "authenticated",
       invalidate: true,
     });
     return result.result === "ok";
