@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -14,17 +15,30 @@ import {
 /*
   A logo wall that earns its place.
 
-  A bare row of greyed-out logos says "someone trusted me" and nothing else.
-  Each logo here carries what it was for on hover and focus, so the row is
-  evidence rather than decoration — and every line points at work that is
-  listed elsewhere on the site.
+  The first version was a static grid of chips with the context hidden until
+  hover — which on a touch screen means hidden full stop, and on a desktop
+  means a row of grey marks saying nothing. Here one logo is always expanded:
+  hovering or focusing moves the selection, and the expanded card states what
+  the work was, so the section reads as evidence at rest rather than only
+  under a cursor.
 */
-function LogoTile({ logo, index }: { logo: Logo; index: number }) {
+
+function LogoCard({
+  logo,
+  isActive,
+  onActivate,
+  index,
+}: {
+  logo: Logo;
+  isActive: boolean;
+  onActivate: () => void;
+  index: number;
+}) {
   const reduceMotion = useReducedMotion();
 
   return (
     <motion.li
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{
@@ -32,62 +46,94 @@ function LogoTile({ logo, index }: { logo: Logo; index: number }) {
         delay: reduceMotion ? 0 : index * 0.05,
         ease: "easeOut",
       }}
-      className="group relative w-[calc(50%-0.375rem)] sm:w-[10.5rem] lg:w-[11.5rem]"
+      /*
+        The active card takes twice the width. `layout` animates that change
+        rather than snapping, which is what makes the row feel like one
+        mechanism instead of tiles popping.
+      */
+      layout={!reduceMotion}
+      className={isActive ? "flex-[2.2]" : "flex-1"}
+      onMouseEnter={onActivate}
+      onFocusCapture={onActivate}
     >
-      {/*
-        A light chip rather than the usual dark card.
-
-        These marks come from eight different sources and most ship with a
-        white background baked into the bitmap, so on a dark surface each one
-        sat in its own white rectangle. Keying the white out would chew the
-        anti-aliased edges of logos like Hedera's; giving them all the light
-        field they were drawn for is both correct and consistent.
-
-        `tabIndex` because the tile is not a link, so the context line would
-        otherwise be unreachable without a pointer.
-      */}
-      <div
-        tabIndex={0}
-        className="flex h-[4.5rem] items-center justify-center rounded-xl border border-border bg-white px-4 outline-none ring-1 ring-black/5 transition-all duration-300 hover:border-primary/40 hover:ring-primary/20 focus-visible:border-primary/60 focus-visible:ring-3 focus-visible:ring-ring/40 sm:h-20"
+      <button
+        type="button"
+        onClick={onActivate}
+        aria-pressed={isActive}
+        className={
+          "group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border p-px text-left outline-none transition-colors duration-500 focus-visible:ring-3 focus-visible:ring-ring/50 " +
+          (isActive
+            ? "border-transparent bg-[linear-gradient(135deg,var(--brand-primary),var(--brand-violet))]"
+            : "border-border bg-border/40 hover:bg-border/70")
+        }
       >
-        <Image
-          src={logo.src}
-          alt={logo.name}
-          width={120}
-          height={40}
-          /* Logos arrive in a dozen shapes; a fixed box with `object-contain`
-             keeps the optical weight even without cropping anyone's mark. */
-          className="max-h-9 w-auto max-w-[7rem] object-contain opacity-80 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
-        />
-      </div>
+        <span className="flex h-full flex-col rounded-[calc(1rem-1px)] bg-card">
+          {/*
+            A light chip for the mark. Most of these ship with a white
+            background baked into the bitmap, so on a dark surface each sat in
+            its own white rectangle; keying that out would chew the
+            anti-aliased edges of marks like Hedera's, so they get the light
+            field they were drawn for.
+          */}
+          <span className="flex h-16 items-center justify-center rounded-t-[calc(1rem-1px)] bg-white px-4">
+            <Image
+              src={logo.src}
+              alt={logo.name}
+              width={120}
+              height={40}
+              className="max-h-8 w-auto max-w-[6.5rem] object-contain"
+            />
+          </span>
 
-      <p className="mt-2 text-center text-[0.6875rem] leading-snug text-muted-foreground opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100">
-        {logo.context}
-      </p>
+          <span className="flex flex-1 flex-col justify-center px-3 py-3">
+            <span
+              className={
+                "text-xs font-medium transition-colors duration-300 " +
+                (isActive ? "text-foreground" : "text-muted-foreground")
+              }
+            >
+              {logo.name}
+            </span>
+
+            {/* Only the active card shows its context, so the row has one
+                thing to read rather than eight competing captions. */}
+            <motion.span
+              initial={false}
+              animate={{
+                opacity: isActive ? 1 : 0,
+                height: isActive ? "auto" : 0,
+              }}
+              transition={{ duration: reduceMotion ? 0 : 0.28, ease: "easeOut" }}
+              className="block overflow-hidden text-[0.6875rem] leading-snug text-muted-foreground"
+            >
+              <span className="block pt-1">{logo.context}</span>
+            </motion.span>
+          </span>
+        </span>
+      </button>
     </motion.li>
   );
 }
 
-function LogoRow({
-  label,
-  logos,
-  offset = 0,
-}: {
-  label: string;
-  logos: Logo[];
-  offset?: number;
-}) {
+function LogoRow({ label, logos }: { label: string; logos: Logo[] }) {
+  /* The first card starts expanded, so the row is never in a state where
+     nothing is explained. */
+  const [activeName, setActiveName] = useState(logos[0].name);
+
   return (
     <div>
       <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-muted-foreground uppercase">
         {label}
       </p>
-      {/* Flex rather than a grid: the two rows hold three and six logos, and
-          a shared six-column grid left the first row half empty. Fixed-basis
-          tiles keep both rows the same size and flush left. */}
-      <ul className="mt-4 flex flex-wrap gap-3 lg:gap-4">
+      <ul className="mt-4 flex flex-wrap gap-3 sm:flex-nowrap">
         {logos.map((logo, index) => (
-          <LogoTile key={logo.name} logo={logo} index={offset + index} />
+          <LogoCard
+            key={logo.name}
+            logo={logo}
+            index={index}
+            isActive={logo.name === activeName}
+            onActivate={() => setActiveName(logo.name)}
+          />
         ))}
       </ul>
     </div>
@@ -98,19 +144,27 @@ function Clients() {
   return (
     <section
       id="clients"
-      className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-14 lg:py-20"
+      className="relative overflow-hidden border-b border-border/80 bg-surface-step-a py-14 lg:py-20"
     >
       <Bloom tone="violet" className="top-0 left-1/4 -translate-y-1/2" />
 
       <Container className="relative">
-        <div className="max-w-2xl">
-          <Eyebrow>Worked with</Eyebrow>
-          <SectionTitle>Teams, and the ground it was built on.</SectionTitle>
-        </div>
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.6fr] lg:gap-14">
+          <div className="lg:pt-1">
+            <Eyebrow>Worked with</Eyebrow>
+            <SectionTitle className="text-[clamp(1.5rem,2.6vw,2rem)]">
+              Teams, and the ground it was built on.
+            </SectionTitle>
+            <p className="mt-4 max-w-[38ch] text-sm leading-relaxed text-muted-foreground">
+              Two different things, kept apart on purpose: the organisations
+              the work was for, and the protocols it was built on.
+            </p>
+          </div>
 
-        <div className="mt-10 flex flex-col gap-8 lg:mt-12 lg:gap-10">
-          <LogoRow label="Organisations" logos={organisations} />
-          <LogoRow label="Protocols & platforms" logos={ecosystems} offset={organisations.length} />
+          <div className="flex min-w-0 flex-col gap-7">
+            <LogoRow label="Organisations" logos={organisations} />
+            <LogoRow label="Protocols & platforms" logos={ecosystems} />
+          </div>
         </div>
       </Container>
     </section>

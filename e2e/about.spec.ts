@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("About page", () => {
-  test("renders every section with no console errors", async ({ page }) => {
+  test("renders the hero and the profile rail with no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (message) => {
       if (message.type() === "error") errors.push(message.text());
@@ -13,14 +13,99 @@ test.describe("About page", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: /One engineer, three habits/i })
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "How this started." })).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Where the experience comes from." })
-    ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "What I build with." })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Studied, and certified." })).toBeVisible();
+
+    const rail = page.getByRole("navigation", { name: "About sections" });
+    for (const label of ["Story", "Experience", "Toolkit", "Credentials"]) {
+      await expect(rail.getByRole("button", { name: new RegExp(label) })).toBeVisible();
+    }
 
     expect(errors).toEqual([]);
+  });
+
+  test("each rail tab swaps the panel", async ({ page }) => {
+    await page.goto("/about");
+    const rail = page.getByRole("navigation", { name: "About sections" });
+
+    /* Story is open by default, so the page is never in a state with no panel. */
+    await expect(page.getByRole("heading", { name: "How this started." })).toBeVisible();
+
+    await rail.getByRole("button", { name: /Experience/ }).click();
+    await expect(page.getByRole("heading", { name: "Where it comes from." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "How this started." })).toBeHidden();
+
+    await rail.getByRole("button", { name: /Toolkit/ }).click();
+    await expect(page.getByRole("heading", { name: "What I build with." })).toBeVisible();
+
+    await rail.getByRole("button", { name: /Credentials/ }).click();
+    await expect(page.getByRole("heading", { name: "Studied and certified." })).toBeVisible();
+  });
+
+  test("the open tab is announced, not just styled", async ({ page }) => {
+    await page.goto("/about");
+    const rail = page.getByRole("navigation", { name: "About sections" });
+
+    const experience = rail.getByRole("button", { name: /Experience/ });
+    await expect(experience).not.toHaveAttribute("aria-current", "true");
+    await experience.click();
+    await expect(experience).toHaveAttribute("aria-current", "true");
+  });
+
+  test("the experience panel carries the migrated track record", async ({ page }) => {
+    await page.goto("/about");
+    await page
+      .getByRole("navigation", { name: "About sections" })
+      .getByRole("button", { name: /Experience/ })
+      .click();
+
+    await expect(
+      page.getByRole("heading", { name: "Full-stack Development Lead" })
+    ).toBeVisible();
+    await expect(page.getByText("HitoAI")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Web3 & Blockchain Engineer" })
+    ).toBeVisible();
+  });
+
+  test("the credentials panel shows real certificate scans", async ({
+    page,
+    request,
+  }) => {
+    await page.goto("/about");
+    await page
+      .getByRole("navigation", { name: "About sections" })
+      .getByRole("button", { name: /Credentials/ })
+      .click();
+
+    await expect(
+      page.getByText("B.Eng Electrical & Electronic Engineering, 2nd class upper")
+    ).toBeVisible();
+
+    const scans = page.locator('img[alt$="certificate"]');
+    await expect(scans.first()).toBeVisible();
+    expect(await scans.count()).toBe(8);
+
+    /*
+      The sources are fetched directly rather than waiting on the browser to
+      decode them.
+
+      Asserting `naturalWidth > 0` is the more direct test and it passes
+      against a production build, but the dev image optimiser stalls when
+      eight optimised variants are requested at once — the requests are issued
+      and no response ever arrives. Since the suite runs against `next dev`,
+      that assertion would fail for a reason that has nothing to do with the
+      page. Fetching each file proves the same thing: it exists and is served.
+    */
+    const sources = await scans.evaluateAll((images) =>
+      images.map((img) => (img as HTMLImageElement).src)
+    );
+
+    for (const source of sources) {
+      const url = new URL(source);
+      const raw = url.searchParams.get("url") ?? url.pathname;
+      const response = await request.get(raw);
+      expect(response.status(), `certificate not served: ${raw}`).toBe(200);
+      expect(Number(response.headers()["content-length"] ?? 1)).toBeGreaterThan(0);
+    }
   });
 
   test("navbar 'About' link navigates to the page", async ({ page }) => {
@@ -29,33 +114,11 @@ test.describe("About page", () => {
     await expect(page).toHaveURL("/about");
   });
 
-  test("shows the migrated portfolio track record", async ({ page }) => {
-    await page.goto("/about");
-
-    /* Roles and institutions carried over from the standalone portfolio.
-       "HitoAI" appears in both the story prose and the experience list, so this
-       scopes to the experience section rather than matching either. */
-    const experience = page.locator("#experience");
-    await expect(
-      experience.getByRole("heading", { name: "Full-stack Development Lead" })
-    ).toBeVisible();
-    await expect(experience.getByText("HitoAI")).toBeVisible();
-    await expect(
-      experience.getByRole("heading", { name: "Web3 & Blockchain Engineer" })
-    ).toBeVisible();
-    /* The university appears twice under #credentials — once as an institution
-       and once as a certificate issuer — so this asserts the degree itself,
-       which is unique on the page. */
-    await expect(
-      page.getByText("B.Eng Electrical & Electronic Engineering, 2nd class upper")
-    ).toBeVisible();
-  });
-
   test("does not expose personal contact details or date of birth", async ({ page }) => {
     /*
-      The portfolio's About panel carried a date of birth and two personal phone
-      numbers. On a company site those invite spam and belong nowhere but the
-      contact route, so their absence is asserted rather than assumed.
+      The portfolio's About panel carried a date of birth and two personal
+      phone numbers. On a company site those invite spam and belong nowhere
+      but the contact route, so their absence is asserted rather than assumed.
     */
     await page.goto("/about");
     const body = await page.locator("body").innerText();
@@ -64,6 +127,22 @@ test.describe("About page", () => {
     expect(body).not.toContain("9038");
     expect(body).not.toMatch(/born on/i);
     expect(body).not.toMatch(/whatsapp/i);
+  });
+
+  test("the project count matches the work page", async ({ page }) => {
+    /*
+      The hero claims a number of shipped projects, derived from the same
+      array the work page renders. A headline figure nobody can reconcile with
+      the work is worth less than no figure at all.
+    */
+    await page.goto("/work");
+    await page.locator("#showcase").scrollIntoViewIfNeeded();
+    const actual = await page.locator("#showcase h3 a").count();
+
+    await page.goto("/about");
+    await expect(
+      page.getByText("Shipped projects").locator("xpath=preceding-sibling::dd[1]")
+    ).toHaveText(String(actual));
   });
 
   test("layout does not overflow horizontally at narrow widths", async ({ page }) => {
@@ -80,26 +159,5 @@ test.describe("About page", () => {
         clientWidth + 1
       );
     }
-  });
-});
-
-test.describe("About page claims", () => {
-  test("the project count matches the work page", async ({ page }) => {
-    /*
-      The About hero claims a number of shipped projects. It is derived from
-      the same array the work page renders, and this asserts the two agree —
-      a headline figure nobody can reconcile with the work is worth less than
-      no figure at all.
-    */
-    await page.goto("/work");
-    await page.locator("#showcase").scrollIntoViewIfNeeded();
-    const actual = await page.locator("#showcase h3 a").count();
-
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/about");
-
-    await expect(
-      page.getByText("Shipped projects").locator("xpath=preceding-sibling::p[1]")
-    ).toHaveText(String(actual));
   });
 });

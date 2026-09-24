@@ -44,11 +44,11 @@ function WorkMedia({
     <div
       className={cn(
         "relative aspect-[16/10] w-full overflow-hidden",
-        /* The generated previews draw on a 2:1 canvas, so they letterbox
-           inside a 16:10 frame. Matching the frame to their own fill makes
-           that invisible; real media covers the frame and wants the darker
-           field behind it while it loads. */
-        media ? "bg-muted" : "bg-card",
+        /* The generated previews draw on a 2:1 canvas and letterbox inside a
+           16:10 frame, so matching the frame to their own fill hides that.
+           Real screenshots sit on a slightly recessed field instead — see
+           the note on the image below. */
+        media ? "bg-surface-step-b" : "bg-card",
         className
       )}
     >
@@ -56,18 +56,29 @@ function WorkMedia({
         {!media ? (
           <WorkPreview variant={variant} />
         ) : media.type === "image" ? (
-          <Image
-            src={media.src}
-            alt={media.alt}
-            fill
-            sizes={sizes}
-            /* Anchored to the top. These are full-page captures with ratios
-               from 1.06 to 2.38 against a 16:10 frame, so the tall ones crop
-               vertically — centred, that discards the header and shows an
-               anonymous slice of mid-page. The top of a product page is the
-               part anyone recognises. */
-            className="object-cover object-top"
-          />
+          /*
+            The screenshot is shown whole, inset on a recessed field, rather
+            than cropped to fill the frame.
+
+            `cover` looked tidier in the abstract and was wrong in practice:
+            these captures range from 1.06 to 2.38 against a 16:10 frame, so
+            it sliced the sides off the wide ones — EEP at 2.02 lost "B" from
+            "Build Your Projects" and the whole right-hand column. A product
+            screenshot that cannot be read is decoration. Inset and contained,
+            every card shows the actual thing, and the letterboxing reads as a
+            deliberate mount rather than a gap.
+          */
+          <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-4">
+            <div className="relative h-full w-full overflow-hidden rounded-lg shadow-[0_18px_40px_-20px_rgba(0,0,0,0.8)] ring-1 ring-border/60">
+              <Image
+                src={media.src}
+                alt={media.alt}
+                fill
+                sizes={sizes}
+                className="object-contain object-top"
+              />
+            </div>
+          </div>
         ) : (
           <video
             src={media.src}
