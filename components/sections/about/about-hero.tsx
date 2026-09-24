@@ -3,266 +3,246 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRightIcon, ClockIcon, MapPinIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { ScrambleText } from "@/components/shared/scramble-text";
 import { Button } from "@/components/ui/button";
-import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
+import { Bloom, HeroTitle } from "@/components/shared/section-kit";
+import { CornerBrackets } from "@/components/sections/explainers/explainer-corner-brackets";
 import { facts, founder } from "@/components/sections/about/about-data";
 import { CountUp } from "@/components/sections/about/count-up";
 
 /*
   ── Replacing the portrait ──────────────────────────────────────────────────
-  Drop a new file at `public/about/headshot.webp` and nothing else needs
-  touching. Square, face centred, 800px or larger — the frame is circular and
-  crops to a square, so anything portrait-shaped loses its top and bottom.
+  Drop a new file at `public/about/headshot.webp`. The frame is 3:4 portrait
+  now rather than a circle, so a standing or head-and-shoulders shot works and
+  a square one is cropped top and bottom. 900px tall or more.
   ────────────────────────────────────────────────────────────────────────────
 */
 const PORTRAIT = "/about/headshot.webp";
 
-/** Ring geometry, kept together so the rings stay concentric when adjusted. */
-const rings = [
-  { inset: "inset-0", duration: 54, direction: 1, style: "border-dashed border-border" },
-  { inset: "inset-[7%]", duration: 38, direction: -1, style: "border-border/60" },
-  { inset: "inset-[14%]", duration: 46, direction: 1, style: "border-dashed border-border/40" },
-] as const;
-
-function PortraitOrbit() {
+/**
+ * The portrait, in a tall frame with a scan travelling down it.
+ *
+ * Deliberately not the orbit this replaced. That grew to fill its column —
+ * 583px at 1440 — which made the photograph the loudest thing on a page about
+ * the work, and squeezed the copy into what was left. This is a fixed,
+ * modest frame: the composition around it does the work instead.
+ *
+ * The scan is thematic rather than ornamental. Docerity is a company about
+ * documentation and explanation, and the whole band is built as a dossier, so
+ * a sweep reading down the page is the one piece of motion that means
+ * something here.
+ */
+function PortraitPlate() {
   const reduceMotion = useReducedMotion();
 
-  /* Every rotation is linear and continuous. Anything eased would pulse, and
-     a pulsing frame beside a face reads as an alert rather than a portrait. */
-  const spin = (duration: number, direction: number) =>
-    reduceMotion
-      ? undefined
-      : {
-          animate: { rotate: 360 * direction },
-          transition: { duration, repeat: Infinity, ease: "linear" as const },
-        };
-
-  /*
-    The orbit fills its column rather than sitting at a fixed width inside one.
-
-    Pinned at 23rem it stayed 368px while its column grew with the viewport,
-    so the slack between the two halves widened as the screen did — measured
-    at 210px of dead space at 1280 and 389px at 1728. Filling the column
-    closes that, and the portrait inset grows in step so the face stays the
-    same size while the rings spread.
-  */
   return (
-    <div className="relative isolate aspect-square w-full">
-      <div
-        aria-hidden
-        className="absolute inset-[-14%] -z-10 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--brand-primary),transparent_80%)_0%,transparent_65%)]"
-      />
-
-      {rings.map((ring) => (
-        <motion.span
-          key={ring.inset}
-          aria-hidden
-          {...spin(ring.duration, ring.direction)}
-          className={`absolute ${ring.inset} rounded-full border ${ring.style}`}
-        />
-      ))}
-
-      {/* A sweep around the rim, the way a radar hand tracks a dial. It is the
-          one fast-moving element, which is why it is also the faintest. */}
-      <motion.span
-        aria-hidden
-        {...spin(7, 1)}
-        className="absolute inset-[3%] rounded-full opacity-70 [background:conic-gradient(from_0deg,transparent_0deg,color-mix(in_oklch,var(--brand-primary),transparent_55%)_28deg,transparent_96deg)] [mask-image:radial-gradient(circle,transparent_63%,black_66%,black_72%,transparent_75%)] [-webkit-mask-image:radial-gradient(circle,transparent_63%,black_66%,black_72%,transparent_75%)]"
-      />
-
-      {/* Two markers riding the outer ring in opposite directions. The dot is
-          offset to the rim by its parent's size, so it tracks the ring exactly
-          rather than being positioned by eye. */}
-      {[
-        { duration: 26, direction: 1, tone: "bg-brand-violet", inset: "inset-0" },
-        { duration: 34, direction: -1, tone: "bg-primary", inset: "inset-[7%]" },
-      ].map((marker) => (
-        <motion.span
-          key={marker.tone + marker.inset}
-          aria-hidden
-          {...spin(marker.duration, marker.direction)}
-          className={`absolute ${marker.inset} rounded-full`}
-        >
-          <span
-            className={`absolute top-0 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full ${marker.tone} shadow-[0_0_12px_currentColor]`}
-          />
-        </motion.span>
-      ))}
-
-      {/* The portrait itself. A 1px gradient ring rather than a border, so the
-          edge runs sapphire to violet like the cards elsewhere. */}
+    <figure className="relative z-10 mx-auto w-[13rem] sm:w-[15rem] lg:mx-0 lg:w-[16rem] xl:w-[17.5rem]">
       <motion.div
-        initial={{ opacity: 0, scale: 0.94 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: reduceMotion ? 0 : 0.7, ease: "easeOut" }}
-        className="absolute inset-[21%] rounded-full bg-[linear-gradient(140deg,var(--brand-primary),var(--brand-violet))] p-px shadow-[0_28px_60px_-28px_rgba(0,0,0,0.9)] xl:inset-[26%]"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.6, ease: "easeOut" }}
+        className="relative rounded-2xl bg-[linear-gradient(150deg,var(--brand-primary),var(--border)_45%,var(--brand-violet))] p-px shadow-[0_34px_70px_-30px_rgba(0,0,0,0.95)]"
       >
-        <div className="relative h-full w-full overflow-hidden rounded-full bg-card">
+        <div className="relative aspect-[3/4] overflow-hidden rounded-[calc(1rem-1px)] bg-card">
           <Image
             src={PORTRAIT}
             alt={`${founder.name}, founder of Docerity`}
             fill
-            sizes="(min-width: 1024px) 15rem, 12rem"
+            sizes="(min-width: 1280px) 17.5rem, (min-width: 640px) 15rem, 13rem"
             priority
-            className="object-cover"
+            className="object-cover object-top"
+          />
+
+          {/* A single bar travelling top to bottom, not a loop of flashes. */}
+          {!reduceMotion ? (
+            <motion.span
+              aria-hidden
+              initial={{ y: "-30%" }}
+              animate={{ y: "130%" }}
+              transition={{ duration: 5.5, repeat: Infinity, ease: "linear" }}
+              className="pointer-events-none absolute inset-x-0 h-1/3 bg-[linear-gradient(to_bottom,transparent,color-mix(in_oklch,var(--brand-primary),transparent_86%)_45%,transparent)]"
+            />
+          ) : null}
+
+          {/* Keeps the crop legible against the frame's lower edge. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-[linear-gradient(to_top,var(--card),transparent)] opacity-70"
           />
         </div>
       </motion.div>
-    </div>
+
+      <figcaption className="mt-3 flex items-baseline justify-between gap-3 font-mono text-[0.625rem] tracking-[0.14em] text-muted-foreground uppercase">
+        <span className="truncate">{founder.name}</span>
+        <span className="shrink-0 text-primary">Founder</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+/** One label/value pair on either rail. */
+function RailItem({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="flex items-baseline gap-2">
+      <span className="text-muted-foreground/70">{label}</span>
+      <span className="text-foreground/80">{value}</span>
+    </span>
   );
 }
 
 /*
-  The band had a 64px background grid. It was removed for the same reason it
-  was removed from the CTA: it reads as scaffolding, and a headline sitting on
-  visible graph paper looks like a wireframe rather than a finished page. The
-  blooms carry the depth instead.
+  Built as a dossier rather than the usual copy-left / visual-right band.
+
+  Three versions of this hero followed that pattern — a stats panel, then a
+  cut-out portrait, then an orbit — and each was the same arrangement with a
+  different object dropped into the right-hand column. The panel, its rails
+  and the registration marks give the section a structure of its own, and it
+  suits a company whose subject is documentation.
 */
 function AboutHero() {
   const reduceMotion = useReducedMotion();
 
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
-      <Bloom className="top-0 right-0 translate-x-1/4 -translate-y-1/3" />
+      <Bloom className="top-0 right-0 translate-x-1/4 -translate-y-1/2" />
       <Bloom tone="violet" className="bottom-0 left-0 -translate-x-1/3 translate-y-1/2" />
 
-      <Container className="relative grid grid-cols-1 items-center gap-10 pt-12 pb-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:pb-12">
-        <div>
-          <Eyebrow>
-            <ScrambleText text="About Docerity" />
-          </Eyebrow>
+      <Container className="relative pt-10 pb-14 lg:pt-12 lg:pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: reduceMotion ? 0 : 0.6, ease: "easeOut" }}
+          className="relative rounded-3xl bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--brand-primary),transparent_62%),var(--border)_38%,color-mix(in_oklch,var(--brand-violet),transparent_66%))] p-px shadow-[0_40px_90px_-50px_rgba(0,0,0,0.95)]"
+        >
+          <div className="relative rounded-[calc(1.5rem-1px)] bg-card">
+            <CornerBrackets />
 
-          {/*
-            The three clauses arrive in sequence rather than all at once. It is
-            a three-part claim — build, explain, teach — and staggering them
-            lets the line land as three beats instead of a block of type
-            appearing whole.
-          */}
-          {/* The shared scale caps at 3.4rem, which stops the longest line
-              around 515px — so on a 1728 screen the headline could not fill
-              its own column no matter how wide the box was allowed to get,
-              and the shortfall showed as air beside the orbit. This lifts the
-              cap only where there is room for it. */}
-          <HeroTitle className="max-w-[20ch] xl:max-w-[22ch] xl:text-[clamp(2.75rem,3.7vw,4.15rem)]">
-            {["One engineer,", "three habits:"].map((line, index) => (
-              <motion.span
-                key={line}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: reduceMotion ? 0 : 0.5,
-                  delay: reduceMotion ? 0 : index * 0.09,
-                  ease: "easeOut",
-                }}
-                className="block"
-              >
-                {line}
-              </motion.span>
-            ))}
-            <motion.span
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: reduceMotion ? 0 : 0.5,
-                delay: reduceMotion ? 0 : 0.18,
-                ease: "easeOut",
-              }}
-              className="block text-brand-violet"
-            >
-              build, explain, teach.
-            </motion.span>
-          </HeroTitle>
+            {/* Header rail — the document's metadata line. */}
+            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-border/70 px-6 py-3.5 font-mono text-[0.625rem] tracking-[0.16em] uppercase sm:px-8">
+              <span className="text-primary">
+                <ScrambleText text="Profile — About Docerity" />
+              </span>
+              <span className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+                <RailItem label="Based" value={founder.based} />
+                <RailItem label="Hours" value={founder.hours} />
+              </span>
+            </div>
 
-          <Lede className="mt-6 max-w-[52ch] text-base">
-            Docerity is the company around work I have been doing for years —
-            shipping production software, writing the explanation that makes it
-            make sense, and mentoring the engineers who will maintain it.
-          </Lede>
+            <div className="grid grid-cols-1 gap-10 px-6 pt-9 pb-8 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-14 lg:pt-12 lg:pb-10">
+              <div className="min-w-0">
+                {/*
+                  A relaxed measure. Earlier versions capped this at 20ch and
+                  the headline broke into three cramped lines while its column
+                  sat half empty; 26ch lets it fall into two with room, which
+                  is what "relaxed" actually looks like at this size.
+                */}
+                <HeroTitle className="mt-0 max-w-[26ch] leading-[1.12]">
+                  {["One engineer,", "three habits:"].map((line, index) => (
+                    <motion.span
+                      key={line}
+                      initial={{ opacity: 0, y: 14 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: reduceMotion ? 0 : 0.5,
+                        delay: reduceMotion ? 0 : 0.1 + index * 0.09,
+                        ease: "easeOut",
+                      }}
+                      className="block"
+                    >
+                      {line}
+                    </motion.span>
+                  ))}
+                  <motion.span
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: reduceMotion ? 0 : 0.5,
+                      delay: reduceMotion ? 0 : 0.28,
+                      ease: "easeOut",
+                    }}
+                    className="block text-brand-violet"
+                  >
+                    build, explain, teach.
+                  </motion.span>
+                </HeroTitle>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button
-              size="lg"
-              className="h-11 w-full px-6 text-sm sm:w-auto"
-              nativeButton={false}
-              render={<Link href="/contact" />}
-            >
-              Start a project
-              <ArrowRightIcon />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-11 w-full px-6 text-sm sm:w-auto"
-              nativeButton={false}
-              render={<Link href="#profile" />}
-            >
-              See the track record
-            </Button>
+                {/* 62ch and 1.85 leading: the lede was capped at 52ch, which
+                    is a caption measure, not a paragraph one. */}
+                <p className="mt-7 max-w-[62ch] text-pretty text-[1.0625rem] leading-[1.85] text-muted-foreground">
+                  Docerity is the company around work I have been doing for
+                  years — shipping production software, writing the explanation
+                  that makes it make sense, and mentoring the engineers who will
+                  maintain it.
+                </p>
+
+                <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <Button
+                    size="lg"
+                    className="h-11 w-full px-6 text-sm sm:w-auto"
+                    nativeButton={false}
+                    render={<Link href="/contact" />}
+                  >
+                    Start a project
+                    <ArrowRightIcon />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-11 w-full px-6 text-sm sm:w-auto"
+                    nativeButton={false}
+                    render={<Link href="#profile" />}
+                  >
+                    See the track record
+                  </Button>
+                </div>
+
+                {/*
+                  The figures sit inside this column rather than spanning the
+                  panel. Spanning it, the last cell ended up directly beneath
+                  the portrait and the plate covered it — the overlap that was
+                  meant to give the composition depth was landing on content.
+                  Keeping them here makes the split asymmetric instead: copy
+                  and figures stacked on the left, one tall plate beside them.
+                */}
+                <dl className="mt-10 grid grid-cols-2 border-t border-border/70 sm:grid-cols-4">
+                  {facts.map((fact, index) => (
+                    <motion.div
+                      key={fact.label}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: reduceMotion ? 0 : 0.4,
+                        delay: reduceMotion ? 0 : index * 0.07,
+                      }}
+                      className="group relative py-5 pr-5 [&:nth-child(even)]:border-l [&:nth-child(even)]:border-border/70 [&:nth-child(even)]:pl-5 [&:not(:nth-child(-n+2))]:border-t [&:not(:nth-child(-n+2))]:border-border/70 sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:border-border/70 sm:[&:not(:first-child)]:pl-5 sm:[&:not(:nth-child(-n+2))]:border-t-0"
+                    >
+                      <span
+                        aria-hidden
+                        className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-[linear-gradient(to_right,var(--brand-primary),transparent)] transition-transform duration-500 group-hover:scale-x-100"
+                      />
+                      <dd className="font-heading text-[clamp(1.5rem,2.2vw,2rem)] leading-none font-semibold text-foreground">
+                        <CountUp value={fact.value} />
+                      </dd>
+                      <dt className="mt-2 text-[0.8125rem] leading-snug text-foreground">
+                        {fact.label}
+                      </dt>
+                      <p className="mt-1 text-[0.6875rem] leading-snug text-muted-foreground">
+                        {fact.since}
+                      </p>
+                    </motion.div>
+                  ))}
+                </dl>
+              </div>
+
+              <PortraitPlate />
+            </div>
           </div>
-
-          {/* Location and time zone: the two questions a distributed client
-              asks first. Phone numbers live on /contact only. */}
-          <dl className="mt-7 flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:gap-x-6">
-            <div className="flex min-w-0 items-center gap-2">
-              <MapPinIcon className="size-4 shrink-0 text-primary" />
-              <dt className="sr-only">Based in</dt>
-              <dd className="truncate">{founder.based}</dd>
-            </div>
-            <div className="flex min-w-0 items-center gap-2">
-              <ClockIcon className="size-4 shrink-0 text-primary" />
-              <dt className="sr-only">Availability</dt>
-              <dd className="truncate">{founder.availability}</dd>
-            </div>
-          </dl>
-        </div>
-
-        {/* Held back to `sm`: on a phone the orbit would be most of the first
-            screen before a word of the introduction. */}
-        <div className="mx-auto hidden w-full max-w-[26rem] sm:block lg:max-w-none">
-          <PortraitOrbit />
-        </div>
+        </motion.div>
       </Container>
-
-      {/* The strip spans the shell on the section's lower edge, so it reads as
-          the floor of the band rather than a fifth element stacked beneath. */}
-      <Container className="relative">
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border/60 lg:grid-cols-4">
-          {facts.map((fact, index) => (
-            <motion.div
-              key={fact.label}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: reduceMotion ? 0 : 0.45,
-                delay: reduceMotion ? 0 : index * 0.08,
-                ease: "easeOut",
-              }}
-              className="group relative bg-card p-5 transition-colors duration-300 hover:bg-surface-step-a lg:p-6"
-            >
-              <span
-                aria-hidden
-                className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-[linear-gradient(to_right,var(--brand-primary),var(--brand-violet))] transition-transform duration-500 group-hover:scale-x-100"
-              />
-              <dd className="font-heading text-[clamp(1.75rem,3vw,2.5rem)] leading-none font-semibold text-foreground">
-                <CountUp value={fact.value} />
-              </dd>
-              <dt className="mt-2 text-sm leading-snug text-foreground">
-                {fact.label}
-              </dt>
-              <p className="mt-1.5 text-xs leading-snug text-muted-foreground">
-                {fact.since}
-              </p>
-            </motion.div>
-          ))}
-        </dl>
-      </Container>
-
-      <div className="h-12 lg:h-16" />
     </section>
   );
 }

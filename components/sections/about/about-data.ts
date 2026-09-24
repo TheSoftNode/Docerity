@@ -15,8 +15,11 @@ export const founder = {
   role: "Founder · Full-stack & Web3 Engineer",
   based: "Lagos, Nigeria",
   /* Stated because it is the practical question a distributed client actually
-     has, and the portfolio made a point of it. */
+     has, and the portfolio made a point of it. `hours` is the same fact cut
+     to fit the dossier rail, which has room for a few characters rather than
+     a sentence — kept beside the long form so the two cannot drift. */
   availability: "Works across European and US time zones",
+  hours: "EU / US overlap",
 } as const;
 
 /** The narrative. Three beats: where I came from, what I do, why Docerity. */
