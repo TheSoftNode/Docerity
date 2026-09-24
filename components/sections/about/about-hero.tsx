@@ -10,6 +10,7 @@ import { ScrambleText } from "@/components/shared/scramble-text";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { facts, founder } from "@/components/sections/about/about-data";
+import { CountUp } from "@/components/sections/about/count-up";
 
 /*
   ── Replacing the portrait ──────────────────────────────────────────────────
@@ -40,8 +41,17 @@ function PortraitOrbit() {
           transition: { duration, repeat: Infinity, ease: "linear" as const },
         };
 
+  /*
+    The orbit fills its column rather than sitting at a fixed width inside one.
+
+    Pinned at 23rem it stayed 368px while its column grew with the viewport,
+    so the slack between the two halves widened as the screen did — measured
+    at 210px of dead space at 1280 and 389px at 1728. Filling the column
+    closes that, and the portrait inset grows in step so the face stays the
+    same size while the rings spread.
+  */
   return (
-    <div className="relative isolate mx-auto aspect-square w-full max-w-[21rem] lg:max-w-[23rem]">
+    <div className="relative isolate aspect-square w-full">
       <div
         aria-hidden
         className="absolute inset-[-14%] -z-10 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--brand-primary),transparent_80%)_0%,transparent_65%)]"
@@ -89,7 +99,7 @@ function PortraitOrbit() {
         initial={{ opacity: 0, scale: 0.94 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: reduceMotion ? 0 : 0.7, ease: "easeOut" }}
-        className="absolute inset-[21%] rounded-full bg-[linear-gradient(140deg,var(--brand-primary),var(--brand-violet))] p-px shadow-[0_28px_60px_-28px_rgba(0,0,0,0.9)]"
+        className="absolute inset-[21%] rounded-full bg-[linear-gradient(140deg,var(--brand-primary),var(--brand-violet))] p-px shadow-[0_28px_60px_-28px_rgba(0,0,0,0.9)] xl:inset-[26%]"
       >
         <div className="relative h-full w-full overflow-hidden rounded-full bg-card">
           <Image
@@ -120,7 +130,7 @@ function AboutHero() {
       <Bloom className="top-0 right-0 translate-x-1/4 -translate-y-1/3" />
       <Bloom tone="violet" className="bottom-0 left-0 -translate-x-1/3 translate-y-1/2" />
 
-      <Container className="relative grid grid-cols-1 items-center gap-10 pt-12 pb-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16 lg:pb-12">
+      <Container className="relative grid grid-cols-1 items-center gap-10 pt-12 pb-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 lg:pb-12">
         <div>
           <Eyebrow>
             <ScrambleText text="About Docerity" />
@@ -132,7 +142,12 @@ function AboutHero() {
             lets the line land as three beats instead of a block of type
             appearing whole.
           */}
-          <HeroTitle className="max-w-[20ch]">
+          {/* The shared scale caps at 3.4rem, which stops the longest line
+              around 515px — so on a 1728 screen the headline could not fill
+              its own column no matter how wide the box was allowed to get,
+              and the shortfall showed as air beside the orbit. This lifts the
+              cap only where there is room for it. */}
+          <HeroTitle className="max-w-[20ch] xl:max-w-[22ch] xl:text-[clamp(2.75rem,3.7vw,4.15rem)]">
             {["One engineer,", "three habits:"].map((line, index) => (
               <motion.span
                 key={line}
@@ -207,7 +222,7 @@ function AboutHero() {
 
         {/* Held back to `sm`: on a phone the orbit would be most of the first
             screen before a word of the introduction. */}
-        <div className="hidden sm:block">
+        <div className="mx-auto hidden w-full max-w-[26rem] sm:block lg:max-w-none">
           <PortraitOrbit />
         </div>
       </Container>
@@ -234,7 +249,7 @@ function AboutHero() {
                 className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-[linear-gradient(to_right,var(--brand-primary),var(--brand-violet))] transition-transform duration-500 group-hover:scale-x-100"
               />
               <dd className="font-heading text-[clamp(1.75rem,3vw,2.5rem)] leading-none font-semibold text-foreground">
-                {fact.value}
+                <CountUp value={fact.value} />
               </dd>
               <dt className="mt-2 text-sm leading-snug text-foreground">
                 {fact.label}

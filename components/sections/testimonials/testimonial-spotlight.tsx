@@ -58,11 +58,20 @@ function TestimonialSpotlight({ header }: { header?: ReactNode }) {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
+    /*
+      Auto-advance stops under reduced motion, matching every other timed
+      component here. Content that replaces itself on a timer is movement the
+      reader did not ask for — the quote they were halfway through is simply
+      gone — and it is the case WCAG's "pause, stop, hide" is about. The
+      avatars still step through the list manually.
+    */
+    if (reduceMotion) return;
+
     const id = window.setInterval(() => {
       setActive((current) => (current + 1) % testimonials.length);
     }, INTERVAL);
     return () => window.clearInterval(id);
-  }, [active]);
+  }, [active, reduceMotion]);
 
   const testimonial = testimonials[active];
 

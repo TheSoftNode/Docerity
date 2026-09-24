@@ -111,14 +111,24 @@ function ProgressTrack({ isActive }: { isActive: boolean }) {
 }
 
 function ExplainerStage() {
+  const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
 
   useEffect(() => {
+    /*
+      Auto-advance stops under reduced motion, matching every other timed
+      component here. Swapping the pair out from under someone mid-sentence is
+      movement they did not ask for, and it also made this section's visual
+      snapshot unstable — the screenshot caught whichever pair happened to be
+      showing.
+    */
+    if (reduceMotion) return;
+
     const id = window.setInterval(() => {
       setActive((current) => (current + 1) % pairs.length);
     }, PAIR_INTERVAL);
     return () => window.clearInterval(id);
-  }, []);
+  }, [reduceMotion]);
 
   const pair = pairs[active];
 

@@ -123,6 +123,36 @@ test.describe("About page", () => {
     expect(response.status()).toBe(200);
   });
 
+  test("every hero figure settles on its real value", async ({ page }) => {
+    /*
+      The figures count up on first view. An earlier version kept the result
+      of `String.match` in the effect's dependency list — a new array on every
+      render — so the effect re-ran, restarted the count, set state and
+      triggered the render that re-ran it, leaving all four flickering near
+      zero. This asserts they come to rest on the real numbers.
+    */
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/about");
+
+    for (const [label, expected] of [
+      ["Years teaching and mentoring", "9+"],
+      ["Hackathon wins", "4"],
+      ["Shipped projects", "25"],
+      ["Blockchain ecosystems", "6"],
+    ] as const) {
+      await expect(
+        page.getByText(label, { exact: true }).locator("xpath=preceding-sibling::dd[1]")
+      ).toHaveText(expected);
+    }
+
+    /* Held for a beat and re-checked: a restarting animation passes a single
+       assertion on its way past the target. */
+    await page.waitForTimeout(1500);
+    await expect(
+      page.getByText("Shipped projects", { exact: true }).locator("xpath=preceding-sibling::dd[1]")
+    ).toHaveText("25");
+  });
+
   test("the hero has no background grid", async ({ page }) => {
     /*
       A 64px graph-paper tile was added to this band and removed again: it
