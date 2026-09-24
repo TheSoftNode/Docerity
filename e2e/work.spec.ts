@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Work", () => {
-  test("renders all case studies with no console errors", async ({ page }) => {
+  test("renders the featured projects with no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (msg) => {
       if (msg.type() === "error") errors.push(msg.text());
@@ -15,8 +15,10 @@ test.describe("Work", () => {
       page.getByRole("heading", { name: "Recent work, real outcomes." })
     ).toBeVisible();
 
-    for (const name of ["Ledger", "Northwind", "Fieldnote"]) {
-      await expect(page.getByRole("heading", { name })).toBeVisible();
+    for (const name of ["EEP", "HitoAI", "MetaPilot"]) {
+      await expect(
+        page.getByRole("heading", { name: `${name} — view project`, exact: true })
+      ).toBeVisible();
     }
 
     expect(errors).toEqual([]);

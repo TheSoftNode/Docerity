@@ -5,160 +5,393 @@ export type ProjectMedia =
   | { type: "image"; src: string; alt: string }
   | { type: "video"; src: string; poster?: string; alt: string };
 
-type CaseStudySection = {
+export type CaseStudySection = {
   heading: string;
   paragraphs: string[];
   media?: Media;
 };
 
-export const projects = [
+export type ProjectStatus = "Live" | "In progress" | "On hold";
+
+export type Project = {
+  index: string;
+  slug: string;
+  name: string;
+  category: string;
+  description: string;
+  tags: readonly string[];
+  status: ProjectStatus;
+  preview: "dashboard" | "grid" | "list";
+  /** Shown on the landing page; the rest appear on /work. */
+  featured?: boolean;
+  liveUrl?: string;
+  repoUrl?: string;
+  /*
+    A written case study, where one exists. Optional on purpose: these are real
+    projects and most do not have a published write-up yet. A detail page
+    renders the overview from the facts above and gains the narrative when it
+    is actually written, rather than shipping an invented one.
+  */
+  role?: string;
+  timeline?: string;
+  results?: readonly string[];
+  body?: readonly CaseStudySection[];
+};
+
+/*
+  Real work, migrated from the standalone portfolio.
+
+  What was here before — Ledger, Northwind and Fieldnote — was placeholder
+  fiction: invented clients with invented metrics ("40% faster close") and no
+  live URLs. Plausible-looking numbers on a company's work page are a
+  liability the first time a prospect asks about one, and meanwhile 25 real
+  shipped projects were sitting on a separate domain.
+
+  Everything below links to something that exists. `status` replaces the old
+  `metric` field because it is a fact rather than a claim.
+*/
+export const projects: readonly Project[] = [
   {
     index: "01",
-    slug: "ledger",
-    name: "Ledger",
-    category: "Fintech · Dashboard",
+    slug: "eep",
+    name: "EEP",
+    category: "AI · Learning platform",
     description:
-      "A real-time finance dashboard rebuilt from the ground up for a team drowning in spreadsheet exports.",
-    tags: ["Next.js", "TypeScript", "Postgres"],
-    metric: "40% faster close",
+      "An AI-assisted learning and mentorship platform: structured project management, real-time collaboration, and guided feedback for developers building toward industry work.",
+    tags: ["Next.js", "TypeScript", "Node.js", "Firebase", "GCP", "Stripe"],
+    status: "In progress",
     preview: "dashboard",
-    role: "Full-stack engineer",
-    timeline: "9 weeks",
-    results: [
-      "40% faster month-end close",
-      "Reconciliation errors caught same-day instead of at month-end",
-      "Leadership gets a live view instead of a weekly export",
-    ],
-    body: [
-      {
-        heading: "The problem",
-        paragraphs: [
-          "The finance team's month-end close ran on a chain of spreadsheet exports: pull data from the accounting system, paste it into a workbook, cross-check it against three other workbooks, and hope nobody's version was stale. Reconciliation errors weren't caught until close — sometimes days later — by which point tracing the source meant reopening every export in the chain.",
-          "Leadership's only view into the numbers was whatever the last export said, which meant every strategic conversation was working from data that was, at best, a few days old.",
-        ],
-        media: {
-          type: "image",
-          alt: "Screenshot of the original spreadsheet-based close process",
-          caption: "The old process: a chain of exports, each one a potential point of drift.",
-        },
-      },
-      {
-        heading: "The approach",
-        paragraphs: [
-          "Instead of exporting data out of the accounting system, we built a dashboard that reads from it directly — a live sync layer that pulls transactions, categorizes them against the existing chart of accounts, and flags discrepancies as they appear rather than at month-end.",
-          "The close workflow itself became a checklist inside the dashboard: each reconciliation step shows its current state, who last touched it, and whether the underlying numbers have changed since. Nobody has to ask \"is this the latest version\" again, because there's only ever one version.",
-        ],
-      },
-      {
-        heading: "The result",
-        paragraphs: [
-          "Close went from a multi-day scramble to a same-day checklist. Discrepancies get caught as they happen instead of surfacing weeks later buried in a spreadsheet, and leadership can look at the dashboard for a real-time number instead of waiting for the next export.",
-        ],
-      },
-    ] satisfies CaseStudySection[],
+    featured: true,
+    liveUrl: "https://eep-v2-app-4b7msmz37a-uc.a.run.app/",
   },
   {
     index: "02",
-    slug: "northwind",
-    name: "Northwind",
-    category: "Commerce · Platform",
+    slug: "hitoai",
+    name: "HitoAI",
+    category: "AI · Corporate platform",
     description:
-      "A headless commerce platform that unified three regional storefronts into one system without downtime.",
-    tags: ["Node.js", "GraphQL", "Redis"],
-    metric: "3x checkout throughput",
+      "The corporate platform for HitoAI's educational technology, covering the assessment tooling institutions use to streamline marking and reporting.",
+    tags: ["React", "Vite", "Node.js", "MongoDB", "Tailwind CSS"],
+    status: "In progress",
     preview: "grid",
-    role: "Backend architect",
-    timeline: "4 months",
-    results: [
-      "3x checkout throughput during peak sales events",
-      "One inventory system instead of three regional copies",
-      "Zero downtime across the entire migration",
-    ],
-    body: [
-      {
-        heading: "The problem",
-        paragraphs: [
-          "Three regional storefronts had grown up independently, each with its own inventory database, its own checkout flow, and its own quirks. A single SKU could show different stock levels in two regions at once, and during peak sales events, checkout would buckle under load that any one storefront's original architecture was never built to share.",
-        ],
-      },
-      {
-        heading: "The approach",
-        paragraphs: [
-          "We built a headless commerce layer behind all three storefronts: one product catalog, one inventory service, one checkout API, with each regional frontend calling into it instead of maintaining its own copy of the truth. The migration ran region by region, with the old and new systems reading from the same inventory source during the transition, so a region could cut over without ever showing a customer stale stock.",
-        ],
-        media: {
-          type: "video",
-          caption: "Walkthrough of the phased cutover for the second region.",
-        },
-      },
-      {
-        heading: "The result",
-        paragraphs: [
-          "Checkout throughput tripled during the next major sales event, handled by infrastructure that scales as one system instead of three uncoordinated ones. Inventory discrepancies between regions — previously a recurring support ticket — stopped being possible, since there's now exactly one number to ask.",
-        ],
-      },
-    ] satisfies CaseStudySection[],
+    featured: true,
+    liveUrl: "https://hitoai.ai/",
   },
   {
     index: "03",
-    slug: "fieldnote",
-    name: "Fieldnote",
-    category: "Mobile · CRM",
+    slug: "easmark",
+    name: "Easmark",
+    category: "AI · EdTech",
     description:
-      "A mobile-first CRM for field teams working offline-first in low-connectivity environments.",
-    tags: ["React Native", "SQLite", "Sync"],
-    metric: "Shipped in 6 weeks",
+      "Grading support for educators: an AI-assisted pass over thesis papers and code submissions that shortens the turnaround without taking the judgement call away from the marker.",
+    tags: ["Next.js", "TypeScript", "Django", "PostgreSQL", "Stripe"],
+    status: "In progress",
     preview: "list",
-    role: "Mobile engineer",
-    timeline: "6 weeks",
-    results: [
-      "Shipped end to end in 6 weeks",
-      "Field teams work fully offline, no lost visit notes",
-      "Sync conflicts resolved automatically instead of manually",
-    ],
-    body: [
-      {
-        heading: "The problem",
-        paragraphs: [
-          "Field reps visiting sites with little or no signal were falling back to paper notes, then re-entering everything once they got back to an office with Wi-Fi — assuming they remembered to, and assuming nothing got lost in the meantime. The existing CRM simply didn't function without a live connection.",
-        ],
-      },
-      {
-        heading: "The approach",
-        paragraphs: [
-          "Fieldnote was built offline-first from the data layer up: every action — a note, a status update, a photo — writes to a local SQLite store immediately, whether or not there's a connection. A sync layer reconciles that local store with the server whenever a connection appears, and resolves the conflicts that come from two reps editing the same record while both were offline, instead of just picking a winner and silently discarding the other change.",
-        ],
-        media: {
-          type: "image",
-          alt: "Screenshot of the offline sync status indicator in the field app",
-          caption: "The sync indicator: reps always know what's saved locally versus confirmed on the server.",
-        },
-      },
-      {
-        heading: "The result",
-        paragraphs: [
-          "The whole thing shipped in six weeks, and field teams stopped losing visit notes to dead zones entirely — every entry is saved the instant it's made, connection or not, and reconciles cleanly once a signal comes back.",
-        ],
-      },
-    ] satisfies CaseStudySection[],
+    featured: true,
+    liveUrl: "https://easmark-vercel.vercel.app/",
+  },
+  {
+    index: "04",
+    slug: "talentchain-pro",
+    name: "TalentChainPro",
+    category: "Web3 · Hedera",
+    description:
+      "Verifiable skill credentials as soulbound tokens, with AI-assisted talent matching on top — professional reputation that a candidate carries rather than re-proves.",
+    tags: ["Next.js", "Hedera SDK", "Hashgraph", "Tailwind CSS"],
+    status: "In progress",
+    preview: "grid",
+    featured: true,
+    liveUrl: "https://talent-chain-frontend-navy.vercel.app/",
+    repoUrl: "https://github.com/austinLorenzMccoy/talentchainpro",
+  },
+  {
+    index: "05",
+    slug: "metapilot",
+    name: "MetaPilot",
+    category: "Web3 · Automation",
+    description:
+      "Automates the routine parts of holding a governance position — DAO voting, reward claiming, scheduled token purchases — against rules the holder sets once.",
+    tags: ["Next.js", "MetaMask SDK", "Tailwind CSS", "shadcn/ui"],
+    status: "Live",
+    preview: "dashboard",
+    featured: true,
+    liveUrl: "https://metapilot-frontend.vercel.app/",
+    repoUrl: "https://github.com/TheSoftNode/metapilot-frontend",
+  },
+  {
+    index: "06",
+    slug: "stacktip",
+    name: "StackTip",
+    category: "Web3 · Bitcoin",
+    description:
+      "Instant tipping and rewards on the Stacks layer, built so a creator can be paid across borders without the transfer fees eating the tip.",
+    tags: ["Clarity", "Next.js", "Node.js", "Smart contracts"],
+    status: "Live",
+    preview: "list",
+    featured: true,
+    liveUrl: "https://stack-tip-peach.vercel.app/",
+    repoUrl: "https://github.com/Arowolokehinde/STX-TIP",
+  },
+  {
+    index: "07",
+    slug: "eep-admin",
+    name: "EEP Admin",
+    category: "AI · Admin dashboard",
+    description:
+      "The administrative side of EEP: user management, analytics and system configuration behind two-factor authentication.",
+    tags: ["Next.js", "TypeScript", "Node.js", "Firebase", "GCP", "2FA"],
+    status: "In progress",
+    preview: "dashboard",
+    liveUrl: "https://eep-v2-app-4b7msmz37a-uc.a.run.app/admin",
+  },
+  {
+    index: "08",
+    slug: "neuraltradex",
+    name: "NeuralTradeX",
+    category: "Web3 · AI trading",
+    description:
+      "Algorithmic trading strategies packaged for individual traders, running continuously on NEAR without requiring the user to write or tune the models.",
+    tags: ["NEAR Protocol", "NEAR AI", "Next.js", "TypeScript"],
+    status: "Live",
+    preview: "dashboard",
+    liveUrl: "https://nueraltraderx.vercel.app/",
+    repoUrl: "https://github.com/TheSoftNode/NUERALTRADERX",
+  },
+  {
+    index: "09",
+    slug: "yieldnexus",
+    name: "YieldNexus",
+    category: "Web3 · Bitcoin DeFi",
+    description:
+      "A single surface for Bitcoin-based DeFi across Stacks protocols, built so the beginner path and the advanced path are the same interface at different depths.",
+    tags: ["sBTC", "Clarity", "Stacks", "Next.js", "Hiro"],
+    status: "In progress",
+    preview: "grid",
+    liveUrl: "https://sbtc-yield-nexus.vercel.app/",
+    repoUrl: "https://github.com/emmanuelist/yield-nexus",
+  },
+  {
+    index: "10",
+    slug: "icplearn",
+    name: "ICPLearn",
+    category: "Web3 · Internet Computer",
+    description:
+      "Ties staking rewards to completed coursework on ICP, so the incentive to learn the protocol and the incentive to hold it point the same way.",
+    tags: ["Next.js", "FastAPI", "Kybra SDK", "Internet Identity"],
+    status: "In progress",
+    preview: "list",
+    liveUrl: "https://icplearn.vercel.app/",
+    repoUrl: "https://github.com/TheSoftNode/icplearn_full",
+  },
+  {
+    index: "11",
+    slug: "realpaytag",
+    name: "RealPayTag",
+    category: "Web3 · Payments",
+    description:
+      "Payments backed by real-world assets, aimed at the gap between slow bank transfers and volatile crypto rails.",
+    tags: ["Next.js", "MetaMask SDK", "Tailwind CSS", "shadcn/ui"],
+    status: "Live",
+    preview: "grid",
+    liveUrl: "https://real-pay-tag-f7uw.vercel.app/",
+    repoUrl: "https://github.com/TheSoftNode/realpaytag",
+  },
+  {
+    index: "12",
+    slug: "cryptopilot",
+    name: "CryptoPilot",
+    category: "Web3 · AI",
+    description:
+      "Wallet operations driven by natural language instead of transaction forms, wired through MetaMask so the signing step stays where the user expects it.",
+    tags: ["Next.js", "Solidity", "Ethereum", "MetaMask SDK", "ML"],
+    status: "On hold",
+    preview: "dashboard",
+    liveUrl: "https://crypto-pilot-sigma.vercel.app/",
+    repoUrl: "https://github.com/TheSoftNode/CryptoPilot",
+  },
+  {
+    index: "13",
+    slug: "crossflow",
+    name: "CrossFlow",
+    category: "Web3 · Stellar",
+    description:
+      "Low-fee USDC transfers between Ethereum and Stellar, with fiat on- and off-ramps for African currencies at both ends.",
+    tags: ["Next.js", "Stellar SDK", "Tailwind CSS", "shadcn/ui"],
+    status: "On hold",
+    preview: "list",
+    liveUrl: "https://cross-flow.vercel.app/",
+  },
+  {
+    index: "14",
+    slug: "susnet",
+    name: "SusNet",
+    category: "AI · Energy",
+    description:
+      "Energy management with predictive analytics and automation, turning meter data into decisions a building operator can act on.",
+    tags: ["React", "Vite", "Django", "Tailwind CSS"],
+    status: "In progress",
+    preview: "dashboard",
+    liveUrl:
+      "https://susnet-frontend-383182311508.europe-west2.run.app/",
+  },
+  {
+    index: "15",
+    slug: "ai4energy",
+    name: "AI4Energy",
+    category: "AI · Forecasting",
+    description:
+      "Pricing optimisation for fuel stations, combining predictive analytics with market and competitor trend analysis.",
+    tags: ["Python", "TensorFlow", "Django", "PostgreSQL", "AWS", "Docker"],
+    status: "On hold",
+    preview: "grid",
+    liveUrl: "https://ai-4-energy-v2.vercel.app/",
+  },
+  {
+    index: "16",
+    slug: "biasadra",
+    name: "Biasadra",
+    category: "AI · Education",
+    description:
+      "An enterprise AI academy connecting universities and businesses, with an application path into partner institutions.",
+    tags: ["Next.js", "Tailwind CSS", "shadcn/ui"],
+    status: "Live",
+    preview: "list",
+    liveUrl: "https://biasadra.com/",
+  },
+  {
+    index: "17",
+    slug: "smart-treasures",
+    name: "Smart Treasures",
+    category: "Fintech · Investment",
+    description:
+      "The public platform for a global investment group, covering their network and the programmes they run across regions.",
+    tags: ["Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
+    status: "Live",
+    preview: "grid",
+    liveUrl: "https://smart-treasures.vercel.app/",
+  },
+  {
+    index: "18",
+    slug: "loan-me",
+    name: "Loan App",
+    category: "Fintech · Lending",
+    description:
+      "Personal and business lending with a short application path, credit assessment and repayment tracking built in.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL", "Stripe", "RTK Query"],
+    status: "On hold",
+    preview: "dashboard",
+    liveUrl: "https://loan-me-v2.vercel.app/",
+    repoUrl: "https://github.com/TheSoftNode/loan-me-v2",
+  },
+  {
+    index: "19",
+    slug: "softmeet",
+    name: "SoftMeet",
+    category: "Platform · Video",
+    description:
+      "Video conferencing with screen sharing and persistent virtual rooms, built on Stream with Clerk handling identity.",
+    tags: ["Next.js", "Stream API", "Clerk", "Tailwind CSS", "shadcn/ui"],
+    status: "Live",
+    preview: "list",
+    liveUrl: "https://softmeet-v2.vercel.app/",
+    repoUrl: "https://github.com/TheSoftNode/softmeet_v2",
+  },
+  {
+    index: "20",
+    slug: "docmeet",
+    name: "DocMeet",
+    category: "Platform · Healthcare",
+    description:
+      "Appointment scheduling between patients and healthcare providers, including booking, management and virtual consultation.",
+    tags: ["React", "Vite", "Node.js", "MongoDB", "Mongoose"],
+    status: "Live",
+    preview: "grid",
+    liveUrl: "https://do-cmeet-web-app.vercel.app/",
+    repoUrl: "https://github.com/Henryno111/DOCmeet_web_app",
+  },
+  {
+    index: "21",
+    slug: "easmark-api",
+    name: "Easmark API",
+    category: "Backend · API",
+    description:
+      "The service behind Easmark: authentication, submission handling and the grading pipeline, documented through Swagger.",
+    tags: ["Django", "JWT", "SQLite", "WebSockets", "Swagger"],
+    status: "In progress",
+    preview: "list",
+    liveUrl: "https://benstacks.pythonanywhere.com/swagger/",
+  },
+  {
+    index: "22",
+    slug: "alx-connect-api",
+    name: "ALX Connect API",
+    category: "Backend · API",
+    description:
+      "Developer matching by skill, experience and learning goal — authentication, the matching algorithm, mentorship connections and CV review, behind one API.",
+    tags: ["Django", "JWT", "SQLite", "WebSockets", "Swagger"],
+    status: "On hold",
+    preview: "dashboard",
+    liveUrl: "https://alxconnect.pythonanywhere.com/swagger/",
+  },
+  {
+    index: "23",
+    slug: "tours-api",
+    name: "Tours API",
+    category: "Backend · API",
+    description:
+      "A REST service for tour management: listings, booking, authentication, payments and reviews, with Swagger documentation.",
+    tags: ["Node.js", "Express", "MongoDB", "JWT", "Stripe", "Swagger"],
+    status: "Live",
+    preview: "grid",
+    repoUrl: "https://github.com/TheSoftNode/TourApp/tree/main",
+  },
+  {
+    index: "24",
+    slug: "softinven",
+    name: "SoftInven",
+    category: "Platform · Inventory",
+    description:
+      "Inventory management for production firms supplying retailers: live stock tracking, order processing and sales reporting, pushed to clients over SignalR.",
+    tags: ["C#", ".NET Core", "Blazor Server", "SQL Server", "SignalR", "Docker"],
+    status: "Live",
+    preview: "list",
+    repoUrl: "https://github.com/TheSoftNode/Soft-Inven",
+  },
+  {
+    index: "25",
+    slug: "lms-api",
+    name: "LMS API",
+    category: "Backend · API",
+    description:
+      "Course delivery, enrolment and progress tracking as a documented service, built to sit behind more than one front end.",
+    tags: ["Django", "JWT", "SQLite", "Swagger"],
+    status: "In progress",
+    preview: "dashboard",
   },
 ] as const;
 
 export type ProjectSlug = (typeof projects)[number]["slug"];
 
+/** The six on the landing page; /work shows everything. */
+export const featuredProjects = projects.filter((project) => project.featured);
+
 /**
  * Drop real project media here — one entry per slug, keyed to the projects
- * above. Files live in `public/`, so `/work/ledger.webp` means
- * `public/work/ledger.webp`.
+ * above. Files live in `public/`, so `/work/eep.webp` means
+ * `public/work/eep.webp`.
+ *
+ * The portfolio carries 40MB of screenshots in its own `public/work`. They are
+ * deliberately not copied in: at that size they slow every clone and deploy,
+ * and they belong in Blob storage or an optimised `public/` set instead.
  *
  * Anything left out falls back to that project's generated SVG preview, so
  * the section is presentable with no assets at all and each card upgrades
  * independently as real media arrives. Nothing else needs editing.
  *
- *   ledger:    { type: "image", src: "/work/ledger.webp", alt: "The Ledger close dashboard" },
- *   northwind: { type: "video", src: "/work/northwind.mp4", poster: "/work/northwind.webp", alt: "Northwind checkout flow" },
+ *   eep:       { type: "image", src: "/work/eep.webp", alt: "The EEP dashboard" },
+ *   metapilot: { type: "video", src: "/work/metapilot.mp4", poster: "/work/metapilot.webp", alt: "MetaPilot rule builder" },
  */
-export const projectMedia: Partial<Record<ProjectSlug, ProjectMedia>> = {};
+export const projectMedia: Partial<Record<string, ProjectMedia>> = {};
 
 export function getProjectBySlug(slug: string) {
   return projects.find((project) => project.slug === slug);

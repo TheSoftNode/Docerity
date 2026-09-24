@@ -29,8 +29,10 @@ test.describe("Work page", () => {
       page.getByRole("heading", { name: "Got something worth building?" })
     ).toBeVisible();
 
-    for (const name of ["Ledger", "Northwind", "Fieldnote"]) {
-      await expect(page.getByRole("heading", { name })).toBeVisible();
+    for (const name of ["MetaPilot", "TalentChainPro", "SoftInven"]) {
+      await expect(
+        page.getByRole("heading", { name: `${name} — view project`, exact: true })
+      ).toBeVisible();
     }
 
     expect(errors).toEqual([]);
@@ -63,8 +65,8 @@ test.describe("Work page", () => {
     await expect(page).toHaveURL("/work");
   });
 
-  test("case study 'All work' back link points to the dedicated page", async ({ page }) => {
-    await page.goto("/work/ledger");
+  test("project page 'All work' back link points to the dedicated page", async ({ page }) => {
+    await page.goto("/work/eep");
     await page.getByRole("link", { name: "All work" }).click();
     await expect(page).toHaveURL("/work");
   });

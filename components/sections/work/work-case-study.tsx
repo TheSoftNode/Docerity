@@ -1,13 +1,19 @@
 import Link from "next/link";
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  CheckIcon,
+  GitBranchIcon,
+} from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { MediaPlaceholder } from "@/components/shared/media-placeholder";
 import { WorkPreview } from "@/components/sections/work/work-preview";
-import { projects } from "@/components/sections/work/work-data";
+import { projects, type Project } from "@/components/sections/work/work-data";
 
-function WorkCaseStudy({ project }: { project: (typeof projects)[number] }) {
+function WorkCaseStudy({ project }: { project: Project }) {
   const currentIndex = projects.findIndex((p) => p.slug === project.slug);
   const prevProject = currentIndex > 0 ? projects[currentIndex - 1] : null;
   const nextProject =
@@ -52,24 +58,58 @@ function WorkCaseStudy({ project }: { project: (typeof projects)[number] }) {
             <div className="flex shrink-0 flex-col gap-4 rounded-xl border border-border bg-card p-5 sm:min-w-52">
               <div>
                 <p className="font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
-                  Outcome
+                  Status
                 </p>
                 <p className="mt-1 font-heading text-lg font-medium text-primary">
-                  {project.metric}
+                  {project.status}
                 </p>
               </div>
-              <div>
-                <p className="font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
-                  Role
-                </p>
-                <p className="mt-1 text-sm text-foreground">{project.role}</p>
-              </div>
-              <div>
-                <p className="font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
-                  Timeline
-                </p>
-                <p className="mt-1 text-sm text-foreground">{project.timeline}</p>
-              </div>
+
+              {/* Role and timeline are part of a written case study, so they
+                  appear only where one exists rather than as empty labels. */}
+              {project.role ? (
+                <div>
+                  <p className="font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
+                    Role
+                  </p>
+                  <p className="mt-1 text-sm text-foreground">{project.role}</p>
+                </div>
+              ) : null}
+              {project.timeline ? (
+                <div>
+                  <p className="font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
+                    Timeline
+                  </p>
+                  <p className="mt-1 text-sm text-foreground">{project.timeline}</p>
+                </div>
+              ) : null}
+
+              {(project.liveUrl || project.repoUrl) && (
+                <div className="flex flex-col gap-2 border-t border-border pt-4">
+                  {project.liveUrl ? (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-1.5 text-sm text-foreground transition-colors hover:text-primary"
+                    >
+                      Visit the project
+                      <ArrowUpRightIcon className="size-3.5 shrink-0" />
+                    </a>
+                  ) : null}
+                  {project.repoUrl ? (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      <GitBranchIcon className="size-3.5 shrink-0" />
+                      Source code
+                    </a>
+                  ) : null}
+                </div>
+              )}
             </div>
           </div>
 
@@ -77,6 +117,7 @@ function WorkCaseStudy({ project }: { project: (typeof projects)[number] }) {
             <WorkPreview variant={project.preview} />
           </div>
 
+          {project.body ? (
           <div className="mt-14">
             {project.body.map((section) => (
               <div key={section.heading} className="mb-10">
@@ -97,20 +138,67 @@ function WorkCaseStudy({ project }: { project: (typeof projects)[number] }) {
               </div>
             ))}
           </div>
+          ) : (
+            /*
+              Most of these projects have no published write-up yet. Rather
+              than pad the page with invented narrative — which is exactly what
+              the placeholder case studies did — it says so plainly and sends
+              the reader to the running thing.
+            */
+            <div className="mt-14 rounded-xl border border-border bg-card p-6 sm:p-8">
+              <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
+                Write-up
+              </p>
+              <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-muted-foreground sm:text-base">
+                A full case study for this project hasn&apos;t been written up
+                yet. In the meantime the build itself is the best description —
+                it&apos;s running, and the source is public where the licence
+                allows.
+              </p>
+              {(project.liveUrl || project.repoUrl) && (
+                <div className="mt-5 flex flex-wrap gap-3">
+                  {project.liveUrl ? (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-foreground transition-colors hover:border-primary/50 hover:text-primary"
+                    >
+                      Visit {project.name}
+                      <ArrowUpRightIcon className="size-3.5 shrink-0" />
+                    </a>
+                  ) : null}
+                  {project.repoUrl ? (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                    >
+                      <GitBranchIcon className="size-3.5 shrink-0" />
+                      Source code
+                    </a>
+                  ) : null}
+                </div>
+              )}
+            </div>
+          )}
 
-          <div className="rounded-xl border border-border bg-card p-6 sm:p-8">
-            <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-              Results
-            </p>
-            <ul className="mt-4 flex flex-col gap-3">
-              {project.results.map((result) => (
-                <li key={result} className="flex items-start gap-2.5 text-sm text-foreground/90">
-                  <CheckIcon className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {result}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {project.results ? (
+            <div className="mt-10 rounded-xl border border-border bg-card p-6 sm:p-8">
+              <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
+                Results
+              </p>
+              <ul className="mt-4 flex flex-col gap-3">
+                {project.results.map((result) => (
+                  <li key={result} className="flex items-start gap-2.5 text-sm text-foreground/90">
+                    <CheckIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+                    {result}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           <div className="mt-14 flex flex-col items-center gap-4 border-t border-border pt-10 text-center">
             <p className="text-sm text-muted-foreground">

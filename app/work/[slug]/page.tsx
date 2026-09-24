@@ -22,17 +22,17 @@ export async function generateMetadata({
   if (!project) return { title: "Not found" };
 
   return {
-    title: `${project.name} — Case Study`,
+    title: `${project.name} — Work`,
     description: project.description,
     openGraph: {
       type: "article",
-      title: `${project.name} — Case Study`,
+      title: `${project.name} — Work`,
       description: project.description,
       url: `${siteConfig.url}/work/${project.slug}`,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${project.name} — Case Study`,
+      title: `${project.name} — Work`,
       description: project.description,
     },
   };

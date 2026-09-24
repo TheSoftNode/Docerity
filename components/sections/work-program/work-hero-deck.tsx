@@ -7,7 +7,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 
 import { MetricDot } from "@/components/shared/section-kit";
 import { WorkMedia } from "@/components/sections/work/work-media";
-import { projects } from "@/components/sections/work/work-data";
+import { featuredProjects as projects } from "@/components/sections/work/work-data";
 
 const INTERVAL = 4600;
 
@@ -47,7 +47,7 @@ function WorkHeroDeck() {
           Recent outcomes
         </p>
         <p className="font-mono text-[0.6875rem] text-muted-foreground">
-          {projects.length} case studies
+          {projects.length} featured
         </p>
       </div>
 
@@ -89,7 +89,7 @@ function WorkHeroDeck() {
                     </p>
                     <p className="mt-1 flex min-w-0 items-center gap-2 text-sm font-medium text-primary">
                       <MetricDot />
-                      <span className="truncate">{project.metric}</span>
+                      <span className="truncate">{project.status}</span>
                     </p>
                   </div>
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition-all duration-300 group-hover/card:border-primary/50 group-hover/card:text-foreground">

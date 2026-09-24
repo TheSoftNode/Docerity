@@ -1,38 +1,54 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Work case studies", () => {
-  test("renders each case study with no console errors", async ({ page }) => {
+test.describe("Work project pages", () => {
+  test("renders each project page with no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (msg) => {
       if (msg.type() === "error") errors.push(msg.text());
     });
     page.on("pageerror", (err) => errors.push(String(err)));
 
-    for (const slug of ["ledger", "northwind", "fieldnote"]) {
+    for (const slug of ["eep", "metapilot", "softinven"]) {
       await page.goto(`/work/${slug}`);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      await expect(page.getByText("Results", { exact: true })).toBeVisible();
+      /* Status is known for every project; "Results" is part of a written
+         case study and most do not have one yet. */
+      await expect(page.getByText("Status", { exact: true })).toBeVisible();
     }
 
     expect(errors).toEqual([]);
   });
 
-  test("homepage 'View case study' links navigate to the real page", async ({ page }) => {
+  test("a project without a written study says so and links out", async ({ page }) => {
+    /*
+      The placeholder case studies were invented narrative. Where no real
+      write-up exists the page has to say that plainly rather than fill the
+      space, so the absence is asserted.
+    */
+    await page.goto("/work/metapilot");
+
+    await expect(page.getByText(/hasn't been written up yet/i)).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Visit MetaPilot/i })
+    ).toHaveAttribute("href", "https://metapilot-frontend.vercel.app/");
+  });
+
+  test("homepage 'View project' links navigate to the real page", async ({ page }) => {
     await page.goto("/");
     await page.locator("#work").scrollIntoViewIfNeeded();
 
-    await page.getByRole("link", { name: /view case study/i }).first().click();
-    await expect(page).toHaveURL("/work/ledger");
+    await page.getByRole("link", { name: /view project/i }).first().click();
+    await expect(page).toHaveURL("/work/eep");
   });
 
-  test("next/previous navigation links between case studies", async ({ page }) => {
-    await page.goto("/work/ledger");
+  test("next/previous navigation links between projects", async ({ page }) => {
+    await page.goto("/work/eep");
 
     await page.getByRole("link", { name: /Next/ }).click();
-    await expect(page).toHaveURL("/work/northwind");
+    await expect(page).toHaveURL("/work/hitoai");
 
     await page.getByRole("link", { name: /Previous/ }).click();
-    await expect(page).toHaveURL("/work/ledger");
+    await expect(page).toHaveURL("/work/eep");
   });
 
   test("returns 404 for an unknown project slug", async ({ page }) => {

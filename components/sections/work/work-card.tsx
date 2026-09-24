@@ -116,7 +116,7 @@ function WorkCard({
               className="outline-none after:absolute after:inset-0 after:z-10 after:rounded-2xl"
             >
               {project.name}
-              <span className="sr-only"> — view case study</span>
+              <span className="sr-only"> — view project</span>
             </Link>
           </h3>
 
@@ -147,13 +147,13 @@ function WorkCard({
           <div className="mt-auto flex flex-col items-start gap-2 border-t border-border/80 pt-5 @[21.5rem]:flex-row @[21.5rem]:items-center @[21.5rem]:justify-between @[21.5rem]:gap-4">
             <p className="flex items-center gap-2 font-heading text-sm font-semibold whitespace-nowrap text-primary">
               <span aria-hidden className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--brand-primary)]" />
-              {project.metric}
+              {project.status}
             </p>
             <span
               aria-hidden
               className="inline-flex items-center gap-1 text-sm whitespace-nowrap text-foreground/60 transition-colors duration-300 group-hover:text-foreground"
             >
-              View case study
+              View project
               <ArrowUpRightIcon className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </span>
           </div>

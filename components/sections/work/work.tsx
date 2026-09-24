@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { WorkBackground, orbitIcons } from "@/components/sections/work/work-background";
 import { OrbitCluster } from "@/components/sections/work/work-orbit";
 import { WorkCard } from "@/components/sections/work/work-card";
-import { projects } from "@/components/sections/work/work-data";
+import { featuredProjects } from "@/components/sections/work/work-data";
 
 function Work() {
   return (
@@ -57,7 +57,7 @@ function Work() {
         {/* Two columns arrive at `sm`, where a card is still wide enough to
             hold its media and a readable description. */}
         <div className="mt-10 grid gap-5 lg:mt-14 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-          {projects.map((project, index) => (
+          {featuredProjects.map((project, index) => (
             <WorkCard key={project.name} project={project} index={index} />
           ))}
         </div>

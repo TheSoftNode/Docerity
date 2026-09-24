@@ -13,8 +13,8 @@ function WorkShowcase() {
 
       <Container className="relative">
         <div className="max-w-2xl">
-          <Eyebrow>Case studies</Eyebrow>
-          <SectionTitle>A few systems, and what they actually solved.</SectionTitle>
+          <Eyebrow>Selected work</Eyebrow>
+          <SectionTitle>Everything shipped, and where it runs.</SectionTitle>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-6">
