@@ -23,7 +23,7 @@ function Mentorship() {
       id="mentorship"
       className="relative overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20 lg:py-24"
     >
-      {/* Bloom behind the path card — right side, alternating with Work's
+      {/* Bloom behind the path card: right side, alternating with Work's
           left-hand bloom so the lighting moves down the page. */}
       <div
         aria-hidden
@@ -39,8 +39,8 @@ function Mentorship() {
             A clear path to your next level.
           </h2>
           <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[34rem]">
-            Weekly 1:1s, honest code review, and a real plan &mdash; not just
-            office hours.
+            Weekly 1:1s, honest code review, and a real plan you can
+            follow between sessions.
           </p>
 
           <ul className="mt-8 grid gap-5 sm:grid-cols-3 md:grid-cols-1 xl:grid-cols-3">
@@ -81,8 +81,8 @@ function Mentorship() {
           </div>
         </div>
 
-        {/* Framed the same way as the Work cards — a gradient hairline around
-            an opaque panel — so the two sections share one visual language. */}
+        {/* Framed the same way as the Work cards: a gradient hairline around
+            an opaque panel, so the two sections share one visual language. */}
         <div className="rounded-2xl bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--brand-primary),transparent_55%),var(--border)_45%,color-mix(in_oklch,var(--brand-violet),transparent_60%))] p-px">
           <div className="rounded-[calc(1rem-1px)] bg-card p-6 sm:p-8">
             <div className="mb-7 flex items-center justify-between border-b border-border/80 pb-5">

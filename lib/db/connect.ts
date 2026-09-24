@@ -41,7 +41,7 @@ export async function connectDB() {
   if (!database.isConfigured) {
     /*
       A typed error rather than a bare throw, so the route wrapper answers 503
-      — "the dependency is down, try again" — instead of 500, which tells a
+      ("the dependency is down, try again") instead of 500, which tells a
       caller and a monitor that the fault is ours and permanent.
     */
     throw new ServiceUnavailableError(

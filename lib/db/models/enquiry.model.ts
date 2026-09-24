@@ -59,7 +59,7 @@ const enquirySchema = new Schema(
 
     /*
       Delivery is recorded rather than assumed. An enquiry is persisted before
-      any mail is attempted, so a Gmail outage costs a notification — and this
+      any mail is attempted, so a Gmail outage costs a notification, and this
       is how that notification's absence becomes visible instead of looking
       like an enquiry I simply missed.
     */
@@ -96,7 +96,7 @@ export type EnquiryDocument = InferSchemaType<typeof enquirySchema>;
 /*
   Declared explicitly rather than inferred from the schema. `InferSchemaType`
   types a subdocument array as Mongoose `Subdocument` instances, which carry
-  document methods a plain object cannot satisfy — so every layer that merely
+  document methods a plain object cannot satisfy, so every layer that merely
   *builds* an attachment would have to fabricate a document to typecheck. This
   is the data shape; Mongoose hydrates it on the way in.
 */

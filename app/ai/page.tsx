@@ -11,7 +11,7 @@ import { AiModels } from "@/components/sections/ai/ai-models";
 export const metadata: Metadata = {
   title: "AI Engineering",
   description:
-    "Production LLM systems, RAG, multi-modal AI pipelines, and conversational agents — plus model evaluation and RLHF training data design.",
+    "Production LLM systems, RAG, multi-modal AI pipelines, and conversational agents, plus model evaluation and RLHF training data design.",
 };
 
 export default function AiPage() {

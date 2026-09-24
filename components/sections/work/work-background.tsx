@@ -63,7 +63,7 @@ function WorkBackground() {
         className="absolute inset-[-3rem] bg-surface-step-b"
       />
 
-      {/* The seam itself — a gradient hairline, brightest at the top. */}
+      {/* The seam itself: a gradient hairline, brightest at the top. */}
       <motion.div
         style={{
           y: driftY,
@@ -96,7 +96,7 @@ function WorkBackground() {
         Clipped to the right zone and held back to `2xl`, which is how it
         behaved originally. Unclipped at `xl` the ring was wider than the space
         beside the cards, so all that surfaced in the open area next to the
-        heading were two stray badges — it read as loose icons drifting across
+        heading were two stray badges; it read as loose icons drifting across
         the section rather than as an orbit sitting behind it.
       */}
       <motion.div

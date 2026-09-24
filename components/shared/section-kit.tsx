@@ -15,7 +15,7 @@ function Eyebrow({ children, className }: { children: ReactNode; className?: str
   );
 }
 
-/** Page-level h1 — the hero's fluid scale. */
+/** Page-level h1, at the hero's fluid scale. */
 function HeroTitle({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <h1
@@ -83,7 +83,7 @@ function FramedPanel({
 }
 
 /**
- * Quiet frame that lights up on hover — for items in a grid, where every card
+ * Quiet frame that lights up on hover, for items in a grid, where every card
  * glowing at once would be noise.
  */
 function HoverCard({

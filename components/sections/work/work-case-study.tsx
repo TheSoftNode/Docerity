@@ -150,8 +150,8 @@ function WorkCaseStudy({ project }: { project: Project }) {
           ) : (
             /*
               Most of these projects have no published write-up yet. Rather
-              than pad the page with invented narrative — which is exactly what
-              the placeholder case studies did — it says so plainly and sends
+              than pad the page with invented narrative (which is exactly what
+              the placeholder case studies did) it says so plainly and sends
               the reader to the running thing.
             */
             <div className="mt-14 rounded-xl border border-border bg-card p-6 sm:p-8">
@@ -160,8 +160,8 @@ function WorkCaseStudy({ project }: { project: Project }) {
               </p>
               <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-muted-foreground sm:text-base">
                 A full case study for this project hasn&apos;t been written up
-                yet. In the meantime the build itself is the best description —
-                it&apos;s running, and the source is public where the licence
+                yet. In the meantime the build itself is the best description.
+                It&apos;s running, and the source is public where the licence
                 allows.
               </p>
               {(project.liveUrl || project.repoUrl) && (

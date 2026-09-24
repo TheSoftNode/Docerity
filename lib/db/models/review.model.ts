@@ -18,7 +18,7 @@ const reviewSchema = new Schema(
     title: { type: String, required: true, trim: true, maxlength: 160 },
     body: { type: String, required: true, trim: true, maxlength: 2000 },
     rating: { type: Number, min: 1, max: 5, required: true },
-    /* A Cloudinary public_id, not a URL — the same reasoning as enquiry
+    /* A Cloudinary public_id, not a URL, for the same reasoning as enquiry
        attachments: the durable fact is the identifier, and a delivery URL is
        derived from it. Empty means no photo, and the UI falls back to
        initials rather than to a "default.jpg" that may not exist. */
@@ -28,7 +28,7 @@ const reviewSchema = new Schema(
     /*
       The gate the portfolio backend never had. `createReview` there was
       `Model.create(req.body)` on an open POST, so anything submitted appeared
-      on the live site immediately — spam, abuse, or a competitor's ad.
+      on the live site immediately: spam, abuse, or a competitor's ad.
 
       Nothing is public until it is explicitly approved. `getPublicReviews`
       is the only read path the site uses and it filters on this field.

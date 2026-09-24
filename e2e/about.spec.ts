@@ -58,11 +58,11 @@ test.describe("About page", () => {
       .click();
 
     await expect(
-      page.getByRole("heading", { name: "Full-stack Development Lead" })
+      page.getByRole("heading", { name: "Senior Full-Stack Software Engineer" })
     ).toBeVisible();
-    await expect(page.getByText("HitoAI")).toBeVisible();
+    await expect(page.getByText("HitoAI", { exact: true })).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Web3 & Blockchain Engineer" })
+      page.getByRole("heading", { name: "Lead Full-Stack Software Engineer" })
     ).toBeVisible();
   });
 
@@ -90,7 +90,7 @@ test.describe("About page", () => {
 
       Asserting `naturalWidth > 0` is the more direct test and it passes
       against a production build, but the dev image optimiser stalls when
-      eight optimised variants are requested at once — the requests are issued
+      eight optimised variants are requested at once: the requests are issued
       and no response ever arrives. Since the suite runs against `next dev`,
       that assertion would fail for a reason that has nothing to do with the
       page. Fetching each file proves the same thing: it exists and is served.
@@ -126,8 +126,8 @@ test.describe("About page", () => {
   test("every hero figure settles on its real value", async ({ page }) => {
     /*
       The figures count up on first view. An earlier version kept the result
-      of `String.match` in the effect's dependency list — a new array on every
-      render — so the effect re-ran, restarted the count, set state and
+      of `String.match` in the effect's dependency list (a new array on every
+      render) so the effect re-ran, restarted the count, set state and
       triggered the render that re-ran it, leaving all four flickering near
       zero. This asserts they come to rest on the real numbers.
     */
@@ -135,10 +135,10 @@ test.describe("About page", () => {
     await page.goto("/about");
 
     for (const [label, expected] of [
-      ["Years teaching and mentoring", "9+"],
-      ["Hackathon wins", "4"],
+      ["Years building production software", "6+"],
+      ["Hackathon wins", "3"],
       ["Shipped projects", "25"],
-      ["Blockchain ecosystems", "6"],
+      ["Blockchain ecosystems", "7"],
     ] as const) {
       await expect(
         page.getByText(label, { exact: true }).locator("xpath=preceding-sibling::dd[1]")

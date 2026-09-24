@@ -25,7 +25,7 @@ function Work() {
               Selected Work
             </p>
             {/* Same fluid scale and weight as the hero's headline, one step
-                down — so the page reads as one type system. */}
+                down, so the page reads as one type system. */}
             <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
               Recent work, real outcomes.
             </h2>

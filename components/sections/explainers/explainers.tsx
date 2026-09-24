@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ExplainerBackground } from "@/components/sections/explainers/explainer-background";
 import { ExplainerStage } from "@/components/sections/explainers/explainer-stage";
 
-/* How every post is built — the two halves the stage on the right animates. */
+/* How every post is built: the two halves the stage on the right animates. */
 const format = [
   { step: "01", title: "The concept", body: "A real engineering idea, named plainly." },
   { step: "02", title: "Like this", body: "Something you already know that works the same way." },
@@ -19,7 +19,7 @@ function Explainers() {
       className="relative overflow-hidden border-b border-border/80 py-16 sm:py-20 lg:py-24"
     >
       {/* The animated wave splits the band down the gutter between the two
-          columns — dark behind the copy, raised behind the stage. Centred, it
+          columns: dark behind the copy, raised behind the stage. Centred, it
           used to cut straight through the stage card. */}
       <ExplainerBackground />
 
@@ -32,8 +32,8 @@ function Explainers() {
             Complex ideas, explained through things you already know.
           </h2>
           <p className="mt-4 max-w-[44ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[32rem]">
-            Every post pairs a real technical concept with an everyday analogy
-            &mdash; so it actually sticks.
+            Every post pairs a real technical concept with an everyday analogy,
+            so it actually sticks.
           </p>
 
           <dl className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">

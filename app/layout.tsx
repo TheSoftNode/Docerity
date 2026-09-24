@@ -23,8 +23,8 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "Docerity — Engineering, Mentorship & Tech Explainers",
-    template: `%s — ${siteConfig.name}`,
+    default: "Docerity · Engineering, Mentorship & Tech Explainers",
+    template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,
   alternates: {
@@ -35,13 +35,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
-    title: "Docerity — Engineering, Mentorship & Tech Explainers",
+    title: "Docerity · Engineering, Mentorship & Tech Explainers",
     description: siteConfig.description,
     url: siteConfig.url,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Docerity — Engineering, Mentorship & Tech Explainers",
+    title: "Docerity · Engineering, Mentorship & Tech Explainers",
     description: siteConfig.description,
   },
 };

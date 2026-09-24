@@ -58,7 +58,7 @@ function HeroIllustration() {
       onPointerLeave={handlePointerLeave}
       /* Left-aligned in its column, not centred. `mx-auto` split the
          leftover width evenly, so half of it landed in the middle of the hero
-         and read as a hole — 106px of dead space at 1280, 210px at 2560. Any
+         and read as a hole: 106px of dead space at 1280, 210px at 2560. Any
          slack now falls on the page's outer edge, where it belongs. */
       className="relative aspect-square w-full max-w-[30rem]"
       style={{ perspective: 1200 }}

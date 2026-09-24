@@ -12,7 +12,7 @@ const DRAW = 2;
 /**
  * The growth path, stood upright.
  *
- * The horizontal curve needs a full-width row to stay legible — squeezed into
+ * The horizontal curve needs a full-width row to stay legible; squeezed into
  * a column its 22px SVG labels shrink to ~13px, and at full width its
  * captions sat directly on the line. Vertical, it fits a two-column layout,
  * reads top-to-bottom like the progression it describes, and uses real text

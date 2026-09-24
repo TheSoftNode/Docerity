@@ -10,7 +10,7 @@ const logger = createLogger("storage");
  * Cloudinary, configured for *signed* direct-to-cloud uploads.
  *
  * The browser sends the file straight to Cloudinary, so the bytes never pass
- * through a route handler and the 4.5MB serverless body limit does not apply —
+ * through a route handler and the 4.5MB serverless body limit does not apply;
  * a PRD exported to PDF with screenshots clears that easily.
  *
  * Unlike the portfolio's unsigned preset, the browser must present a signature
@@ -64,7 +64,7 @@ export type SignedUploadParams = {
  * Parameters the browser needs to upload one file.
  *
  * `type: "authenticated"` is the important part. A default Cloudinary upload
- * is served from a permanent public URL — anyone holding it, forever, can read
+ * is served from a permanent public URL: anyone holding it, forever, can read
  * the file. A client's product requirements are not public, so these are
  * stored under a delivery type that refuses unsigned requests, and read back
  * through `signedUrlFor` with an expiry.
@@ -82,7 +82,7 @@ export function createUploadSignature(params: {
     Every parameter signed here must also be sent by the browser, and the
     browser must send nothing else that Cloudinary signs. A mismatch produces
     "Invalid Signature", so this object and the client's form fields have to be
-    kept in step — which is why the client reads them from this same response
+    kept in step, which is why the client reads them from this same response
     rather than hard-coding them.
   */
   const signature = api.utils.api_sign_request(
@@ -131,7 +131,7 @@ export function signedUrlFor(params: {
  * Confirms an asset really exists and reports what Cloudinary actually stored.
  *
  * The browser tells us what it uploaded, and the browser can lie. Before an
- * attachment is attached to an enquiry, this asks Cloudinary directly — so a
+ * attachment is attached to an enquiry, this asks Cloudinary directly, so a
  * fabricated `public_id`, or a size that disagrees with the real object,
  * cannot be recorded as fact.
  */
@@ -162,7 +162,7 @@ export async function describeAsset(params: {
   }
 }
 
-/** Removes an asset — used when an enquiry is deleted, so files do not orphan. */
+/** Removes an asset, used when an enquiry is deleted, so files do not orphan. */
 export async function destroyAsset(params: {
   publicId: string;
   resourceType: ResourceType;

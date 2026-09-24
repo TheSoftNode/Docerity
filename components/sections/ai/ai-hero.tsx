@@ -19,9 +19,9 @@ function AiHero() {
           <Eyebrow><ScrambleText text="AI & LLM Engineering" /></Eyebrow>
           <HeroTitle>AI systems that run in production, not a demo.</HeroTitle>
           <Lede className="mt-6 text-base">
-            LLM routing, RAG, multi-modal pipelines, and conversational agents
-            &mdash; processing millions of real requests, plus the model
-            evaluation work behind training data that actually improves a model.
+            LLM routing, RAG, multi-modal pipelines, and conversational agents,
+            processing millions of real requests, plus the model evaluation work
+            behind training data that actually improves a model.
           </Lede>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">

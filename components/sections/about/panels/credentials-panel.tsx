@@ -48,7 +48,7 @@ function CredentialsPanel() {
               <div className="group h-full overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-300 hover:border-primary/40">
                 {/*
                   `contain`, not `cover`. These are documents ranging from 1.29
-                  to 1.78 against a 16:10 frame — the widest cropped the
+                  to 1.78 against a 16:10 frame, and the widest cropped the
                   recipient's name off both sides, which is the one thing on a
                   certificate worth seeing.
                 */}

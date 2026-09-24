@@ -17,7 +17,7 @@ test.describe("Work", () => {
 
     for (const name of ["EEP", "HitoAI", "MetaPilot"]) {
       await expect(
-        page.getByRole("heading", { name: `${name} — view project`, exact: true })
+        page.getByRole("heading", { name: `${name}, view project`, exact: true })
       ).toBeVisible();
     }
 

@@ -21,7 +21,7 @@ export const projects = [
     name: "MetaPilot",
     badge: "MetaMask x Solana Hackathon Winner",
     description:
-      "A 4-program DeFi automation protocol (2,000+ lines of Rust) for autonomous DAO voting, reward claiming, AI-powered yield optimization, and token purchasing — so users never miss an on-chain opportunity.",
+      "A 4-program DeFi automation protocol (2,000+ lines of Rust) for autonomous DAO voting, reward claiming, AI-powered yield optimization, and token purchasing, so users never miss an on-chain opportunity.",
     tags: ["Solana", "Rust", "Anchor", "DeFi"],
     Icon: BotIcon,
   },
@@ -54,7 +54,7 @@ export const capabilities: {
   {
     title: "Smart contract architecture",
     description:
-      "Full-stack contract systems in Solidity, Clarity, and Rust — designed for security and long-term maintainability, not just a passing audit.",
+      "Full-stack contract systems in Solidity, Clarity, and Rust, designed for security and long-term maintainability rather than a passing audit.",
     Icon: LinkIcon,
   },
   {

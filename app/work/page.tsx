@@ -13,7 +13,7 @@ import { WorkTestimonials } from "@/components/sections/work-program/work-testim
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Production software shipped for real teams — fintech dashboards, commerce platforms, offline-first mobile apps, and the process behind them.",
+    "Production software shipped for real teams: fintech dashboards, commerce platforms, offline-first mobile apps, and the process behind them.",
 };
 
 export default function WorkPage() {

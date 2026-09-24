@@ -61,14 +61,14 @@
    Two themes, one vocabulary.
 
    `:root` is light, `.dark` is dark, and the dark values are the ones the
-   brand was designed around — obsidian ink, royal sapphire, muted violet and
+   brand was designed around: obsidian ink, royal sapphire, muted violet and
    soft pearl, with steel gray for secondary text.
 
    The three accents are a vocabulary, not a palette to sprinkle:
-     sapphire  — the brand. Buttons, links, section labels, engineering.
-     violet    — rare. AI and Web3, selected words, metrics, illustration
+     sapphire  : the brand. Buttons, links, section labels, engineering.
+     violet    : rare. AI and Web3, selected words, metrics, illustration
                  detail.
-     teal      — rarer still. Success, live, shipped, verified states.
+     teal      : rarer still. Success, live, shipped, verified states.
 
    The accents shift between themes rather than staying fixed: sapphire on
    white needs to be darker than sapphire on obsidian to stay legible.
@@ -83,7 +83,7 @@
   --brand-navy: #0a1120;
   --brand-primary: #4453d6;
   --brand-violet: #6a4fd0;
-  /* Iris sits between sapphire and violet — small uppercase labels only. */
+  /* Iris sits between sapphire and violet, for small uppercase labels only. */
   --brand-iris: #4f57d8;
   --brand-teal: #0f8375;
 
@@ -222,7 +222,7 @@
     The button silhouette: two opposite corners cut away.
 
     A chamfer rather than a rounded rectangle, because the site already speaks
-    this language — registration marks on the About panel, corner brackets on
+    this language: registration marks on the About panel, corner brackets on
     the explainer stage, hairline rules everywhere. A cut corner belongs to
     that vocabulary in a way a pill or a leaf shape would not.
 
@@ -231,7 +231,7 @@
 
     `clip-path` cuts through anything painted on the element, which is why the
     outline variant drops its border for a translucent fill, and why the focus
-    ring is drawn inside with an inset shadow — an outer ring would simply be
+    ring is drawn inside with an inset shadow; an outer ring would simply be
     clipped away, leaving keyboard users nothing to see.
   */
   .btn-shape {
@@ -255,7 +255,7 @@
 
     From `lg` the mechanism changes. It used to cap the content at 84rem and
     let every extra pixel of viewport become margin, which meant the gutter
-    grew five times faster than the screen did — 48px at 1280, 96px at 1440,
+    grew five times faster than the screen did: 48px at 1280, 96px at 1440,
     240px at 1728, while the content sat frozen at 1248px the whole way. It
     was not even monotonic: the rem-based cap combined with the root-size step
     at 1800 made 1920 *narrower*-gutted than 1728.

@@ -16,7 +16,7 @@ import {
   A logo wall that earns its place.
 
   The first version was a static grid of chips with the context hidden until
-  hover — which on a touch screen means hidden full stop, and on a desktop
+  hover, which on a touch screen means hidden full stop, and on a desktop
   means a row of grey marks saying nothing. Here one logo is always expanded:
   hovering or focusing moves the selection, and the expanded card states what
   the work was, so the section reads as evidence at rest rather than only

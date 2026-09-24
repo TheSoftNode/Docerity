@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 /*
   Sections animate in with `whileInView`, and Playwright counts an element at
-  `opacity: 0` as visible — it has a box. So waiting for a heading proves
+  `opacity: 0` as visible, since it has a box. So waiting for a heading proves
   nothing about whether the section has actually appeared, and a screenshot
   taken at that moment captures an empty band. One baseline was recorded that
   way: a blank page that would have matched any blank render.

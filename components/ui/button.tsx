@@ -9,20 +9,20 @@ const buttonVariants = cva(
 
     Two consequences follow from clipping rather than rounding. The focus
     indicator is an outline drawn *inside* the element via a negative offset,
-    because `ring-*` paints outside and the clip erases it — a keyboard user
+    because `ring-*` paints outside and the clip erases it, so a keyboard user
     would be left with no indicator at all. `aria-invalid` gets the same
     treatment for the same reason.
 
     An inset `box-shadow` was tried first and silently produced nothing:
     Tailwind composes `box-shadow` from several custom properties, and the
     colour in an arbitrary `shadow-[...]` value was dropped on the way through.
-    `outline` is a plain property with no such composition — but it needs
+    `outline` is a plain property with no such composition, but it needs
     `outline-solid` alongside the width, because the base `outline-none` sets
     the style to `none` and a width alone leaves it there.
 
     The indicator is `--foreground`, not `--ring`. The ring colour is the same
     sapphire as the primary button's fill, so on the site's most-used button
-    the focus outline was invisible — present in the computed style and
+    the focus outline was invisible: present in the computed style and
     impossible to see. Near-white clears 3:1 against both the sapphire fill
     and the dark translucent one.
   */
@@ -33,14 +33,14 @@ const buttonVariants = cva(
         /* The glow is a `drop-shadow` filter, not a box-shadow: `clip-path`
            clips anything painted outside the element, so a box-shadow would
            never appear. A filter is applied after the clip and traces the
-           chamfered silhouette. The fill stays flat — white on
+           chamfered silhouette. The fill stays flat: white on
            `--brand-primary` already measures 4.21:1, and mixing violet in
            would darken it further. */
         default:
           "bg-primary text-primary-foreground hover:bg-primary/90 hover:[filter:drop-shadow(0_8px_18px_color-mix(in_oklch,var(--brand-primary),transparent_55%))]",
         /* Filled rather than bordered. A border on a clipped element stops
            dead at each cut, leaving two bare diagonals and four truncated
-           edges, which reads as broken — a translucent fill gives the chamfer
+           edges, which reads as broken. A translucent fill gives the chamfer
            something to cut instead. */
         outline:
           "bg-foreground/[0.06] text-foreground hover:bg-foreground/[0.12] hover:text-foreground aria-expanded:bg-foreground/[0.12] aria-expanded:text-foreground",

@@ -89,7 +89,7 @@ function useTypedPhrase(enabled: boolean) {
 /**
  * The CTA's right half: a console you pick a command from.
  *
- * The prompt types itself, but it is decoration — `aria-hidden`, with the real
+ * The prompt types itself, but it is decoration: `aria-hidden`, with the real
  * choices below as ordinary links. A screen reader gets three clear
  * destinations instead of a stuttering string of characters.
  */
@@ -107,7 +107,7 @@ function CtaConsole() {
           <span className="size-2 rounded-full bg-muted-foreground/30" />
         </span>
         <p className="ml-1 font-mono text-[0.6875rem] tracking-[0.12em] text-muted-foreground uppercase">
-          docerity &mdash; start
+          docerity / start
         </p>
       </div>
 

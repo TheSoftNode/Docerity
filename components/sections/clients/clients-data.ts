@@ -2,7 +2,7 @@
   Two honest groupings rather than one "clients" wall.
 
   The portfolio showed blockchains and companies in a single row of logos
-  under "Trusted by Industry Leaders", which overstates the blockchains —
+  under "Trusted by Industry Leaders", which overstates the blockchains:
   Stacks is not a client, it is a protocol the work was built on. Splitting
   them says more, not less: one row is who paid for the work, the other is
   the ground it was built on, and neither needs a caveat.

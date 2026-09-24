@@ -119,7 +119,7 @@ function ExplainerStage() {
       Auto-advance stops under reduced motion, matching every other timed
       component here. Swapping the pair out from under someone mid-sentence is
       movement they did not ask for, and it also made this section's visual
-      snapshot unstable — the screenshot caught whichever pair happened to be
+      snapshot unstable: the screenshot caught whichever pair happened to be
       showing.
     */
     if (reduceMotion) return;

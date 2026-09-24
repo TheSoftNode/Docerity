@@ -56,13 +56,13 @@ export const database = {
   1. Gmail rewrites the From header to the authenticated account unless the
      address is a verified alias (Gmail → Settings → Accounts → "Send mail
      as"). So setting SMTP_FROM to hello@docerity.com before that alias exists
-     does not make mail appear to come from it — Gmail silently replaces it.
+     does not make mail appear to come from it; Gmail silently replaces it.
 
   2. Free Gmail allows roughly 500 recipients per day and will temporarily
      lock the account if that is exceeded. Fine for enquiry volume; not a
      newsletter transport.
 
-  The password must be a 16-character App Password, not the account password —
+  The password must be a 16-character App Password, not the account password:
   Google disabled plain password auth for SMTP in May 2022.
 */
 export const email = {
@@ -100,7 +100,7 @@ export const email = {
   Cloudinary with *signed* uploads.
 
   The portfolio uploads client-side with an unsigned preset, which means the
-  preset name — visible in the browser bundle — is the only thing standing
+  preset name (visible in the browser bundle) is the only thing standing
   between the internet and your Cloudinary quota. Anyone who reads it can
   upload anything to the account.
 

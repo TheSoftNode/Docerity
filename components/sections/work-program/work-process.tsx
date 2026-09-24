@@ -17,7 +17,7 @@ function WorkProcess() {
           <Eyebrow>How it works</Eyebrow>
           <SectionTitle>From first call to shipped software.</SectionTitle>
           <Lede>
-            Four stages, each ending in something you can look at &mdash; not a
+            Four stages, each ending in something you can look at, not a
             status update.
           </Lede>
         </div>

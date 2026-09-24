@@ -10,7 +10,7 @@ import { failure } from "@/lib/http/responses";
  *
  * The previous handlers each carried their own try/catch and their own
  * `console.log`, which meant an unhandled throw in one of them produced
- * Next's default 500 with no log line at all — the failure existed only as a
+ * Next's default 500 with no log line at all; the failure existed only as a
  * blank page.
  */
 

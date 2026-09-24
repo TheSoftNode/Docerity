@@ -50,7 +50,7 @@ function isRetryable(error: unknown): boolean {
 const MAX_ATTEMPTS = 3;
 
 function backoffMs(attempt: number) {
-  /* 400ms, 1200ms — bounded so three attempts still fit inside maxDuration. */
+  /* 400ms, 1200ms, bounded so three attempts still fit inside maxDuration. */
   return 400 * 3 ** (attempt - 1);
 }
 
@@ -67,7 +67,7 @@ export async function sendMail(
   options: SendOptions = {}
 ): Promise<DeliveryResult> {
   if (!emailConfig.isConfigured) {
-    logger.warn("email is not configured — skipping send", { to: message.to });
+    logger.warn("email is not configured, skipping send", { to: message.to });
     return { ok: false, error: "Email is not configured.", attempts: 0 };
   }
 

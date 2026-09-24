@@ -19,7 +19,7 @@ function WorkHero() {
           <HeroTitle>Software built for what happens after launch.</HeroTitle>
           <Lede className="mt-6 text-base">
             A few production systems, picked for the problems they actually
-            solved &mdash; plus how projects like these usually go, start to
+            solved, plus how projects like these usually go, start to
             finish.
           </Lede>
 

@@ -11,7 +11,7 @@ import { steps } from "@/components/sections/contact/contact-data";
 function Contact() {
   return (
     /*
-      One section, two columns — what you're sending on the left, where you
+      One section, two columns: what you're sending on the left, where you
       send it on the right. This used to be a centred header above a light
       ivory panel, which put a hard seam between the dark page and the form.
     */
@@ -23,7 +23,7 @@ function Contact() {
           <Eyebrow>New project</Eyebrow>
           <HeroTitle>Tell me what you&apos;re building.</HeroTitle>
           <Lede className="mt-6">
-            A few details now save a lot of back-and-forth later &mdash; I read
+            A few details now save a lot of back-and-forth later. I read
             every message myself.
           </Lede>
 

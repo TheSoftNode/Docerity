@@ -25,8 +25,8 @@ function Hero() {
         The grid stays single-column until `lg`. That is deliberate: it keeps
         the headline's available width moving in step with the viewport, so a
         `vw`-based type scale can never grow while its column shrinks. The old
-        split at `md` did exactly that — 48px type at 640px, then 40px at 768px
-        once the column halved — and at 1024px it left a five-line ragged
+        split at `md` did exactly that (48px type at 640px, then 40px at 768px
+        once the column halved) and at 1024px it left a five-line ragged
         headline with "Ideas" orphaned on its own line.
 
         Height comes from the content. Pinning the hero to `100dvh` minus the
@@ -36,7 +36,7 @@ function Hero() {
         Top padding stays at one value rather than stepping up to `pt-20` at
         `lg`. The column is centred against the artwork, which is a fixed
         480px tall while the copy is 360–400px, so centring already adds
-        40–60px above the eyebrow — the larger step landed the headline
+        40–60px above the eyebrow, and the larger step landed the headline
         ~140px below the nav and read as the hero being pushed down the page.
       */}
       <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-10 lg:pb-24 xl:gap-12">
@@ -55,11 +55,11 @@ function Hero() {
             step is ever allowed to go.
           */}
           <h1 className="mt-6 max-w-[20ch] text-balance font-heading text-[clamp(2rem,6vw,3rem)] font-semibold leading-[1.05] tracking-tight text-foreground md:max-w-none md:text-[clamp(1.9rem,3.4vw,3.6rem)] lg:mt-7 lg:text-[clamp(2.75rem,3.6vw,3.6rem)]">
-            {/* Three sentences, three lines — but only once the column is wide
+            {/* Three sentences, three lines, but only once the column is wide
                 enough to hold them. Below `lg` they wrap naturally. */}
             <span className="md:block">Software shipped.</span>{" "}
             <span className="md:block">Engineers grown.</span>{" "}
-            {/* Violet, not sapphire — the headline accent should not be the
+            {/* Violet, not sapphire: the headline accent should not be the
                 same colour as the button sitting directly under it. */}
             <span className="text-brand-violet md:block">Ideas made simple.</span>
           </h1>
@@ -96,7 +96,7 @@ function Hero() {
           Appears only once it is an actual column. Stacked beneath the copy on
           a tablet it added ~450px of scroll for pure decoration, taking the
           hero from 458px at 640 to 915px at 768. There is no blank half to
-          fill below `lg` any more — the copy spans the full width there — so
+          fill below `lg` any more (the copy spans the full width there) so
           the artwork simply waits until the layout has room for it.
         */}
         {/*

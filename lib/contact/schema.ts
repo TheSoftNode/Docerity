@@ -129,9 +129,9 @@ export function validateEnquiry(
     );
 
     if (oversized) {
-      errors.files = `${oversized.name} is ${formatBytes(oversized.size)} — the limit is ${formatBytes(FILE_LIMITS.maxBytesPerFile)} per file.`;
+      errors.files = `${oversized.name} is ${formatBytes(oversized.size)}, and the limit is ${formatBytes(FILE_LIMITS.maxBytesPerFile)} per file.`;
     } else if (total > FILE_LIMITS.maxBytesTotal) {
-      errors.files = `That's ${formatBytes(total)} in total — the limit is ${formatBytes(FILE_LIMITS.maxBytesTotal)}.`;
+      errors.files = `That's ${formatBytes(total)} in total, and the limit is ${formatBytes(FILE_LIMITS.maxBytesTotal)}.`;
     } else if (wrongType) {
       errors.files = `${wrongType.name} isn't a supported file type.`;
     }

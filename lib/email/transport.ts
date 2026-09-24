@@ -14,7 +14,7 @@ import { ServiceUnavailableError } from "@/lib/core/errors";
  *
  * The timeouts matter more than they look. Gmail will hold a TCP connection
  * open without responding when the account is rate limited, and with
- * nodemailer's defaults that hangs until the platform kills the function —
+ * nodemailer's defaults that hangs until the platform kills the function,
  * turning a slow email into a failed request. These cap the total attempt well
  * inside the route's `maxDuration`.
  */

@@ -13,8 +13,8 @@ const ALL = "All work";
 /*
   Filtered rather than one undifferentiated wall of 25.
 
-  A visitor arrives with a question — "have you shipped AI?", "do you actually
-  do Web3?" — and a flat grid makes them scan every card to answer it. The
+  A visitor arrives with a question ("have you shipped AI?", "do you actually
+  do Web3?") and a flat grid makes them scan every card to answer it. The
   buckets come from the projects themselves, so adding a project with a new
   group adds its filter without touching this file.
 */

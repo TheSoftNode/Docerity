@@ -1,6 +1,6 @@
 import type { Media } from "@/components/shared/media-placeholder";
 
-/** Real media for a project card — a screenshot, or a short looping clip. */
+/** Real media for a project card: a screenshot, or a short looping clip. */
 export type ProjectMedia =
   | { type: "image"; src: string; alt: string }
   | { type: "video"; src: string; poster?: string; alt: string };
@@ -43,7 +43,7 @@ export type Project = {
 /*
   Real work, migrated from the standalone portfolio.
 
-  What was here before — Ledger, Northwind and Fieldnote — was placeholder
+  What was here before (Ledger, Northwind and Fieldnote) was placeholder
   fiction: invented clients with invented metrics ("40% faster close") and no
   live URLs. Plausible-looking numbers on a company's work page are a
   liability the first time a prospect asks about one, and meanwhile 25 real
@@ -74,7 +74,7 @@ export const projects: readonly Project[] = [
     category: "AI · Corporate platform",
     groups: ["AI", "Full-stack"],
     description:
-      "The corporate platform for HitoAI's educational technology, covering the assessment tooling institutions use to streamline marking and reporting.",
+      "The corporate platform for HitoAI's educational technology, covering the assessment tooling institutions use for marking and reporting.",
     tags: ["React", "Vite", "Node.js", "MongoDB", "Tailwind CSS"],
     status: "In progress",
     preview: "grid",
@@ -102,7 +102,7 @@ export const projects: readonly Project[] = [
     category: "Web3 · Hedera",
     groups: ["Web3", "Hackathon"],
     description:
-      "Verifiable skill credentials as soulbound tokens, with AI-assisted talent matching on top — professional reputation that a candidate carries rather than re-proves.",
+      "Verifiable skill credentials as soulbound tokens, with AI-assisted talent matching on top. Professional reputation that a candidate carries rather than re-proves.",
     tags: ["Next.js", "Hedera SDK", "Hashgraph", "Tailwind CSS"],
     status: "In progress",
     preview: "grid",
@@ -117,7 +117,7 @@ export const projects: readonly Project[] = [
     category: "Web3 · Automation",
     groups: ["Web3", "Hackathon"],
     description:
-      "Automates the routine parts of holding a governance position — DAO voting, reward claiming, scheduled token purchases — against rules the holder sets once.",
+      "Automates the routine parts of holding a governance position (DAO voting, reward claiming, scheduled token purchases) against rules the holder sets once.",
     tags: ["Next.js", "MetaMask SDK", "Tailwind CSS", "shadcn/ui"],
     status: "Live",
     preview: "dashboard",
@@ -351,7 +351,7 @@ export const projects: readonly Project[] = [
     category: "Backend · API",
     groups: ["Backend / API"],
     description:
-      "Developer matching by skill, experience and learning goal — authentication, the matching algorithm, mentorship connections and CV review, behind one API.",
+      "Developer matching by skill, experience and learning goal. Authentication, the matching algorithm, mentorship connections and CV review, behind one API.",
     tags: ["Django", "JWT", "SQLite", "WebSockets", "Swagger"],
     status: "On hold",
     preview: "dashboard",
@@ -403,7 +403,7 @@ export type ProjectSlug = (typeof projects)[number]["slug"];
 export const featuredProjects = projects.filter((project) => project.featured);
 
 /**
- * Drop real project media here — one entry per slug, keyed to the projects
+ * Drop real project media here: one entry per slug, keyed to the projects
  * above. Files live in `public/`, so `/work/eep.webp` means
  * `public/work/eep.webp`.
  *

@@ -17,8 +17,8 @@ function MentorshipProgramHero() {
           <Eyebrow><ScrambleText text="Mentorship" /></Eyebrow>
           <HeroTitle>A clear path to your next level.</HeroTitle>
           <Lede className="mt-6 text-base">
-            Weekly 1:1s, honest code review, and a real plan &mdash; not just
-            office hours. For engineers who want someone invested in their
+            Weekly 1:1s, honest code review, and a real plan you can
+            follow between sessions. For engineers who want someone invested in their
             growth, not a subscription to a video course.
           </Lede>
 

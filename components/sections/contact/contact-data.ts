@@ -2,7 +2,7 @@ export const steps = [
   {
     title: "You send the details",
     description:
-      "Project, mentorship, or just a question — tell me what's on your mind.",
+      "Project, mentorship, or just a question. Tell me what's on your mind.",
   },
   {
     title: "I read it myself",

@@ -6,7 +6,7 @@ import { type FieldMap } from "@/lib/core/errors";
  * One response envelope for every endpoint.
  *
  * Without this, each handler invents its own shape and the client ends up with
- * a branch per endpoint — this one returns `{error}`, that one `{errors}`,
+ * a branch per endpoint: this one returns `{error}`, that one `{errors}`,
  * another a bare string. The contact form already had to special-case that.
  */
 

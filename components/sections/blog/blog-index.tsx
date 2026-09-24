@@ -11,14 +11,14 @@ function BlogIndex() {
       An index page, not a landing page: the console is what people came for,
       so the header stays compact and sits on one row. A full hero-scale title
       stacked above its lede pushed the console's first article to 551px on a
-      900px viewport — most of the fold spent on a heading.
+      900px viewport, with most of the fold spent on a heading.
     */
     <section className="relative overflow-hidden border-b border-border/80 bg-background pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-20">
       <Bloom tone="violet" className="top-0 right-0 translate-x-1/3 -translate-y-1/3" />
       <Bloom className="bottom-0 left-0 -translate-x-1/3 translate-y-1/3" />
 
       <Container className="relative">
-        {/* Title left, lede right — it fills the space the stacked layout left
+        {/* Title left, lede right: it fills the space the stacked layout left
             empty and costs no extra height. */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:items-end lg:gap-12">
           <div>

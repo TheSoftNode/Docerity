@@ -7,7 +7,7 @@ import { Contact } from "@/components/sections/contact/contact";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Start a project, apply for mentorship, or just say hello — tell Docerity what you're building.",
+    "Start a project, apply for mentorship, or just say hello. Tell Docerity what you're building.",
 };
 
 export default function ContactPage() {

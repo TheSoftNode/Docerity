@@ -6,7 +6,7 @@ const steps = [
 ] as const;
 
 /*
-  The rising staircase stays — it is the growth metaphor — but each step now
+  The rising staircase stays, since it is the growth metaphor, but each step now
   fades in from nothing at its top edge. Drawn as flat 3.5% blocks, their hard
   top edges ran straight through the stage descriptions.
 */

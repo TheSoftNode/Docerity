@@ -11,7 +11,7 @@ import { Web3Capabilities } from "@/components/sections/web3/web3-capabilities";
 export const metadata: Metadata = {
   title: "Web3",
   description:
-    "Hackathon-winning dApps and smart contract systems across Solana, Stacks, and beyond — DeFi automation, real-world asset tokenization, and AI x Web3.",
+    "Hackathon-winning dApps and smart contract systems across Solana, Stacks, and beyond: DeFi automation, real-world asset tokenization, and AI x Web3.",
 };
 
 export default function Web3Page() {

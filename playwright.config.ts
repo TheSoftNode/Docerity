@@ -14,8 +14,8 @@ export default defineConfig({
     limit. That produced a recurring failure that looked like a broken link
     and was not one.
 
-    Raising the ceiling does not hide a real break — an assertion that will
-    never pass still fails, just later — while one that would have passed at
+    Raising the ceiling does not hide a real break: an assertion that will
+    never pass still fails, just later, while one that would have passed at
     5.2s now does.
   */
   expect: { timeout: 15_000 },

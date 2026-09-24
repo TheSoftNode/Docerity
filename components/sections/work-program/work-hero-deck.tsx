@@ -23,7 +23,7 @@ const layout = [
  *
  * Reuses each project's existing preview art via `WorkMedia`, so a real
  * screenshot dropped into `projectMedia` shows up here too. Only the front
- * card is interactive — the ones behind are `aria-hidden` and taken out of the
+ * card is interactive; the ones behind are `aria-hidden` and taken out of the
  * tab order, otherwise keyboard users would tab through three links to pages
  * they cannot see.
  */

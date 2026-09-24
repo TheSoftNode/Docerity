@@ -32,7 +32,7 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>${escapeXml(siteConfig.name)} — Tech Explainers</title>
+    <title>${escapeXml(siteConfig.name)} · Tech Explainers</title>
     <link>${siteConfig.url}/blog</link>
     <description>${escapeXml(
       "Complex engineering concepts explained through everyday analogies, plus articles on engineering practice."

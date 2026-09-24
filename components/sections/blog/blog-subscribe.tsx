@@ -48,7 +48,7 @@ function BlogSubscribe() {
 
       {status === "success" ? (
         <p className="mt-4 text-center text-sm text-muted-foreground">
-          You&apos;re on the list — thanks for subscribing.
+          You&apos;re on the list. Thanks for subscribing.
         </p>
       ) : (
         <form
@@ -80,7 +80,7 @@ function BlogSubscribe() {
 
       {status === "error" && (
         <p className="mt-3 text-center text-sm text-destructive">
-          Something went wrong — please try again.
+          Something went wrong. Please try again.
         </p>
       )}
     </div>

@@ -34,7 +34,7 @@ type HeroDeckItem = {
 /**
  * A page hero's supporting panel, as a deck that deals itself.
  *
- * Only the front card is interactive — the ones behind are `aria-hidden` and
+ * Only the front card is interactive; the ones behind are `aria-hidden` and
  * out of the tab order, or a keyboard user would tab through links to cards
  * they cannot see. Under reduced motion it stops cycling and the indicators
  * become the only way through, so every item stays reachable.
@@ -92,7 +92,7 @@ function HeroDeck({
                 tabIndex={isFront ? 0 : -1}
                 className="group/card flex h-full flex-col outline-none"
               >
-                {/* Accent wash instead of a screenshot — these pages have no
+                {/* Accent wash instead of a screenshot; these pages have no
                     per-item artwork, so the icon carries the card. */}
                 <div className="relative flex flex-1 items-center justify-center overflow-hidden border-b border-border/70">
                   <div

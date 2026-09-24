@@ -9,7 +9,7 @@ import type { NextConfig } from "next";
   static response headers belong in config where they cost nothing.
 */
 const securityHeaders = [
-  /* Stops a browser from second-guessing a declared Content-Type — the
+  /* Stops a browser from second-guessing a declared Content-Type; the
      mechanism behind "upload a .txt, get it executed as script". */
   { key: "X-Content-Type-Options", value: "nosniff" },
 

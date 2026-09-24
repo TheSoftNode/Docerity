@@ -18,7 +18,7 @@ export const capabilities: {
   {
     title: "Web applications",
     description:
-      "Full-stack products from first commit to production — not just the frontend polish.",
+      "Full-stack products from first commit to production, not just the frontend polish.",
     Icon: MonitorSmartphoneIcon,
   },
   {
@@ -51,28 +51,28 @@ export const process: {
     title: "Discovery",
     summary: "Understand the real problem",
     description:
-      "Before any code, we get specific about what's actually broken, who it affects, and what success looks like — most scope creep starts from skipping this.",
+      "Before any code, we get specific about what's actually broken, who it affects, and what success looks like. Most scope creep starts from skipping this.",
     Icon: SearchIcon,
   },
   {
     title: "Architecture",
-    summary: "Design for the next two years, not just launch day",
+    summary: "Design for the next two years, not only launch day",
     description:
-      "A plan for the data model, the integrations, and the parts most likely to change — so the system bends instead of breaking as requirements grow.",
+      "A plan for the data model, the integrations, and the parts most likely to change, so the system bends instead of breaking as requirements grow.",
     Icon: RadarIcon,
   },
   {
     title: "Build",
     summary: "Ship in reviewable, working slices",
     description:
-      "Working software early and often, in pieces small enough to actually review — not one enormous reveal at the end.",
+      "Working software early and often, in pieces small enough to actually review, not one enormous reveal at the end.",
     Icon: BoxesIcon,
   },
   {
     title: "Ship & support",
     summary: "Launch is the start, not the finish",
     description:
-      "Deployed, monitored, and handed off with real documentation — plus support after launch for the issues only production traffic reveals.",
+      "Deployed, monitored, and handed off with real documentation, plus support after launch for the issues only production traffic reveals.",
     Icon: RocketIcon,
   },
 ];

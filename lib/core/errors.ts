@@ -5,7 +5,7 @@
  * The distinction that matters is `isOperational`: an expected condition
  * (invalid input, rate limit, a service being down) versus a bug. Operational
  * errors carry a message written for the person who triggered them.
- * Non-operational ones must never have their message shown — it can contain a
+ * Non-operational ones must never have their message shown; it can contain a
  * connection string, a stack, or an internal identifier.
  */
 
@@ -20,7 +20,7 @@ export abstract class AppError extends Error {
   readonly publicMessage: string;
   /** Per-field messages, where the failure maps to specific inputs. */
   readonly fields?: FieldMap;
-  /** Extra detail for the log only — never serialised into a response. */
+  /** Extra detail for the log only, never serialised into a response. */
   readonly context?: Record<string, unknown>;
 
   constructor(
@@ -86,7 +86,7 @@ export class RateLimitError extends AppError {
 }
 
 /**
- * A dependency this request needed is unavailable — the database, the mail
+ * A dependency this request needed is unavailable: the database, the mail
  * transport, the storage API. 503 rather than 500 because the request may well
  * succeed on a retry, and because it tells a monitor the fault is downstream.
  */

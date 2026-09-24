@@ -47,7 +47,7 @@ const RATE_LIMIT = { max: 5, windowMinutes: 60 };
   Time budget for the two emails, sized to fit inside the contact route's
   `maxDuration` of 30s with room for the database writes that follow each send.
   A healthy Gmail send takes 1–3s, so this only ever bites when something is
-  wrong — which is exactly when being killed mid-attempt would lose the
+  wrong, which is exactly when being killed mid-attempt would lose the
   delivery record.
 */
 const DELIVERY_BUDGET = { notificationMs: 14_000, acknowledgementMs: 10_000 };
@@ -61,7 +61,7 @@ const DELIVERY_BUDGET = { notificationMs: 14_000, acknowledgementMs: 10_000 };
  * Cloudinary what it actually holds is the only way to record a fact rather
  * than a claim.
  *
- * A file that cannot be confirmed is kept but flagged, not silently dropped —
+ * A file that cannot be confirmed is kept but flagged, not silently dropped;
  * losing a client's PRD without telling anyone is the worse failure.
  */
 async function verifyAttachments(
@@ -155,7 +155,7 @@ export async function submitEnquiry(
   const recent = await repo.countRecentFromIp(input.submittedFromIp, RATE_LIMIT.windowMinutes);
   if (input.submittedFromIp !== "unknown" && recent >= RATE_LIMIT.max) {
     throw new RateLimitError(
-      "That's several enquiries in a row — please give it an hour, or email me directly.",
+      "That's several enquiries in a row. Please give it an hour, or email me directly.",
       RATE_LIMIT.windowMinutes * 60,
       { context: { ip: input.submittedFromIp, recent } }
     );
@@ -230,8 +230,8 @@ async function deliverEnquiryEmails(
   const acknowledgement = renderEnquiryAcknowledgement(data);
 
   /*
-    Both sends share the route's time budget, split so the notification — the
-    one that reaches a person — gets the larger share and is attempted first.
+    Both sends share the route's time budget, split so the notification (the
+    one that reaches a person) gets the larger share and is attempted first.
     `after` runs inside the route's maxDuration, so an unbounded retry budget
     would let the platform kill the function before either outcome is written.
   */
@@ -244,7 +244,7 @@ async function deliverEnquiryEmails(
   const notificationResult = await sendMail(
     {
       to: emailConfig.owner,
-      subject: `New enquiry — ${input.name}${input.company ? ` (${input.company})` : ""}`,
+      subject: `New enquiry from ${input.name}${input.company ? ` (${input.company})` : ""}`,
       html: notification.html,
       text: notification.text,
       /* So hitting reply in the mail client answers the sender. */
@@ -263,7 +263,7 @@ async function deliverEnquiryEmails(
   const acknowledgementResult = await sendMail(
     {
       to: input.email,
-      subject: "Thanks — your enquiry reached Docerity",
+      subject: "Thanks, your enquiry reached Docerity",
       html: acknowledgement.html,
       text: acknowledgement.text,
       replyTo: emailConfig.owner,

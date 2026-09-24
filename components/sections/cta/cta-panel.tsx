@@ -7,7 +7,7 @@ import { useReducedMotion } from "framer-motion";
  * The CTA's framed panel, with a highlight that follows the cursor across it.
  *
  * The pointer position is written to CSS custom properties rather than React
- * state — this fires on every mouse move, and re-rendering the whole panel at
+ * state: this fires on every mouse move, and re-rendering the whole panel at
  * that rate would be wasteful. The highlight only fades in on hover, and is
  * skipped entirely under reduced motion and on touch (`pointerType`).
  */

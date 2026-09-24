@@ -1,6 +1,6 @@
 /**
  * A measurement rule down the right edge of the landing hero, with a
- * registration mark at each end — a nod to a technical drawing.
+ * registration mark at each end, a nod to a technical drawing.
  *
  * Deliberately right-side only and used on the landing hero alone. Mirrored
  * down both edges and repeated on every page hero it stopped reading as an

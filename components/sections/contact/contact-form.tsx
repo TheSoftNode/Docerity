@@ -130,7 +130,7 @@ function ContactForm() {
       Attachments go from the browser straight to Cloudinary, and only their
       identifiers are posted to the enquiry route. A route handler receives the
       whole body in memory and the platform caps that at 4.5MB, so posting the
-      bytes through it put a hard ceiling on file size — a PRD exported to PDF
+      bytes through it put a hard ceiling on file size. A PRD exported to PDF
       with screenshots clears that easily. This path has no such limit.
     */
     const attachments: UploadedAttachment[] = [];
@@ -212,7 +212,7 @@ function ContactForm() {
             Message sent.
           </p>
           <p className="max-w-xs text-sm text-muted-foreground">
-            Thanks for reaching out — I read every message myself and will
+            Thanks for reaching out. I read every message myself and will
             reply within 1–2 business days.
           </p>
         </CardContent>
@@ -434,7 +434,7 @@ function ContactForm() {
             ) : null}
             {status === "error" ? (
               <p className="text-center text-sm text-destructive">
-                Something went wrong — please try again, or email{" "}
+                Something went wrong. Please try again, or email{" "}
                 <a href={`mailto:${siteConfig.email}`} className="underline">
                   {siteConfig.email}
                 </a>{" "}

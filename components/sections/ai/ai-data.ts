@@ -22,7 +22,7 @@ export const projects = [
     name: "Production RAG system",
     stat: "Real-time across 3 platforms",
     description:
-      "MongoDB Atlas Vector Search over 1536-dim embeddings, with hybrid search combining cosine similarity and metadata filtering — powers real-time intent analysis across Twitter, Facebook, and TikTok.",
+      "MongoDB Atlas Vector Search over 1536-dim embeddings, with hybrid search combining cosine similarity and metadata filtering. Powers real-time intent analysis across Twitter, Facebook, and TikTok.",
     tags: ["RAG", "Vector search", "MongoDB Atlas"],
     Icon: SearchCodeIcon,
   },
@@ -40,7 +40,7 @@ export const projects = [
     name: "WhatsApp AI assistant",
     stat: "9-container production deployment",
     description:
-      "A conversational assistant that turns a message or product photo into published social content — intent detection, image analysis, and multi-turn context memory, deployed across Nginx, FastAPI webhooks, and Celery workers for parallel processing.",
+      "A conversational assistant that turns a message or product photo into published social content, with intent detection, image analysis and multi-turn context memory, deployed across Nginx, FastAPI webhooks, and Celery workers for parallel processing.",
     tags: ["Conversational AI", "FastAPI", "Celery"],
     Icon: MessageCircleIcon,
   },
@@ -72,7 +72,7 @@ export const capabilities: {
   {
     title: "Model evaluation & RLHF",
     description:
-      "Designed training samples and evaluation rubrics, and annotated model responses across 150+ technical tasks — I know what makes training data actually improve a model.",
+      "Designed training samples and evaluation rubrics, and annotated model responses across 150+ technical tasks. I know what makes training data actually improve a model.",
     Icon: ClipboardCheckIcon,
   },
 ];

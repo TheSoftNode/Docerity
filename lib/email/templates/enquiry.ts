@@ -51,7 +51,7 @@ function renderAttachments(attachments: EnquiryAttachmentView[]): string {
 
   const items = attachments
     .map((file) => {
-      const label = `${escapeHtml(file.name)} <span style="color:${COLORS.steel};font-size:12px;">— ${escapeHtml(formatBytes(file.bytes))}</span>`;
+      const label = `${escapeHtml(file.name)} <span style="color:${COLORS.steel};font-size:12px;">· ${escapeHtml(formatBytes(file.bytes))}</span>`;
       return file.url
         ? `<li style="margin:0 0 8px 0;font-size:14px;"><a href="${escapeHtml(file.url)}" style="color:${COLORS.sapphire};text-decoration:none;font-weight:500;">${label}</a></li>`
         : `<li style="margin:0 0 8px 0;font-size:14px;color:${COLORS.pearl};">${label}</li>`;
@@ -71,7 +71,7 @@ ${items}
 export function renderEnquiryNotification(data: EnquiryEmailData) {
   const html = renderLayout({
     title: "New project enquiry",
-    preheader: `${data.name}${data.company ? ` · ${data.company}` : ""} — ${labelFor(projectTypes, data.projectType)}`,
+    preheader: `${data.name}${data.company ? ` · ${data.company}` : ""} · ${labelFor(projectTypes, data.projectType)}`,
     body: `${renderRows(rowsFor(data))}
 <p style="margin:24px 0 0 0;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:${COLORS.steel};font-weight:600;">Message</p>
 ${renderParagraphBlock(data.message)}
@@ -108,11 +108,11 @@ export function renderEnquiryAcknowledgement(data: EnquiryEmailData) {
   const firstName = data.name.trim().split(/\s+/)[0] || data.name;
 
   const html = renderLayout({
-    title: `Thanks, ${firstName} — your enquiry arrived`,
+    title: `Thanks, ${firstName}, your enquiry arrived`,
     preheader: "I've got your project details and will reply within two working days.",
     body: `<p style="margin:0;font-size:15px;line-height:1.7;color:${COLORS.pearl};">
   Thanks for getting in touch about your project. This is an automatic confirmation that it
-  reached me &mdash; I read every enquiry myself and will reply within two working days.
+  reached me. I read every enquiry myself and will reply within two working days.
 </p>
 <p style="margin:16px 0 0 0;font-size:15px;line-height:1.7;color:${COLORS.pearl};">
   For your reference, here&rsquo;s what you sent:
@@ -132,7 +132,7 @@ ${
   });
 
   const text = [
-    `Thanks, ${firstName} — your enquiry arrived.`,
+    `Thanks, ${firstName}, your enquiry arrived.`,
     "",
     "This is an automatic confirmation that your enquiry reached me. I read every one myself",
     "and will reply within two working days.",

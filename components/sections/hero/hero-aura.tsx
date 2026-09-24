@@ -5,14 +5,14 @@ import { motion, useReducedMotion } from "framer-motion";
 /**
  * Decorative depth behind the hero illustration.
  *
- * A sibling layer — it never touches the cards, scenes or chips.
+ * A sibling layer: it never touches the cards, scenes or chips.
  *
  * Rings are sized from this box's *width* and kept circular with
  * `aspect-square`, so they always fit the column they sit in.
  *
  * Two earlier versions clipped. Fixed `rem` sizes inside an `overflow-hidden`
  * box left the ring exactly as tall as the frame, tangent to the edges and
- * sliced flat. Sizing from height then overshot the other way — at 1440 the
+ * sliced flat. Sizing from height then overshot the other way: at 1440 the
  * ring spanned 694–1454, crossing into the text column and running off the
  * page, where the section's `overflow-hidden` cut it flat again.
  */

@@ -42,7 +42,7 @@ test.describe("Project media", () => {
     const images = page.locator("#showcase img");
     expect(await images.count()).toBeGreaterThanOrEqual(12);
 
-    /* Check a sample actually decoded — Next serves these through the image
+    /* Check a sample actually decoded; Next serves these through the image
        optimiser, so a bad source path fails at request time, not build time. */
     for (let i = 0; i < 6; i++) {
       const ok = await images.nth(i).evaluate(

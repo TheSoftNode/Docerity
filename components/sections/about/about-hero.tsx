@@ -38,13 +38,13 @@ const markers = [
  * The portrait, ringed by a slow orbit.
  *
  * Sized in `rem` rather than filling its column. Letting it fill was what
- * turned it into the loudest thing on the page — 583px at 1440 — and squeezed
+ * turned it into the loudest thing on the page (583px at 1440) and squeezed
  * the copy into what was left. Held at 17rem it reads as an instrument beside
  * the text instead of competing with it, and the surrounding panel now does
  * the compositional work.
  *
  * It also sits 48px above the centre line. Centred against the whole left
- * column it came to rest 50px below the headline — level with the figures
+ * column it came to rest 50px below the headline, level with the figures
  * rather than the copy, which put the heaviest thing on the right beside the
  * lightest on the left. Lifted, its top edge lands within a few pixels of the
  * headline's, so the two halves start together.
@@ -153,7 +153,7 @@ function RailItem({ label, value }: { label: string; value: string }) {
   documentation.
 
   Spacing throughout is deliberately tight. The band is an introduction, not a
-  destination — it should be read in one glance and scrolled past, so nothing
+  destination: it should be read in one glance and scrolled past, so nothing
   here gets more room than it needs to be legible.
 */
 function AboutHero() {
@@ -174,10 +174,10 @@ function AboutHero() {
           <div className="relative rounded-[calc(1.5rem-1px)] bg-card">
             <CornerBrackets />
 
-            {/* Header rail — the document's metadata line. */}
+            {/* Header rail: the document's metadata line. */}
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1.5 border-b border-border/70 px-6 py-3 font-mono text-[0.625rem] tracking-[0.16em] uppercase sm:px-8">
               <span className="text-primary">
-                <ScrambleText text="Profile — About Docerity" />
+                <ScrambleText text="Profile · About Docerity" />
               </span>
               <span className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
                 <RailItem label="Based" value={founder.based} />
@@ -226,7 +226,7 @@ function AboutHero() {
                     which is a caption measure rather than a paragraph one. */}
                 <p className="mt-5 max-w-[58ch] text-pretty text-[0.9375rem] leading-[1.8] text-muted-foreground">
                   Docerity is the company around work I have been doing for
-                  years — shipping production software, writing the explanation
+                  years: shipping production software, writing the explanation
                   that makes it make sense, and mentoring the engineers who will
                   maintain it.
                 </p>

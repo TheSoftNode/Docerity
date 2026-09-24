@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
 
   This exists because the gutter used to grow five times faster than the
   screen: the content was capped at 84rem, so from 1366 up every extra pixel
-  of viewport became margin — 48px of edge space at 1280, 96px at 1440, 240px
+  of viewport became margin: 48px of edge space at 1280, 96px at 1440, 240px
   at 1728, with the content frozen at 1248px throughout. It was not even
   monotonic, because the rem-based cap interacted with the root-size step at
   1800 to make 1920 narrower-gutted than 1728.
@@ -13,7 +13,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Page shell", () => {
   /*
     Each test here reloads the page at eight to ten viewport widths, which is
-    the point — the bug was a discontinuity *between* widths, so one viewport
+    the point: the bug was a discontinuity *between* widths, so one viewport
     proves nothing. That makes them several times longer than a normal test,
     and the default 30s budget is not enough once four workers are competing
     for the dev server.

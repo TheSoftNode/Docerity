@@ -46,7 +46,7 @@ function Cta() {
               </h2>
 
               <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground">
-                A project, mentorship, or just a question &mdash; I read every
+                A project, mentorship, or just a question. I read every
                 email myself.
               </p>
 

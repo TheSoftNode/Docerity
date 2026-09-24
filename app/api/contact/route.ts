@@ -10,7 +10,7 @@ import { ValidationError } from "@/lib/core/errors";
   Enquiries arrive as JSON. Attachments were uploaded by the browser straight
   to Cloudinary beforehand (see `./upload/route.ts`) and only their identifiers
   are posted here, so the body stays a few hundred bytes regardless of how
-  large the files are — the 4.5MB serverless body cap never comes into play.
+  large the files are; the 4.5MB serverless body cap never comes into play.
 
   The handler itself is thin on purpose: parse, delegate, respond. The rules
   live in the service, where they can be exercised without a web server.
@@ -88,7 +88,7 @@ export const POST = withRoute("api.contact", async (request, { logger, ip }) => 
     Email runs after the response is flushed.
 
     Gmail's SMTP handshake plus two sends is a second or two at best, and the
-    sender gains nothing by waiting for it — the enquiry is already durable in
+    sender gains nothing by waiting for it; the enquiry is already durable in
     MongoDB, and delivery outcomes are recorded on that document rather than
     reported back through this response.
   */

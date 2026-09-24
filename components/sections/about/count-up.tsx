@@ -6,7 +6,7 @@ import { useInView, useReducedMotion } from "framer-motion";
 /**
  * Counts a figure up when it first scrolls into view.
  *
- * The values carry suffixes — "9+" — so the number is split from whatever
+ * The values carry suffixes ("9+"), so the number is split from whatever
  * trails it and only the digits animate. Rendering "9" then "+" separately
  * would let the "+" shift sideways as the number grows a digit.
  *

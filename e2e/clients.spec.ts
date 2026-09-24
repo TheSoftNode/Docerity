@@ -20,7 +20,11 @@ test.describe("Clients", () => {
 
   test("every logo actually loads", async ({ page }) => {
     /* A broken logo still renders an alt-text box, so the section looks
-       populated while being empty. This checks the bitmaps decoded. */
+       populated while being empty. This checks the bitmaps decoded.
+
+       Polled rather than sampled once: in dev these go through the image
+       optimiser, which can take a second or two per file, and reading
+       `complete` straight after the scroll caught them mid-flight. */
     await page.goto("/");
     await page.locator("#clients").scrollIntoViewIfNeeded();
 
@@ -29,11 +33,16 @@ test.describe("Clients", () => {
     expect(count).toBe(9);
 
     for (let i = 0; i < count; i++) {
-      const ok = await logos.nth(i).evaluate(
-        (img: HTMLImageElement) => img.complete && img.naturalWidth > 0
-      );
       const alt = await logos.nth(i).getAttribute("alt");
-      expect(ok, `logo failed to load: ${alt}`).toBe(true);
+      await expect
+        .poll(
+          () =>
+            logos
+              .nth(i)
+              .evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
+          { message: `logo failed to load: ${alt}` }
+        )
+        .toBe(true);
     }
   });
 });

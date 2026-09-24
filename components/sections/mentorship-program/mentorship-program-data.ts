@@ -66,7 +66,7 @@ export const formatSteps = [
   },
 ] as const;
 
-// PLACEHOLDER CONTENT — replace every entry with a real testimonial before
+// PLACEHOLDER CONTENT: replace every entry with a real testimonial before
 // launch. Keep the shape (quote/name/role) the same; nothing else depends on it.
 export const mentorshipTestimonials = [
   {

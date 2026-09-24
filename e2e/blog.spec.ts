@@ -152,7 +152,7 @@ test.describe("Blog article", () => {
   test("a failed subscribe surfaces the error rather than claiming success", async ({
     page,
   }) => {
-    /* The write endpoint can be down — 503 when the database is unreachable —
+    /* The write endpoint can be down (503 when the database is unreachable)
        and the form must not report success in that case. */
     await page.route("**/api/subscribe", (route) =>
       route.fulfill({

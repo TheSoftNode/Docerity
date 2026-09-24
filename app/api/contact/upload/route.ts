@@ -12,7 +12,7 @@ import { ACCEPTED_FILE_TYPES, FILE_LIMITS, formatBytes } from "@/lib/contact/sch
   Why the file never passes through here: a serverless function receives the
   whole request body in memory and Vercel caps that at 4.5MB, so a 10MB PRD
   could not arrive no matter what the form promised. The alternative the
-  portfolio backend uses — multer writing to local disk — is worse on a
+  portfolio backend uses (multer writing to local disk) is worse on a
   platform with an ephemeral filesystem, because those files are deleted on the
   next deploy. That is why attachment links in already-sent portfolio contact
   emails now 404.

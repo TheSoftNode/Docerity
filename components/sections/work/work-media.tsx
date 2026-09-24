@@ -19,7 +19,7 @@ const CARD_SIZES = "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw";
  * The card's media slot.
  *
  * Renders a real screenshot or clip when one exists for this project, and the
- * generated SVG preview when it does not — so a card is never an empty box
+ * generated SVG preview when it does not, so a card is never an empty box
  * waiting on assets. Both fill the same 16:10 frame, which means dropping in
  * real media never changes the grid's geometry.
  */
@@ -46,7 +46,7 @@ function WorkMedia({
         "relative aspect-[16/10] w-full overflow-hidden",
         /* The generated previews draw on a 2:1 canvas and letterbox inside a
            16:10 frame, so matching the frame to their own fill hides that.
-           Real screenshots sit on a slightly recessed field instead — see
+           Real screenshots sit on a slightly recessed field instead; see
            the note on the image below. */
         media ? "bg-surface-step-b" : "bg-card",
         className
@@ -62,7 +62,7 @@ function WorkMedia({
 
             `cover` looked tidier in the abstract and was wrong in practice:
             these captures range from 1.06 to 2.38 against a 16:10 frame, so
-            it sliced the sides off the wide ones — EEP at 2.02 lost "B" from
+            it sliced the sides off the wide ones: EEP at 2.02 lost "B" from
             "Build Your Projects" and the whole right-hand column. A product
             screenshot that cannot be read is decoration. Inset and contained,
             every card shows the actual thing, and the letterboxing reads as a

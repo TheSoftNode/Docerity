@@ -1,9 +1,9 @@
-// PLACEHOLDER CONTENT — replace every entry with a real testimonial before
+// PLACEHOLDER CONTENT: replace every entry with a real testimonial before
 // launch. Keep the shape (quote/name/role) the same; nothing else depends on it.
 export const testimonials = [
   {
     quote:
-      "Docerity felt like adding a senior engineer to the team overnight — clear communication, clean code, shipped on time.",
+      "Docerity felt like adding a senior engineer to the team overnight. Clear communication, clean code, shipped on time.",
     name: "Client Name",
     role: "Title, Company",
   },

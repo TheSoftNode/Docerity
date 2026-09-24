@@ -80,7 +80,7 @@ const tabs: Tab[] = [
  * click.
  *
  * Panels render only when selected, so a tab's contents cost nothing until
- * it is opened — the credentials panel alone holds eight images.
+ * it is opened; the credentials panel alone holds eight images.
  */
 function AboutWorkspace() {
   const reduceMotion = useReducedMotion();
@@ -101,7 +101,7 @@ function AboutWorkspace() {
           a mono rail across the top. The two bands were a dossier followed by
           a plain two-column layout, which made the page look like it changed
           its mind halfway down. Continuing the frame makes them read as one
-          document — a cover sheet and the pages behind it.
+          document: a cover sheet and the pages behind it.
         */}
         <div className="rounded-3xl bg-[linear-gradient(to_bottom,color-mix(in_oklch,var(--brand-violet),transparent_66%),var(--border)_42%,color-mix(in_oklch,var(--brand-primary),transparent_70%))] p-px shadow-[0_40px_90px_-50px_rgba(0,0,0,0.95)]">
           <div className="relative rounded-[calc(1.5rem-1px)] bg-card">
@@ -213,7 +213,7 @@ function AboutWorkspace() {
 
         <div className="min-w-0">
           {/* `mode="wait"` so the outgoing panel finishes before the next
-              arrives — overlapping them made the column jump between two very
+              arrives; overlapping them made the column jump between two very
               different heights mid-transition. */}
           <AnimatePresence mode="wait" initial={false}>
             <motion.div

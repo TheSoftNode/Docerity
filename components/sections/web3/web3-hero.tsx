@@ -20,8 +20,8 @@ function Web3Hero() {
           <HeroTitle>Hackathon-winning dApps, shipped on real chains.</HeroTitle>
           <Lede className="mt-6 text-base">
             Smart contract systems, DeFi automation, and real-world asset
-            tokenization across Solana, Stacks, and beyond &mdash; three
-            hackathon wins, not just prototypes.
+            tokenization across Solana, Stacks, and beyond. Three
+            hackathon wins came out of it, and the contracts are live.
           </Lede>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">

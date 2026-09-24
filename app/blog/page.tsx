@@ -7,7 +7,7 @@ import { BlogIndex } from "@/components/sections/blog/blog-index";
 export const metadata: Metadata = {
   title: "Tech Explainers",
   description:
-    "Complex engineering concepts explained through everyday analogies — caching, load balancing, API requests, concurrency, and more.",
+    "Complex engineering concepts explained through everyday analogies: caching, load balancing, API requests, concurrency, and more.",
 };
 
 export default function BlogPage() {

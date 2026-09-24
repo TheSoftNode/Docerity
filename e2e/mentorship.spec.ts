@@ -20,7 +20,7 @@ test.describe("Mentorship", () => {
 
     // Below `sm`, the SVG growth path is swapped for a compact text list
     // (its labels are illegible at that scale), so both representations
-    // exist in the DOM — `.and(locator(":visible"))` picks whichever one
+    // exist in the DOM; `.and(locator(":visible"))` picks whichever one
     // is actually shown at the current viewport.
     for (const label of ["Foundations", "Code Reviews", "System Design", "Leadership"]) {
       await expect(

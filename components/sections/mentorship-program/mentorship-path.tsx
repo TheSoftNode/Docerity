@@ -19,7 +19,7 @@ function MentorshipPath() {
           <SectionTitle>One path, four stages.</SectionTitle>
           <Lede>
             You start where you actually are, and move on when the work shows
-            you are ready &mdash; not when a calendar says so.
+            you are ready, not when a calendar says so.
           </Lede>
         </div>
 

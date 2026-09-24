@@ -61,8 +61,8 @@ function TestimonialSpotlight({ header }: { header?: ReactNode }) {
     /*
       Auto-advance stops under reduced motion, matching every other timed
       component here. Content that replaces itself on a timer is movement the
-      reader did not ask for — the quote they were halfway through is simply
-      gone — and it is the case WCAG's "pause, stop, hide" is about. The
+      reader did not ask for (the quote they were halfway through is simply
+      gone), and it is the case WCAG's "pause, stop, hide" is about. The
       avatars still step through the list manually.
     */
     if (reduceMotion) return;

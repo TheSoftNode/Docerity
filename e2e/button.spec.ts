@@ -38,7 +38,7 @@ test.describe("Buttons", () => {
 
       First an inset `box-shadow`, which Tailwind composes from several custom
       properties and which silently dropped the colour. Then an outline in the
-      ring colour — which is the same sapphire as the primary button's fill,
+      ring colour, which is the same sapphire as the primary button's fill,
       so it painted sapphire on sapphire. `clip-path` also erases any outer
       ring, so none of the usual defaults would have worked here.
     */

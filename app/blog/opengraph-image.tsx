@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Tech Explainers — Docerity";
+export const alt = "Tech Explainers · Docerity";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

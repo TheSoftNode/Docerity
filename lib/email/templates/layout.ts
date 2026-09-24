@@ -4,7 +4,7 @@ import { siteConfig } from "@/lib/config/site";
   EJS escaped interpolated values automatically via `<%= %>`. These templates
   are plain template literals, which do not, so every piece of submitted text
   must pass through `escapeHtml` on the way in. Skipping it would let a visitor
-  put markup — or a `<style>` block, or a link wearing your name — into an
+  put markup (or a `<style>` block, or a link wearing your name) into an
   email that appears to come from Docerity.
 */
 function escapeHtml(value: unknown): string {

@@ -15,8 +15,8 @@ function AiCapabilities() {
           <SectionTitle>The part after the demo works.</SectionTitle>
           <Lede>
             Getting a model to answer once is the easy part. These are the
-            pieces that keep it answering &mdash; cheaply, reliably, and at
-            real volume.
+            pieces that keep it answering cheaply, reliably, and at real
+            volume.
           </Lede>
         </div>
 

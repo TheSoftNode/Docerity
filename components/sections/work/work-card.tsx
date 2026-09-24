@@ -52,7 +52,7 @@ function WorkCard({
       /*
         `initial` must not depend on `useReducedMotion()`. That hook reports
         false during SSR and true on a reduced-motion client, so branching here
-        made the server emit `opacity: 0` while the client emitted nothing —
+        made the server emit `opacity: 0` while the client emitted nothing,
         a hydration mismatch React declines to patch, which left every card
         permanently invisible. The entrance is identical on both sides now and
         only its duration responds to the setting.
@@ -86,7 +86,7 @@ function WorkCard({
           />
 
           {/* Sits in the scrim at the foot of the media, not the top-left
-              corner — the generated previews draw their own window chrome
+              corner, since the generated previews draw their own window chrome
               there and the two collided. Here it also reads as the label
               above the project name. */}
           <span className="absolute bottom-3 left-6 rounded-full border border-border/80 bg-background/70 px-2.5 py-1 font-mono text-[0.625rem] tracking-[0.14em] text-foreground/80 uppercase backdrop-blur-md sm:left-7">
@@ -107,16 +107,16 @@ function WorkCard({
               Stretched link: the anchor wraps the visible name, and its
               `::after` covers the whole card for the click target. An earlier
               version put an absolute overlay span inside an otherwise empty
-              anchor, which left the <a> itself zero-sized — keyboard focus
+              anchor, which left the <a> itself zero-sized, so keyboard focus
               landed on nothing visible. The card's `focus-within` frame shows
               focus; the arrow in the footer is decoration.
             */}
             <Link
               href={`/work/${project.slug}`}
+              aria-label={`${project.name}, view project`}
               className="outline-none after:absolute after:inset-0 after:z-10 after:rounded-2xl"
             >
               {project.name}
-              <span className="sr-only"> — view project</span>
             </Link>
           </h3>
 
@@ -139,7 +139,7 @@ function WorkCard({
             `mt-auto` pins every footer to the same line across the row,
             however long a description runs.
 
-            The row splits on the *card's* width, not the viewport's — a
+            The row splits on the *card's* width, not the viewport's. A
             container query. Viewport breakpoints cannot see that a card is
             narrow, so at 1280 the middle card's metric wrapped while its
             neighbours' did not, knocking the whole row out of alignment.

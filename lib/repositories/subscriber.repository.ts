@@ -8,7 +8,7 @@ export async function subscribe(email: string, source = "site") {
 
   /*
     An upsert rather than find-then-insert, so two submissions racing cannot
-    both attempt an insert and have the unique index reject the second — which
+    both attempt an insert and have the unique index reject the second, which
     would surface as an error to somebody who simply double-clicked.
 
     `status` is in `$set` so re-subscribing after unsubscribing works;
