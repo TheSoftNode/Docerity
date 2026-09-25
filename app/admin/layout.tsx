@@ -11,6 +11,7 @@ import { countPostsByStatus } from "@/lib/repositories/post.repository";
 import { isStaff } from "@/lib/auth/permissions";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { BrandMark } from "@/components/shared/brand-mark";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -104,6 +105,14 @@ export default async function AdminLayout({
                   Sign out
                 </Button>
               </form>
+
+              {/*
+                The same toggle the public navbar uses, rather than a second
+                one written for here. The admin area is where the most time is
+                spent, and it was the one part of the site with no way to switch.
+              */}
+              <ThemeToggle className="size-7 text-muted-foreground" />
+
               <Button
                 variant="ghost"
                 size="icon-sm"

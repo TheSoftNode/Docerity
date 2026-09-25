@@ -149,6 +149,32 @@ test.describe("Signing in", () => {
     await expect(page).toHaveURL("/admin/posts");
   });
 
+  test("the rail carries a theme toggle, and the choice sticks", async ({ page }) => {
+    /*
+      The admin area is where the most time is spent and was the one part of the
+      site with no way to switch, because the rail was built without the toggle
+      the public navbar has.
+
+      The second half is the part worth asserting: next-themes writes to
+      localStorage and re-applies the class before paint, so a choice that did
+      not survive a navigation would look like the toggle not working at all.
+    */
+    await signIn(page);
+
+    const toggle = page.getByRole("button", { name: "Toggle light and dark theme" });
+    await expect(toggle).toBeVisible();
+
+    await toggle.click();
+    await expect(page.locator("html")).toHaveClass(/light/);
+
+    await page.goto("/admin/posts");
+    await expect(page.locator("html")).toHaveClass(/light/);
+
+    /* Back to dark, so the rest of the suite runs in the theme it started in. */
+    await page.getByRole("button", { name: "Toggle light and dark theme" }).click();
+    await expect(page.locator("html")).toHaveClass(/dark/);
+  });
+
   test("signing out ends the session", async ({ page }) => {
     await signIn(page);
     await page.getByRole("button", { name: "Sign out" }).click();
