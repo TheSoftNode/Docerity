@@ -70,25 +70,61 @@ function loadEnvLocal() {
   }
 }
 
+/*
+  One readline interface for the whole run, not one per question.
+
+  The previous version built an interface inside `prompt()` and closed it before
+  resolving, then built another for the next question. That works in a terminal,
+  where a person types each answer after seeing its prompt, and is fragile
+  everywhere else: closing an interface releases stdin, and anything already
+  buffered between the close and the next interface is lost. Piped input hits
+  that immediately, and the script then exits 0 having created nothing, which is
+  the worst way for a bootstrap script to fail.
+
+  `hideInput` is read at call time rather than captured when the interface is
+  built, because the same interface serves both the visible prompts and the
+  hidden ones.
+*/
+let rl;
+let hideInput = false;
+
+function reader() {
+  if (rl) return rl;
+
+  rl = createInterface({ input: process.stdin, output: process.stdout });
+
+  /* Suppress the echo while a password is being typed, so it is not left on
+     screen, or in the terminal's scrollback, for whoever walks past next. */
+  const write = rl._writeToOutput.bind(rl);
+  rl._writeToOutput = (chunk) => {
+    if (!hideInput) write(chunk);
+  };
+
+  return rl;
+}
+
 function prompt(question, { silent = false } = {}) {
   return new Promise((resolvePrompt) => {
-    const rl = createInterface({ input: process.stdin, output: process.stdout });
+    const input = reader();
 
-    if (silent) {
-      /* Suppress the echo so the password is not left on screen, and on the
-         terminal's scrollback, for whoever walks past next. */
-      const output = rl.output;
-      rl._writeToOutput = (chunk) => {
-        if (chunk.includes(question)) output.write(chunk);
-      };
-    }
-
-    rl.question(question, (answer) => {
-      if (silent) rl.output.write("\n");
-      rl.close();
-      resolvePrompt(answer);
+    /* The question itself still has to appear; only what is typed after it is
+       hidden, so the flag goes up once the prompt has been written. */
+    input.question(question, (answer) => {
+      if (silent) {
+        hideInput = false;
+        process.stdout.write("\n");
+      }
+      resolvePrompt(answer.trim());
     });
+
+    if (silent) hideInput = true;
   });
+}
+
+function closeReader() {
+  hideInput = false;
+  rl?.close();
+  rl = undefined;
 }
 
 const userSchema = new mongoose.Schema(
@@ -96,7 +132,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     name: { type: String, required: true, trim: true },
     passwordHash: { type: String, required: true, select: false },
-    role: { type: String, enum: ["owner", "editor"], default: "editor" },
+    role: { type: String, enum: ["owner", "editor", "contributor"], default: "owner" },
     failedAttempts: { type: Number, default: 0 },
     lockedUntil: { type: Date, default: null },
     lastLoginAt: { type: Date, default: null },
@@ -130,6 +166,8 @@ async function main() {
     console.error("A name is required.");
     process.exit(1);
   }
+  /* Deliberately not "contributor": this creates the account that runs the
+     site, and a contributor is invited from inside the admin area. */
   if (role !== "owner" && role !== "editor") {
     console.error(`Role must be "owner" or "editor", not "${role}".`);
     process.exit(1);
@@ -137,14 +175,20 @@ async function main() {
 
   const password = await prompt("Password (at least 12 characters): ", { silent: true });
   if (password.length < 12) {
+    closeReader();
     console.error("That is shorter than 12 characters.");
     process.exit(1);
   }
   const again = await prompt("Confirm password: ", { silent: true });
   if (password !== again) {
+    closeReader();
     console.error("Those do not match.");
     process.exit(1);
   }
+
+  /* Every question has been asked, so the interface can go. Left open, it
+     holds stdin and the process never exits after the work is done. */
+  closeReader();
 
   process.stdout.write("Hashing (this is meant to take a moment)... ");
   const passwordHash = await hashPassword(password);
