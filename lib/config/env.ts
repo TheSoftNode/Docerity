@@ -171,10 +171,6 @@ export const auth = {
        no .env.local and the e2e suite needs no secret. */
     return DEV_SESSION_SECRET;
   },
-  /** Guards the one-time bootstrap route; unset means the route is disabled. */
-  get setupToken() {
-    return read("ADMIN_SETUP_TOKEN");
-  },
 };
 
 /* ── Runtime ──────────────────────────────────────────────────────────── */
