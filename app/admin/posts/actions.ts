@@ -2,8 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireUserOrThrow } from "@/lib/auth/dal";
-import { isAppError, ValidationError } from "@/lib/core/errors";
+import { requireStaffOrThrow, requireUserOrThrow, type AdminUser } from "@/lib/auth/dal";
+import { can } from "@/lib/auth/permissions";
+import { ForbiddenError, isAppError, NotFoundError, ValidationError } from "@/lib/core/errors";
 import { createLogger } from "@/lib/core/logger";
 import { estimateReadTime } from "@/lib/db/models/post.model";
 import {
@@ -18,26 +19,30 @@ import {
 import {
   createPost,
   deletePost,
+  findPostById,
   importPosts,
   isSlugTaken,
   setPostStatus,
   updatePost,
+  type LeanPost,
 } from "@/lib/repositories/post.repository";
 import { entries as staticEntries } from "@/components/sections/blog/blog-data";
 import { CONTENT_ICONS, type ContentIconName } from "@/lib/content/icons";
 
 /**
- * Writing, publishing and importing posts.
+ * Writing, submitting, publishing and importing posts.
  *
- * Every action starts with `requireUserOrThrow`. Rendering the editor behind a
- * session check is not a boundary: these are POST endpoints against the page's
- * URL, reachable without the page ever being loaded.
+ * Every action starts with a guard. Rendering the editor behind a session check
+ * is not a boundary: these are POST endpoints against the page's URL, reachable
+ * without the page ever being loaded. The contributor rules in particular have
+ * to live here, because hiding a Publish button does not stop anybody from
+ * invoking the action that button would have called.
  */
 
 const logger = createLogger("admin.posts");
 
 export type SaveResult =
-  | { ok: true; id: string; slug: string }
+  | { ok: true; id: string; slug: string; status: PostStatus }
   | { ok: false; errors: PostFieldErrors };
 
 /**
@@ -59,6 +64,55 @@ function revalidatePost(slug: string) {
 /** Narrows an icon name from the form against the registry. */
 function iconName(value: string, fallback: ContentIconName): ContentIconName {
   return value in CONTENT_ICONS ? (value as ContentIconName) : fallback;
+}
+
+/**
+ * Whether this person may touch this post at all.
+ *
+ * Staff may touch any. A contributor may touch only their own, and the check is
+ * on the stored `authorId` rather than on anything the client sent, so knowing
+ * another post's id gets you nothing.
+ *
+ * A `NotFoundError` rather than a `ForbiddenError` for somebody else's post: a
+ * 403 confirms the id exists, which turns the editor into a way of probing for
+ * valid ids.
+ */
+function assertMayEdit(post: LeanPost | null, user: AdminUser): LeanPost {
+  if (!post) throw new NotFoundError("That post no longer exists.");
+
+  if (!can.seeAllPosts(user.role) && String(post.authorId ?? "") !== user.id) {
+    throw new NotFoundError("That post no longer exists.");
+  }
+
+  /*
+    A contributor cannot edit their own post once it is live either. Otherwise
+    "cannot publish" is decorative: submit something harmless, wait for it to be
+    approved, then rewrite the body in place.
+  */
+  if (!can.publishPosts(user.role) && post.status === "published") {
+    throw new ForbiddenError(
+      "This one is live, so it can only be changed by an editor. Send me a note about what needs fixing."
+    );
+  }
+
+  return post;
+}
+
+/**
+ * Clamps a requested status to what this role is allowed to set.
+ *
+ * Returns the status rather than throwing for the ordinary case, because the UI
+ * never offers a contributor the Publish button; reaching here with
+ * `published` means the action was called directly, and that is worth refusing
+ * loudly rather than silently downgrading.
+ */
+function assertMaySetStatus(status: PostStatus, user: AdminUser): PostStatus {
+  if (status === "published" && !can.publishPosts(user.role)) {
+    throw new ForbiddenError(
+      "Contributors submit posts for review rather than publishing them."
+    );
+  }
+  return status;
 }
 
 /**
@@ -109,6 +163,14 @@ export async function savePost(
     const user = await requireUserOrThrow();
     const post = normalise(input);
 
+    assertMaySetStatus(post.status, user);
+
+    /* Loaded before anything is written, so ownership is checked against the
+       stored document rather than against the id the client chose to send. */
+    const existing = existingId
+      ? assertMayEdit(await findPostById(existingId), user)
+      : null;
+
     const errors = validatePost(post);
 
     /*
@@ -122,9 +184,19 @@ export async function savePost(
 
     if (Object.keys(errors).length > 0) return { ok: false, errors };
 
-    const saved = existingId
-      ? await updatePost(existingId, post, user.email)
-      : await createPost(post, user.email);
+    const saved = existing
+      ? await updatePost(existingId!, post, user.email)
+      : await createPost(post, user.email, {
+          id: user.id,
+          /*
+            A byline only for a contributor. The site is already in the owner's
+            voice, so signing his own posts would be odd, and an editor is
+            usually publishing on his behalf.
+          */
+          byline: can.publishPosts(user.role)
+            ? null
+            : { name: user.name, title: "", link: "", mentee: true },
+        });
 
     if (!saved) {
       return { ok: false, errors: { form: "That post no longer exists." } };
@@ -136,12 +208,16 @@ export async function savePost(
       slug: saved.slug,
       status: post.status,
       by: user.email,
+      role: user.role,
     });
 
-    return { ok: true, id: saved.id, slug: saved.slug };
+    return { ok: true, id: saved.id, slug: saved.slug, status: post.status };
   } catch (error) {
     if (error instanceof ValidationError) {
-      return { ok: false, errors: (error.fields as PostFieldErrors) ?? { form: error.publicMessage } };
+      return {
+        ok: false,
+        errors: (error.fields as PostFieldErrors) ?? { form: error.publicMessage },
+      };
     }
     if (isAppError(error)) return { ok: false, errors: { form: error.publicMessage } };
 
@@ -172,11 +248,30 @@ export async function changePostStatus(
 ): Promise<SimpleResult> {
   try {
     const user = await requireUserOrThrow();
+    assertMaySetStatus(status, user);
+
+    const existing = assertMayEdit(await findPostById(id), user);
+
+    /*
+      A contributor may move their own post between draft and submitted, and
+      nothing else. Withdrawing a submission is deliberately allowed: somebody
+      who spots a mistake after sending should be able to pull it back rather
+      than having to ask.
+    */
+    if (!can.publishPosts(user.role) && status !== "draft" && status !== "submitted") {
+      throw new ForbiddenError("Contributors can only draft and submit.");
+    }
+
     const updated = await setPostStatus(id, status, user.email);
     if (!updated) return { ok: false, message: "That post no longer exists." };
 
     revalidatePost(updated.slug);
-    logger.info("post status changed", { id, status, by: user.email });
+    logger.info("post status changed", {
+      id,
+      from: existing.status,
+      to: status,
+      by: user.email,
+    });
     return { ok: true };
   } catch (error) {
     if (isAppError(error)) return { ok: false, message: error.publicMessage };
@@ -188,11 +283,21 @@ export async function changePostStatus(
 export async function removePost(id: string): Promise<SimpleResult> {
   try {
     const user = await requireUserOrThrow();
+    const existing = assertMayEdit(await findPostById(id), user);
+
+    /* `assertMayEdit` already refuses a contributor a published post, so this
+       only catches the case of an editor deleting live content, which is
+       theirs to do. Logged with the status so the record says what was lost. */
     const deleted = await deletePost(id);
     if (!deleted) return { ok: false, message: "That post no longer exists." };
 
     revalidatePost(deleted.slug);
-    logger.info("post deleted", { id, slug: deleted.slug, by: user.email });
+    logger.info("post deleted", {
+      id,
+      slug: deleted.slug,
+      status: existing.status,
+      by: user.email,
+    });
     return { ok: true };
   } catch (error) {
     if (isAppError(error)) return { ok: false, message: error.publicMessage };
@@ -209,14 +314,14 @@ export async function removePost(id: string): Promise<SimpleResult> {
  * process would have to be taught. Idempotent: existing slugs are skipped, so
  * pressing it twice imports nothing.
  *
- * `blog-data.ts` stays where it is afterwards. It is the fallback when the
- * database is unreachable, not a fixture to be deleted once this has run.
+ * Staff only. It publishes eight posts in one press, which is precisely what a
+ * contributor may not do.
  */
 export async function importBuiltInPosts(): Promise<
   { ok: true; imported: number; skipped: number } | { ok: false; message: string }
 > {
   try {
-    const user = await requireUserOrThrow();
+    const user = await requireStaffOrThrow();
 
     /*
       The static entries hold icon *components*; a document stores a name. The

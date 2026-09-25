@@ -29,4 +29,8 @@ export const navLinks = [
   layout tests cover. The page is reached from the testimonials section, which
   is where somebody is already reading reviews when they want more of them.
 */
-export const footerLinks = [...navLinks, { label: "Reviews", href: "/reviews" }] as const;
+export const footerLinks = [
+  ...navLinks,
+  { label: "Reviews", href: "/reviews" },
+  { label: "Write for us", href: "/contribute" },
+] as const;

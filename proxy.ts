@@ -26,7 +26,16 @@ export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const hasSessionCookie = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
 
+  /*
+    The two pages under /admin that a signed-out person is meant to reach.
+
+    The invitation link is the one that bites: somebody claiming an account has
+    no session by definition, so without this exclusion the proxy would send
+    every invite straight to a login form they cannot use. The page validates
+    the token itself, which is the real gate.
+  */
   const isLoginPage = pathname === "/admin/login";
+  const isInvitePage = pathname.startsWith("/admin/invite/");
 
   /*
     This file only ever redirects *to* the login page, never away from it.
@@ -44,7 +53,7 @@ export function proxy(request: NextRequest) {
     can verify the session. The login page does it, with the same DAL call as
     everything else.
   */
-  if (!isLoginPage && !hasSessionCookie) {
+  if (!isLoginPage && !isInvitePage && !hasSessionCookie) {
     const login = new URL("/admin/login", request.url);
     /* Carried so signing in returns to the page that was asked for. The action
        validates it before redirecting; see `safeReturnPath`. */

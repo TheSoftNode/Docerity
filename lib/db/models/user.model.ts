@@ -22,22 +22,31 @@ const userSchema = new Schema(
     },
     name: { type: String, required: true, trim: true, maxlength: 120 },
 
-    /* The scrypt digest, salt and parameters in one string; never a password.
-       `select: false` keeps it out of every query that does not ask for it by
-       name, so a future `findOne()` whose result is passed to the client
-       cannot leak it by accident. */
-    passwordHash: { type: String, required: true, select: false },
+    /*
+      The scrypt digest, salt and parameters in one string; never a password.
+      `select: false` keeps it out of every query that does not ask for it by
+      name, so a future `findOne()` whose result is passed to the client cannot
+      leak it by accident.
+
+      Not required, because an invited account exists before its owner has
+      chosen a password. `authenticate` refuses to sign in an account without
+      one rather than comparing against an empty string.
+    */
+    passwordHash: { type: String, default: "", select: false },
 
     /*
-      `owner` can manage other accounts; `editor` can write and publish content
-      and moderate reviews but cannot touch users. Two roles rather than a
-      permission matrix, because a third would be invented to justify the
-      matrix rather than because anyone needed it.
+      What this account may do. The rules themselves live in
+      `lib/auth/permissions.ts` rather than being re-derived at each call site.
+
+      `contributor` exists because "editor" was too much to hand a mentee. An
+      editor can read every client enquiry, with budgets and attachments, see
+      the subscriber list, and publish straight to the live blog. A contributor
+      writes their own posts and submits them, and sees nothing else.
     */
     role: {
       type: String,
-      enum: ["owner", "editor"],
-      default: "editor",
+      enum: ["owner", "editor", "contributor"],
+      default: "contributor",
       required: true,
     },
 
@@ -51,6 +60,23 @@ const userSchema = new Schema(
     lockedUntil: { type: Date, default: null },
 
     lastLoginAt: { type: Date, default: null },
+
+    /*
+      A pending invitation.
+
+      Stored as a SHA-256 digest, not the token itself. The token is what a link
+      in somebody's inbox carries, so a leaked database backup would otherwise
+      hand over working invitations. A plain digest rather than scrypt is right
+      here and wrong for a password: this value is 32 random bytes, so there is
+      no dictionary to run against it.
+
+      The alternative was creating the account with a password you invent and
+      message to them, which trains everybody involved to send credentials
+      through chat.
+    */
+    inviteTokenHash: { type: String, default: "", select: false },
+    inviteExpiresAt: { type: Date, default: null },
+    invitedBy: { type: String, default: "" },
 
     /*
       Bumped when the password changes or every session is revoked. It is part

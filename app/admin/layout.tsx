@@ -7,6 +7,8 @@ import { signOut } from "@/lib/auth/actions";
 import { database } from "@/lib/config/env";
 import { countEnquiriesByStatus } from "@/lib/repositories/enquiry.repository";
 import { countReviewsByStatus } from "@/lib/repositories/review.repository";
+import { countPostsByStatus } from "@/lib/repositories/post.repository";
+import { isStaff } from "@/lib/auth/permissions";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { BrandMark } from "@/components/shared/brand-mark";
 import { Button } from "@/components/ui/button";
@@ -39,14 +41,30 @@ export default async function AdminLayout({
     the database goes away mid-session, otherwise an Atlas blip turns every
     admin page into an error screen instead of one with empty lists.
   */
-  let counts = { enquiries: 0, reviews: 0 };
+  let counts = { enquiries: 0, reviews: 0, posts: 0 };
   if (database.isConfigured) {
     try {
-      const [enquiries, reviews] = await Promise.all([
-        countEnquiriesByStatus(),
-        countReviewsByStatus(),
-      ]);
-      counts = { enquiries: enquiries.new, reviews: reviews.pending };
+      if (isStaff(user.role)) {
+        /* Staff see what is waiting on them across the whole site. */
+        const [enquiries, reviews, posts] = await Promise.all([
+          countEnquiriesByStatus(),
+          countReviewsByStatus(),
+          countPostsByStatus(),
+        ]);
+        counts = {
+          enquiries: enquiries.new,
+          reviews: reviews.pending,
+          posts: posts.submitted,
+        };
+      } else {
+        /*
+          A contributor's badge counts their own drafts, not the queue. Counting
+          submissions site-wide would leak how much other people have written,
+          from a number on a nav item.
+        */
+        const posts = await countPostsByStatus(user.id);
+        counts = { enquiries: 0, reviews: 0, posts: posts.draft };
+      }
     } catch {
       /* Badges are an affordance, not information the page depends on. */
     }

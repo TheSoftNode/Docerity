@@ -198,7 +198,11 @@ test.describe("Blog SEO plumbing", () => {
     expect(res.status()).toBe(200);
     expect(res.headers()["content-type"]).toContain("application/rss+xml");
     const body = await res.text();
-    expect(body).toContain("<rss version=\"2.0\">");
+    /* The namespace declaration is part of it: <dc:creator> on a contributor's
+       post needs the prefix declared, or the whole feed is invalid XML. */
+    expect(body).toContain(
+      '<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">'
+    );
     expect(body).toContain("A sticky note on your monitor");
   });
 

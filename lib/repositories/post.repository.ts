@@ -25,10 +25,19 @@ export async function findPublishedBySlug(slug: string): Promise<LeanPost | null
   return PostModel.findOne({ slug: slug.toLowerCase(), status: "published" }).lean<LeanPost>();
 }
 
-/** Everything, drafts included. Only ever called behind the session check. */
-export async function listAllPosts(): Promise<LeanPost[]> {
+/**
+ * Everything, drafts included. Only ever called behind the session check.
+ *
+ * `authorId` scopes the list to one person's work. That parameter is the access
+ * rule for contributors, not a convenience: a contributor's page passes their
+ * own id, so another writer's draft is not merely hidden from the list, it is
+ * never fetched.
+ */
+export async function listAllPosts(authorId?: string): Promise<LeanPost[]> {
   await connectDB();
-  return PostModel.find().sort({ updatedAt: -1 }).lean<LeanPost[]>();
+  return PostModel.find(authorId ? { authorId } : {})
+    .sort({ updatedAt: -1 })
+    .lean<LeanPost[]>();
 }
 
 export async function findPostById(id: string): Promise<LeanPost | null> {
@@ -36,13 +45,30 @@ export async function findPostById(id: string): Promise<LeanPost | null> {
   return PostModel.findById(id).lean<LeanPost>();
 }
 
-export async function countPostsByStatus() {
+/**
+ * Posts waiting for a decision, oldest first.
+ *
+ * Oldest first on purpose: a submission queue ordered newest first buries the
+ * thing that has been waiting longest, which is the one that needs answering.
+ */
+export async function listSubmittedPosts(): Promise<LeanPost[]> {
   await connectDB();
-  const [draft, published] = await Promise.all([
-    PostModel.countDocuments({ status: "draft" }),
-    PostModel.countDocuments({ status: "published" }),
+  return PostModel.find({ status: "submitted" })
+    .sort({ submittedAt: 1 })
+    .lean<LeanPost[]>();
+}
+
+export async function countPostsByStatus(authorId?: string) {
+  await connectDB();
+  const scope = authorId ? { authorId } : {};
+
+  const [draft, submitted, published] = await Promise.all([
+    PostModel.countDocuments({ ...scope, status: "draft" }),
+    PostModel.countDocuments({ ...scope, status: "submitted" }),
+    PostModel.countDocuments({ ...scope, status: "published" }),
   ]);
-  return { draft, published, total: draft + published };
+
+  return { draft, submitted, published, total: draft + submitted + published };
 }
 
 /**
@@ -61,6 +87,13 @@ export async function isSlugTaken(slug: string, excludeId?: string): Promise<boo
   if (!existing) return false;
   return !excludeId || String(existing._id) !== excludeId;
 }
+
+export type PostAuthor = {
+  name: string;
+  title: string;
+  link: string;
+  mentee: boolean;
+};
 
 function toDocument(input: PostInput, updatedBy: string) {
   return {
@@ -98,11 +131,20 @@ function resolvePublishedAt(
   return existing ?? new Date();
 }
 
-export async function createPost(input: PostInput, updatedBy: string) {
+export async function createPost(
+  input: PostInput,
+  updatedBy: string,
+  /* Set once, at creation. A post does not change hands afterwards, and
+     reassigning one would rewrite who it belongs to under somebody's feet. */
+  author?: { id: string; byline: PostAuthor | null }
+) {
   await connectDB();
   const created = await PostModel.create({
     ...toDocument(input, updatedBy),
+    authorId: author?.id ?? "",
+    author: author?.byline ?? null,
     publishedAt: resolvePublishedAt(input, null),
+    submittedAt: input.status === "submitted" ? new Date() : null,
   });
   return { id: String(created._id), slug: created.slug };
 }
@@ -110,7 +152,9 @@ export async function createPost(input: PostInput, updatedBy: string) {
 export async function updatePost(id: string, input: PostInput, updatedBy: string) {
   await connectDB();
 
-  const existing = await PostModel.findById(id).select("publishedAt").lean();
+  /* `status` as well as `publishedAt`: the submitted stamp below compares
+     against the status the post is moving *from*. */
+  const existing = await PostModel.findById(id).select("publishedAt status").lean();
   if (!existing) return null;
 
   const updated = await PostModel.findByIdAndUpdate(
@@ -119,6 +163,12 @@ export async function updatePost(id: string, input: PostInput, updatedBy: string
       $set: {
         ...toDocument(input, updatedBy),
         publishedAt: resolvePublishedAt(input, existing.publishedAt),
+        /* Stamped on the transition into `submitted` and left alone otherwise,
+           so editing a submitted post does not move it to the back of the
+           queue it is already waiting in. */
+        ...(input.status === "submitted" && existing.status !== "submitted"
+          ? { submittedAt: new Date() }
+          : {}),
       },
     },
     { new: true, runValidators: true }
@@ -127,6 +177,13 @@ export async function updatePost(id: string, input: PostInput, updatedBy: string
     .lean();
 
   return updated ? { id, slug: updated.slug } : null;
+}
+
+/** Replaces the stored byline, for an editor correcting a contributor's. */
+export async function setPostAuthor(id: string, byline: PostAuthor | null) {
+  await connectDB();
+  const result = await PostModel.updateOne({ _id: id }, { $set: { author: byline } });
+  return result.matchedCount > 0;
 }
 
 /**
@@ -139,7 +196,7 @@ export async function updatePost(id: string, input: PostInput, updatedBy: string
 export async function setPostStatus(id: string, status: PostStatus, updatedBy: string) {
   await connectDB();
 
-  const existing = await PostModel.findById(id).select("publishedAt").lean();
+  const existing = await PostModel.findById(id).select("publishedAt status").lean();
   if (!existing) return null;
 
   const updated = await PostModel.findByIdAndUpdate(
@@ -148,6 +205,9 @@ export async function setPostStatus(id: string, status: PostStatus, updatedBy: s
       $set: {
         status,
         updatedBy,
+        ...(status === "submitted" && existing.status !== "submitted"
+          ? { submittedAt: new Date() }
+          : {}),
         /* First publish stamps the date; unpublishing leaves it, so
            republishing does not move the post to the top of the index. */
         publishedAt:

@@ -8,13 +8,23 @@ import { createLogger } from "@/lib/core/logger";
 import { hashPassword } from "@/lib/auth/password";
 import { validatePassword } from "@/lib/services/auth.service";
 import {
+  cancelInvite,
   countUsers,
-  createUser,
+  createInvitedUser,
   deleteUser,
+  reissueInvite,
   setPasswordHash,
   setUserDisabled,
   setUserRole,
 } from "@/lib/repositories/user.repository";
+import {
+  createInviteToken,
+  hashInviteToken,
+  inviteExpiry,
+  inviteUrl,
+} from "@/lib/auth/invite";
+import { runtime } from "@/lib/config/env";
+import type { Role } from "@/lib/auth/permissions";
 
 /**
  * Account management. Owner-only, except for changing your own password.
@@ -27,8 +37,12 @@ import {
 const logger = createLogger("admin.users");
 
 export type UserActionResult =
-  | { ok: true; message?: string }
+  | { ok: true; message?: string; inviteUrl?: string }
   | { ok: false; message: string };
+
+function roleFrom(value: unknown): Role {
+  return value === "owner" || value === "editor" ? value : "contributor";
+}
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -41,8 +55,7 @@ export async function inviteUser(
 
     const email = String(formData.get("email") ?? "").trim().toLowerCase();
     const name = String(formData.get("name") ?? "").trim();
-    const password = String(formData.get("password") ?? "");
-    const role = String(formData.get("role") ?? "editor") === "owner" ? "owner" : "editor";
+    const role = roleFrom(formData.get("role"));
 
     if (!EMAIL.test(email)) {
       throw new ValidationError("That email address doesn't look right.");
@@ -50,28 +63,37 @@ export async function inviteUser(
     if (name.length < 2) {
       throw new ValidationError("A name is required.");
     }
-    validatePassword(password);
 
     /*
-      The password is set here rather than emailed as an invitation link.
+      An invitation rather than a password you invent and send them.
 
-      An invitation flow needs a second token type, an expiry, a public route to
-      accept it, and mail that reliably arrives, and this is a site with one
-      operator adding an occasional collaborator. Telling them the password over
-      a channel you already trust is fewer moving parts, and they can change it
-      from this same page.
+      The first version of this form asked the owner for a password, which they
+      then had to pass along over whatever chat they use. That puts a working
+      credential in a message that outlives the moment, and means two people
+      know the password from the start. Here the account exists with no password
+      at all until the invited person sets one.
     */
-    const created = await createUser({
+    const token = createInviteToken();
+
+    const created = await createInvitedUser({
       email,
       name,
-      passwordHash: await hashPassword(password),
       role,
+      inviteTokenHash: hashInviteToken(token),
+      inviteExpiresAt: inviteExpiry(),
+      invitedBy: owner.email,
     });
 
     revalidatePath("/admin/users");
-    logger.info("account created", { email, role, by: owner.email });
+    logger.info("account invited", { email, role, by: owner.email });
 
-    return { ok: true, message: `${created.name} can now sign in.` };
+    return {
+      ok: true,
+      message: `${created.name} can set their own password with this link. It works once, and expires in three days.`,
+      /* Returned rather than emailed: SMTP is optional in this deployment, and
+         an invitation that silently fails to send is worse than one you copy. */
+      inviteUrl: inviteUrl(runtime.siteUrl, token),
+    };
   } catch (error) {
     if (isAppError(error)) return { ok: false, message: error.publicMessage };
 
@@ -84,15 +106,60 @@ export async function inviteUser(
       return { ok: false, message: "An account with that address already exists." };
     }
 
-    logger.error("creating an account failed", error);
+    logger.error("inviting an account failed", error);
     return { ok: false, message: "That did not work. Please try again." };
   }
 }
 
-export async function changeRole(
-  id: string,
-  role: "owner" | "editor"
-): Promise<UserActionResult> {
+/** A fresh link for somebody who never used their first one, or let it lapse. */
+export async function resendInvite(id: string): Promise<UserActionResult> {
+  try {
+    const owner = await requireOwner();
+
+    const token = createInviteToken();
+    const reissued = await reissueInvite(id, hashInviteToken(token), inviteExpiry());
+
+    if (!reissued) {
+      /* `reissueInvite` only matches an account with no password, so this is
+         either a missing account or one that has already been set up. */
+      return {
+        ok: false,
+        message: "That account has already been set up, so it needs a password reset rather than an invitation.",
+      };
+    }
+
+    revalidatePath("/admin/users");
+    logger.info("invitation reissued", { id, by: owner.email });
+
+    return {
+      ok: true,
+      message: "A new link. The previous one no longer works.",
+      inviteUrl: inviteUrl(runtime.siteUrl, token),
+    };
+  } catch (error) {
+    if (isAppError(error)) return { ok: false, message: error.publicMessage };
+    logger.error("reissuing an invitation failed", error);
+    return { ok: false, message: "That did not work. Please try again." };
+  }
+}
+
+export async function revokeInvite(id: string): Promise<UserActionResult> {
+  try {
+    const owner = await requireOwner();
+    const cancelled = await cancelInvite(id);
+    if (!cancelled) return { ok: false, message: "There is no invitation to revoke." };
+
+    revalidatePath("/admin/users");
+    logger.info("invitation revoked", { id, by: owner.email });
+    return { ok: true, message: "That link no longer works." };
+  } catch (error) {
+    if (isAppError(error)) return { ok: false, message: error.publicMessage };
+    logger.error("revoking an invitation failed", error);
+    return { ok: false, message: "That did not work. Please try again." };
+  }
+}
+
+export async function changeRole(id: string, role: Role): Promise<UserActionResult> {
   try {
     const owner = await requireOwner();
 

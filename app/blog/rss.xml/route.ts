@@ -13,6 +13,16 @@ function escapeXml(value: string) {
 /* The feed is regenerated on the same window as the blog itself. */
 export const revalidate = 300;
 
+/*
+  The Dublin Core namespace is declared on <rss> because a contributor's post
+  carries <dc:creator>. An undeclared prefix makes the whole document invalid
+  XML, and a reader that validates refuses all of it rather than that one
+  element.
+
+  Explained here rather than in an XML comment: anything inside the template
+  literal is shipped to every feed reader, and an internal note about namespaces
+  is not something a subscriber should receive.
+*/
 export async function GET() {
   const entries = await getPublishedEntries();
 
@@ -29,13 +39,18 @@ export async function GET() {
       <link>${url}</link>
       <guid>${url}</guid>
       <pubDate>${pubDate}</pubDate>
-      <description>${escapeXml(entry.hook)}</description>
+      <description>${escapeXml(entry.hook)}</description>${
+        entry.author
+          ? `
+      <dc:creator>${escapeXml(entry.author.name)}</dc:creator>`
+          : ""
+      }
     </item>`;
     })
     .join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>${escapeXml(siteConfig.name)} · Tech Explainers</title>
     <link>${siteConfig.url}/blog</link>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { requireUser } from "@/lib/auth/dal";
+import { can } from "@/lib/auth/permissions";
 import { findPostById } from "@/lib/repositories/post.repository";
 import { PostEditor } from "@/components/admin/post-editor";
 import type { PostInput } from "@/lib/content/post-schema";
@@ -14,7 +15,7 @@ export default async function EditPostPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await requireUser(`/admin/posts/${id}`);
+  const user = await requireUser(`/admin/posts/${id}`);
 
   /*
     A malformed id is a 404, not a 500.
@@ -27,6 +28,18 @@ export default async function EditPostPage({
 
   const post = await findPostById(id);
   if (!post) notFound();
+
+  /*
+    A contributor may only open their own work, and a published post is beyond
+    even that: otherwise "cannot publish" would be decorative, since anybody
+    could submit something harmless, wait for approval, and rewrite the body in
+    place afterwards.
+
+    `notFound` rather than a 403, because a 403 confirms the id exists and turns
+    this route into a way of probing for valid ones.
+  */
+  if (!can.seeAllPosts(user.role) && String(post.authorId ?? "") !== user.id) notFound();
+  if (!can.publishPosts(user.role) && post.status === "published") notFound();
 
   /* Mapped to the editor's input shape: Dates become strings, and the nullable
      document fields become the defaults the form expects. */
@@ -75,5 +88,5 @@ export default async function EditPostPage({
     initial.body = [{ heading: "", paragraphs: [""], sidenote: "", media: null }];
   }
 
-  return <PostEditor initial={initial} postId={id} />;
+  return <PostEditor initial={initial} postId={id} role={user.role} />;
 }

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireUserOrThrow } from "@/lib/auth/dal";
+import { requireStaffOrThrow } from "@/lib/auth/dal";
 import { createLogger } from "@/lib/core/logger";
 import { isAppError } from "@/lib/core/errors";
 import { storage } from "@/lib/config/env";
@@ -32,7 +32,7 @@ async function guarded(
   run: (actor: { id: string; email: string }) => Promise<void>
 ): Promise<ActionResult> {
   try {
-    const user = await requireUserOrThrow();
+    const user = await requireStaffOrThrow();
     await run(user);
     return { ok: true };
   } catch (error) {

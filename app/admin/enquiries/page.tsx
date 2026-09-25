@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PaperclipIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { requireUser } from "@/lib/auth/dal";
+import { requireStaff } from "@/lib/auth/dal";
 import { database } from "@/lib/config/env";
 import {
   countEnquiriesByStatus,
@@ -39,7 +39,9 @@ export default async function AdminEnquiriesPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireUser("/admin/enquiries");
+  /* Staff only: a contributor has no business in here, and typing the URL
+     sends them to the one page they can use rather than showing an error. */
+  await requireStaff("/admin/enquiries");
 
   const { status } = await searchParams;
   const tab: Tab = TABS.some((option) => option.value === status)

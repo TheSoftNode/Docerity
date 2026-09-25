@@ -100,6 +100,38 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                 <p className="mt-1 text-xs text-muted-foreground">
                   {formatDate(entry.publishedAt)} &middot; {entry.readTime}
                 </p>
+
+                {/*
+                  A byline only when somebody other than Theophilus wrote it.
+                  Every post of his has none: the site is already in his voice,
+                  so signing each one would read as odd. The mentee marker is
+                  the point of a mentee's post, not a disclaimer on it.
+                */}
+                {entry.author ? (
+                  <p className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                    <span className="text-muted-foreground">Written by</span>
+                    {entry.author.link ? (
+                      <a
+                        href={entry.author.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-foreground underline-offset-4 hover:underline"
+                      >
+                        {entry.author.name}
+                      </a>
+                    ) : (
+                      <span className="font-medium text-foreground">{entry.author.name}</span>
+                    )}
+                    {entry.author.title ? (
+                      <span className="text-muted-foreground">{entry.author.title}</span>
+                    ) : null}
+                    {entry.author.mentee ? (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[0.625rem] tracking-[0.12em] uppercase text-primary">
+                        Mentee
+                      </span>
+                    ) : null}
+                  </p>
+                ) : null}
               </div>
 
               <div className="flex flex-wrap gap-2 sm:ml-auto">

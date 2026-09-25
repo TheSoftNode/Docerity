@@ -94,9 +94,17 @@ const postSchema = new Schema(
     */
     readTime: { type: String, default: "", maxlength: 40 },
 
+    /*
+      Three states, not two.
+
+      `submitted` is what a contributor's finished post sits in: they cannot
+      publish, so without it their only options would be leaving it a draft
+      you might never notice, or handing them a permission they should not
+      have. It is the same moderation shape as a pending review.
+    */
     status: {
       type: String,
-      enum: ["draft", "published"],
+      enum: ["draft", "submitted", "published"],
       default: "draft",
       required: true,
     },
@@ -122,8 +130,48 @@ const postSchema = new Schema(
     topic: { type: String, default: "", maxlength: 120 },
     iconName: { type: String, default: "", maxlength: 60 },
 
+    /*
+      Who wrote it, as an account id.
+
+      This is the access rule, not the byline: `listPostsFor` filters on it so a
+      contributor sees only their own work, and the editor refuses to open a
+      post belonging to somebody else. Empty on everything written before
+      contributors existed, which reads as "the owner's".
+    */
+    authorId: { type: String, default: "", index: true },
+
+    /*
+      The byline, snapshotted rather than joined.
+
+      A post published under somebody's name in March should still say that in
+      December, even if they have since changed their title or left. Reading it
+      from the user record would quietly rewrite history, and would also mean
+      deleting an account blanked the byline on their published work.
+
+      Empty `name` means no byline, which is every post written by the owner:
+      the site is already in his voice and signing each one would be odd.
+    */
+    author: {
+      type: new Schema(
+        {
+          name: { type: String, default: "", maxlength: 120 },
+          title: { type: String, default: "", maxlength: 160 },
+          link: { type: String, default: "", maxlength: 500 },
+          /* Shown as a marker on the index. The point of a mentee's post is
+             partly that a mentee wrote it. */
+          mentee: { type: Boolean, default: false },
+        },
+        { _id: false }
+      ),
+      default: null,
+    },
+
     /* Who last saved it. Useful the moment there is more than one editor. */
     updatedBy: { type: String, default: "" },
+
+    /* Set when a contributor submits, so the queue can be ordered by how long
+       something has been waiting rather than when it was first drafted. */
+    submittedAt: { type: Date, default: null },
   },
   { timestamps: true }
 );
@@ -135,8 +183,11 @@ postSchema.index(
   { partialFilterExpression: { status: "published" } }
 );
 
-/* The admin list, which shows drafts and published together. */
+/* The admin list, which shows every status together. */
 postSchema.index({ updatedAt: -1 });
+
+/* A contributor's own list, which is the only list they can see. */
+postSchema.index({ authorId: 1, updatedAt: -1 });
 
 export type PostDocument = InferSchemaType<typeof postSchema>;
 

@@ -2,12 +2,17 @@
 
 import { useActionState, useState, useTransition } from "react";
 import {
+  CheckIcon,
+  ClockIcon,
+  CopyIcon,
   KeyRoundIcon,
+  LinkIcon,
   LoaderCircleIcon,
   ShieldCheckIcon,
   Trash2Icon,
   UserPlusIcon,
   UserXIcon,
+  XIcon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -19,37 +24,92 @@ import {
   changeRole,
   inviteUser,
   removeUser,
+  resendInvite,
+  revokeInvite,
   toggleDisabled,
   type UserActionResult,
 } from "@/app/admin/users/actions";
+import { ROLES, type Role } from "@/lib/auth/permissions";
 
 export type AccountRow = {
   id: string;
   email: string;
   name: string;
-  role: "owner" | "editor";
+  role: Role;
   disabled: boolean;
   lastLoginAt: string | null;
   createdAt: string;
+  /** No password set yet: an invitation is outstanding. */
+  pending: boolean;
+  inviteExpiresAt: string | null;
 };
 
 const selectClass =
   "h-9 rounded-lg border border-input bg-transparent px-2 text-xs text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
+/**
+ * The invitation link, with a copy button.
+ *
+ * Shown rather than emailed, because SMTP is optional in this deployment and an
+ * invitation that silently failed to send would be worse than one you copy: the
+ * account would exist, the person would never hear, and nothing would say so.
+ */
+function InviteLink({ url }: { url: string }) {
+  const [copied, setCopied] = useState(false);
+
+  return (
+    <div className="rounded-lg border border-brand-teal/30 bg-brand-teal/[0.07] px-3 py-2.5">
+      <p className="flex items-center gap-1.5 font-mono text-[0.625rem] tracking-[0.14em] uppercase text-brand-teal">
+        <LinkIcon className="size-3" />
+        One-time link
+      </p>
+
+      <p className="mt-2 break-all font-mono text-[0.6875rem] leading-relaxed text-foreground">
+        {url}
+      </p>
+
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="mt-2.5 w-full"
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(url);
+            setCopied(true);
+            window.setTimeout(() => setCopied(false), 2000);
+          } catch {
+            /* Clipboard access is refused outside a secure context and in some
+               browsers without a user gesture. The link is on screen either
+               way, so this fails quietly rather than blaming the person. */
+          }
+        }}
+      >
+        {copied ? <CheckIcon /> : <CopyIcon />}
+        {copied ? "Copied" : "Copy the link"}
+      </Button>
+    </div>
+  );
+}
+
 function Feedback({ state }: { state: UserActionResult | undefined }) {
   if (!state) return null;
+
   return (
-    <p
-      role="alert"
-      className={cn(
-        "rounded-lg px-3 py-2 text-xs",
-        state.ok
-          ? "bg-brand-teal/10 text-brand-teal"
-          : "bg-destructive/10 text-destructive"
-      )}
-    >
-      {state.ok ? state.message : state.message}
-    </p>
+    <div className="space-y-2">
+      <p
+        role="alert"
+        className={cn(
+          "rounded-lg px-3 py-2 text-xs",
+          state.ok
+            ? "bg-brand-teal/10 text-brand-teal"
+            : "bg-destructive/10 text-destructive"
+        )}
+      >
+        {state.message}
+      </p>
+      {state.ok && state.inviteUrl ? <InviteLink url={state.inviteUrl} /> : null}
+    </div>
   );
 }
 
@@ -62,6 +122,7 @@ function AccountRowItem({
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [freshInvite, setFreshInvite] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   function run(action: () => Promise<UserActionResult>) {
@@ -69,6 +130,7 @@ function AccountRowItem({
     startTransition(async () => {
       const result = await action();
       if (!result.ok) setError(result.message);
+      else if (result.inviteUrl) setFreshInvite(result.inviteUrl);
     });
   }
 
@@ -94,16 +156,27 @@ function AccountRowItem({
                 Disabled
               </span>
             ) : null}
+            {account.pending ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 font-mono text-[0.625rem] uppercase text-amber-600 dark:text-amber-400">
+                <ClockIcon className="size-2.5" />
+                Invited
+              </span>
+            ) : null}
           </div>
           <p className="truncate text-xs text-muted-foreground">{account.email}</p>
           <p className="mt-1 font-mono text-[0.6875rem] text-muted-foreground">
-            {account.lastLoginAt
-              ? `last signed in ${new Date(account.lastLoginAt).toLocaleDateString("en-GB", {
+            {account.pending && account.inviteExpiresAt
+              ? `invitation expires ${new Date(account.inviteExpiresAt).toLocaleDateString("en-GB", {
                   day: "numeric",
                   month: "short",
-                  year: "numeric",
                 })}`
-              : "never signed in"}
+              : account.lastLoginAt
+                ? `last signed in ${new Date(account.lastLoginAt).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}`
+                : "never signed in"}
           </p>
         </div>
 
@@ -111,15 +184,38 @@ function AccountRowItem({
           <select
             value={account.role}
             disabled={pending}
-            onChange={(event) =>
-              run(() => changeRole(account.id, event.target.value as "owner" | "editor"))
-            }
+            onChange={(event) => run(() => changeRole(account.id, event.target.value as Role))}
             aria-label={`Role for ${account.name}`}
             className={selectClass}
           >
-            <option value="editor">Editor</option>
-            <option value="owner">Owner</option>
+            {ROLES.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
+
+          {account.pending ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={pending}
+                onClick={() => run(() => resendInvite(account.id))}
+              >
+                New link
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                disabled={pending}
+                aria-label={`Revoke the invitation for ${account.name}`}
+                onClick={() => run(() => revokeInvite(account.id))}
+              >
+                <XIcon />
+              </Button>
+            </>
+          ) : null}
 
           <Button
             variant="ghost"
@@ -172,6 +268,12 @@ function AccountRowItem({
           {error}
         </p>
       ) : null}
+
+      {freshInvite ? (
+        <div className="mt-3">
+          <InviteLink url={freshInvite} />
+        </div>
+      ) : null}
     </li>
   );
 }
@@ -219,11 +321,11 @@ function UserAdmin({
             className="space-y-3 rounded-xl border border-border bg-card/40 px-4 py-4"
           >
             <h2 className="font-heading text-sm font-semibold text-foreground">
-              Add an account
+              Invite somebody
             </h2>
             <p className="text-xs text-muted-foreground">
-              You set the password and pass it on. They can change it from this
-              page once they are in.
+              You get a one-time link to send them. They choose their own
+              password, so none of it travels through a chat message.
             </p>
 
             <div className="flex flex-col gap-1.5">
@@ -242,25 +344,18 @@ function UserAdmin({
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="invite-password">Password</Label>
-              <Input
-                id="invite-password"
-                name="password"
-                type="password"
-                /* `new-password` rather than off, so a password manager offers
-                   to generate one instead of filling in the operator's own. */
-                autoComplete="new-password"
-                minLength={12}
-                required
-                className="h-9"
-              />
-              <p className="text-xs text-muted-foreground">At least 12 characters.</p>
-            </div>
-            <div className="flex flex-col gap-1.5">
               <Label htmlFor="invite-role">Role</Label>
-              <select id="invite-role" name="role" className={cn(selectClass, "h-9 w-full")}>
-                <option value="editor">Editor: writing and moderation</option>
-                <option value="owner">Owner: also manages accounts</option>
+              <select
+                id="invite-role"
+                name="role"
+                defaultValue="contributor"
+                className={cn(selectClass, "h-9 w-full")}
+              >
+                {ROLES.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}: {option.summary}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -268,7 +363,7 @@ function UserAdmin({
 
             <Button type="submit" size="sm" disabled={inviting} className="w-full">
               {inviting ? <LoaderCircleIcon className="animate-spin" /> : <UserPlusIcon />}
-              Create the account
+              Create the invitation
             </Button>
           </form>
         ) : null}

@@ -73,10 +73,19 @@ export default async function BlogPostPage({
     headline: title,
     description: entry.hook,
     datePublished: entry.publishedAt,
-    author: {
-      "@type": "Person",
-      name: siteConfig.name,
-    },
+    /* The real author when a contributor wrote it, so search engines
+       attribute it to them rather than to the site. That attribution is most of
+       what makes contributing worth somebody's time. */
+    author: entry.author
+      ? {
+          "@type": "Person",
+          name: entry.author.name,
+          ...(entry.author.link ? { url: entry.author.link } : {}),
+        }
+      : {
+          "@type": "Person",
+          name: siteConfig.name,
+        },
     publisher: {
       "@type": "Organization",
       name: siteConfig.name,

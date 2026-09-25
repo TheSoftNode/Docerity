@@ -27,6 +27,12 @@ const OWNER = {
   The schema is declared loosely here on purpose: this is standing in for the
   bootstrap script, and importing the real model would pull Next's module
   resolution into a plain Node context.
+
+  Every collection this file touches is cleared, not just users. The suite
+  shares one database with `contributors.spec.ts`, and the two ran in whichever
+  order Playwright chose: leaving a published post behind made "nothing written
+  here yet" fail in whichever file happened to run second, which looked like a
+  broken import and was two tests disagreeing about the starting state.
 */
 async function createOwner() {
   await mongoose.connect(process.env.MONGODB_URI!);
@@ -52,6 +58,10 @@ async function createOwner() {
     );
 
   await User.deleteMany({});
+  for (const name of ["posts", "reviews", "enquiries", "subscribers"]) {
+    await mongoose.connection.collection(name).deleteMany({});
+  }
+
   await User.create({
     email: OWNER.email,
     name: OWNER.name,
@@ -376,6 +386,16 @@ test.describe("The writing pipeline", () => {
       .getByRole("button", { name: "Unpublish Written by the integration suite" })
       .click();
 
+    /*
+      Waited for, not assumed. The action runs inside a `startTransition`, so
+      navigating straight after the click races it and reads the post as still
+      live, which looks like a broken revalidation and is not one. The row
+      leaving the published tab is the observable end of the transition.
+    */
+    await expect(
+      page.getByRole("link", { name: "Written by the integration suite" })
+    ).toHaveCount(0);
+
     await page.goto("/blog/written-by-the-integration-suite");
     await expect(page.getByText("404")).toBeVisible();
   });
@@ -461,22 +481,25 @@ test.describe("Account rules", () => {
 
     await page.getByLabel("Name").fill("Test Editor");
     await page.getByLabel("Email").fill("editor@docerity.test");
-    await page.getByLabel("Password", { exact: true }).fill("an-editor-password-here");
     /* `exact`, because the row above also has a select labelled
        "Role for Test Owner" and the substring match hits both. */
     await page.getByLabel("Role", { exact: true }).selectOption("editor");
-    await page.getByRole("button", { name: "Create the account" }).click();
+    await page.getByRole("button", { name: "Create the invitation" }).click();
 
-    await expect(page.getByText("Test Editor can now sign in.")).toBeVisible();
+    /* An invitation, not a password the owner invents and passes along. */
+    await expect(page.getByText("One-time link")).toBeVisible();
+    const link = (await page.getByText(/\/admin\/invite\//).first().innerText()).trim();
 
     /* A separate context, so the owner's session is not reused. */
     const context = await browser.newContext();
     const editorPage = await context.newPage();
 
-    await editorPage.goto("/admin/login");
-    await editorPage.getByLabel("Email").fill("editor@docerity.test");
-    await editorPage.getByLabel("Password").fill("an-editor-password-here");
-    await editorPage.getByRole("button", { name: "Sign in" }).click();
+    await editorPage.goto(new URL(link).pathname);
+    await editorPage.getByLabel("Choose a password").fill("an-editor-password-here");
+    await editorPage.getByLabel("Again").fill("an-editor-password-here");
+    await editorPage.getByRole("button", { name: /Set my password/ }).click();
+
+    /* An editor lands on the overview; only a contributor is sent to Writing. */
     await expect(editorPage).toHaveURL("/admin");
 
     /* The rail hides Accounts for an editor. */
@@ -496,7 +519,7 @@ test.describe("Account rules", () => {
     await expect(rows).toHaveCount(1);
     await expect(editorPage.getByText(OWNER.name)).toHaveCount(0);
     await expect(
-      editorPage.getByRole("button", { name: "Create the account" })
+      editorPage.getByRole("button", { name: "Create the invitation" })
     ).toHaveCount(0);
 
     await context.close();

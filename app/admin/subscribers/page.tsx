@@ -3,7 +3,7 @@ import Link from "next/link";
 import { DownloadIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { requireUser } from "@/lib/auth/dal";
+import { requireStaff } from "@/lib/auth/dal";
 import { database } from "@/lib/config/env";
 import {
   countSubscribersByStatus,
@@ -19,7 +19,9 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = { title: "Subscribers" };
 
 export default async function AdminSubscribersPage() {
-  await requireUser("/admin/subscribers");
+  /* Staff only: a contributor has no business in here, and typing the URL
+     sends them to the one page they can use rather than showing an error. */
+  await requireStaff("/admin/subscribers");
 
   if (!database.isConfigured) {
     return (

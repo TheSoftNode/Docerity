@@ -4,6 +4,7 @@ import { PlusIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { requireUser } from "@/lib/auth/dal";
+import { can } from "@/lib/auth/permissions";
 import { database } from "@/lib/config/env";
 import { countPostsByStatus, listAllPosts } from "@/lib/repositories/post.repository";
 import {
@@ -20,6 +21,7 @@ export const metadata: Metadata = { title: "Writing" };
 const FILTERS = [
   { value: "all", label: "Everything" },
   { value: "draft", label: "Drafts" },
+  { value: "submitted", label: "Submitted" },
   { value: "published", label: "Live" },
 ] as const;
 
@@ -30,7 +32,11 @@ export default async function AdminPostsPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireUser("/admin/posts");
+  /* Not `requireStaff`: this is the one admin page a contributor is meant to
+     use. What they can see within it is scoped below. */
+  const user = await requireUser("/admin/posts");
+  const mayPublish = can.publishPosts(user.role);
+  const seesEverything = can.seeAllPosts(user.role);
 
   const { status } = await searchParams;
   const filter: Filter = FILTERS.some((option) => option.value === status)
@@ -42,7 +48,7 @@ export default async function AdminPostsPage({
       <>
         <AdminPageHeader
           title="Writing"
-          description="Explainers and articles. Drafts stay private until you publish them."
+          description="Explainers and articles. Drafts stay private until they are published."
         />
         <div className="mt-6">
           <AdminNoDatabase what="Posts" />
@@ -55,7 +61,19 @@ export default async function AdminPostsPage({
     );
   }
 
-  const [counts, rows] = await Promise.all([countPostsByStatus(), listAllPosts()]);
+  /*
+    The author filter is the access rule, not a convenience.
+
+    A contributor's queries carry their own id, so another writer's draft is
+    never fetched rather than merely hidden from the list. The editor applies
+    the same rule again when a post is opened by id.
+  */
+  const scope = seesEverything ? undefined : user.id;
+
+  const [counts, rows] = await Promise.all([
+    countPostsByStatus(scope),
+    listAllPosts(scope),
+  ]);
 
   const posts: PostSummary[] = rows
     .filter((row) => filter === "all" || row.status === filter)
@@ -74,13 +92,20 @@ export default async function AdminPostsPage({
       publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
       updatedAt: row.updatedAt.toISOString(),
       sections: row.body?.length ?? 0,
+      /* Only shown to staff. A contributor's list is all their own, so a byline
+         on every row would be noise. */
+      authorName: seesEverything ? (row.author?.name ?? "") : "",
     }));
 
   return (
     <>
       <AdminPageHeader
         title="Writing"
-        description="Explainers and articles. Drafts stay private until you publish them."
+        description={
+          mayPublish
+            ? "Explainers and articles. Drafts stay private until you publish them."
+            : "Your explainers and articles. Submit one and it reaches Theophilus to read before it goes live."
+        }
       >
         <Button
           size="sm"
@@ -102,8 +127,7 @@ export default async function AdminPostsPage({
 
       <nav aria-label="Filter by status" className="mt-5 flex flex-wrap gap-2">
         {FILTERS.map((option) => {
-          const count =
-            option.value === "all" ? counts.total : counts[option.value];
+          const count = option.value === "all" ? counts.total : counts[option.value];
           const active = option.value === filter;
           return (
             <Link
@@ -114,7 +138,13 @@ export default async function AdminPostsPage({
                 "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors",
                 active
                   ? "bg-foreground/[0.08] text-foreground"
-                  : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
+                  : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground",
+                /* The queue is highlighted for staff when something is waiting,
+                   because it is the one tab here with somebody on the other end
+                   of it. */
+                option.value === "submitted" && mayPublish && counts.submitted > 0 && !active
+                  ? "text-primary"
+                  : ""
               )}
             >
               {option.label}
@@ -130,23 +160,37 @@ export default async function AdminPostsPage({
         {posts.length === 0 ? (
           counts.total === 0 ? (
             <AdminEmptyState
-              title="Nothing written here yet"
-              description="The blog is currently serving the eight posts built into the code. Import them to edit them here, or start something new."
+              title={mayPublish ? "Nothing written here yet" : "Nothing written yet"}
+              description={
+                mayPublish
+                  ? "The blog is currently serving the eight posts built into the code. Import them to edit them here, or start something new."
+                  : "Start an explainer and save it as a draft. Nothing is visible to anybody else until you submit it."
+              }
             >
-              <ImportPostsButton />
+              {mayPublish ? <ImportPostsButton /> : null}
             </AdminEmptyState>
           ) : (
             <AdminEmptyState
-              title={filter === "draft" ? "No drafts" : "Nothing published"}
+              title={
+                filter === "draft"
+                  ? "No drafts"
+                  : filter === "submitted"
+                    ? "Nothing waiting"
+                    : "Nothing published"
+              }
               description={
                 filter === "draft"
-                  ? "Everything you have written is live."
-                  : "There are drafts waiting, but nothing is published yet."
+                  ? "Everything here has been submitted or published."
+                  : filter === "submitted"
+                    ? mayPublish
+                      ? "Posts a contributor has finished land here for you to read before they go live."
+                      : "Nothing of yours is waiting on a decision."
+                    : "There are drafts waiting, but nothing is published yet."
               }
             />
           )
         ) : (
-          posts.map((post) => <PostRow key={post.id} post={post} />)
+          posts.map((post) => <PostRow key={post.id} post={post} role={user.role} />)
         )}
       </div>
     </>

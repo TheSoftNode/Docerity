@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/lib/auth/dal";
+import { isStaff } from "@/lib/auth/permissions";
 import { withRoute } from "@/lib/http/handler";
 import { failure } from "@/lib/http/responses";
 import { database } from "@/lib/config/env";
@@ -38,6 +39,14 @@ export const GET = withRoute("api.admin.subscribers.export", async (request, { l
   if (!user) {
     /* 401 rather than a redirect: the caller asked for a file. */
     return failure(401, "unauthorized", "Please sign in again.", {
+      requestId: request.headers.get("x-request-id") ?? "unknown",
+    });
+  }
+
+  /* This is a column of people's email addresses, which is nothing to do with
+     writing a post. 403 rather than 401: they are signed in, just not allowed. */
+  if (!isStaff(user.role)) {
+    return failure(403, "forbidden", "That export is not open to contributors.", {
       requestId: request.headers.get("x-request-id") ?? "unknown",
     });
   }

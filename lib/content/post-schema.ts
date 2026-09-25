@@ -20,7 +20,12 @@ export const POST_LIMITS = {
 } as const;
 
 export type PostType = "explainer" | "article";
-export type PostStatus = "draft" | "published";
+/*
+  `submitted` sits between the two: a contributor's finished post, waiting for
+  somebody who can publish. It validates like a published post, because there
+  is no point queueing something incomplete for review.
+*/
+export type PostStatus = "draft" | "submitted" | "published";
 
 export type SectionInput = {
   heading: string;
@@ -134,7 +139,7 @@ export function validatePost(input: PostInput): PostFieldErrors {
     forced to write a complete section before the first save would mean losing
     an outline every time, which is exactly when a draft is most useful.
   */
-  if (input.status === "published") {
+  if (input.status === "published" || input.status === "submitted") {
     const usable = input.body.filter(
       (section) =>
         section.heading.trim().length >= POST_LIMITS.headingMin &&
@@ -143,7 +148,9 @@ export function validatePost(input: PostInput): PostFieldErrors {
 
     if (usable.length === 0) {
       errors.body =
-        "A published post needs at least one section with a heading and a paragraph.";
+        input.status === "submitted"
+          ? "Before submitting, write at least one section with a heading and a paragraph."
+          : "A published post needs at least one section with a heading and a paragraph.";
     }
   }
 

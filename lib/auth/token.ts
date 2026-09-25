@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 
 import { auth as authConfig } from "@/lib/config/env";
+import type { Role } from "@/lib/auth/permissions";
 
 /**
  * Signing and verifying a session token, and nothing else.
@@ -24,9 +25,13 @@ export const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
 
 export type SessionPayload = {
   userId: string;
-  role: "owner" | "editor";
+  role: Role;
   sessionVersion: number;
 };
+
+/* A set rather than a chain of comparisons, so adding a role means editing
+   `permissions.ts` alone. An unrecognised role reads as no session. */
+const ROLES = new Set<Role>(["owner", "editor", "contributor"]);
 
 function key() {
   return new TextEncoder().encode(authConfig.sessionSecret);
@@ -70,7 +75,7 @@ export async function readSession(
     */
     if (
       typeof payload.userId !== "string" ||
-      (payload.role !== "owner" && payload.role !== "editor") ||
+      !ROLES.has(payload.role as Role) ||
       typeof payload.sessionVersion !== "number"
     ) {
       return null;
@@ -78,7 +83,7 @@ export async function readSession(
 
     return {
       userId: payload.userId,
-      role: payload.role,
+      role: payload.role as Role,
       sessionVersion: payload.sessionVersion,
     };
   } catch {

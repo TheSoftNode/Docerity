@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { requireUser } from "@/lib/auth/dal";
+import { requireStaff } from "@/lib/auth/dal";
 import { database, email as emailConfig, storage } from "@/lib/config/env";
 import { countEnquiriesByStatus } from "@/lib/repositories/enquiry.repository";
 import { countReviewsByStatus } from "@/lib/repositories/review.repository";
@@ -95,7 +95,9 @@ function ServiceRow({ ready, name, detail }: { ready: boolean; name: string; det
 }
 
 export default async function AdminOverviewPage() {
-  const user = await requireUser("/admin");
+  const user = /* Staff only: a contributor has no business in here, and typing the URL
+     sends them to the one page they can use rather than showing an error. */
+  await requireStaff("/admin");
 
   const services = (
     <ul className="mt-4 space-y-3">

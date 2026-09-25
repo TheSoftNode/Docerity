@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { SESSION_COOKIE, readSession, type SessionPayload } from "@/lib/auth/token";
 import { findSessionUser } from "@/lib/repositories/user.repository";
 import { ForbiddenError, UnauthorizedError } from "@/lib/core/errors";
+import { isStaff, type Role } from "@/lib/auth/permissions";
 import { createLogger } from "@/lib/core/logger";
 
 /**
@@ -31,7 +32,7 @@ export type AdminUser = {
   id: string;
   email: string;
   name: string;
-  role: "owner" | "editor";
+  role: Role;
 };
 
 /**
@@ -72,7 +73,7 @@ export const getCurrentUser = cache(async (): Promise<AdminUser | null> => {
       id: String(user._id),
       email: user.email,
       name: user.name,
-      role: user.role,
+      role: user.role as Role,
     };
   } catch (error) {
     /*
@@ -118,5 +119,29 @@ export async function requireOwner(): Promise<AdminUser> {
   if (user.role !== "owner") {
     throw new ForbiddenError("Only the account owner can do that.");
   }
+  return user;
+}
+
+/**
+ * Owner or editor, for everything a contributor has no business seeing:
+ * enquiries, the subscriber list, review moderation, publishing.
+ *
+ * Throws rather than redirecting, for the same reason as `requireUserOrThrow`.
+ */
+export async function requireStaffOrThrow(): Promise<AdminUser> {
+  const user = await requireUserOrThrow();
+  if (!isStaff(user.role)) {
+    throw new ForbiddenError("That part of the admin area is not open to contributors.");
+  }
+  return user;
+}
+
+/**
+ * The page-level counterpart: a contributor who types one of those URLs is sent
+ * to the one page they can use rather than shown an error.
+ */
+export async function requireStaff(returnTo?: string): Promise<AdminUser> {
+  const user = await requireUser(returnTo);
+  if (!isStaff(user.role)) redirect("/admin/posts");
   return user;
 }

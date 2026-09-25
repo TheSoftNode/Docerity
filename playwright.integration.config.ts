@@ -29,6 +29,12 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   forbidOnly: !!process.env.CI,
+  /*
+    No retries. The one recurring failure here turned out to be a stale
+    `.next/dev` cache making the dev server answer 404 for real routes, which a
+    retry did not fix and would have hidden if it had. `scripts/integration.mjs`
+    clears that cache before every run, so a failure now means a failure.
+  */
   retries: 0,
   reporter: [["list"]],
   /* Same reasoning as the main config: the dev server compiles each route on

@@ -44,6 +44,18 @@ function toEntry(post: LeanPost): BlogEntry {
        and in the browser and produce a hydration mismatch. */
     publishedAt: (post.publishedAt ?? post.createdAt).toISOString().slice(0, 10),
     tags: post.tags ?? [],
+    /* Only when there is a name. Every post the owner wrote has none, because
+       the site is already in his voice and signing each one would be odd. */
+    ...(post.author?.name
+      ? {
+          author: {
+            name: post.author.name,
+            title: post.author.title ?? "",
+            link: post.author.link ?? "",
+            mentee: Boolean(post.author.mentee),
+          },
+        }
+      : {}),
     body: (post.body ?? []).map((section) => ({
       heading: section.heading,
       paragraphs: section.paragraphs ?? [],

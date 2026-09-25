@@ -8,6 +8,7 @@ import {
   recordSuccessfulLogin,
 } from "@/lib/repositories/user.repository";
 import type { SessionPayload } from "@/lib/auth/session";
+import type { Role } from "@/lib/auth/permissions";
 
 /**
  * Credential checking, and the counting that makes guessing expensive.
@@ -75,6 +76,22 @@ export async function authenticate(
     return { ok: false, message: GENERIC_FAILURE };
   }
 
+  /*
+    An invited account that has not been set up yet.
+
+    `verifyPassword` against an empty digest already returns false, but doing it
+    explicitly matters: otherwise each attempt counts toward the lockout, so
+    somebody typing a password into an account they have not claimed locks
+    themselves out of the invitation they are about to use.
+  */
+  if (!user.passwordHash) {
+    await verifyPassword(password, await DUMMY_HASH_PROMISE);
+    logger.warn("login attempt on an account with a pending invitation", {
+      userId: String(user._id),
+    });
+    return { ok: false, message: GENERIC_FAILURE };
+  }
+
   if (user.lockedUntil && user.lockedUntil.getTime() > Date.now()) {
     const seconds = Math.ceil((user.lockedUntil.getTime() - Date.now()) / 1000);
     /*
@@ -90,7 +107,7 @@ export async function authenticate(
     );
   }
 
-  const valid = await verifyPassword(password, user.passwordHash ?? "");
+  const valid = await verifyPassword(password, user.passwordHash);
 
   if (!valid) {
     const { locked } = await recordFailedLogin(user._id, {
@@ -117,7 +134,7 @@ export async function authenticate(
     name: user.name,
     session: {
       userId: String(user._id),
-      role: user.role,
+      role: user.role as Role,
       sessionVersion: user.sessionVersion ?? 1,
     },
   };

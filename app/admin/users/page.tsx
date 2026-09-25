@@ -41,6 +41,8 @@ export default async function AdminUsersPage() {
     disabled: Boolean(row.disabledAt),
     lastLoginAt: row.lastLoginAt ? row.lastLoginAt.toISOString() : null,
     createdAt: row.createdAt.toISOString(),
+    pending: row.pending,
+    inviteExpiresAt: row.inviteExpiresAt ? row.inviteExpiresAt.toISOString() : null,
   }));
 
   return (
@@ -49,7 +51,7 @@ export default async function AdminUsersPage() {
         title="Accounts"
         description={
           user.role === "owner"
-            ? "Who can sign in. Owners manage accounts; editors write and moderate."
+            ? "Who can sign in. Owners manage accounts, editors publish, contributors write and submit."
             : "Your account. Only an owner can add or change accounts."
         }
       />

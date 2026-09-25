@@ -40,7 +40,8 @@ The password is read from stdin, not taken as an argument, so it does not land
 in shell history or the process list. Running it again for the same address
 resets that account's password and signs its other sessions out.
 
-Then sign in at `/admin/login`.
+Then sign in at `/admin/login`. Every other account is created from inside, by
+invitation.
 
 ## The admin area
 
@@ -51,7 +52,47 @@ Then sign in at `/admin/login`.
 | `/admin/reviews` | Moderation queue. Nothing is public until approved here |
 | `/admin/posts` | Write, edit and publish explainers and articles |
 | `/admin/subscribers` | The mailing list, and a CSV export |
-| `/admin/users` | Accounts. Owners manage accounts, editors write and moderate |
+| `/admin/users` | Accounts, and the invitations that create them |
+
+### Roles
+
+| Role | Can |
+| --- | --- |
+| **Owner** | Everything, including accounts |
+| **Editor** | Writing, publishing, reviews, enquiries, subscribers |
+| **Contributor** | Writes their own posts and submits them. Nothing else |
+
+A contributor is a mentee writing an explainer. They cannot publish, cannot see
+client enquiries or the subscriber list, and cannot open anybody else's draft.
+Those are rules in the Data Access Layer and the repositories, not hidden nav
+items: a contributor who types `/admin/enquiries` is sent to Writing, and the
+subscriber export answers 403.
+
+### Inviting somebody
+
+`/admin/users` → **Invite somebody**. You get a one-time link, valid for three
+days, which you send them. They choose their own password, so nothing secret
+travels through a chat message and only one person ever knows it.
+
+The link works once. If it lapses, **New link** issues another; **revoke**
+cancels an outstanding one. An invited account cannot be signed in to until it
+is claimed.
+
+### How a contributor's post reaches the blog
+
+1. They write it in the same editor you use. Drafts are private to them.
+2. **Submit for review** puts it in the queue at `/admin/posts?status=submitted`.
+   They can withdraw it back to a draft if they spot something.
+3. You read it, edit it, and publish. Nothing publishes itself.
+4. It goes up with their byline and a "Mentee" marker, and the schema.org
+   author and the feed's `dc:creator` name them rather than the site.
+
+Once it is live they can no longer edit it. Otherwise "cannot publish" would be
+decorative: submit something harmless, wait for approval, rewrite it in place.
+
+`/contribute` is the public page explaining all of this. It deliberately has no
+submission form, because an open one collects filler that somebody has to read
+and refuse.
 
 ### Writing a post
 
@@ -150,7 +191,7 @@ cannot tree-shake an import it cannot see.
 
 ```bash
 npm run test:e2e             # 234 tests, no database needed
-npm run test:integration     # 22 tests against a real MongoDB
+npm run test:integration     # 36 tests against a real MongoDB
 ```
 
 The main suite runs with no `MONGODB_URI` on purpose: that covers the degraded
@@ -159,8 +200,10 @@ path, which is a real production state and the one nobody thinks to check.
 The integration suite starts an in-memory MongoDB, then a dev server that
 inherits its URI, and drives the whole pipeline: signing in, submitting and
 approving a review, importing and editing and publishing a post, reading an
-enquiry, and the account rules. Stop any running `next dev` first, because
-Next 16 refuses a second one in the same directory.
+enquiry, inviting a contributor and watching every door they should not be able
+to open stay shut. Stop any running `next dev` first, and do not run two copies
+at once: they fight over the port and over `.next/dev`, and the symptom is the
+dev server answering 404 for routes that plainly exist.
 
 Visual baselines are recorded on macOS in dev mode. After a deliberate visual
 change:

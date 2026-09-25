@@ -19,12 +19,42 @@
  */
 
 import { spawn } from "node:child_process";
+import { rmSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { MongoMemoryServer } from "mongodb-memory-server";
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
+/*
+  The whole dev cache goes, not just the lock file.
+
+  Next 16 writes a lock so a second `next dev` in the same directory refuses to
+  start, and a server killed rather than exited leaves it behind. Clearing only
+  the lock turned out not to be enough: a run interrupted mid-compile also
+  leaves a partial route tree in `.next/dev/build`, and the next server starts
+  happily and then answers 404 for routes that plainly exist. The symptom was
+  `/admin/login` returning 404 for an entire run, which read as a flaky test and
+  was a stale cache.
+
+  A few seconds of recompiling is a fair price for every run starting from the
+  same place.
+*/
+function clearDevCache() {
+  try {
+    rmSync(resolve(root, ".next/dev"), { recursive: true, force: true });
+  } catch {
+    /* Absent is the normal case on a fresh clone. */
+  }
+}
+
 
 let mongod;
 
 async function main() {
+  clearDevCache();
+
   process.stdout.write("Starting MongoDB... ");
 
   mongod = await MongoMemoryServer.create({

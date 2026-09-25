@@ -10,6 +10,7 @@ import {
   EyeIcon,
   LoaderCircleIcon,
   SaveIcon,
+  SendIcon,
   XIcon,
 } from "lucide-react";
 
@@ -21,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { IconPicker } from "@/components/admin/icon-picker";
 import { SectionEditor } from "@/components/admin/section-editor";
 import { savePost } from "@/app/admin/posts/actions";
+import { can, type Role } from "@/lib/auth/permissions";
 import {
   POST_LIMITS,
   slugify,
@@ -47,10 +49,12 @@ function FieldError({ message }: { message?: string }) {
 function PostEditor({
   initial,
   postId,
+  role,
 }: {
   initial: PostInput;
   /** Absent for a new post. */
   postId?: string;
+  role: Role;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -118,6 +122,7 @@ function PostEditor({
   }
 
   const isExplainer = post.type === "explainer";
+  const mayPublish = can.publishPosts(role);
 
   return (
     <div className="pb-16">
@@ -162,13 +167,31 @@ function PostEditor({
             onClick={() => submit("draft")}
           >
             {pending ? <LoaderCircleIcon className="animate-spin" /> : <SaveIcon />}
-            Save draft
+            {post.status === "submitted" && !mayPublish ? "Withdraw to draft" : "Save draft"}
           </Button>
 
-          <Button size="sm" disabled={pending} onClick={() => submit("published")}>
-            <EyeIcon />
-            {post.status === "published" ? "Update live post" : "Publish"}
-          </Button>
+          {/*
+            The rule this button embodies is enforced in the action, not here.
+            Hiding Publish from a contributor is an affordance; `savePost`
+            refuses a `published` status from a role that cannot publish, so
+            calling the action directly gets the same answer.
+          */}
+          {mayPublish ? (
+            <Button size="sm" disabled={pending} onClick={() => submit("published")}>
+              <EyeIcon />
+              {post.status === "published" ? "Update live post" : "Publish"}
+            </Button>
+          ) : post.status === "submitted" ? (
+            <Button size="sm" disabled variant="outline" title="Waiting to be read">
+              <SendIcon />
+              Submitted
+            </Button>
+          ) : (
+            <Button size="sm" disabled={pending} onClick={() => submit("submitted")}>
+              <SendIcon />
+              Submit for review
+            </Button>
+          )}
         </div>
       </div>
 
@@ -352,11 +375,25 @@ function PostEditor({
                 "mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium",
                 post.status === "published"
                   ? "bg-brand-teal/15 text-brand-teal"
-                  : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                  : post.status === "submitted"
+                    ? "bg-primary/15 text-primary"
+                    : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
               )}
             >
-              {post.status === "published" ? "Live" : "Draft"}
+              {post.status === "published"
+                ? "Live"
+                : post.status === "submitted"
+                  ? "Waiting to be read"
+                  : "Draft"}
             </p>
+
+            {!mayPublish ? (
+              <p className="mt-2.5 text-xs leading-relaxed text-muted-foreground">
+                {post.status === "submitted"
+                  ? "Theophilus will read it and either publish it or come back to you. Withdraw it if you want to keep working."
+                  : "Submitting sends it to be read. Nothing you write is visible to anybody until then."}
+              </p>
+            ) : null}
           </div>
 
           <div className="flex flex-col gap-1.5">

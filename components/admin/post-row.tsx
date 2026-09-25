@@ -7,13 +7,16 @@ import {
   EyeOffIcon,
   ExternalLinkIcon,
   PencilIcon,
+  SendIcon,
   Trash2Icon,
+  UndoIcon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ContentIcon } from "@/components/shared/content-icon";
 import { changePostStatus, removePost } from "@/app/admin/posts/actions";
+import { can, type Role } from "@/lib/auth/permissions";
 
 export type PostSummary = {
   id: string;
@@ -21,21 +24,25 @@ export type PostSummary = {
   slug: string;
   title: string;
   hook: string;
-  status: "draft" | "published";
+  status: "draft" | "submitted" | "published";
   tags: string[];
   readTime: string;
   iconName: string;
   publishedAt: string | null;
   updatedAt: string;
   sections: number;
+  /** Shown to staff, so a queue of submissions says who wrote each one. */
+  authorName: string;
 };
 
-function PostRow({ post }: { post: PostSummary }) {
+function PostRow({ post, role }: { post: PostSummary; role: Role }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const live = post.status === "published";
+  const submitted = post.status === "submitted";
+  const mayPublish = can.publishPosts(role);
 
   function run(action: () => Promise<{ ok: boolean; message?: string }>) {
     setError(null);
@@ -49,7 +56,7 @@ function PostRow({ post }: { post: PostSummary }) {
     <article
       className={cn(
         "rounded-xl border bg-card px-4 py-3.5 transition-opacity sm:px-5",
-        live ? "border-border" : "border-amber-500/30",
+        live ? "border-border" : submitted ? "border-primary/40" : "border-amber-500/30",
         pending && "opacity-60"
       )}
     >
@@ -70,14 +77,23 @@ function PostRow({ post }: { post: PostSummary }) {
             <span
               className={cn(
                 "rounded-full px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-wide",
-                live ? "bg-brand-teal/15 text-brand-teal" : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                live
+                  ? "bg-brand-teal/15 text-brand-teal"
+                  : submitted
+                    ? "bg-primary/15 text-primary"
+                    : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
               )}
             >
-              {live ? "Live" : "Draft"}
+              {live ? "Live" : submitted ? "Submitted" : "Draft"}
             </span>
             <span className="font-mono text-[0.625rem] uppercase tracking-wide text-muted-foreground">
               {post.type}
             </span>
+            {post.authorName ? (
+              <span className="truncate text-xs text-muted-foreground">
+                by {post.authorName}
+              </span>
+            ) : null}
           </div>
 
           <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{post.hook}</p>
@@ -117,28 +133,58 @@ function PostRow({ post }: { post: PostSummary }) {
             </Button>
           ) : null}
 
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            nativeButton={false}
-            render={<Link href={`/admin/posts/${post.id}`} aria-label={`Edit ${post.title}`} />}
-          >
-            <PencilIcon />
-          </Button>
+          {mayPublish || !live ? (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              nativeButton={false}
+              render={<Link href={`/admin/posts/${post.id}`} aria-label={`Edit ${post.title}`} />}
+            >
+              <PencilIcon />
+            </Button>
+          ) : null}
 
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            disabled={pending}
-            aria-label={live ? `Unpublish ${post.title}` : `Publish ${post.title}`}
-            onClick={() =>
-              run(() => changePostStatus(post.id, live ? "draft" : "published"))
-            }
-          >
-            {live ? <EyeOffIcon /> : <EyeIcon />}
-          </Button>
+          {/*
+            Two different affordances, because the two roles do different
+            things. Staff publish and unpublish. A contributor submits for
+            review and can withdraw it again, which matters: somebody who spots
+            a mistake after sending should be able to pull it back rather than
+            having to ask.
+          */}
+          {mayPublish ? (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              disabled={pending}
+              aria-label={live ? `Unpublish ${post.title}` : `Publish ${post.title}`}
+              onClick={() =>
+                run(() => changePostStatus(post.id, live ? "draft" : "published"))
+              }
+            >
+              {live ? <EyeOffIcon /> : <EyeIcon />}
+            </Button>
+          ) : submitted ? (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={pending}
+              onClick={() => run(() => changePostStatus(post.id, "draft"))}
+            >
+              <UndoIcon />
+              Withdraw
+            </Button>
+          ) : !live ? (
+            <Button
+              size="sm"
+              disabled={pending}
+              onClick={() => run(() => changePostStatus(post.id, "submitted"))}
+            >
+              <SendIcon />
+              Submit
+            </Button>
+          ) : null}
 
-          {confirmingDelete ? (
+          {!mayPublish && live ? null : confirmingDelete ? (
             <>
               <Button
                 variant="destructive"

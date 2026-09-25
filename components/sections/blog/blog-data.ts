@@ -30,6 +30,21 @@ type Section = {
   media?: Media;
 };
 
+/**
+ * Who wrote it, when that is not the owner.
+ *
+ * Absent on everything in this file: the site is in his voice, so a byline on
+ * each of his own posts would read as odd. It is present on a contributor's,
+ * where the point is partly who wrote it.
+ */
+export type PostByline = {
+  name: string;
+  title: string;
+  link: string;
+  /** Marks a post by somebody being mentored, which the index calls out. */
+  mentee: boolean;
+};
+
 type BaseEntry = {
   slug: string;
   title: string;
@@ -38,6 +53,7 @@ type BaseEntry = {
   publishedAt: string;
   tags: string[];
   body: Section[];
+  author?: PostByline;
 };
 
 export type ExplainerPost = BaseEntry & {

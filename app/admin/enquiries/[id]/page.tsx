@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeftIcon } from "lucide-react";
 
-import { requireUser } from "@/lib/auth/dal";
+import { requireStaff } from "@/lib/auth/dal";
 import {
   findEnquiryById,
   markEnquiryRead,
@@ -25,7 +25,7 @@ export default async function EnquiryPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await requireUser(`/admin/enquiries/${id}`);
+  await requireStaff(`/admin/enquiries/${id}`);
 
   /* Mongoose throws a CastError on anything that is not a 24-character hex
      string, which would surface as a 500 rather than a 404. */

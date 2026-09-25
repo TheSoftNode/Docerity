@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { can, type Role } from "@/lib/auth/permissions";
 
 /**
  * The admin rail.
@@ -27,30 +28,37 @@ type NavItem = {
   href: string;
   label: string;
   Icon: LucideIcon;
-  /** Owner-only items are filtered server-side; this is only the label. */
-  ownerOnly?: boolean;
+  /*
+    Whether this role should see the link at all.
+
+    Hiding a link is not access control, and is not treated as such: each page
+    and every action re-checks for itself. This only decides what is worth
+    showing, so a contributor is not looking at four tabs that would turn them
+    away.
+  */
+  visible: (role: Role) => boolean;
 };
 
 const items: NavItem[] = [
-  { href: "/admin", label: "Overview", Icon: LayoutDashboardIcon },
-  { href: "/admin/enquiries", label: "Enquiries", Icon: InboxIcon },
-  { href: "/admin/reviews", label: "Reviews", Icon: StarIcon },
-  { href: "/admin/posts", label: "Writing", Icon: FileTextIcon },
-  { href: "/admin/subscribers", label: "Subscribers", Icon: MailIcon },
-  { href: "/admin/users", label: "Accounts", Icon: UsersIcon, ownerOnly: true },
+  { href: "/admin", label: "Overview", Icon: LayoutDashboardIcon, visible: can.readEnquiries },
+  { href: "/admin/enquiries", label: "Enquiries", Icon: InboxIcon, visible: can.readEnquiries },
+  { href: "/admin/reviews", label: "Reviews", Icon: StarIcon, visible: can.moderateReviews },
+  { href: "/admin/posts", label: "Writing", Icon: FileTextIcon, visible: can.writePosts },
+  { href: "/admin/subscribers", label: "Subscribers", Icon: MailIcon, visible: can.readSubscribers },
+  { href: "/admin/users", label: "Accounts", Icon: UsersIcon, visible: can.manageAccounts },
 ];
 
 function AdminNav({
   role,
   counts,
 }: {
-  role: "owner" | "editor";
-  counts: { enquiries: number; reviews: number };
+  role: Role;
+  counts: { enquiries: number; reviews: number; posts: number };
 }) {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
 
-  const visible = items.filter((item) => !item.ownerOnly || role === "owner");
+  const visible = items.filter((item) => item.visible(role));
 
   return (
     <nav aria-label="Admin sections" className="flex flex-col gap-1">
@@ -70,7 +78,9 @@ function AdminNav({
             ? counts.enquiries
             : item.href === "/admin/reviews"
               ? counts.reviews
-              : 0;
+              : item.href === "/admin/posts"
+                ? counts.posts
+                : 0;
 
         return (
           <Link

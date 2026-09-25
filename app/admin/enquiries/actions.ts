@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireUserOrThrow } from "@/lib/auth/dal";
+import { requireStaffOrThrow } from "@/lib/auth/dal";
 import { isAppError } from "@/lib/core/errors";
 import { createLogger } from "@/lib/core/logger";
 import { storage } from "@/lib/config/env";
@@ -23,7 +23,7 @@ export async function updateEnquiryStatus(
   status: EnquiryStatus
 ): Promise<SimpleResult> {
   try {
-    const user = await requireUserOrThrow();
+    const user = await requireStaffOrThrow();
     const updated = await setEnquiryStatus(id, status);
     if (!updated) return { ok: false, message: "That enquiry no longer exists." };
 
@@ -54,7 +54,7 @@ export async function getAttachmentUrl(
   publicId: string
 ): Promise<{ ok: true; url: string } | { ok: false; message: string }> {
   try {
-    const user = await requireUserOrThrow();
+    const user = await requireStaffOrThrow();
 
     if (!storage.isConfigured) {
       return { ok: false, message: "Cloudinary is not configured for this environment." };

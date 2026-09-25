@@ -13,7 +13,7 @@ export default async function NewPostPage({
 }: {
   searchParams: Promise<{ type?: string }>;
 }) {
-  await requireUser("/admin/posts/new");
+  const user = await requireUser("/admin/posts/new");
 
   const { type } = await searchParams;
   /* The kind comes from the link that got here, and is switchable in the
@@ -32,5 +32,5 @@ export default async function NewPostPage({
     );
   }
 
-  return <PostEditor initial={emptyPost(kind)} />;
+  return <PostEditor initial={emptyPost(kind)} role={user.role} />;
 }
