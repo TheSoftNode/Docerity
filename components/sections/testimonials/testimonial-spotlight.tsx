@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRightIcon, QuoteIcon } from "lucide-react";
+import { ArrowRightIcon, PenLineIcon, QuoteIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -146,25 +146,35 @@ function TestimonialSpotlight({
           })}
         </ul>
 
-        {/* The way to the full set, and to the form. Without it the section is
-            a dead end and nobody finds the reviews page from the homepage. */}
-        <div className="mt-6 flex flex-wrap items-center gap-2">
+        {/*
+          The way to the full set, and to the form.
+
+          Both were `outline` and `ghost` at `sm` in the first version, which
+          put a borderless button next to a filled one at the bottom of the
+          column: the second read as stray text rather than something to press,
+          and "Leave one" gave no clue what it led to. The invitation is now the
+          filled one, because writing a review is the action this section is
+          actually asking for.
+        */}
+        <div className="mt-7 flex flex-col gap-3 border-t border-border/70 pt-6 sm:flex-row sm:items-center">
           <Button
-            variant="outline"
-            size="sm"
-            nativeButton={false}
-            render={<Link href="/reviews" />}
-          >
-            Read all reviews
-            <ArrowRightIcon />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
+            size="lg"
+            className="h-10 w-full px-5 text-sm sm:w-auto"
             nativeButton={false}
             render={<Link href="/reviews#leave-a-review" />}
           >
-            Leave one
+            <PenLineIcon />
+            Write a review
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="h-10 w-full px-5 text-sm sm:w-auto"
+            nativeButton={false}
+            render={<Link href="/reviews" />}
+          >
+            Read all of them
+            <ArrowRightIcon />
           </Button>
         </div>
       </div>

@@ -199,8 +199,10 @@ test.describe("The review pipeline", () => {
     await page.goto("/reviews");
     await expect(page.getByText(review.body)).toBeVisible();
     await expect(page.getByText(review.fullName)).toBeVisible();
-    /* The average appears once there is something to average. */
+    /* The average and its distribution replace the empty-state panel once
+       there is something to average. */
     await expect(page.getByText("5.0")).toBeVisible();
+    await expect(page.getByText("No entries")).toHaveCount(0);
 
     /* And the structured data, which was absent with no reviews. */
     const jsonLd = await page.locator('script[type="application/ld+json"]').innerText();

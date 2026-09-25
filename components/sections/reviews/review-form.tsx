@@ -28,6 +28,7 @@ function Field({
   hint,
   optional,
   children,
+  className,
 }: {
   id: string;
   label: string;
@@ -35,9 +36,10 @@ function Field({
   hint?: string;
   optional?: boolean;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={cn("flex flex-col gap-1.5", className)}>
       <Label htmlFor={id}>
         {label}
         {optional ? (
@@ -213,21 +215,28 @@ function ReviewForm() {
         <input id="review-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="rating-group">How did it go?</Label>
-        <div id="rating-group">
-          <StarRating
-            name="rating"
-            value={rating}
-            onChange={(next) => {
-              setRating(next);
-              setErrors((current) => ({ ...current, rating: undefined }));
-            }}
-            invalid={Boolean(errors.rating)}
-          />
+      {/* The rating is the one field with no default and the one people skip,
+          so it gets a framed row of its own rather than sitting in the stack
+          looking like every other label. */}
+      <div className="rounded-xl border border-border bg-background/40 px-4 py-3.5">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <Label htmlFor="rating-group" className="text-sm">
+            How did it go?
+          </Label>
+          <div id="rating-group">
+            <StarRating
+              name="rating"
+              value={rating}
+              onChange={(next) => {
+                setRating(next);
+                setErrors((current) => ({ ...current, rating: undefined }));
+              }}
+              invalid={Boolean(errors.rating)}
+            />
+          </div>
         </div>
         {errors.rating ? (
-          <p className="text-xs text-destructive">{errors.rating}</p>
+          <p className="mt-2 text-xs text-destructive">{errors.rating}</p>
         ) : null}
       </div>
 
@@ -305,17 +314,24 @@ function ReviewForm() {
         </p>
       </Field>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field id="linkTitle" label="A link" optional hint="Your company, or the project." >
-          <Input id="linkTitle" name="linkTitle" placeholder="Acme" className="h-10" />
-        </Field>
-        <Field id="linkUrl" label="Its address" optional error={errors.links}>
-          <Input id="linkUrl" name="linkUrl" placeholder="acme.com" className="h-10" />
-        </Field>
-      </div>
+      {/* The two optional blocks sit under one legend, so the required fields
+          above read as the actual length of the form. */}
+      <fieldset className="rounded-xl border border-border/70 px-4 py-4">
+        <legend className="px-1.5 font-mono text-[0.625rem] tracking-[0.16em] uppercase text-muted-foreground">
+          Optional
+        </legend>
 
-      <Field id="photo" label="A photo of you" optional error={errors.photo}>
-        <div className="flex items-center gap-3">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field id="linkTitle" label="A link" hint="Your company, or the project.">
+            <Input id="linkTitle" name="linkTitle" placeholder="Acme" className="h-10" />
+          </Field>
+          <Field id="linkUrl" label="Its address" error={errors.links}>
+            <Input id="linkUrl" name="linkUrl" placeholder="acme.com" className="h-10" />
+          </Field>
+        </div>
+
+        <Field id="photo" label="A photo of you" error={errors.photo} className="mt-5">
+          <div className="flex items-center gap-3">
           <span className="inline-flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-muted/40">
             {photo ? (
               /* An object URL rather than a FileReader data URL: it does not
@@ -364,9 +380,10 @@ function ReviewForm() {
             >
               <XIcon />
             </Button>
-          ) : null}
-        </div>
-      </Field>
+            ) : null}
+          </div>
+        </Field>
+      </fieldset>
 
       {errors.form ? (
         <p

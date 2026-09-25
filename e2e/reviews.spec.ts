@@ -16,12 +16,16 @@ test.describe("Reviews page", () => {
     await page.goto("/reviews");
 
     await expect(
-      page.getByRole("heading", { level: 1, name: /work with me/i })
+      page.getByRole("heading", { level: 1, name: /in their words/i })
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Be the first to leave one." })
+      page.getByRole("heading", { name: "Worked together? Be the first." })
     ).toBeVisible();
     await expect(page.getByLabel("Your name")).toBeVisible();
+
+    /* The empty state says so rather than showing an empty panel where the
+       rating summary goes. */
+    await expect(page.getByText("No entries")).toBeVisible();
 
     expect(errors).toEqual([]);
   });
@@ -85,8 +89,13 @@ test.describe("Reviews page", () => {
       as a button. Every other test here queries these the same way.
     */
     await expect(
-      page.getByRole("button", { name: "Read all reviews" })
+      page.getByRole("button", { name: "Read all of them" })
     ).toHaveAttribute("href", "/reviews");
+    /* Filled rather than ghost. A borderless button beside a filled one read as
+       stray text, which is why nobody found the form from the homepage. */
+    await expect(
+      page.getByRole("button", { name: "Write a review" })
+    ).toHaveAttribute("href", "/reviews#leave-a-review");
     await expect(
       page.locator('footer a[href="/reviews"]')
     ).toBeVisible();
