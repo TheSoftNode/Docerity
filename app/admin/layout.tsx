@@ -10,6 +10,7 @@ import { countReviewsByStatus } from "@/lib/repositories/review.repository";
 import { countPostsByStatus } from "@/lib/repositories/post.repository";
 import { isStaff } from "@/lib/auth/permissions";
 import { AdminNav } from "@/components/admin/admin-nav";
+import { AdminRail } from "@/components/admin/admin-rail";
 import { BrandMark } from "@/components/shared/brand-mark";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -73,14 +74,8 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-svh flex-col bg-background lg:flex-row">
-      {/*
-        The rail's edge is a gradient hairline rather than a flat border, so
-        the one line separating the tool from the content is the brand's rather
-        than the default grey. Drawn as a pseudo-element on the aside so it
-        needs no extra node.
-      */}
-      <aside className="relative shrink-0 border-b border-border/80 bg-card/40 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[linear-gradient(to_right,var(--brand-primary),var(--brand-violet))] after:opacity-40 after:content-[''] lg:w-60 lg:border-r-0 lg:border-b-0 lg:after:inset-y-0 lg:after:left-auto lg:after:h-auto lg:after:w-px lg:after:bg-[linear-gradient(to_bottom,transparent,var(--brand-primary)_20%,var(--brand-violet)_80%,transparent)]">
-        <div className="flex h-full flex-col gap-6 px-4 py-5 lg:sticky lg:top-0 lg:max-h-svh lg:py-6">
+      <AdminRail
+        brand={
           <Link href="/admin" className="flex items-center gap-2.5">
             <BrandMark className="size-8" />
             <span className="font-heading text-sm font-semibold tracking-tight text-foreground">
@@ -90,47 +85,47 @@ export default async function AdminLayout({
               Admin
             </span>
           </Link>
+        }
+      >
+        <div className="flex-1">
+          <AdminNav role={user.role} counts={counts} />
+        </div>
 
-          <div className="flex-1">
-            <AdminNav role={user.role} counts={counts} />
+        <div className="space-y-3 border-t border-border/80 pt-4">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-foreground">{user.name}</p>
+            <p className="truncate text-xs text-muted-foreground">{user.email}</p>
           </div>
 
-          <div className="space-y-3 border-t border-border/80 pt-4">
-            <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-foreground">{user.name}</p>
-              <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {/* A Server Action in a form, so signing out is a POST. A GET
-                  link would let any page on the internet sign you out with an
-                  <img src>. */}
-              <form action={signOut} className="flex-1">
-                <Button type="submit" variant="outline" size="sm" className="w-full">
-                  <LogOutIcon />
-                  Sign out
-                </Button>
-              </form>
-
-              {/*
-                The same toggle the public navbar uses, rather than a second
-                one written for here. The admin area is where the most time is
-                spent, and it was the one part of the site with no way to switch.
-              */}
-              <ThemeToggle className="size-7 text-muted-foreground" />
-
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                nativeButton={false}
-                render={<Link href="/" target="_blank" aria-label="Open the site" />}
-              >
-                <ExternalLinkIcon />
+          <div className="flex items-center gap-2">
+            {/* A Server Action in a form, so signing out is a POST. A GET
+                link would let any page on the internet sign you out with an
+                <img src>. */}
+            <form action={signOut} className="flex-1">
+              <Button type="submit" variant="outline" size="sm" className="w-full">
+                <LogOutIcon />
+                Sign out
               </Button>
-            </div>
+            </form>
+
+            {/*
+              The same toggle the public navbar uses, rather than a second one
+              written for here. The admin area is where the most time is spent,
+              and it was the one part of the site with no way to switch.
+            */}
+            <ThemeToggle className="size-7 text-muted-foreground" />
+
+            <Button
+              variant="subtle"
+              size="icon-sm"
+              nativeButton={false}
+              render={<Link href="/" target="_blank" aria-label="Open the site" />}
+            >
+              <ExternalLinkIcon />
+            </Button>
           </div>
         </div>
-      </aside>
+      </AdminRail>
 
       <main className="min-w-0 flex-1 px-5 py-7 sm:px-7 lg:px-9 lg:py-9">{children}</main>
     </div>

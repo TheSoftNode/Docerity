@@ -320,6 +320,57 @@ test.describe("Section headings", () => {
   });
 });
 
+test.describe("The rail on a phone", () => {
+  /*
+    Stacked above the content, the rail was a full screen of navigation before
+    any of it: the mark, nine sections, the account block and the sign-out row.
+    The greeting on every page of the tool sat below the fold.
+  */
+
+  /* Scoped to the rail. The overview also has a link called "Subscribers",
+     which is a stat card rather than a section, and an unscoped locator finds
+     that one and reports the menu as open. */
+  const section = (page: Page, name: string) =>
+    page.getByRole("navigation", { name: "Admin sections" }).getByRole("link", { name });
+
+  test("collapses, so the page starts at the top of the screen", async ({ page }) => {
+    await signIn(page, OWNER);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/admin");
+
+    await expect(section(page, "Subscribers")).toBeHidden();
+
+    const box = await page.getByRole("heading", { level: 1 }).boundingBox();
+    /* Within the first screen, and in practice just under the bar. */
+    expect(box!.y).toBeLessThan(200);
+  });
+
+  test("the toggle opens it, and navigating closes it again", async ({ page }) => {
+    await signIn(page, OWNER);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/admin");
+
+    await page.getByRole("button", { name: "Open the menu" }).click();
+    await expect(section(page, "Subscribers")).toBeVisible();
+
+    await section(page, "Page content").click();
+    await expect(page).toHaveURL(/\/admin\/content/);
+
+    /* Otherwise the menu sits over the page it just opened, and the first
+       thing you do on arriving anywhere is dismiss it. */
+    await expect(section(page, "Subscribers")).toBeHidden();
+  });
+
+  test("and nothing is hidden on a wide screen", async ({ page }) => {
+    await signIn(page, OWNER);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/admin");
+
+    await expect(section(page, "Subscribers")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Open the menu" })).toBeHidden();
+  });
+});
+
 test.describe("A section with an icon", () => {
   test("the icon a section stores is the icon the page draws", async ({ page }) => {
     /*
