@@ -229,7 +229,7 @@ export async function removeProject(id: string): Promise<SimpleResult> {
 }
 
 /**
- * Moves the twenty-five projects in `work-data.ts` into the database.
+ * Moves the projects in `work-data.ts` into the database.
  *
  * A one-time action rather than a migration script, for the same reason the
  * blog's import is: it needs the TypeScript module, the path alias and the

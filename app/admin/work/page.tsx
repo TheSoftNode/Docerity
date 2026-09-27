@@ -17,6 +17,7 @@ import {
 } from "@/components/admin/admin-page-header";
 import { ProjectRow, type ProjectSummary } from "@/components/admin/project-row";
 import { ImportProjectsButton } from "@/components/admin/import-projects-button";
+import { projects as staticProjects } from "@/components/sections/work/work-data";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Work" };
@@ -46,8 +47,8 @@ export default async function AdminWorkPage() {
         <div className="mt-6">
           <AdminNoDatabase what="Projects" />
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            The site is still serving the twenty-five projects built into the
-            code, so the work page is unaffected.
+            The site is still serving the {staticProjects.length} projects built
+            into the code, so the work page is unaffected.
           </p>
         </div>
       </>
@@ -76,6 +77,11 @@ export default async function AdminWorkPage() {
     isFirst: index === 0,
     isLast: index === rows.length - 1,
   }));
+
+  /* Which of the built-in projects have never been imported. Compared by slug
+     because that is what `importProjects` deduplicates on. */
+  const stored = new Set(projects.map((project) => project.slug));
+  const pendingImport = staticProjects.filter((project) => !stored.has(project.slug)).length;
 
   return (
     <>
@@ -122,11 +128,34 @@ export default async function AdminWorkPage() {
         ))}
       </dl>
 
+      {/*
+        Offered whenever the file has projects the database does not, not only
+        when the list is empty.
+
+        Adding a project to `work-data.ts` is how a batch of them arrives, and
+        with the old condition those were invisible here the moment one project
+        existed: the file had them, the database did not, and nothing said so.
+        The import skips slugs that are already stored, so pressing this cannot
+        overwrite anything edited here.
+      */}
+      {pendingImport > 0 && projects.length > 0 ? (
+        <div className="mt-5 flex flex-col items-center gap-2 rounded-xl border border-dashed border-primary/25 bg-primary/[0.04] px-5 py-4 text-center sm:flex-row sm:justify-between sm:text-left">
+          <p className="text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">
+              {pendingImport} {pendingImport === 1 ? "project is" : "projects are"} built into
+              the code
+            </span>{" "}
+            and not stored here yet. Import to edit {pendingImport === 1 ? "it" : "them"}.
+          </p>
+          <ImportProjectsButton />
+        </div>
+      ) : null}
+
       <div className="mt-5 space-y-2">
         {projects.length === 0 ? (
           <AdminEmptyState
             title="Nothing here yet"
-            description="The site is currently serving the twenty-five projects built into the code. Import them to edit them here, or start a new one."
+            description={`The site is currently serving the ${staticProjects.length} projects built into the code. Import them to edit them here, or start a new one.`}
           >
             <ImportProjectsButton />
           </AdminEmptyState>

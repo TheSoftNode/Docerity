@@ -210,7 +210,8 @@ export async function deleteProject(id: string) {
 /**
  * Inserts projects that are not already present, and reports what it skipped.
  *
- * Used once, to move the twenty-five in `work-data.ts` into the database.
+ * Moves what is in `work-data.ts` into the database, skipping slugs already
+ * stored, so it can be run again when the file gains projects.
  * Idempotent: existing slugs are filtered out first, so running it twice
  * imports nothing the second time.
  */

@@ -2,11 +2,12 @@ import { test, expect, type Page } from "@playwright/test";
 import mongoose from "mongoose";
 
 import { hashPassword } from "@/lib/auth/password";
+import { projects as builtIn } from "@/components/sections/work/work-data";
 
 /**
  * The work section, against a real database.
  *
- * The import is the load-bearing part: twenty-five real projects are already
+ * The import is the load-bearing part: real projects are already
  * on the site from a file, and moving them into the database must not lose or
  * reorder any of them.
  */
@@ -38,7 +39,7 @@ async function signIn(page: Page) {
 }
 
 test.describe("Before anything is imported", () => {
-  test("the work page still serves the twenty-five built into the code", async ({ page }) => {
+  test("the work page still serves the ones built into the code", async ({ page }) => {
     /* The fallback is the whole point: an empty database must not empty the
        work page. */
     await page.goto("/work");
@@ -47,12 +48,12 @@ test.describe("Before anything is imported", () => {
 });
 
 test.describe("Importing", () => {
-  test("moves all twenty-five in, in order", async ({ page }) => {
+  test("moves all of them in, in order", async ({ page }) => {
     await signIn(page);
     await page.goto("/admin/work");
 
     await expect(page.getByText("Nothing here yet")).toBeVisible();
-    await page.getByRole("button", { name: /Import the 25 existing/ }).click();
+    await page.getByRole("button", { name: /Import the built-in projects/ }).click();
 
     /*
       The rows, not the confirmation message.
@@ -64,7 +65,7 @@ test.describe("Importing", () => {
       and waiting for the message was a race that passed on a fast machine.
     */
     const rows = page.locator("article");
-    await expect(rows).toHaveCount(25);
+    await expect(rows).toHaveCount(builtIn.length);
     /* Order preserved from the file: EEP is first on the site today. */
     await expect(rows.first()).toContainText("EEP");
   });
@@ -72,10 +73,41 @@ test.describe("Importing", () => {
   test("is idempotent", async ({ page }) => {
     await signIn(page);
     await page.goto("/admin/work");
-    await expect(page.locator("article")).toHaveCount(25);
-    /* The button is gone once rows exist, which is the affordance; the action
-       itself is guarded by the slug filter. */
-    await expect(page.getByRole("button", { name: /Import the 25/ })).toHaveCount(0);
+    await expect(page.locator("article")).toHaveCount(builtIn.length);
+    /* The button is gone once every built-in project is stored: it is offered
+       when the file has something the database does not, and now it does not.
+       The action itself stays guarded by the slug filter regardless. */
+    await expect(
+      page.getByRole("button", { name: /Import the built-in projects/ })
+    ).toHaveCount(0);
+  });
+
+  test("is offered again when the file gains a project", async ({ page }) => {
+    /*
+      Adding entries to `work-data.ts` is how a batch of projects arrives, and
+      the import used to be offered only while the collection was empty. That
+      made every later addition invisible here: rendering on the site from the
+      file, and uneditable in the admin, with nothing saying why.
+    */
+    await signIn(page);
+
+    /* One of the stored projects is removed, which is the same state as the
+       file having gained one: the file has a slug the database does not. */
+    await mongoose.connect(process.env.MONGODB_URI!);
+    await mongoose.connection.collection("projects").deleteOne({ slug: builtIn[0].slug });
+    await mongoose.disconnect();
+
+    await page.goto("/admin/work");
+    await expect(page.getByText(/built into the code/)).toBeVisible();
+
+    await page.getByRole("button", { name: /Import the built-in projects/ }).click();
+    await expect(page.locator("article")).toHaveCount(builtIn.length);
+
+    /* And nothing else was touched: the import inserts what is missing rather
+       than replacing what is there. */
+    await expect(
+      page.getByRole("button", { name: /Import the built-in projects/ })
+    ).toHaveCount(0);
   });
 
   test("the public page now reads from the database", async ({ page }) => {

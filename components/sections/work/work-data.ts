@@ -92,7 +92,6 @@ export const projects: readonly Project[] = [
     tags: ["React", "Vite", "Node.js", "MongoDB", "Tailwind CSS"],
     status: "In progress",
     preview: "grid",
-    featured: true,
     liveUrl: "https://hitoai.ai/",
   },
   {
@@ -106,7 +105,6 @@ export const projects: readonly Project[] = [
     tags: ["Next.js", "TypeScript", "Django", "PostgreSQL", "Stripe"],
     status: "In progress",
     preview: "list",
-    featured: true,
     liveUrl: "https://easmark-vercel.vercel.app/",
   },
   {
@@ -150,7 +148,6 @@ export const projects: readonly Project[] = [
     tags: ["Clarity", "Next.js", "Node.js", "Smart contracts"],
     status: "Live",
     preview: "list",
-    featured: true,
     liveUrl: "https://stack-tip-peach.vercel.app/",
     repoUrl: "https://github.com/Arowolokehinde/STX-TIP",
   },
@@ -399,6 +396,221 @@ export const projects: readonly Project[] = [
   },
   {
     index: "25",
+    slug: "uri-social",
+    name: "URI Social",
+    category: "AI · Social platform",
+    groups: ["AI", "Full-stack"],
+    description:
+      "Social publishing for brands, with the expensive part of the pipeline made cheap: every post is routed to the model that actually fits it rather than to the best one available.",
+    tags: ["FastAPI", "Next.js", "MongoDB", "Redis", "GPT-4o", "Gemini"],
+    status: "Live",
+    preview: "dashboard",
+    featured: true,
+    client: "URI Creative",
+    role: "Lead full-stack engineer",
+    timeline: "2025 – present",
+    results: [
+      "A three-tier router over GPT-4o, Gemini and a rule-based fallback, processing millions of posts at 90% lower routing cost.",
+      "Above 99.99% uptime through the period it went from pre-user development into active adoption.",
+      "A production retrieval pipeline on 1,536-dimension embeddings with hybrid cosine and metadata search.",
+    ],
+    body: [
+      {
+        heading: "Routing by difficulty, not by default",
+        paragraphs: [
+          "Sending every request to the strongest model is the obvious way to build this and the reason the economics never work: most posts are not hard, and paying top price for the easy ones is where the budget goes.",
+          "SmartLLMRouter grades each request and sends it down one of three tiers: GPT-4o where the work genuinely needs it, Gemini for the middle, and a rule-based path for the cases that were never a language problem in the first place. Cost scales with actual difficulty rather than with worst-case difficulty.",
+        ],
+      },
+      {
+        heading: "Retrieval that holds up past a demo",
+        paragraphs: [
+          "Intent analysis runs across Twitter, Facebook and TikTok in real time, over 1,536-dimension embeddings in MongoDB Atlas Vector Search. The search is hybrid: cosine similarity narrowed by metadata filters, because relevance on its own returns the right kind of thing from the wrong account or the wrong month.",
+        ],
+      },
+      {
+        heading: "Images, and the quality gate in front of them",
+        paragraphs: [
+          "A multimodal service of around 2,800 lines pairs GPT-4o Vision and DALL·E 3 with ordinary computer vision: blur detection and exposure analysis, behind platform-specific rules for LinkedIn, Instagram, Twitter and Facebook.",
+          "The gates matter more than the generation. A model will return something for any prompt, and the question on a brand account is whether what came back is publishable, which is a different question from whether it is plausible.",
+        ],
+      },
+    ],
+  },
+  {
+    index: "26",
+    slug: "uri-unified-inbox",
+    name: "URI Unified Inbox",
+    category: "Backend · Messaging",
+    groups: ["Backend / API", "AI"],
+    description:
+      "One inbox for a business's Instagram, Messenger and WhatsApp conversations: DMs and comments in a single list, with honest delivery state rather than a hopeful tick.",
+    tags: ["FastAPI", "Python", "MongoDB", "Meta Graph API", "WhatsApp"],
+    status: "In progress",
+    preview: "list",
+    client: "URI Creative",
+    role: "Lead engineer",
+    timeline: "2026",
+    results: [
+      "153 tests covering webhook authenticity, ordering, the whole send pipeline and cross-workspace isolation.",
+      "A standalone service with its own database and deployment, which imports nothing from the main backend.",
+      "Runs with one command against an in-memory database and a sandboxed Meta, so a frontend can be built before any account is connected.",
+    ],
+    body: [
+      {
+        heading: "Delivery state you can act on",
+        paragraphs: [
+          "Most inboxes show a message as sent and leave it there. This one moves through pending, accepted, delivered and read, and says failed or unknown when that is what happened, because a reply that silently did not arrive is worse than one that visibly did not.",
+          "Eligibility is checked before the send and again at the send itself: the reply window, the channel's capability, the media type and the permission. One command produces one provider call, carrying a client idempotency key, so a retry cannot post twice.",
+        ],
+      },
+      {
+        heading: "What the tests actually cover",
+        paragraphs: [
+          "The suite verifies the things that go wrong in production rather than the happy path: timeouts, crashes mid-send, echo races, rate limits, token expiry, duplicate keys, and repeated webhook delivery.",
+          "It also states what it cannot verify. Behaviour against the real Meta APIs, a real DocumentDB and App Review are all outside what a test suite can prove, and the README says so rather than implying the green run covers them.",
+        ],
+      },
+    ],
+  },
+  {
+    index: "27",
+    slug: "jane-whatsapp",
+    name: "Jane on WhatsApp",
+    category: "AI · Conversational",
+    groups: ["AI", "Backend / API"],
+    description:
+      "A WhatsApp assistant that answers customer questions from a brand's own approved facts, and says it does not know rather than inventing a price.",
+    tags: ["FastAPI", "Celery", "Redis", "Nginx", "Docker", "AWS"],
+    status: "Live",
+    preview: "grid",
+    client: "URI Creative",
+    role: "Lead engineer",
+    timeline: "2025 – 2026",
+    results: [
+      "Nine containers in production: three FastAPI webhook servers, three Celery workers, Redis, Flower and Nginx.",
+      "Migrated from Azure to AWS without taking the number offline.",
+      "Deterministic and exact-match-only in its first version, so it cannot invent an answer.",
+    ],
+    body: [
+      {
+        heading: "Refusing to guess",
+        paragraphs: [
+          "The first version answers only from the operational facts a brand's playbook carries, matched exactly. Anything outside that is handed to a person.",
+          "That is a smaller product than a model answering freely, and it is the right one to ship first on a channel where a wrong price is a commitment a customer can screenshot.",
+        ],
+      },
+      {
+        heading: "Why nine containers",
+        paragraphs: [
+          "WhatsApp webhooks arrive in bursts and must be acknowledged quickly, while the work behind them is slow and occasionally fails. Splitting the webhook servers from the workers means a slow answer cannot cause a missed delivery, and Redis carries the queue between them.",
+        ],
+      },
+    ],
+  },
+  {
+    index: "28",
+    slug: "uri-developer-platform",
+    name: "URI Developer Platform",
+    category: "Backend · Developer platform",
+    groups: ["Backend / API"],
+    description:
+      "The public API and SDK behind URI Social: key issuing, per-key rate limits and a documented surface other people can build against.",
+    tags: ["FastAPI", "MongoDB", "TypeScript", "OpenAPI"],
+    status: "In progress",
+    preview: "dashboard",
+    client: "URI Creative",
+    role: "Lead engineer",
+    timeline: "2026",
+    results: [
+      "27 SDK endpoints and 6 dashboard endpoints for issuing and revoking keys.",
+      "Key authentication in middleware, so a route cannot forget to check.",
+      "Rate limits reset on a schedule rather than being trusted to a counter in memory.",
+    ],
+  },
+  {
+    index: "29",
+    slug: "api-scan-service",
+    name: "API Scan Service",
+    category: "Security · API scanning",
+    groups: ["Backend / API", "Security"],
+    description:
+      "API security scanning pulled out of a Django monolith and onto its own machines: ZAP, Nuclei and Schemathesis in parallel, with the findings posted back.",
+    tags: ["FastAPI", "Python", "OWASP ZAP", "Nuclei", "Schemathesis", "Docker"],
+    status: "Live",
+    preview: "list",
+    featured: true,
+    client: "SmartComply",
+    role: "Senior full-stack engineer",
+    timeline: "2026",
+    results: [
+      "Scanner image cut from 411MB to 217MB, and the results payload by roughly 170×.",
+      "Thread-pool exhaustion at around 40 queued scans replaced with a bounded queue and HTTP 429 backpressure.",
+      "Holds no database, no object storage and no merchant data: it receives a URL and a callback address.",
+    ],
+    body: [
+      {
+        heading: "Why it had to move out",
+        paragraphs: [
+          "A scan needs Docker, takes every CPU core it can reach and peaks at about 1.6 GB of memory. Run beside the web application, a handful of them put the whole platform at risk.",
+          "So the scanners run on their own server and the platform sends them a URL. The service deliberately holds nothing: no database, no object storage, no merchant data. Compromising it gets an attacker a queue of URLs.",
+        ],
+      },
+      {
+        heading: "Backpressure instead of collapse",
+        paragraphs: [
+          "The first version queued scans as background tasks and fell over at around forty of them, with the thread pool exhausted and no signal that anything was wrong.",
+          "A bounded worker queue replaced it, and a full queue now answers 429 rather than accepting work it cannot do. Refusing a request is a better failure than accepting it and losing it.",
+        ],
+      },
+      {
+        heading: "Callbacks that cannot duplicate",
+        paragraphs: [
+          "Results are delivered by callback, and PDF rendering on the receiving end is slow enough that the caller sometimes retried. Every retry produced another report.",
+          "Delivery now claims the result with an atomic compare-and-clear, so the second callback finds nothing to send. Idempotency here is not a nicety: a duplicate compliance report is a question somebody has to answer.",
+        ],
+      },
+    ],
+  },
+  {
+    index: "30",
+    slug: "qwikpass",
+    name: "QwikPass",
+    category: "Mobile · Access control",
+    groups: ["Mobile", "Full-stack"],
+    description:
+      "Access control, payments and compliance for gated sites, across five product surfaces, with gates that keep working when the connection does not.",
+    tags: ["Flutter", "Firebase", "Next.js", "React", "TypeScript", "Gemini"],
+    status: "Live",
+    preview: "grid",
+    featured: true,
+    client: "Coretrix Technologies",
+    role: "Lead engineer, and the only one",
+    timeline: "2026 – present",
+    results: [
+      "488+ tests at over 80% coverage on the critical paths.",
+      "Gate requests under 307ms and webhook processing under 328ms at the 95th percentile.",
+      "42 Firestore rules and more than 40 tamper-evident audit actions.",
+    ],
+    body: [
+      {
+        heading: "Five surfaces, one engineer",
+        paragraphs: [
+          "A Flutter app for residents, a separate Guard APK for the gate, a Next.js console for management, a React surface for events and the public site, over three business lines: access control, payments, communications, compliance, analytics and operations.",
+          "Owning all of it end to end is unusual and it is the reason the parts agree with each other. There was nobody to hand an interface to and no second opinion about what a field means.",
+        ],
+      },
+      {
+        heading: "A gate with no signal is still a gate",
+        paragraphs: [
+          "Gates sit where connectivity is worst, and an access system that needs the network to decide is an access system that fails at the exact moment somebody is waiting at a barrier.",
+          "Offline verification uses RFC 6238 time-based codes, so the guard's device can check a pass against the clock rather than against a server. The audit trail reconciles when the connection returns.",
+        ],
+      },
+    ],
+  },
+  {
+    index: "31",
     slug: "lms-api",
     name: "LMS API",
     category: "Backend · API",
@@ -413,7 +625,7 @@ export const projects: readonly Project[] = [
 
 export type ProjectSlug = (typeof projects)[number]["slug"];
 
-/** The six on the landing page; /work shows everything. */
+/** The flagged ones, on the landing page; /work shows everything. */
 export const featuredProjects = projects.filter((project) => project.featured);
 
 /**

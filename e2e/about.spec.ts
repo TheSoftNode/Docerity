@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { projects } from "@/components/sections/work/work-data";
+
 test.describe("About page", () => {
   test("renders the hero and the profile rail with no console errors", async ({ page }) => {
     const errors: string[] = [];
@@ -137,7 +139,9 @@ test.describe("About page", () => {
     for (const [label, expected] of [
       ["Years building production software", "6+"],
       ["Hackathon wins", "3"],
-      ["Shipped projects", "25"],
+      /* Counted from the file, not typed: the figure is derived from the
+         project list, so a new project must not fail this test. */
+      ["Shipped projects", String(projects.length)],
       ["Blockchain ecosystems", "7"],
     ] as const) {
       await expect(
@@ -150,7 +154,7 @@ test.describe("About page", () => {
     await page.waitForTimeout(1500);
     await expect(
       page.getByText("Shipped projects", { exact: true }).locator("xpath=preceding-sibling::dd[1]")
-    ).toHaveText("25");
+    ).toHaveText(String(projects.length));
   });
 
   test("the hero has no background grid", async ({ page }) => {

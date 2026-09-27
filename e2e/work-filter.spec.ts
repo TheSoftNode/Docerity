@@ -1,13 +1,17 @@
 import { test, expect } from "@playwright/test";
 
+import { projects } from "@/components/sections/work/work-data";
+
 test.describe("Work filtering", () => {
   test("filters narrow the grid and the counts are real", async ({ page }) => {
     await page.goto("/work");
     await page.locator("#showcase").scrollIntoViewIfNeeded();
 
     const cards = page.locator("#showcase h3 a");
+    /* Counted from the file rather than typed: this test is about the filter
+       chips agreeing with the grid, not about how many projects there are. */
     const all = await cards.count();
-    expect(all).toBe(25);
+    expect(all).toBe(projects.length);
 
     /* The count on each filter has to match what it actually shows, or the
        chips are decoration rather than information. */

@@ -7,12 +7,15 @@ import { Button } from "@/components/ui/button";
 import { importBuiltInProjects } from "@/app/admin/work/actions";
 
 /**
- * Moves the twenty-five projects in `work-data.ts` into the database.
+ * Moves the projects in `work-data.ts` into the database.
  *
- * Only offered while the collection is empty, which is the one time it is the
- * obvious thing to do. It is idempotent regardless, but a permanent Import
- * button beside real rows invites somebody to wonder whether it overwrites
- * them.
+ * Offered while the collection is empty, and afterwards whenever the file has
+ * projects the database does not: adding a batch to the file is how they
+ * arrive, and with no way to pull them in they would render on the site and be
+ * uneditable here.
+ *
+ * Safe to press twice. The import compares slugs and inserts only what is
+ * missing, so it cannot overwrite a project edited here.
  */
 function ImportProjectsButton() {
   const [pending, startTransition] = useTransition();
@@ -38,7 +41,7 @@ function ImportProjectsButton() {
         }
       >
         {pending ? <LoaderCircleIcon className="animate-spin" /> : <DownloadIcon />}
-        Import the 25 existing projects
+        Import the built-in projects
       </Button>
 
       {result ? (
