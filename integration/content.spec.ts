@@ -345,6 +345,26 @@ test.describe("The rail on a phone", () => {
     expect(box!.y).toBeLessThan(200);
   });
 
+  test("opening it covers the page rather than moving it", async ({ page }) => {
+    /*
+      Collapsing the rail was only half of it. In the flow, an open menu pushed
+      the content down by its own height, so opening the menu moved the page
+      you were looking at, which is the same complaint one screen further on.
+    */
+    await signIn(page, OWNER);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/admin");
+
+    const heading = page.getByRole("heading", { level: 1 });
+    const before = await heading.boundingBox();
+
+    await page.getByRole("button", { name: "Open the menu" }).click();
+    await expect(section(page, "Subscribers")).toBeVisible();
+
+    const after = await heading.boundingBox();
+    expect(after!.y).toBe(before!.y);
+  });
+
   test("the toggle opens it, and navigating closes it again", async ({ page }) => {
     await signIn(page, OWNER);
     await page.setViewportSize({ width: 390, height: 844 });

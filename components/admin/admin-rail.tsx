@@ -81,11 +81,39 @@ function AdminRail({
           </button>
         </div>
 
+        {/*
+          Tapping the page behind the menu closes it, which is what anybody
+          expects of something covering what they were reading. `aria-hidden`
+          and no tab stop: the close button in the bar is the accessible way
+          out, and this is the same action for a pointer.
+        */}
+        {open ? (
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-hidden
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 top-[3.75rem] z-0 cursor-default bg-background/60 backdrop-blur-[1px] lg:hidden"
+          />
+        ) : null}
+
         <div
           id="admin-sections"
           className={cn(
-            "flex-1 flex-col gap-6 pb-2 lg:flex lg:pb-0",
-            open ? "flex" : "hidden"
+            /*
+              Over the page, not above it.
+
+              Collapsing the rail was only half the problem: in the flow, an
+              open menu pushed the content down by its own height, so opening
+              it moved the page you were looking at. It is positioned against
+              the bar instead, scrolls on its own when the list is longer than
+              the screen, and leaves the content where it was.
+            */
+            "absolute inset-x-0 top-full z-10 max-h-[calc(100svh-3.75rem)] flex-col gap-6 overflow-y-auto border-b border-border/80 bg-card px-4 pt-4 pb-5 shadow-[0_24px_48px_-24px_rgba(0,0,0,0.5)]",
+            open ? "flex" : "hidden",
+            /* From `lg` it is a column in the rail again: no positioning, no
+               panel, nothing hidden. */
+            "lg:static lg:z-auto lg:flex lg:max-h-none lg:flex-1 lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
           )}
         >
           {children}
