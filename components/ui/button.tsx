@@ -48,6 +48,20 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+        /*
+          For rows of icon actions.
+
+          `ghost` sets no text colour, so an icon inside one inherits the
+          foreground and every row of actions came out as a line of plain white
+          marks competing with the row's own content. This sits back at rest and
+          picks up the brand colour on hover, which is the behaviour an action
+          you have not reached for yet should have.
+        */
+        subtle:
+          "text-muted-foreground hover:bg-primary/10 hover:text-primary aria-expanded:bg-primary/10 aria-expanded:text-primary",
+        /* The same, for the one action in a row that cannot be undone. */
+        "subtle-danger":
+          "text-muted-foreground hover:bg-destructive/10 hover:text-destructive aria-expanded:bg-destructive/10 aria-expanded:text-destructive",
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",

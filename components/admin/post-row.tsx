@@ -122,7 +122,7 @@ function PostRow({ post, role }: { post: PostSummary; role: Role }) {
         <div className="flex shrink-0 items-center gap-1">
           {live ? (
             <Button
-              variant="ghost"
+              variant="subtle"
               size="icon-sm"
               nativeButton={false}
               render={
@@ -135,7 +135,7 @@ function PostRow({ post, role }: { post: PostSummary; role: Role }) {
 
           {mayPublish || !live ? (
             <Button
-              variant="ghost"
+              variant="subtle"
               size="icon-sm"
               nativeButton={false}
               render={<Link href={`/admin/posts/${post.id}`} aria-label={`Edit ${post.title}`} />}
@@ -153,7 +153,7 @@ function PostRow({ post, role }: { post: PostSummary; role: Role }) {
           */}
           {mayPublish ? (
             <Button
-              variant="ghost"
+              variant="subtle"
               size="icon-sm"
               disabled={pending}
               aria-label={live ? `Unpublish ${post.title}` : `Publish ${post.title}`}
@@ -205,7 +205,7 @@ function PostRow({ post, role }: { post: PostSummary; role: Role }) {
             </>
           ) : (
             <Button
-              variant="ghost"
+              variant="subtle-danger"
               size="icon-sm"
               disabled={pending}
               aria-label={`Delete ${post.title}`}

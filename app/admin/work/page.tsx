@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PlusIcon, ExternalLinkIcon } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { requireStaff } from "@/lib/auth/dal";
 import { database, storage } from "@/lib/config/env";
 import {
@@ -19,6 +20,17 @@ import { ImportProjectsButton } from "@/components/admin/import-projects-button"
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Work" };
+
+/*
+  The accent hairline the overview counts carry, so a number reads as a number
+  everywhere in the tool rather than only on one page. Indexed by position,
+  which is enough: these strips are two or three cards that never reorder.
+*/
+const STRIP_EDGES = [
+  "before:bg-[linear-gradient(to_right,var(--brand-primary),transparent)]",
+  "before:bg-[linear-gradient(to_right,var(--brand-violet),transparent)]",
+  "before:bg-[linear-gradient(to_right,var(--brand-teal),transparent)]",
+] as const;
 
 export default async function AdminWorkPage() {
   await requireStaff("/admin/work");
@@ -92,8 +104,14 @@ export default async function AdminWorkPage() {
           ["On the site", counts.published],
           ["Drafts", counts.draft],
           ["On the homepage", counts.featured],
-        ].map(([label, value]) => (
-          <div key={String(label)} className="rounded-xl border border-border bg-card px-4 py-3">
+        ].map(([label, value], index) => (
+          <div
+            key={String(label)}
+            className={cn(
+              "relative overflow-hidden rounded-xl border border-border bg-card px-4 py-3 before:absolute before:inset-x-0 before:top-0 before:h-px before:content-['']",
+              STRIP_EDGES[index % STRIP_EDGES.length]
+            )}
+          >
             <dt className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
               {label}
             </dt>

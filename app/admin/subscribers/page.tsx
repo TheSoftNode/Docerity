@@ -18,6 +18,17 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Subscribers" };
 
+/*
+  The accent hairline the overview counts carry, so a number reads as a number
+  everywhere in the tool rather than only on one page. Indexed by position,
+  which is enough: these strips are two or three cards that never reorder.
+*/
+const STRIP_EDGES = [
+  "before:bg-[linear-gradient(to_right,var(--brand-primary),transparent)]",
+  "before:bg-[linear-gradient(to_right,var(--brand-violet),transparent)]",
+  "before:bg-[linear-gradient(to_right,var(--brand-teal),transparent)]",
+] as const;
+
 export default async function AdminSubscribersPage() {
   /* Staff only: a contributor has no business in here, and typing the URL
      sends them to the one page they can use rather than showing an error. */
@@ -67,8 +78,14 @@ export default async function AdminSubscribersPage() {
           ["Subscribed", counts.subscribed],
           ["Unsubscribed", counts.unsubscribed],
           ["Total ever", counts.total],
-        ].map(([label, value]) => (
-          <div key={String(label)} className="rounded-xl border border-border bg-card px-4 py-3">
+        ].map(([label, value], index) => (
+          <div
+            key={String(label)}
+            className={cn(
+              "relative overflow-hidden rounded-xl border border-border bg-card px-4 py-3 before:absolute before:inset-x-0 before:top-0 before:h-px before:content-['']",
+              STRIP_EDGES[index % STRIP_EDGES.length]
+            )}
+          >
             <dt className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
               {label}
             </dt>

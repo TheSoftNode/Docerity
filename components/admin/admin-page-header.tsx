@@ -69,7 +69,16 @@ function AdminEmptyState({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-border bg-card/30 px-6 py-12 text-center">
+    /*
+      A faint brand wash rather than a grey dashed box. Every list here starts
+      empty, so this is the first thing somebody sees in half the tool, and a
+      dashed grey rectangle reads as a component that failed to load.
+    */
+    <div className="relative overflow-hidden rounded-xl border border-dashed border-primary/25 bg-primary/[0.04] px-6 py-12 text-center">
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(to_right,transparent,var(--brand-primary),var(--brand-violet),transparent)] opacity-60"
+      />
       <p className="font-heading text-sm font-semibold text-foreground">{title}</p>
       <p className="mx-auto mt-1.5 max-w-[46ch] text-sm text-muted-foreground">
         {description}

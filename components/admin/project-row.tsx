@@ -125,7 +125,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
           {/* Order is the grid's order, so it is edited here rather than as a
               number buried in the form. */}
           <Button
-            variant="ghost"
+            variant="subtle"
             size="icon-xs"
             disabled={pending || project.isFirst}
             aria-label={`Move ${project.name} up`}
@@ -134,7 +134,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
             <ChevronUpIcon />
           </Button>
           <Button
-            variant="ghost"
+            variant="subtle"
             size="icon-xs"
             disabled={pending || project.isLast}
             aria-label={`Move ${project.name} down`}
@@ -144,7 +144,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
           </Button>
 
           <Button
-            variant="ghost"
+            variant="subtle"
             size="icon-sm"
             disabled={pending}
             aria-label={
@@ -158,7 +158,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
           </Button>
 
           <Button
-            variant="ghost"
+            variant="subtle"
             size="icon-sm"
             disabled={pending}
             aria-label={project.published ? `Unpublish ${project.name}` : `Publish ${project.name}`}
@@ -169,7 +169,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
 
           {project.published ? (
             <Button
-              variant="ghost"
+              variant="subtle"
               size="icon-sm"
               nativeButton={false}
               render={
@@ -181,7 +181,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
           ) : null}
 
           <Button
-            variant="ghost"
+            variant="subtle"
             size="icon-sm"
             nativeButton={false}
             render={<Link href={`/admin/work/${project.id}`} aria-label={`Edit ${project.name}`} />}
@@ -205,7 +205,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
             </>
           ) : (
             <Button
-              variant="ghost"
+              variant="subtle-danger"
               size="icon-sm"
               disabled={pending}
               aria-label={`Delete ${project.name}`}

@@ -138,9 +138,12 @@ export default async function AdminPostsPage({
               aria-current={active ? "page" : undefined}
               className={cn(
                 "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors",
+                /* Brand-tinted and outlined, like the rail's current item.
+                   A grey pill on a grey bar is the weakest "you are here"
+                   signal available, and these tabs are also a count. */
                 active
-                  ? "bg-foreground/[0.08] text-foreground"
-                  : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground",
+                  ? "border border-primary/30 bg-primary/[0.12] text-foreground"
+                  : "border border-transparent text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground",
                 /* The queue is highlighted for staff when something is waiting,
                    because it is the one tab here with somebody on the other end
                    of it. */
@@ -150,7 +153,12 @@ export default async function AdminPostsPage({
               )}
             >
               {option.label}
-              <span className="font-mono text-[0.6875rem] tabular-nums text-muted-foreground">
+              <span
+                className={cn(
+                  "font-mono text-[0.6875rem] tabular-nums",
+                  active ? "text-primary" : "text-muted-foreground"
+                )}
+              >
                 {count}
               </span>
             </Link>

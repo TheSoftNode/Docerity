@@ -236,7 +236,7 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
           ) : (
             <Button
               size="icon-sm"
-              variant="ghost"
+              variant="subtle-danger"
               aria-label={`Delete the review from ${review.fullName}`}
               disabled={pending}
               onClick={() => setConfirmingDelete(true)}

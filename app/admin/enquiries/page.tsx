@@ -86,9 +86,12 @@ export default async function AdminEnquiriesPage({
               aria-current={active ? "page" : undefined}
               className={cn(
                 "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors",
+                /* Brand-tinted and outlined, like the rail's current item.
+                   A grey pill on a grey bar is the weakest "you are here"
+                   signal available, and these tabs are also a count. */
                 active
-                  ? "bg-foreground/[0.08] text-foreground"
-                  : "text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
+                  ? "border border-primary/30 bg-primary/[0.12] text-foreground"
+                  : "border border-transparent text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
               )}
             >
               {option.label}
