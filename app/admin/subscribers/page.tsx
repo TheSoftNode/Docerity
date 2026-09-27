@@ -42,6 +42,7 @@ export default async function AdminSubscribersPage() {
   return (
     <>
       <AdminPageHeader
+        eyebrow="Mailing list"
         title="Subscribers"
         description="The explainer mailing list. Export it to send from anywhere that is not Gmail."
       >

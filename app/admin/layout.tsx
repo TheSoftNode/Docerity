@@ -73,7 +73,13 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-svh flex-col bg-background lg:flex-row">
-      <aside className="shrink-0 border-b border-border/80 bg-card/40 lg:w-60 lg:border-r lg:border-b-0">
+      {/*
+        The rail's edge is a gradient hairline rather than a flat border, so
+        the one line separating the tool from the content is the brand's rather
+        than the default grey. Drawn as a pseudo-element on the aside so it
+        needs no extra node.
+      */}
+      <aside className="relative shrink-0 border-b border-border/80 bg-card/40 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[linear-gradient(to_right,var(--brand-primary),var(--brand-violet))] after:opacity-40 after:content-[''] lg:w-60 lg:border-r-0 lg:border-b-0 lg:after:inset-y-0 lg:after:left-auto lg:after:h-auto lg:after:w-px lg:after:bg-[linear-gradient(to_bottom,transparent,var(--brand-primary)_20%,var(--brand-violet)_80%,transparent)]">
         <div className="flex h-full flex-col gap-6 px-4 py-5 lg:sticky lg:top-0 lg:max-h-svh lg:py-6">
           <Link href="/admin" className="flex items-center gap-2.5">
             <BrandMark className="size-8" />

@@ -27,6 +27,7 @@ export default async function AdminWorkPage() {
     return (
       <>
         <AdminPageHeader
+          eyebrow="Projects"
           title="Work"
           description="The projects on the work page and the homepage."
         />
@@ -67,6 +68,7 @@ export default async function AdminWorkPage() {
   return (
     <>
       <AdminPageHeader
+        eyebrow="Projects"
         title="Work"
         description="The order here is the order on the site. Starred projects also show on the homepage."
       >

@@ -123,7 +123,9 @@ function BlockEditor({
 
         <div className="flex flex-wrap items-center gap-2">
           {saved ? (
-            <span className="font-mono text-xs text-primary">Saved</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-teal/30 bg-brand-teal/10 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-brand-teal">
+              Saved
+            </span>
           ) : null}
           <Button
             variant="ghost"
@@ -142,7 +144,12 @@ function BlockEditor({
       </div>
 
       <div className="mt-6 max-w-3xl">
-        <h1 className="font-heading text-2xl font-medium tracking-tight text-foreground">
+        {/* The same eyebrow and rule every other admin page carries, so an
+            editor reads as a page of the tool rather than a bare form. */}
+        <p className="font-mono text-[0.625rem] uppercase tracking-[0.16em] text-primary">
+          {block.page}
+        </p>
+        <h1 className="mt-2 font-heading text-2xl font-medium tracking-tight text-foreground">
           {block.title}
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -237,7 +244,15 @@ function GroupEditor({
 }) {
   const header = (
     <div>
-      <h2 className="font-heading text-base font-medium text-foreground">{group.label}</h2>
+      {/* A short gradient tick beside each group, so a long form reads as a
+          set of sections rather than one column of fields. */}
+      <h2 className="flex items-center gap-2 font-heading text-base font-medium text-foreground">
+        <span
+          aria-hidden
+          className="h-3.5 w-0.5 shrink-0 rounded-full bg-[linear-gradient(to_bottom,var(--brand-primary),var(--brand-violet))]"
+        />
+        {group.label}
+      </h2>
       {group.description ? (
         <p className="mt-1 max-w-[60ch] text-xs leading-relaxed text-muted-foreground">
           {group.description}
@@ -302,7 +317,7 @@ function GroupEditor({
               key={entry.key}
               className="rounded-xl border border-border bg-card/40 px-4 py-4"
             >
-              <legend className="px-1 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+              <legend className="px-1 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-primary/80">
                 {entry.label}
               </legend>
               {entry.hint ? (
@@ -396,7 +411,7 @@ function ListGroupEditor({
       <div className="space-y-3">
         {rows.map((row, index) => (
           <fieldset key={index} className="rounded-xl border border-border bg-card/40 px-4 py-4">
-            <legend className="px-1 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+            <legend className="px-1 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-primary/80">
               {group.itemNoun} {String(index + 1).padStart(2, "0")}
             </legend>
 

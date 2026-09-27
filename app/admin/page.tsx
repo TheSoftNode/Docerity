@@ -22,6 +22,39 @@ import { AdminNoDatabase, AdminPageHeader } from "@/components/admin/admin-page-
 export const metadata: Metadata = { title: "Overview" };
 
 /** A number worth clicking on, with what is waiting called out. */
+/**
+ * The four accents the overview counts are drawn in.
+ *
+ * Colour here is a label, not decoration: four identical grey cards mean
+ * finding the reviews count is reading four headings, and the eye is much
+ * faster at "the violet one". The same four hues the public site already uses,
+ * so the tool and the site look like one product.
+ */
+const ACCENTS = {
+  primary: {
+    icon: "text-primary",
+    edge: "before:bg-[linear-gradient(to_right,var(--brand-primary),transparent)]",
+    hover: "hover:border-primary/40",
+  },
+  violet: {
+    icon: "text-brand-violet",
+    edge: "before:bg-[linear-gradient(to_right,var(--brand-violet),transparent)]",
+    hover: "hover:border-brand-violet/40",
+  },
+  iris: {
+    icon: "text-brand-iris",
+    edge: "before:bg-[linear-gradient(to_right,var(--brand-iris),transparent)]",
+    hover: "hover:border-brand-iris/40",
+  },
+  teal: {
+    icon: "text-brand-teal",
+    edge: "before:bg-[linear-gradient(to_right,var(--brand-teal),transparent)]",
+    hover: "hover:border-brand-teal/40",
+  },
+} as const;
+
+type Accent = keyof typeof ACCENTS;
+
 function StatCard({
   href,
   label,
@@ -29,6 +62,7 @@ function StatCard({
   waiting,
   waitingLabel,
   Icon,
+  accent,
 }: {
   href: string;
   label: string;
@@ -36,20 +70,26 @@ function StatCard({
   waiting?: number;
   waitingLabel?: string;
   Icon: LucideIcon;
+  accent: Accent;
 }) {
+  const tone = ACCENTS[accent];
+
   return (
     <Link
       href={href}
-      className="group/stat rounded-xl border border-border bg-card px-4 py-4 transition-colors hover:border-primary/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+      className={cn(
+        /* The accent runs along the top edge as a hairline, which colours the
+           card without tinting the number sitting under it. */
+        "group/stat relative overflow-hidden rounded-xl border border-border bg-card px-4 py-4 transition-colors before:absolute before:inset-x-0 before:top-0 before:h-px before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
+        tone.edge,
+        tone.hover
+      )}
     >
       <div className="flex items-start justify-between gap-3">
         <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
           {label}
         </p>
-        <Icon
-          aria-hidden
-          className="size-4 text-muted-foreground transition-colors group-hover/stat:text-primary"
-        />
+        <Icon aria-hidden className={cn("size-4", tone.icon)} />
       </div>
 
       <p className="mt-2 font-heading text-2xl font-semibold tabular-nums text-foreground">
@@ -181,6 +221,7 @@ export default async function AdminOverviewPage() {
           waiting={enquiries.new}
           waitingLabel="unread"
           Icon={InboxIcon}
+          accent="primary"
         />
         <StatCard
           href="/admin/reviews?status=pending"
@@ -189,6 +230,7 @@ export default async function AdminOverviewPage() {
           waiting={reviews.pending}
           waitingLabel="awaiting approval"
           Icon={StarIcon}
+          accent="violet"
         />
         <StatCard
           href="/admin/posts?status=draft"
@@ -197,12 +239,14 @@ export default async function AdminOverviewPage() {
           waiting={posts.draft}
           waitingLabel="in draft"
           Icon={FileTextIcon}
+          accent="iris"
         />
         <StatCard
           href="/admin/subscribers"
           label="Subscribers"
           value={subscribers.subscribed}
           Icon={MailIcon}
+          accent="teal"
         />
       </div>
 

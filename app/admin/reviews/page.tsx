@@ -47,6 +47,7 @@ export default async function AdminReviewsPage({
     return (
       <>
         <AdminPageHeader
+          eyebrow="Moderation"
           title="Reviews"
           description="Nothing appears on the site until you approve it here."
         />
@@ -88,6 +89,7 @@ export default async function AdminReviewsPage({
   return (
     <>
       <AdminPageHeader
+        eyebrow="Moderation"
         title="Reviews"
         description="Nothing appears on the site until you approve it here."
       >

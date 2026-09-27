@@ -47,6 +47,7 @@ export default async function AdminPostsPage({
     return (
       <>
         <AdminPageHeader
+          eyebrow="Writing"
           title="Writing"
           description="Explainers and articles. Drafts stay private until they are published."
         />
@@ -100,6 +101,7 @@ export default async function AdminPostsPage({
   return (
     <>
       <AdminPageHeader
+        eyebrow="Writing"
         title="Writing"
         description={
           mayPublish

@@ -106,7 +106,13 @@ function AdminNav({
             {active ? (
               <motion.span
                 layoutId="admin-nav-active"
-                className="absolute inset-0 rounded-lg bg-foreground/[0.07]"
+                /*
+                  Brand-tinted rather than a grey wash, and with a coloured bar
+                  down its leading edge. A neutral pill said "this one" and
+                  nothing else; the bar is what makes the current section
+                  findable at a glance down a list of nine.
+                */
+                className="absolute inset-0 rounded-lg border border-primary/25 bg-primary/[0.12] before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-[linear-gradient(to_bottom,var(--brand-primary),var(--brand-violet))] before:content-['']"
                 transition={
                   reduceMotion
                     ? { duration: 0 }
@@ -115,7 +121,12 @@ function AdminNav({
               />
             ) : null}
 
-            <item.Icon className="relative size-4 shrink-0" />
+            <item.Icon
+              className={cn(
+                "relative size-4 shrink-0 transition-colors",
+                active ? "text-primary" : "text-muted-foreground group-hover/nav:text-foreground"
+              )}
+            />
             <span className="relative flex-1 truncate">{item.label}</span>
 
             {badge > 0 ? (

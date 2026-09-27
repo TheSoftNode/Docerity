@@ -48,6 +48,7 @@ export default async function AdminUsersPage() {
   return (
     <>
       <AdminPageHeader
+        eyebrow="Access"
         title="Accounts"
         description={
           user.role === "owner"

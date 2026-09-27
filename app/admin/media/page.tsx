@@ -53,6 +53,7 @@ export default async function AdminMediaPage() {
   return (
     <>
       <AdminPageHeader
+        eyebrow="Uploads"
         title="Media"
         description="Everything uploaded through the editors, across projects and posts."
       />

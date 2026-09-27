@@ -39,6 +39,7 @@ export default async function AdminContentPage() {
   return (
     <>
       <AdminPageHeader
+        eyebrow="Editable copy"
         title="Page content"
         description="The written parts of the site that are not projects, posts or reviews."
       />
@@ -56,34 +57,44 @@ export default async function AdminContentPage() {
           <li key={block.key}>
             <Link
               href={`/admin/content/${block.key}`}
-              className="group flex h-full flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40"
+              className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
             >
+              {/* Edited sections carry a coloured edge. Eleven cards that look
+                  identical mean finding the ones you have changed is reading
+                  eleven captions. */}
+              {edited.has(block.key) ? (
+                <span
+                  aria-hidden
+                  className="absolute inset-y-0 left-0 w-0.5 bg-[linear-gradient(to_bottom,var(--brand-primary),var(--brand-violet))]"
+                />
+              ) : null}
+
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+                  <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-primary">
                     {block.page}
                   </p>
                   <h2 className="mt-1.5 font-heading text-base font-medium text-foreground">
                     {block.title}
                   </h2>
                 </div>
-                <ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                <ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:text-primary" />
               </div>
 
               <p className="mt-2 flex-1 text-xs leading-relaxed text-muted-foreground">
                 {block.description}
               </p>
 
-              <p className="mt-4 flex items-center gap-1.5 font-mono text-[0.625rem] uppercase tracking-[0.14em]">
-                {edited.has(block.key) ? (
-                  <>
-                    <CheckIcon className="size-3 text-primary" />
-                    <span className="text-primary">Your version</span>
-                  </>
-                ) : (
-                  <span className="text-muted-foreground">As it shipped</span>
-                )}
-              </p>
+              {edited.has(block.key) ? (
+                <p className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-brand-teal/30 bg-brand-teal/10 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-brand-teal">
+                  <CheckIcon className="size-3" />
+                  Your version
+                </p>
+              ) : (
+                <p className="mt-4 inline-flex w-fit items-center rounded-full border border-border px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+                  As it shipped
+                </p>
+              )}
             </Link>
           </li>
         ))}

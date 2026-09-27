@@ -52,6 +52,7 @@ export default async function AdminEnquiriesPage({
     return (
       <>
         <AdminPageHeader
+          eyebrow="Inbox"
           title="Enquiries"
           description="Everything sent through the contact form."
         />
@@ -70,6 +71,7 @@ export default async function AdminEnquiriesPage({
   return (
     <>
       <AdminPageHeader
+        eyebrow="Inbox"
         title="Enquiries"
         description="Everything sent through the contact form, with its delivery record."
       />
