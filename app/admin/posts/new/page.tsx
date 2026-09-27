@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { requireUser } from "@/lib/auth/dal";
-import { database } from "@/lib/config/env";
+import { database, storage } from "@/lib/config/env";
 import { emptyPost, type PostType } from "@/lib/content/post-schema";
 import { PostEditor } from "@/components/admin/post-editor";
 import { AdminNoDatabase, AdminPageHeader } from "@/components/admin/admin-page-header";
@@ -32,5 +32,9 @@ export default async function NewPostPage({
     );
   }
 
-  return <PostEditor initial={emptyPost(kind)} role={user.role} />;
+  /* Empty when Cloudinary is not configured, which is what hides the upload
+     button in the body editor: there would be nowhere for the file to go. */
+  const cloudName = storage.isConfigured ? storage.credentials.cloudName : "";
+
+  return <PostEditor initial={emptyPost(kind)} role={user.role} cloudName={cloudName} />;
 }

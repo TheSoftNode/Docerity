@@ -236,3 +236,75 @@ test.describe("Writing as a contributor", () => {
     await expect(page.getByRole("link", { name: /^Edit / })).toHaveCount(0);
   });
 });
+
+test.describe("Body media", () => {
+  /*
+    A contributor can upload into a post and cannot upload into the work
+    section. Both halves matter: without the first, an editor re-uploads every
+    screenshot a mentee wrote about, and people start pasting links to images
+    on someone else's server instead. Without the second, "contributors cannot
+    touch the work page" is decorative.
+
+    Cloudinary is unconfigured here, so a permitted request gets as far as the
+    signature and fails there with 503. What is being checked is which requests
+    are turned away before that point, and with what status.
+  */
+  test("a contributor may sign a post upload", async ({ page }) => {
+    await signIn(page, MENTEE);
+
+    const image = await page.request.post("/api/admin/posts/upload", {
+      data: { contentType: "image/png", bytes: 500_000 },
+    });
+
+    expect(image.status()).not.toBe(401);
+    expect(image.status()).not.toBe(403);
+    expect(image.status()).not.toBe(400);
+  });
+
+  test("and may not sign a work upload", async ({ page }) => {
+    await signIn(page, MENTEE);
+
+    const image = await page.request.post("/api/admin/work/upload", {
+      data: { contentType: "image/png", bytes: 500_000 },
+    });
+
+    expect(image.status()).toBe(403);
+  });
+
+  test("the type and size rules are the same on both routes", async ({ page }) => {
+    /* They share `signMediaUpload`, and this is what says so from the outside:
+       a format accepted on one and refused on the other can now only happen
+       deliberately. */
+    await signIn(page, MENTEE);
+
+    const pdf = await page.request.post("/api/admin/posts/upload", {
+      data: { contentType: "application/pdf", bytes: 1000 },
+    });
+    expect(pdf.status()).toBe(400);
+    expect((await pdf.json()).error.fields.media).toContain("image or a video");
+
+    const bigImage = await page.request.post("/api/admin/posts/upload", {
+      data: { contentType: "image/png", bytes: 40_000_000 },
+    });
+    expect(bigImage.status()).toBe(400);
+    expect((await bigImage.json()).error.fields.media).toContain("15MB");
+
+    /* And the video ceiling is the higher one, as on the work route. */
+    const video = await page.request.post("/api/admin/posts/upload", {
+      data: { contentType: "video/mp4", bytes: 40_000_000 },
+    });
+    expect(video.status()).not.toBe(400);
+  });
+
+  test("signed out, neither route answers", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.context().clearCookies();
+
+    for (const route of ["/api/admin/posts/upload", "/api/admin/work/upload"]) {
+      const response = await page.request.post(route, {
+        data: { contentType: "image/png", bytes: 500_000 },
+      });
+      expect(response.status()).toBe(401);
+    }
+  });
+});

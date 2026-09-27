@@ -2,9 +2,18 @@ import { ImageIcon, PlayIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * A media frame in a body section.
+ *
+ * `src` is what turns it into real media: with one, `SectionMedia` renders the
+ * image or the clip, and without one it renders the dashed box below. The
+ * optional source is why the two live in one type rather than two: an author
+ * marks where a diagram goes, and fills it in later without the section
+ * changing shape.
+ */
 export type Media =
-  | { type: "image"; alt: string; caption?: string }
-  | { type: "video"; caption?: string };
+  | { type: "image"; alt: string; caption?: string; src?: string }
+  | { type: "video"; caption?: string; src?: string; poster?: string; alt?: string };
 
 function MediaPlaceholder({
   media,

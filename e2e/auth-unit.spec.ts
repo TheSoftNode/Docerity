@@ -4,11 +4,14 @@ import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { readSession, signSession } from "@/lib/auth/token";
 import {
   POST_LIMITS,
+  cleanSections,
   cleanTags,
+  emptySectionMedia,
   emptyPost,
   slugify,
   validatePost,
 } from "@/lib/content/post-schema";
+import { sectionMediaOf } from "@/lib/content/section-media";
 import { normaliseUrl, validateReview } from "@/lib/reviews/schema";
 
 /*
@@ -277,5 +280,162 @@ test.describe("Post validation", () => {
       POST_LIMITS.maxTags
     );
     expect(cleanTags(["", "  ", "real"])).toEqual(["real"]);
+  });
+});
+
+test.describe("Post body media", () => {
+  /* A section with one usable paragraph, so `validatePost` gets past the
+     "a published post needs a section" rule and reaches the media checks. */
+  function postWith(media: ReturnType<typeof emptySectionMedia> | null) {
+    return {
+      ...emptyPost("article"),
+      title: "A title",
+      slug: "a-title",
+      hook: "x".repeat(30),
+      topic: "T",
+      status: "published" as const,
+      body: [
+        {
+          heading: "A heading",
+          paragraphs: ["A paragraph with enough in it to count."],
+          sidenote: "",
+          media,
+        },
+      ],
+    };
+  }
+
+  test("an uploaded image needs alt text, an empty frame does not", () => {
+    /* The empty frame is the useful case: it renders a dashed placeholder that
+       says a diagram goes here, and demanding a description of a picture that
+       does not exist yet would make it unusable while drafting. */
+    expect(validatePost(postWith(emptySectionMedia())).body).toBeUndefined();
+
+    const uploaded = { ...emptySectionMedia(), publicId: "docerity/posts/abc123" };
+    expect(validatePost(postWith(uploaded)).body).toContain("alt text");
+
+    const described = { ...uploaded, alt: "A request passing through the cache" };
+    expect(validatePost(postWith(described)).body).toBeUndefined();
+  });
+
+  test("a video with no alt text is fine", () => {
+    /* It carries a caption and its own controls, and describing a clip in an
+       alt attribute is not how anybody reads one. */
+    const clip = {
+      ...emptySectionMedia("video"),
+      publicId: "docerity/posts/clip",
+      caption: "The migration running",
+    };
+    expect(validatePost(postWith(clip)).body).toBeUndefined();
+  });
+
+  test("a media path off this site is dropped", () => {
+    /*
+      `src` is a path under /public and nothing else. A contributor can reach
+      the save action, and an absolute URL there would put a stranger's server
+      in an <img src> on a published page: every reader's IP address handed
+      over, and the picture swappable afterwards.
+    */
+    const [kept] = cleanSections([
+      { heading: "H", paragraphs: ["P"], sidenote: "", media: { ...emptySectionMedia(), src: "/work/eep.webp" } },
+    ]);
+    expect(kept.media?.src).toBe("/work/eep.webp");
+
+    for (const hostile of [
+      "https://evil.example/x.png",
+      "//evil.example/x.png",
+      "http://evil.example/x.png",
+      "javascript:alert(1)",
+      "data:image/svg+xml,<svg onload=alert(1)>",
+    ]) {
+      const [section] = cleanSections([
+        { heading: "H", paragraphs: ["P"], sidenote: "", media: { ...emptySectionMedia(), src: hostile } },
+      ]);
+      expect(section.media?.src).toBe("");
+    }
+  });
+
+  test("the upload fields survive a clean", () => {
+    /* The round trip the editor depends on: what it uploaded has to still be
+       there after normalisation, or saving would quietly drop the image. */
+    const [section] = cleanSections([
+      {
+        heading: "H",
+        paragraphs: ["P"],
+        sidenote: "",
+        media: {
+          type: "video",
+          publicId: "docerity/posts/clip",
+          src: "",
+          alt: "  A clip  ",
+          caption: "  What it looks like  ",
+          poster: "",
+        },
+      },
+    ]);
+
+    expect(section.media).toEqual({
+      type: "video",
+      publicId: "docerity/posts/clip",
+      src: "",
+      alt: "A clip",
+      caption: "What it looks like",
+      poster: "",
+    });
+  });
+});
+
+test.describe("Rendering a stored media frame", () => {
+  /*
+    Cloudinary is not configured in this suite, which is the interesting half:
+    every one of these is the degraded path, and the rule is that it degrades to
+    the dashed placeholder rather than to a broken image.
+  */
+  test("nothing stored renders nothing", () => {
+    expect(sectionMediaOf(null)).toBeUndefined();
+    expect(sectionMediaOf(undefined)).toBeUndefined();
+  });
+
+  test("an empty frame keeps its shape and has no source", () => {
+    /* Which is what makes `SectionMedia` draw the placeholder. */
+    const media = sectionMediaOf({ type: "image", alt: "A diagram goes here" });
+    expect(media).toEqual({ type: "image", alt: "A diagram goes here" });
+    expect(media && "src" in media).toBe(false);
+  });
+
+  test("a static path is used as given", () => {
+    expect(sectionMediaOf({ type: "image", src: "/work/eep.webp", alt: "EEP" })).toEqual({
+      type: "image",
+      alt: "EEP",
+      src: "/work/eep.webp",
+    });
+  });
+
+  test("an upload with no Cloudinary falls back to the placeholder", () => {
+    /*
+      Not to a res.cloudinary.com URL built from an empty cloud name, which is
+      what a missing `storage.isConfigured` check would produce: a 404 image on
+      every article, where the dashed box at least says what is missing.
+    */
+    const media = sectionMediaOf({ type: "image", publicId: "docerity/posts/x", alt: "A" });
+    expect(media && "src" in media).toBe(false);
+  });
+
+  test("a video keeps its uploaded poster even with no clip URL", () => {
+    /* A poster with nothing to play is a still image pretending to be a video,
+       so it is dropped along with the source rather than rendered alone. */
+    const media = sectionMediaOf({
+      type: "video",
+      publicId: "docerity/posts/clip",
+      poster: "/work/poster.webp",
+    });
+    expect(media && "src" in media).toBe(false);
+    expect(media && "poster" in media).toBe(false);
+  });
+
+  test("a captionless frame carries no caption key", () => {
+    /* An empty string would render an empty <figcaption> under the image. */
+    const media = sectionMediaOf({ type: "image", alt: "A", caption: "" });
+    expect(media && "caption" in media).toBe(false);
   });
 });

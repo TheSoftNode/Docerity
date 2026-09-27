@@ -9,7 +9,7 @@ import {
 
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
-import { MediaPlaceholder } from "@/components/shared/media-placeholder";
+import { SectionMedia } from "@/components/shared/section-media";
 import { WorkMedia } from "@/components/sections/work/work-media";
 import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
 
@@ -215,7 +215,7 @@ function WorkCaseStudy({
                 ) : section.media ? (
                   /* The dashed placeholder, still here for the entries in
                      `work-data.ts` that never had a real image. */
-                  <MediaPlaceholder media={section.media} tone="dark" />
+                  <SectionMedia media={section.media} tone="dark" />
                 ) : null}
               </div>
             ))}

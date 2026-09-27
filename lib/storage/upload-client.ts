@@ -42,7 +42,8 @@ export class UploadError extends Error {}
 export type UploadEndpoint =
   | "/api/contact/upload"
   | "/api/reviews/upload"
-  | "/api/admin/work/upload";
+  | "/api/admin/work/upload"
+  | "/api/admin/posts/upload";
 
 export async function uploadAttachment(
   file: File,

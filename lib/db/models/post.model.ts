@@ -37,12 +37,28 @@ const sectionSchema = new Schema(
     /* The pulled-aside analogy. Optional, and the one thing that makes an
        explainer read like an explainer rather than documentation. */
     sidenote: { type: String, default: "", maxlength: 1000 },
+    /*
+      An image or a clip inside the section.
+
+      `publicId` is a Cloudinary asset and `src` a path under /public, the same
+      pair the project model carries and for the same reason: the posts built
+      into `blog-data.ts` predate uploads, and a post imported from the file and
+      later given a real upload has both. The upload wins, being the newer of
+      the two. With neither, the article draws the dashed placeholder frame it
+      always did, so an author can mark where a diagram belongs before drawing
+      it.
+    */
     media: {
       type: new Schema(
         {
           type: { type: String, enum: ["image", "video"], required: true },
+          publicId: { type: String, default: "" },
+          src: { type: String, default: "" },
           alt: { type: String, default: "" },
           caption: { type: String, default: "" },
+          /* Video only: the still shown before playback. Generated from the
+             clip when it is left empty. */
+          poster: { type: String, default: "" },
         },
         { _id: false }
       ),

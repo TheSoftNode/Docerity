@@ -1,12 +1,15 @@
 "use client";
 
+import { useRef, useState } from "react";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   ImageIcon,
+  Loader2Icon,
   PlusIcon,
   QuoteIcon,
   Trash2Icon,
+  UploadIcon,
   XIcon,
 } from "lucide-react";
 
@@ -15,7 +18,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { SectionInput } from "@/lib/content/post-schema";
+import { emptySectionMedia, type SectionInput } from "@/lib/content/post-schema";
+import { uploadAttachment, UploadError } from "@/lib/storage/upload-client";
 
 /**
  * The body editor: a list of sections, each a heading plus paragraphs.
@@ -30,11 +34,24 @@ function SectionEditor({
   sections,
   onChange,
   error,
+  cloudName,
 }: {
   sections: SectionInput[];
   onChange: (next: SectionInput[]) => void;
   error?: string;
+  /*
+    For previewing an upload before the post is saved. Empty when Cloudinary
+    is not configured, which is also when the upload button is hidden: there
+    is nowhere for the file to go.
+  */
+  cloudName: string;
 }) {
+  /* Per section, so uploading into one does not put every other section's
+     button into a loading state. */
+  const [uploading, setUploading] = useState<number | null>(null);
+  const [uploadError, setUploadError] = useState<Record<number, string>>({});
+  const fileInputs = useRef<Record<number, HTMLInputElement | null>>({});
+
   function update(index: number, patch: Partial<SectionInput>) {
     onChange(sections.map((section, i) => (i === index ? { ...section, ...patch } : section)));
   }
@@ -68,6 +85,68 @@ function SectionEditor({
     update(sectionIndex, {
       paragraphs: section.paragraphs.map((p, i) => (i === paragraphIndex ? value : p)),
     });
+  }
+
+  /**
+   * Uploads the chosen file straight to Cloudinary and records what came back.
+   *
+   * The same two-step the enquiry and project forms use: the server signs a
+   * request, the browser posts the bytes to Cloudinary, and only the resulting
+   * public_id reaches this form. A file never passes through the Next server,
+   * which is what keeps a 200MB screen recording from being a serverless
+   * function's problem.
+   */
+  async function chooseFile(index: number, event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadError((current) => ({ ...current, [index]: "" }));
+    setUploading(index);
+
+    /* The browser reports the type; the route decides the Cloudinary namespace
+       from it and signs accordingly, so this only records which it was. */
+    const isVideo = file.type.startsWith("video/");
+    const existing = sections[index].media;
+
+    try {
+      const uploaded = await uploadAttachment(file, {
+        endpoint: "/api/admin/posts/upload",
+      });
+      update(index, {
+        media: {
+          ...emptySectionMedia(isVideo ? "video" : "image"),
+          publicId: uploaded.publicId,
+          /* Kept: replacing a diagram with a clearer version of the same
+             diagram should not wipe its description or its caption. */
+          alt: existing?.alt ?? "",
+          caption: existing?.caption ?? "",
+        },
+      });
+    } catch (error) {
+      setUploadError((current) => ({
+        ...current,
+        [index]:
+          error instanceof UploadError ? error.message : "That file could not be uploaded.",
+      }));
+    } finally {
+      setUploading(null);
+      const input = fileInputs.current[index];
+      if (input) input.value = "";
+    }
+  }
+
+  /*
+    Built here rather than on the server, so a newly uploaded file previews
+    before the post has been saved. Video comes from its own namespace, which
+    is why this is not one template with the type swapped in.
+  */
+  function previewUrl(media: SectionInput["media"]) {
+    if (!media) return "";
+    if (!media.publicId) return media.src;
+    if (!cloudName) return "";
+    return media.type === "video"
+      ? `https://res.cloudinary.com/${cloudName}/video/upload/q_auto,f_auto/${media.publicId}`
+      : `https://res.cloudinary.com/${cloudName}/image/upload/w_480,c_limit,f_auto,q_auto/${media.publicId}`;
   }
 
   return (
@@ -241,6 +320,75 @@ function SectionEditor({
                   </Button>
                 </div>
 
+                {/*
+                  The file, above the text about it.
+
+                  Hidden when Cloudinary is not configured, along with the
+                  preview: an upload button that can only fail is worse than no
+                  upload button. The frame still works as a placeholder then,
+                  which is what it always was.
+                */}
+                {cloudName ? (
+                  <div className="mt-3">
+                    {previewUrl(section.media) ? (
+                      <div className="mb-2 overflow-hidden rounded-lg border border-border bg-card">
+                        {section.media.type === "video" ? (
+                          <video
+                            src={previewUrl(section.media)}
+                            controls
+                            preload="metadata"
+                            className="max-h-48 w-full bg-black object-contain"
+                          />
+                        ) : (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={previewUrl(section.media)}
+                            alt=""
+                            className="max-h-48 w-full object-contain"
+                          />
+                        )}
+                      </div>
+                    ) : null}
+
+                    <input
+                      ref={(node) => {
+                        fileInputs.current[index] = node;
+                      }}
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/avif,video/mp4,video/webm,video/quicktime"
+                      className="hidden"
+                      onChange={(event) => chooseFile(index, event)}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={uploading === index}
+                      onClick={() => fileInputs.current[index]?.click()}
+                    >
+                      {uploading === index ? (
+                        <>
+                          <Loader2Icon className="animate-spin" />
+                          Uploading
+                        </>
+                      ) : (
+                        <>
+                          <UploadIcon />
+                          {section.media.publicId || section.media.src
+                            ? "Replace the file"
+                            : "Upload a file"}
+                        </>
+                      )}
+                    </Button>
+
+                    {uploadError[index] ? (
+                      <p role="alert" className="mt-2 text-xs text-destructive">
+                        {uploadError[index]}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+
                 <div className="mt-2 grid gap-2 sm:grid-cols-2">
                   {section.media.type === "image" ? (
                     <Input
@@ -266,22 +414,24 @@ function SectionEditor({
                   />
                 </div>
 
-                {/* Said plainly, because the frame is a placeholder rather than
-                    an upload: the article template draws a dashed box, and
-                    pretending otherwise would be a surprise at publish time. */}
-                <p className="mt-2 text-[0.6875rem] text-muted-foreground">
-                  This renders a placeholder frame in the article. Image uploads
-                  for post bodies are not wired up yet.
-                </p>
+                {/* Said plainly, because a frame with nothing in it still
+                    renders, as the dashed box it has always been. That is
+                    useful while writing and a surprise at publish time, so it
+                    says which one this is. */}
+                {!section.media.publicId && !section.media.src ? (
+                  <p className="mt-2 text-[0.6875rem] text-muted-foreground">
+                    {cloudName
+                      ? "Nothing uploaded yet, so this renders as a placeholder frame in the article."
+                      : "Uploads need Cloudinary configured. This renders as a placeholder frame in the article."}
+                  </p>
+                ) : null}
               </div>
             ) : (
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() =>
-                  update(index, { media: { type: "image", alt: "", caption: "" } })
-                }
+                onClick={() => update(index, { media: emptySectionMedia() })}
               >
                 <ImageIcon />
                 Media frame

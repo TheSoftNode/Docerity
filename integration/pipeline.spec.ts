@@ -553,6 +553,43 @@ test.describe("The writing pipeline", () => {
     ).toBeVisible();
   });
 
+  test("a media frame added in the editor reaches the live article", async ({ page }) => {
+    /*
+      Cloudinary is unconfigured here, so the upload button is hidden and the
+      frame stays empty. That is the case worth asserting: an empty frame is
+      the dashed placeholder, and it is what an author leaves behind while a
+      diagram is still being drawn. The upload itself is signed by
+      `/api/admin/posts/upload`, which `contributors.spec.ts` covers.
+    */
+    await signIn(page);
+    await page.goto("/admin/posts?status=published");
+    await page.getByRole("link", { name: "Written by the integration suite" }).click();
+    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/);
+
+    await page.getByRole("button", { name: "Media frame" }).click();
+    await page.getByLabel("Alt text for section 1").fill("Where the diagram goes");
+    await page.getByLabel("Caption for section 1").fill("Coming once it is drawn");
+
+    /* Said in the editor rather than discovered at publish time. */
+    await expect(page.getByText(/renders as a placeholder frame/)).toBeVisible();
+
+    await page.getByRole("button", { name: "Update live post" }).click();
+    await expect(page.getByText("Saved")).toBeVisible();
+
+    await page.goto("/blog/written-by-the-integration-suite");
+    await expect(page.getByText("Image placeholder")).toBeVisible();
+    await expect(page.getByText("Coming once it is drawn")).toBeVisible();
+
+    /* And it survives a reload of the editor, which is the round trip through
+       the database that would silently drop the new fields if the schema had
+       not been widened. */
+    await page.goto("/admin/posts?status=published");
+    await page.getByRole("link", { name: "Written by the integration suite" }).click();
+    await expect(page.getByLabel("Alt text for section 1")).toHaveValue(
+      "Where the diagram goes"
+    );
+  });
+
   test("a duplicate slug is refused against the field", async ({ page }) => {
     await signIn(page);
     await page.goto("/admin/posts/new?type=article");

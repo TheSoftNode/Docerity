@@ -14,10 +14,17 @@ import { storage } from "@/lib/config/env";
  * several megabytes to do it. `c_fill,g_face` crops to the face rather than the
  * centre, so a photo taken in landscape does not become a picture of someone's
  * shoulder.
+ *
+ * Leaving `height` out asks for the other mode: scaled to fit the width, whole,
+ * with no crop. That is what a diagram or a screenshot inside an article needs.
+ * Cropping one to a fixed ratio cuts the bottom off a tall flowchart, and the
+ * point of putting it there was that somebody could read it. `c_limit` also
+ * never upscales, so a small image stays its own size rather than being blown
+ * up into mush.
  */
 export function cloudinaryImageUrl(
   publicId: string,
-  options: { width: number; height: number } = { width: 192, height: 192 }
+  options: { width: number; height?: number } = { width: 192, height: 192 }
 ): string {
   if (!publicId || !storage.isConfigured) return "";
 
@@ -25,9 +32,7 @@ export function cloudinaryImageUrl(
 
   const transformation = [
     `w_${options.width}`,
-    `h_${options.height}`,
-    "c_fill",
-    "g_face",
+    ...(options.height ? [`h_${options.height}`, "c_fill", "g_face"] : ["c_limit"]),
     /* `f_auto` serves AVIF or WebP by Accept header, `q_auto` picks a quality
        per image rather than a fixed number; together they are usually a 60-80%
        saving over the original with no visible difference at this size. */

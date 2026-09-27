@@ -50,11 +50,14 @@ function PostEditor({
   initial,
   postId,
   role,
+  cloudName,
 }: {
   initial: PostInput;
   /** Absent for a new post. */
   postId?: string;
   role: Role;
+  /** For previewing body media before the post is saved. "" with no storage. */
+  cloudName: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -360,6 +363,7 @@ function PostEditor({
             sections={post.body}
             onChange={(body) => set("body", body)}
             error={errors.body}
+            cloudName={cloudName}
           />
         </div>
 

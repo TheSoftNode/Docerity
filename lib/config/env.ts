@@ -135,6 +135,11 @@ export const storage = {
   /* Project screenshots, kept apart from the other two so a stray delete in
      one folder cannot take the work page's images with it. */
   workFolder: read("CLOUDINARY_WORK_FOLDER") ?? "docerity/work",
+  /* Images and clips inside a blog post's body. Their own folder for the same
+     reason as the work one, and because contributors can upload here and
+     cannot upload to the work folder: keeping the two apart means a mistake in
+     the permission check cannot put a stranger's file on the work page. */
+  postFolder: read("CLOUDINARY_POST_FOLDER") ?? "docerity/posts",
 };
 
 /* ── Auth ─────────────────────────────────────────────────────────────── */

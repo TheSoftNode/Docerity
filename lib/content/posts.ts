@@ -14,6 +14,7 @@ import {
   type BlogEntry,
   type ExplainerPost,
 } from "@/components/sections/blog/blog-data";
+import { sectionMediaOf } from "@/lib/content/section-media";
 
 /**
  * Where the blog's content comes from.
@@ -62,18 +63,7 @@ function toEntry(post: LeanPost): BlogEntry {
       /* Omitted rather than empty: the template checks for the property's
          presence, and an empty string would render an empty aside. */
       ...(section.sidenote ? { sidenote: section.sidenote } : {}),
-      ...(section.media
-        ? {
-            media:
-              section.media.type === "video"
-                ? ({ type: "video", caption: section.media.caption || undefined } as const)
-                : ({
-                    type: "image",
-                    alt: section.media.alt,
-                    caption: section.media.caption || undefined,
-                  } as const),
-          }
-        : {}),
+      ...(section.media ? { media: sectionMediaOf(section.media) } : {}),
     })),
   };
 

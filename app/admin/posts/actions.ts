@@ -350,6 +350,12 @@ export async function importBuiltInPosts(): Promise<
         media: section.media
           ? {
               type: section.media.type,
+              /* The built-in posts have no uploads: they were written before
+                 body media existed, and their frames are placeholders. An
+                 import fills in the shape and leaves the sources empty. */
+              publicId: "",
+              src: "",
+              poster: "",
               alt: section.media.type === "image" ? section.media.alt : "",
               caption: section.media.caption ?? "",
             }

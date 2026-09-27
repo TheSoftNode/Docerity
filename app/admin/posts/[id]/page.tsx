@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { requireUser } from "@/lib/auth/dal";
+import { storage } from "@/lib/config/env";
 import { can } from "@/lib/auth/permissions";
 import { findPostById } from "@/lib/repositories/post.repository";
 import { PostEditor } from "@/components/admin/post-editor";
@@ -59,6 +60,9 @@ export default async function EditPostPage({
       media: section.media
         ? {
             type: section.media.type as "image" | "video",
+            publicId: section.media.publicId ?? "",
+            src: section.media.src ?? "",
+            poster: section.media.poster ?? "",
             alt: section.media.alt ?? "",
             caption: section.media.caption ?? "",
           }
@@ -88,5 +92,11 @@ export default async function EditPostPage({
     initial.body = [{ heading: "", paragraphs: [""], sidenote: "", media: null }];
   }
 
-  return <PostEditor initial={initial} postId={id} role={user.role} />;
+  /* Empty when Cloudinary is not configured, which is what hides the upload
+     button in the body editor: there would be nowhere for the file to go. */
+  const cloudName = storage.isConfigured ? storage.credentials.cloudName : "";
+
+  return (
+    <PostEditor initial={initial} postId={id} role={user.role} cloudName={cloudName} />
+  );
 }

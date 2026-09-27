@@ -27,12 +27,55 @@ export type PostType = "explainer" | "article";
 */
 export type PostStatus = "draft" | "submitted" | "published";
 
+/**
+ * What a section's media frame holds while it is being edited.
+ *
+ * `publicId` is the Cloudinary asset the browser uploaded, `src` a path under
+ * /public carried over from `blog-data.ts`. Both can be empty, and then the
+ * article renders the dashed placeholder frame: marking where a diagram goes
+ * before drawing it is a thing authors do.
+ */
+export type SectionMediaInput = {
+  type: "image" | "video";
+  publicId: string;
+  src: string;
+  alt: string;
+  caption: string;
+  poster: string;
+};
+
 export type SectionInput = {
   heading: string;
   paragraphs: string[];
   sidenote: string;
-  media: { type: "image" | "video"; alt: string; caption: string } | null;
+  media: SectionMediaInput | null;
 };
+
+/** A frame with nothing in it yet, which is how one is added in the editor. */
+export function emptySectionMedia(type: "image" | "video" = "image"): SectionMediaInput {
+  return { type, publicId: "", src: "", alt: "", caption: "", poster: "" };
+}
+
+/**
+ * Keeps `src` to a file this site actually serves.
+ *
+ * It is a path under /public, never a URL. The editor never sets it (uploads
+ * go to `publicId`), so the only ways a value arrives are the importer and
+ * somebody posting to the Server Action by hand, and a contributor can reach
+ * that action: writing posts is the one thing their role is for.
+ *
+ * So an absolute URL is dropped rather than rendered. It would put a stranger's
+ * server in an `<img src>` on a published page, which hands them every reader's
+ * IP address and lets them swap the picture afterwards. A protocol-relative
+ * "//host/x" is the same trick with the scheme left off, which is why the check
+ * is on the first two characters rather than on the first.
+ */
+function safeMediaPath(raw: string): string {
+  const value = raw.trim();
+  if (!value) return "";
+  if (!value.startsWith("/") || value.startsWith("//")) return "";
+  return value;
+}
 
 export type TermInput = {
   label: string;
@@ -158,6 +201,27 @@ export function validatePost(input: PostInput): PostFieldErrors {
     errors.body = `That is more than ${POST_LIMITS.maxSections} sections. Consider splitting the post.`;
   }
 
+  /*
+    An uploaded image needs a description, the same rule the work editor has.
+
+    Only once there is something to describe: an empty frame renders as a
+    dashed placeholder whose whole job is to say "a diagram goes here", and
+    demanding alt text for a picture that does not exist yet would make the
+    placeholder useless. A video is exempt because it carries a caption and
+    controls, and describing a clip in an alt attribute is not how anybody
+    reads one.
+  */
+  const missingAlt = input.body.findIndex(
+    (section) =>
+      section.media?.type === "image" &&
+      (section.media.publicId || section.media.src) &&
+      !section.media.alt.trim()
+  );
+
+  if (missingAlt >= 0) {
+    errors.body = `Section ${missingAlt + 1} has an image with no alt text. Describe what it shows.`;
+  }
+
   if (input.type === "explainer") {
     /*
       An explainer is the pairing of a concept with an analogy, and the index
@@ -196,6 +260,11 @@ export function cleanSections(sections: SectionInput[]): SectionInput[] {
       media: section.media
         ? {
             type: section.media.type,
+            publicId: section.media.publicId.trim(),
+            /* A video's poster is generated from the clip when it is blank, so
+               it is never required of the author. */
+            poster: safeMediaPath(section.media.poster),
+            src: safeMediaPath(section.media.src),
             alt: section.media.alt.trim(),
             caption: section.media.caption.trim(),
           }

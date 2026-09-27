@@ -10,7 +10,7 @@ import {
   type BlogEntry,
 } from "@/components/sections/blog/blog-data";
 import { BlogIntroBackground } from "@/components/sections/blog/blog-intro-background";
-import { MediaPlaceholder } from "@/components/shared/media-placeholder";
+import { SectionMedia } from "@/components/shared/section-media";
 import { ReadingProgress } from "@/components/sections/blog/blog-reading-progress";
 import { BlogSubscribe } from "@/components/sections/blog/blog-subscribe";
 
@@ -164,7 +164,7 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                               {paragraph}
                             </p>
                           ))}
-                          {section.media && <MediaPlaceholder media={section.media} />}
+                          {section.media && <SectionMedia media={section.media} />}
                           {section.sidenote && (
                             <div className="mt-4 lg:hidden">
                               <Sidenote sidenote={section.sidenote} />
@@ -197,7 +197,7 @@ function BlogArticle({ entry }: { entry: BlogEntry }) {
                             {paragraph}
                           </p>
                         ))}
-                        {section.media && <MediaPlaceholder media={section.media} />}
+                        {section.media && <SectionMedia media={section.media} />}
                       </div>
                     ))}
                   </div>
