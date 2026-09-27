@@ -6,8 +6,12 @@ import { ScrambleText } from "@/components/shared/scramble-text";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, FramedPanel, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { GrowthTimeline } from "@/components/sections/mentorship/growth-timeline";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { CheckpointView } from "@/lib/content/blocks/views";
 
-function MentorshipProgramHero() {
+async function MentorshipProgramHero() {
+  const checkpoints = await getGroup<CheckpointView[]>("mentorship", "checkpoints");
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
       <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
@@ -53,7 +57,7 @@ function MentorshipProgramHero() {
             </p>
             <p className="font-mono text-[0.6875rem] text-muted-foreground">4 stages</p>
           </div>
-          <GrowthTimeline />
+          <GrowthTimeline checkpoints={checkpoints} />
         </FramedPanel>
       </Container>
     </section>

@@ -6,9 +6,12 @@ import { siteConfig } from "@/lib/config/site";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { ContactBackground } from "@/components/sections/contact/contact-background";
 import { ContactForm, ContactFormFallback } from "@/components/sections/contact/contact-form";
-import { steps } from "@/components/sections/contact/contact-data";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { TitledView } from "@/lib/content/blocks/views";
 
-function Contact() {
+async function Contact() {
+  const steps = await getGroup<TitledView[]>("contact", "steps");
+
   return (
     /*
       One section, two columns: what you're sending on the left, where you

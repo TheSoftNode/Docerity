@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-import { pairs } from "@/components/sections/explainers/explainers-data";
 import { CornerBrackets } from "@/components/sections/explainers/explainer-corner-brackets";
+import { ContentIcon } from "@/components/shared/content-icon";
+import type { PairView } from "@/lib/content/blocks/views";
 
 const PAIR_INTERVAL = 4200;
 
@@ -12,13 +13,13 @@ function Panel({
   kicker,
   label,
   caption,
-  Icon,
+  iconName,
   align,
 }: {
   kicker: string;
   label: string;
   caption: string;
-  Icon: (typeof pairs)[number]["concept"]["Icon"];
+  iconName: string;
   align: "left" | "right";
 }) {
   const reduceMotion = useReducedMotion();
@@ -46,7 +47,7 @@ function Panel({
           transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.05 }}
           className="flex size-12 items-center justify-center rounded-2xl border border-border bg-card"
         >
-          <Icon className="size-6 text-primary" strokeWidth={1.75} />
+          <ContentIcon name={iconName} className="size-6 text-primary" strokeWidth={1.75} />
         </motion.div>
       </div>
 
@@ -110,7 +111,7 @@ function ProgressTrack({ isActive }: { isActive: boolean }) {
   );
 }
 
-function ExplainerStage() {
+function ExplainerStage({ pairs }: { pairs: PairView[] }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
 
@@ -128,9 +129,17 @@ function ExplainerStage() {
       setActive((current) => (current + 1) % pairs.length);
     }, PAIR_INTERVAL);
     return () => window.clearInterval(id);
-  }, [reduceMotion]);
+    /* `pairs.length` rather than the array: a new array identity on every
+       render would restart the timer on every render. */
+  }, [reduceMotion, pairs.length]);
 
-  const pair = pairs[active];
+  /* `?? pairs[0]` because the list is editable: a shorter one arriving while
+     `active` sits past its end would otherwise read `.id` off undefined. */
+  const pair = pairs[active] ?? pairs[0];
+
+  /* The schema asks for at least two pairs, so this is a guard rather than a
+     state anybody should reach. An absent stage beats a thrown render. */
+  if (!pair) return null;
 
   return (
     <div>
@@ -149,17 +158,17 @@ function ExplainerStage() {
             >
               <Panel
                 kicker="The concept"
-                label={pair.concept.label}
-                caption={pair.concept.caption}
-                Icon={pair.concept.Icon}
+                label={pair.conceptLabel}
+                caption={pair.conceptCaption}
+                iconName={pair.conceptIcon}
                 align="left"
               />
               <Connector />
               <Panel
                 kicker="Like this"
-                label={pair.analogy.label}
-                caption={pair.analogy.caption}
-                Icon={pair.analogy.Icon}
+                label={pair.analogyLabel}
+                caption={pair.analogyCaption}
+                iconName={pair.analogyIcon}
                 align="right"
               />
             </motion.div>

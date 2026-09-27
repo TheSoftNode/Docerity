@@ -2,9 +2,13 @@ import { TrophyIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, HoverCard, SectionTitle } from "@/components/shared/section-kit";
-import { projects } from "@/components/sections/web3/web3-data";
+import { ContentIcon } from "@/components/shared/content-icon";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { Web3ProjectView } from "@/lib/content/blocks/views";
 
-function Web3Projects() {
+async function Web3Projects() {
+  const projects = await getGroup<Web3ProjectView[]>("web3", "projects");
+
   return (
     <section
       id="projects"
@@ -23,7 +27,7 @@ function Web3Projects() {
             <HoverCard key={project.slug} innerClassName="p-6 sm:p-7">
               <div className="flex items-start justify-between gap-4">
                 <span className="flex size-11 items-center justify-center rounded-xl border border-border bg-background text-brand-violet transition-colors duration-300 group-hover:border-brand-violet/50">
-                  <project.Icon className="size-5" strokeWidth={1.75} />
+                  <ContentIcon name={project.iconName} className="size-5" strokeWidth={1.75} />
                 </span>
                 <span
                   aria-hidden

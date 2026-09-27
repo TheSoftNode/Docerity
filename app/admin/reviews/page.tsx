@@ -73,6 +73,9 @@ export default async function AdminReviewsPage({
     body: row.body,
     rating: row.rating,
     status: row.status as ModeratedReview["status"],
+    /* Defaulted, because reviews submitted before the field existed have none
+       and every section treats a missing kind as a client review. */
+    kind: (row.kind ?? "client") as ModeratedReview["kind"],
     contactEmail: row.contactEmail ?? "",
     photoUrl:
       row.photoPublicId && storage.isConfigured

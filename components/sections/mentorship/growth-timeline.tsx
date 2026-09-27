@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
-import { checkpoints } from "@/components/sections/mentorship/mentorship-data";
+import type { CheckpointView } from "@/lib/content/blocks/views";
 
 /* The rail draws over two seconds and each checkpoint arrives as the line
    reaches it. */
@@ -18,7 +18,7 @@ const DRAW = 2;
  * reads top-to-bottom like the progression it describes, and uses real text
  * rather than SVG text, so it stays crisp at every size.
  */
-function GrowthTimeline() {
+function GrowthTimeline({ checkpoints }: { checkpoints: CheckpointView[] }) {
   const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLOListElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });

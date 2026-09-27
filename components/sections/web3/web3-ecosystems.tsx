@@ -1,9 +1,15 @@
 import { Container } from "@/components/shared/container";
 import { Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { Web3EcosystemsBackground } from "@/components/sections/web3/web3-ecosystems-background";
-import { ecosystems, stack } from "@/components/sections/web3/web3-data";
+import { getBlock } from "@/lib/content/blocks/source";
 
-function Web3Ecosystems() {
+async function Web3Ecosystems() {
+  /* One read for both lists: `getBlock` is wrapped in React's `cache`, so two
+     `getGroup` calls would share a query anyway, but asking once says so. */
+  const web3 = await getBlock("web3");
+  const ecosystems = web3.ecosystems as string[];
+  const stack = web3.stack as string[];
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20 lg:py-24">
       <Web3EcosystemsBackground />

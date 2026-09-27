@@ -9,6 +9,8 @@ import {
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { GrowthTimeline } from "@/components/sections/mentorship/growth-timeline";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { CheckpointView } from "@/lib/content/blocks/views";
 
 /* The three promises from the lede, given room to breathe. */
 const pillars = [
@@ -17,7 +19,9 @@ const pillars = [
   { Icon: MapIcon, title: "A real plan", body: "Milestones, not open-ended office hours." },
 ] as const;
 
-function Mentorship() {
+async function Mentorship() {
+  const checkpoints = await getGroup<CheckpointView[]>("mentorship", "checkpoints");
+
   return (
     <section
       id="mentorship"
@@ -93,7 +97,7 @@ function Mentorship() {
                 4 stages
               </p>
             </div>
-            <GrowthTimeline />
+            <GrowthTimeline checkpoints={checkpoints} />
           </div>
         </div>
       </Container>

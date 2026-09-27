@@ -61,6 +61,19 @@ export async function setStatus(id: string, status: "approved" | "rejected") {
   return result.matchedCount > 0;
 }
 
+/**
+ * Corrects which section a review appears in.
+ *
+ * The kind is chosen by the person writing the review, and a wrong choice puts
+ * their words on the wrong page. Without this the only remedies were leaving it
+ * there or deleting somebody's genuine review, so the field is editable by
+ * staff and nothing else about the review is: the text stays as they wrote it.
+ */
+export async function setKind(id: string, kind: ReviewKind) {
+  await connectDB();
+  return ReviewModel.findByIdAndUpdate(id, { kind }, { new: true }).lean();
+}
+
 export async function countRecentFromIp(ip: string, windowMinutes: number) {
   await connectDB();
   const since = new Date(Date.now() - windowMinutes * 60_000);

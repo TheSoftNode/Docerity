@@ -5,6 +5,8 @@ import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { ExplainerBackground } from "@/components/sections/explainers/explainer-background";
 import { ExplainerStage } from "@/components/sections/explainers/explainer-stage";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { PairView } from "@/lib/content/blocks/views";
 
 /* How every post is built: the two halves the stage on the right animates. */
 const format = [
@@ -12,7 +14,9 @@ const format = [
   { step: "02", title: "Like this", body: "Something you already know that works the same way." },
 ] as const;
 
-function Explainers() {
+async function Explainers() {
+  const pairs = await getGroup<PairView[]>("explainers", "pairs");
+
   return (
     <section
       id="blog"
@@ -65,7 +69,7 @@ function Explainers() {
           </Button>
         </div>
 
-        <ExplainerStage />
+        <ExplainerStage pairs={pairs} />
       </Container>
     </section>
   );

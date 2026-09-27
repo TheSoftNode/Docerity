@@ -10,9 +10,12 @@ import {
 import { siteConfig } from "@/lib/config/site";
 import { Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipFaqBackground } from "@/components/sections/mentorship-program/mentorship-faq-background";
-import { faqs } from "@/components/sections/mentorship-program/mentorship-program-data";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { FaqView } from "@/lib/content/blocks/views";
 
-function MentorshipFaq() {
+async function MentorshipFaq() {
+  const faqs = await getGroup<FaqView[]>("mentorship", "faqs");
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       <MentorshipFaqBackground />

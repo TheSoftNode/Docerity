@@ -17,10 +17,12 @@ import { StarDisplay } from "@/components/sections/reviews/star-rating";
 import { initialsOf } from "@/components/sections/reviews/review-card";
 import {
   approveReview,
+  changeReviewKind,
   rejectReview,
   removeReview,
   type ActionResult,
 } from "@/app/admin/reviews/actions";
+import { REVIEW_KINDS, type ReviewKind } from "@/lib/reviews/schema";
 
 export type ModeratedReview = {
   id: string;
@@ -29,6 +31,7 @@ export type ModeratedReview = {
   body: string;
   rating: number;
   status: "pending" | "approved" | "rejected";
+  kind: ReviewKind;
   contactEmail: string;
   photoUrl: string;
   links: { title: string; url: string }[];
@@ -143,7 +146,38 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
         </p>
       ) : null}
 
+      {/*
+        Which section this appears in, and the one thing here that can be
+        corrected after the fact.
+
+        The writer picks it on the public form, and a wrong choice puts their
+        words under the wrong heading: a mentee's quote on the work page, or a
+        client's on the mentorship page. Before this the remedies were leaving
+        it wrong or deleting a genuine review. Nothing else about the review is
+        editable, so the text stays exactly as they wrote it.
+      */}
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/70 pt-3">
+        <label className="flex items-center gap-2 text-xs text-muted-foreground">
+          Appears in
+          <select
+            value={review.kind}
+            disabled={pending}
+            onChange={(event) =>
+              run(() => changeReviewKind(review.id, event.target.value))
+            }
+            aria-label={`Which section the review from ${review.fullName} appears in`}
+            className="h-8 rounded-lg border border-input bg-transparent px-2 text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          >
+            {REVIEW_KINDS.map((kind) => (
+              <option key={kind.value} value={kind.value}>
+                {kind.section}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         {review.status !== "approved" ? (
           <Button size="sm" disabled={pending} onClick={() => run(() => approveReview(review.id))}>
             {pending ? <LoaderCircleIcon className="animate-spin" /> : <CheckIcon />}

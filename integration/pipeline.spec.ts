@@ -410,6 +410,40 @@ test.describe("The review pipeline", () => {
     ).toHaveCount(0);
   });
 
+  test("a review in the wrong section can be moved to the right one", async ({
+    page,
+  }) => {
+    /*
+      The kind is chosen by the person writing the review, and a wrong choice
+      puts their words under the wrong heading. Before this the remedies were
+      leaving it wrong or deleting somebody's genuine review.
+
+      Everything is unpublished by the test above, so this approves one, moves
+      it, and checks both pages.
+    */
+    await signIn(page);
+    await page.goto("/admin/reviews?status=rejected");
+
+    /* Ada wrote a client review; this moves her to the mentorship page. */
+    const row = page.locator("li, article").filter({ hasText: clientReviews[0].fullName });
+    await row
+      .getByRole("combobox", { name: /Which section the review from/ })
+      .first()
+      .selectOption("mentee");
+
+    await page.getByRole("button", { name: "Approve after all" }).first().click();
+    await expect(page.getByText(clientReviews[0].body)).toHaveCount(0);
+
+    await page.goto("/mentorship");
+    await expect(page.getByText(clientReviews[0].body)).toBeVisible();
+
+    /* And she is no longer quoted as a client. With one client review left the
+       work section is below its minimum and absent entirely, which is the
+       same rule as everywhere else. */
+    await page.goto("/work");
+    await expect(page.getByText(clientReviews[0].body)).toHaveCount(0);
+  });
+
   test("a fourth review from one address is refused", async ({ request }) => {
     /*
       Last in the describe, because it deliberately leaves three pending

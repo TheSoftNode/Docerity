@@ -26,10 +26,15 @@ export const ACCEPTED_PHOTO_EXTENSIONS = ".png,.jpg,.jpeg,.webp";
 
 export type ReviewLinkInput = { title: string; url: string };
 
+/*
+  `label` is the answer on the public form, written as the person would say it.
+  `section` is the same fact from the other side of the desk, for the admin,
+  where "You mentored me" beside a moderation queue reads as nonsense.
+*/
 export const REVIEW_KINDS = [
-  { value: "client", label: "You built something for me" },
-  { value: "mentee", label: "You mentored me" },
-  { value: "reader", label: "I read the explainers" },
+  { value: "client", label: "You built something for me", section: "Work page" },
+  { value: "mentee", label: "You mentored me", section: "Mentorship page" },
+  { value: "reader", label: "I read the explainers", section: "Homepage only" },
 ] as const;
 
 export type ReviewKind = (typeof REVIEW_KINDS)[number]["value"];

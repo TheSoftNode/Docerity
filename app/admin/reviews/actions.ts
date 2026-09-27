@@ -10,8 +10,10 @@ import { destroyAsset } from "@/lib/storage/cloudinary";
 import {
   deleteReview,
   findReviewById,
+  setKind,
   setStatus,
 } from "@/lib/repositories/review.repository";
+import { REVIEW_KINDS, type ReviewKind } from "@/lib/reviews/schema";
 
 /**
  * Moderation.
@@ -53,6 +55,32 @@ async function guarded(
 function revalidatePublicReviews() {
   revalidatePath("/reviews");
   revalidatePath("/");
+}
+
+/**
+ * Moves a review to a different section.
+ *
+ * `/work` reads client reviews, `/mentorship` reads mentee ones, and the
+ * homepage reads all of them, so this is the difference between a mentee's
+ * words appearing under "From clients" and appearing where they belong.
+ *
+ * The value is narrowed against the list rather than cast. This is a POST
+ * endpoint, and an unrecognised kind would store a review that no section
+ * queries for, which looks exactly like the approval having silently failed.
+ */
+export async function changeReviewKind(id: string, kind: string): Promise<ActionResult> {
+  return guarded("change kind", async (actor) => {
+    if (!REVIEW_KINDS.some((candidate) => candidate.value === kind)) {
+      throw new Error(`unrecognised review kind: ${kind}`);
+    }
+
+    await setKind(id, kind as ReviewKind);
+    /* Both the page it left and the page it arrives on, plus the homepage. */
+    revalidatePublicReviews();
+    revalidatePath("/work");
+    revalidatePath("/mentorship");
+    logger.info("review kind changed", { id, kind, by: actor.email });
+  });
 }
 
 export async function approveReview(id: string): Promise<ActionResult> {

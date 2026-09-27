@@ -6,9 +6,13 @@ import { ScrambleText } from "@/components/shared/scramble-text";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { HeroDeck } from "@/components/shared/hero-deck";
-import { projects } from "@/components/sections/web3/web3-data";
+import { ContentIcon } from "@/components/shared/content-icon";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { Web3ProjectView } from "@/lib/content/blocks/views";
 
-function Web3Hero() {
+async function Web3Hero() {
+  const projects = await getGroup<Web3ProjectView[]>("web3", "projects");
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
       <Bloom tone="violet" className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
@@ -52,7 +56,7 @@ function Web3Hero() {
           accent="violet"
           items={projects.map((project) => ({
             key: project.slug,
-            icon: <project.Icon className="size-7" strokeWidth={1.5} />,
+            icon: <ContentIcon name={project.iconName} className="size-7" strokeWidth={1.5} />,
             title: project.name,
             meta: (
               <span className="flex items-center gap-1.5">

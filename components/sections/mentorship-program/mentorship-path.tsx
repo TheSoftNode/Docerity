@@ -1,9 +1,11 @@
 import { Container } from "@/components/shared/container";
 import { Eyebrow, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipPathBackground } from "@/components/sections/mentorship-program/mentorship-path-background";
-import { stages } from "@/components/sections/mentorship-program/mentorship-program-data";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { StageView } from "@/lib/content/blocks/views";
 
-function MentorshipPath() {
+async function MentorshipPath() {
+  const stages = await getGroup<StageView[]>("mentorship", "stages");
   const last = stages.length - 1;
 
   return (

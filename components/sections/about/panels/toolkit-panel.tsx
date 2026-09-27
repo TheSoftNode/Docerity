@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { skillGroups, tools } from "@/components/sections/about/about-data";
+import type { SkillGroupView, ToolView } from "@/lib/content/blocks/views";
 
 /*
   Grouped, then shown again as marks.
@@ -10,7 +10,13 @@ import { skillGroups, tools } from "@/components/sections/about/about-data";
   for the part they care about; the tool row gives the panel something to look
   at rather than a nineteenth line of text.
 */
-function ToolkitPanel() {
+function ToolkitPanel({
+  skillGroups,
+  tools,
+}: {
+  skillGroups: SkillGroupView[];
+  tools: ToolView[];
+}) {
   return (
     <div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">

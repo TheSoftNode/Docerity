@@ -8,6 +8,7 @@ import {
   FileTextIcon,
   InboxIcon,
   LayoutDashboardIcon,
+  LayoutTemplateIcon,
   MailIcon,
   StarIcon,
   UsersIcon,
@@ -46,6 +47,10 @@ const items: NavItem[] = [
   { href: "/admin/reviews", label: "Reviews", Icon: StarIcon, visible: can.moderateReviews },
   { href: "/admin/posts", label: "Writing", Icon: FileTextIcon, visible: can.writePosts },
   { href: "/admin/work", label: "Work", Icon: BriefcaseIcon, visible: can.publishPosts },
+  /* Everything written on the site that is not a project, a post or a review:
+     the client logos, the About page, the mentorship programme, the service and
+     capability grids, the explainer pairs and the contact steps. */
+  { href: "/admin/content", label: "Page content", Icon: LayoutTemplateIcon, visible: can.publishPosts },
   { href: "/admin/subscribers", label: "Subscribers", Icon: MailIcon, visible: can.readSubscribers },
   { href: "/admin/users", label: "Accounts", Icon: UsersIcon, visible: can.manageAccounts },
 ];

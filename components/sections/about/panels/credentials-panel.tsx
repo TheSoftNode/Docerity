@@ -1,13 +1,19 @@
 import Image from "next/image";
 
-import { certifications, education } from "@/components/sections/about/about-data";
+import type { CertificationView, EducationView } from "@/lib/content/blocks/views";
 
 /*
   The certificates show their actual scans. A card reading "Google IT Support
   Specialist" is a claim; the certificate is the evidence, and it was sitting
   unused in the portfolio's assets.
 */
-function CredentialsPanel() {
+function CredentialsPanel({
+  certifications,
+  education,
+}: {
+  certifications: CertificationView[];
+  education: EducationView[];
+}) {
   return (
     <div className="flex flex-col gap-10">
       <div>

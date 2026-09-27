@@ -1,9 +1,11 @@
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { AiModelsBackground } from "@/components/sections/ai/ai-models-background";
-import { models } from "@/components/sections/ai/ai-data";
+import { getGroup } from "@/lib/content/blocks/source";
 
-function AiModels() {
+async function AiModels() {
+  const models = await getGroup<string[]>("ai", "models");
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       <AiModelsBackground />

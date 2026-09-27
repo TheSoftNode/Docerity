@@ -10,7 +10,7 @@ import { ScrambleText } from "@/components/shared/scramble-text";
 import { Button } from "@/components/ui/button";
 import { Bloom, HeroTitle } from "@/components/shared/section-kit";
 import { CornerBrackets } from "@/components/sections/explainers/explainer-corner-brackets";
-import { facts, founder } from "@/components/sections/about/about-data";
+import type { FactView, FounderView } from "@/lib/content/blocks/views";
 import { CountUp } from "@/components/sections/about/count-up";
 
 /*
@@ -49,7 +49,7 @@ const markers = [
  * lightest on the left. Lifted, its top edge lands within a few pixels of the
  * headline's, so the two halves start together.
  */
-function PortraitOrbit() {
+function PortraitOrbit({ name }: { name: string }) {
   const reduceMotion = useReducedMotion();
 
   /* Every rotation is linear and continuous. Anything eased would pulse, and
@@ -114,7 +114,7 @@ function PortraitOrbit() {
           <div className="relative h-full w-full overflow-hidden rounded-full bg-card">
             <Image
               src={PORTRAIT}
-              alt={`${founder.name}, founder of Docerity`}
+              alt={`${name}, founder of Docerity`}
               fill
               sizes="(min-width: 1280px) 12rem, 10rem"
               priority
@@ -126,7 +126,7 @@ function PortraitOrbit() {
 
       {/* The dossier's photo caption: one hairline, two mono labels. */}
       <figcaption className="mt-4 flex items-baseline justify-between gap-3 border-t border-border/70 pt-2.5 font-mono text-[0.625rem] tracking-[0.14em] text-muted-foreground uppercase">
-        <span className="truncate">{founder.name}</span>
+        <span className="truncate">{name}</span>
         <span className="shrink-0 text-primary">Founder</span>
       </figcaption>
     </figure>
@@ -156,7 +156,13 @@ function RailItem({ label, value }: { label: string; value: string }) {
   destination: it should be read in one glance and scrolled past, so nothing
   here gets more room than it needs to be legible.
 */
-function AboutHero() {
+function AboutHero({
+  founder,
+  facts,
+}: {
+  founder: FounderView;
+  facts: FactView[];
+}) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -289,7 +295,7 @@ function AboutHero() {
                 </dl>
               </div>
 
-              <PortraitOrbit />
+              <PortraitOrbit name={founder.name} />
             </div>
           </div>
         </motion.div>

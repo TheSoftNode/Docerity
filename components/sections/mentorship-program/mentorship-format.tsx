@@ -8,11 +8,14 @@ import {
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipFormatBackground } from "@/components/sections/mentorship-program/mentorship-format-background";
-import { formatSteps } from "@/components/sections/mentorship-program/mentorship-program-data";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { TitledView } from "@/lib/content/blocks/views";
 
 const icons = [VideoIcon, GitPullRequestIcon, RouteIcon, MessageCircleIcon];
 
-function MentorshipFormat() {
+async function MentorshipFormat() {
+  const formatSteps = await getGroup<TitledView[]>("mentorship", "formatSteps");
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-surface-raised py-16 sm:py-20 lg:py-24">
       <MentorshipFormatBackground />

@@ -1,9 +1,13 @@
 import { Container } from "@/components/shared/container";
 import { Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { AiCapabilitiesBackground } from "@/components/sections/ai/ai-capabilities-background";
-import { capabilities } from "@/components/sections/ai/ai-data";
+import { ContentIcon } from "@/components/shared/content-icon";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { CapabilityView } from "@/lib/content/blocks/views";
 
-function AiCapabilities() {
+async function AiCapabilities() {
+  const capabilities = await getGroup<CapabilityView[]>("ai", "capabilities");
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20 lg:py-24">
       <AiCapabilitiesBackground />
@@ -25,7 +29,7 @@ function AiCapabilities() {
             {capabilities.map((capability, index) => (
               <li key={capability.title} className="flex gap-5 px-5 py-6 sm:px-6">
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-border bg-background text-primary">
-                  <capability.Icon className="size-5" strokeWidth={1.75} />
+                  <ContentIcon name={capability.iconName} className="size-5" strokeWidth={1.75} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-4">

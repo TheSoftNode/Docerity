@@ -1,10 +1,10 @@
-import { experience } from "@/components/sections/about/about-data";
+import type { ExperienceView } from "@/lib/content/blocks/views";
 
 /*
   A spine with a node per role, so six entries read as one sequence rather
   than six unrelated cards.
 */
-function ExperiencePanel() {
+function ExperiencePanel({ experience }: { experience: ExperienceView[] }) {
   return (
     <ol className="relative flex flex-col gap-4 sm:pl-8">
       <span

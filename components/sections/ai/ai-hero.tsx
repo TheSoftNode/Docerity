@@ -6,9 +6,13 @@ import { ScrambleText } from "@/components/shared/scramble-text";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { HeroDeck } from "@/components/shared/hero-deck";
-import { projects } from "@/components/sections/ai/ai-data";
+import { ContentIcon } from "@/components/shared/content-icon";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { AiProjectView } from "@/lib/content/blocks/views";
 
-function AiHero() {
+async function AiHero() {
+  const projects = await getGroup<AiProjectView[]>("ai", "projects");
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
       <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
@@ -52,7 +56,7 @@ function AiHero() {
           accent="primary"
           items={projects.map((project) => ({
             key: project.slug,
-            icon: <project.Icon className="size-7" strokeWidth={1.5} />,
+            icon: <ContentIcon name={project.iconName} className="size-7" strokeWidth={1.5} />,
             title: project.name,
             meta: project.stat,
             tags: project.tags,

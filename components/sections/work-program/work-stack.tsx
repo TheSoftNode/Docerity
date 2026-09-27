@@ -1,9 +1,11 @@
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { WorkStackBackground } from "@/components/sections/work-program/work-stack-background";
-import { stack } from "@/components/sections/work-program/work-program-data";
+import { getGroup } from "@/lib/content/blocks/source";
 
-function WorkStack() {
+async function WorkStack() {
+  const stack = await getGroup<string[]>("services", "stack");
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background py-16 sm:py-20 lg:py-24">
       <WorkStackBackground />

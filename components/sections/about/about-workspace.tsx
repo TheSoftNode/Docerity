@@ -13,13 +13,7 @@ import {
 import { Container } from "@/components/shared/container";
 import { Bloom } from "@/components/shared/section-kit";
 import { CornerBrackets } from "@/components/sections/explainers/explainer-corner-brackets";
-import {
-  certifications,
-  education,
-  experience,
-  skillGroups,
-  tools,
-} from "@/components/sections/about/about-data";
+import type { AboutContent } from "@/lib/content/blocks/views";
 import { StoryPanel } from "@/components/sections/about/panels/story-panel";
 import { ExperiencePanel } from "@/components/sections/about/panels/experience-panel";
 import { ToolkitPanel } from "@/components/sections/about/panels/toolkit-panel";
@@ -31,43 +25,16 @@ type Tab = {
   caption: string;
   count: number;
   Icon: LucideIcon;
-  Panel: () => React.ReactElement;
-};
+  /*
+    A rendered element rather than a component reference.
 
-const tabs: Tab[] = [
-  {
-    id: "story",
-    label: "Story",
-    caption: "How this started",
-    count: 3,
-    Icon: UserRoundIcon,
-    Panel: StoryPanel,
-  },
-  {
-    id: "experience",
-    label: "Experience",
-    caption: "Where it comes from",
-    count: experience.length,
-    Icon: BriefcaseIcon,
-    Panel: ExperiencePanel,
-  },
-  {
-    id: "toolkit",
-    label: "Toolkit",
-    caption: "What I build with",
-    count: skillGroups.length + tools.length,
-    Icon: WrenchIcon,
-    Panel: ToolkitPanel,
-  },
-  {
-    id: "credentials",
-    label: "Credentials",
-    caption: "Studied and certified",
-    count: education.length + certifications.length,
-    Icon: AwardIcon,
-    Panel: CredentialsPanel,
-  },
-];
+    The panels take their content as props now, so a `() => ReactElement` no
+    longer describes them, and building the list inside the component is what
+    lets each tab's count come from the content rather than from a number typed
+    beside it that drifts the moment somebody adds a certificate.
+  */
+  panel: React.ReactNode;
+};
 
 /**
  * The About page's body: a sticky rail on the left, one panel at a time on
@@ -82,8 +49,49 @@ const tabs: Tab[] = [
  * Panels render only when selected, so a tab's contents cost nothing until
  * it is opened; the credentials panel alone holds eight images.
  */
-function AboutWorkspace() {
+function AboutWorkspace({ about }: { about: AboutContent }) {
   const reduceMotion = useReducedMotion();
+
+  const tabs: Tab[] = [
+    {
+      id: "story",
+      label: "Story",
+      caption: "How this started",
+      count: about.story.length,
+      Icon: UserRoundIcon,
+      panel: <StoryPanel founder={about.founder} story={about.story} />,
+    },
+    {
+      id: "experience",
+      label: "Experience",
+      caption: "Where it comes from",
+      count: about.experience.length,
+      Icon: BriefcaseIcon,
+      panel: <ExperiencePanel experience={about.experience} />,
+    },
+    {
+      id: "toolkit",
+      label: "Toolkit",
+      caption: "What I build with",
+      count: about.skillGroups.length + about.tools.length,
+      Icon: WrenchIcon,
+      panel: <ToolkitPanel skillGroups={about.skillGroups} tools={about.tools} />,
+    },
+    {
+      id: "credentials",
+      label: "Credentials",
+      caption: "Studied and certified",
+      count: about.education.length + about.certifications.length,
+      Icon: AwardIcon,
+      panel: (
+        <CredentialsPanel
+          certifications={about.certifications}
+          education={about.education}
+        />
+      ),
+    },
+  ];
+
   const [activeId, setActiveId] = useState(tabs[0].id);
   const active = tabs.find((tab) => tab.id === activeId) ?? tabs[0];
 
@@ -227,7 +235,7 @@ function AboutWorkspace() {
                 {active.caption}.
               </h2>
 
-              <active.Panel />
+              {active.panel}
             </motion.div>
           </AnimatePresence>
               </div>

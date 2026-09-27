@@ -1,7 +1,7 @@
-import { founder, story } from "@/components/sections/about/about-data";
+import type { FounderView } from "@/lib/content/blocks/views";
 
 /** The narrative. Measure-capped, because it is the only long prose here. */
-function StoryPanel() {
+function StoryPanel({ founder, story }: { founder: FounderView; story: string[] }) {
   return (
     <div className="max-w-[68ch]">
       <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-primary uppercase">
