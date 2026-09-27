@@ -21,6 +21,35 @@ const caseStudySectionSchema = new Schema(
   {
     heading: { type: String, required: true, trim: true, maxlength: 200 },
     paragraphs: { type: [String], default: [] },
+    /*
+      A real image, where the first version rendered a dashed placeholder box.
+      That placeholder was fine while no case study existed; the moment one is
+      written it is an unfinished-looking rectangle in the middle of the page.
+    */
+    image: {
+      type: new Schema(
+        {
+          publicId: { type: String, default: "" },
+          alt: { type: String, default: "", maxlength: 300 },
+          caption: { type: String, default: "", maxlength: 300 },
+        },
+        { _id: false }
+      ),
+      default: null,
+    },
+  },
+  { _id: false }
+);
+
+/* One entry in the gallery below the hero. */
+const galleryItemSchema = new Schema(
+  {
+    publicId: { type: String, default: "" },
+    /* A path under `public/`, so an imported project can gain a gallery
+       without everything being re-uploaded. */
+    src: { type: String, default: "" },
+    alt: { type: String, default: "", maxlength: 300 },
+    caption: { type: String, default: "", maxlength: 300 },
   },
   { _id: false }
 );
@@ -103,6 +132,18 @@ const projectSchema = new Schema(
     repoUrl: { type: String, default: "", maxlength: 500 },
 
     media: { type: mediaSchema, default: null },
+
+    /*
+      More screenshots, shown below the hero on the project page.
+      Deliberately separate from `media`: the card shows one image and one
+      only, and a gallery that fed the card would make the grid's geometry
+      depend on how many screenshots somebody happened to upload.
+    */
+    gallery: { type: [galleryItemSchema], default: [] },
+
+    /* Who it was built for, where that is not confidential. An empty string
+       reads as "mine" rather than as missing data. */
+    client: { type: String, default: "", trim: true, maxlength: 160 },
 
     /* The homepage shows the featured ones; /work shows everything published. */
     featured: { type: Boolean, default: false },

@@ -66,6 +66,18 @@ function WorkCaseStudy({
             </div>
 
             <div className="flex shrink-0 flex-col gap-4 rounded-xl border border-border bg-card p-5 sm:min-w-52">
+              {/* Shown only when there is one. An empty "Client" label on a
+                  personal project reads as missing data rather than as a
+                  project that had no client. */}
+              {project.client ? (
+                <div>
+                  <p className="font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
+                    Built for
+                  </p>
+                  <p className="mt-1 text-sm text-foreground">{project.client}</p>
+                </div>
+              ) : null}
+
               <div>
                 <p className="font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
                   Status
@@ -136,6 +148,34 @@ function WorkCaseStudy({
             />
           </div>
 
+          {/*
+            The gallery, below the hero.
+
+            Two columns rather than one, because these are screenshots of the
+            same product and seeing two side by side reads as a tour where a
+            single column reads as a slideshow you have to scroll through.
+          */}
+          {project.gallery && project.gallery.length > 0 ? (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {project.gallery.map((image) => (
+                <figure key={image.src}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    loading="lazy"
+                    className="w-full rounded-xl border border-border"
+                  />
+                  {image.caption ? (
+                    <figcaption className="mt-2 text-xs text-muted-foreground">
+                      {image.caption}
+                    </figcaption>
+                  ) : null}
+                </figure>
+              ))}
+            </div>
+          ) : null}
+
           {project.body ? (
           <div className="mt-14">
             {project.body.map((section) => (
@@ -151,9 +191,32 @@ function WorkCaseStudy({
                     {paragraph}
                   </p>
                 ))}
-                {section.media && (
+                {section.image ? (
+                  <figure className="my-6">
+                    {/*
+                      A plain <img>: the source is a Cloudinary URL that already
+                      carries `f_auto,q_auto` at the right width, so routing it
+                      through Next's optimiser would refetch and re-encode
+                      something already done.
+                    */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={section.image.src}
+                      alt={section.image.alt}
+                      loading="lazy"
+                      className="w-full rounded-xl border border-border"
+                    />
+                    {section.image.caption ? (
+                      <figcaption className="mt-2 text-xs text-muted-foreground">
+                        {section.image.caption}
+                      </figcaption>
+                    ) : null}
+                  </figure>
+                ) : section.media ? (
+                  /* The dashed placeholder, still here for the entries in
+                     `work-data.ts` that never had a real image. */
                   <MediaPlaceholder media={section.media} tone="dark" />
-                )}
+                ) : null}
               </div>
             ))}
           </div>

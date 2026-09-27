@@ -5,10 +5,20 @@ export type ProjectMedia =
   | { type: "image"; src: string; alt: string }
   | { type: "video"; src: string; poster?: string; alt: string };
 
+/** One resolved image on a project page: a URL, plus what it shows. */
+export type ProjectImage = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
 export type CaseStudySection = {
   heading: string;
   paragraphs: string[];
+  /* The dashed placeholder, for the entries in this file that never had a real
+     one. A database-backed project uses `image` instead. */
   media?: Media;
+  image?: ProjectImage;
 };
 
 export type ProjectStatus = "Live" | "In progress" | "On hold";
@@ -38,6 +48,10 @@ export type Project = {
   timeline?: string;
   results?: readonly string[];
   body?: readonly CaseStudySection[];
+  /* Added when the work section moved into the database. Absent on every entry
+     in this file, which is why both are optional. */
+  client?: string;
+  gallery?: readonly ProjectImage[];
 };
 
 /*

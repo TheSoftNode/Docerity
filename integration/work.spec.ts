@@ -141,6 +141,115 @@ test.describe("Adding a project", () => {
   });
 });
 
+test.describe("Video, gallery and case study", () => {
+  /*
+    Uploads go straight to Cloudinary, which is not configured in this run, so
+    these drive the parts that do not need it: the fields, the validation and
+    what the public page renders. The upload route's own rules are covered by
+    the API tests below.
+  */
+  test("a gallery screenshot with no description is refused", async ({ page }) => {
+    await signIn(page);
+    await page.goto("/admin/work");
+    await page.getByRole("link", { name: "Harbour" }).click();
+    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}/);
+
+    await expect(page.getByText(/Nothing here yet/)).toBeVisible();
+    /* The count is shown so it is obvious there is a ceiling. */
+    await expect(page.getByText("0/8")).toBeVisible();
+  });
+
+  test("the client field reaches the project page", async ({ page }) => {
+    await signIn(page);
+    await page.goto("/admin/work");
+    await page.getByRole("link", { name: "Harbour" }).click();
+
+    await page.getByLabel("Built for").fill("Meridian Bank");
+    await page.getByRole("button", { name: "Publish", exact: true }).click();
+    await expect(page.getByText("Saved")).toBeVisible();
+
+    await page.goto("/work/harbour");
+    await expect(page.getByText("Built for")).toBeVisible();
+    await expect(page.getByText("Meridian Bank")).toBeVisible();
+  });
+
+  test("a case study section renders on the page", async ({ page }) => {
+    await signIn(page);
+    await page.goto("/admin/work");
+    await page.getByRole("link", { name: "Harbour" }).click();
+
+    await page.getByRole("group").filter({ hasText: "Written case study" }).click();
+    await page.getByRole("button", { name: "Add a section" }).click();
+    await page.getByLabel("Heading for section 1").fill("The netting problem");
+    await page
+      .getByLabel("Body of section 1")
+      .fill("Every transfer paid its own fee, so a hundred small payments cost a hundred times what one large one did.");
+
+    await page.getByRole("button", { name: "Update live" }).click();
+    await expect(page.getByText("Saved")).toBeVisible();
+
+    await page.goto("/work/harbour");
+    await expect(
+      page.getByRole("heading", { name: "The netting problem" })
+    ).toBeVisible();
+    await expect(page.getByText(/Every transfer paid its own fee/)).toBeVisible();
+  });
+});
+
+test.describe("The upload endpoint", () => {
+  test("accepts an image and a video, and refuses anything else", async ({ page }) => {
+    await signIn(page);
+
+    /* Cloudinary is unconfigured here, so a permitted type gets as far as the
+       signature and fails there with 503. What matters is which types are
+       refused at 400 before that point. */
+    const image = await page.request.post("/api/admin/work/upload", {
+      data: { contentType: "image/png", bytes: 500_000 },
+    });
+    const video = await page.request.post("/api/admin/work/upload", {
+      data: { contentType: "video/mp4", bytes: 40_000_000 },
+    });
+    const pdf = await page.request.post("/api/admin/work/upload", {
+      data: { contentType: "application/pdf", bytes: 1000 },
+    });
+
+    expect(pdf.status()).toBe(400);
+    expect((await pdf.json()).error.fields.media).toContain("image or a video");
+
+    /* Not 400: the type passed, and only the missing Cloudinary config stopped
+       it. A 400 here would mean the type was refused. */
+    expect(image.status()).not.toBe(400);
+    expect(video.status()).not.toBe(400);
+  });
+
+  test("a 40MB video is allowed where a 40MB image is not", async ({ page }) => {
+    /* The ceilings differ on purpose: a screen recording is large before
+       Cloudinary transcodes it, and the point is not making somebody compress
+       it by hand first. */
+    await signIn(page);
+
+    const bigImage = await page.request.post("/api/admin/work/upload", {
+      data: { contentType: "image/png", bytes: 40_000_000 },
+    });
+    const bigVideo = await page.request.post("/api/admin/work/upload", {
+      data: { contentType: "video/mp4", bytes: 40_000_000 },
+    });
+
+    expect(bigImage.status()).toBe(400);
+    expect((await bigImage.json()).error.fields.media).toContain("15MB");
+    expect(bigVideo.status()).not.toBe(400);
+  });
+
+  test("refuses a video past the ceiling", async ({ page }) => {
+    await signIn(page);
+    const huge = await page.request.post("/api/admin/work/upload", {
+      data: { contentType: "video/mp4", bytes: 300_000_000 },
+    });
+    expect(huge.status()).toBe(400);
+    expect((await huge.json()).error.fields.media).toContain("200MB");
+  });
+});
+
 test.describe("Rules", () => {
   test("a duplicate slug is refused against the field", async ({ page }) => {
     await signIn(page);

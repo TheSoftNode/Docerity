@@ -8,6 +8,7 @@ import { createLogger } from "@/lib/core/logger";
 import { storage } from "@/lib/config/env";
 import { destroyAsset } from "@/lib/storage/cloudinary";
 import {
+  cleanGallery,
   cleanList,
   cleanSections,
   normaliseProjectUrl,
@@ -75,6 +76,8 @@ function normalise(input: ProjectInput): ProjectInput {
     tags: cleanList(input.tags, PROJECT_LIMITS.maxTags),
     results: cleanList(input.results, PROJECT_LIMITS.maxResults),
     body: cleanSections(input.body),
+    gallery: cleanGallery(input.gallery),
+    client: input.client.trim(),
     /* Run through the protocol check, so a bare "acme.com" becomes a usable
        href and `javascript:` never reaches an anchor. */
     liveUrl: normaliseProjectUrl(input.liveUrl) ?? "",
@@ -268,6 +271,10 @@ export async function importBuiltInProjects(): Promise<
               poster: media.type === "video" ? (media.poster ?? "") : "",
             }
           : null,
+        /* Neither exists in the file, so imported projects start without
+           them and gain them on a later edit. */
+        gallery: [],
+        client: "",
         featured: Boolean(project.featured),
         published: true,
         sortOrder: index + 1,
@@ -278,6 +285,7 @@ export async function importBuiltInProjects(): Promise<
           ? project.body.map((section) => ({
               heading: section.heading,
               paragraphs: [...section.paragraphs],
+              image: null,
             }))
           : [],
       };

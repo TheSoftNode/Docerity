@@ -91,6 +91,8 @@ function toDocument(input: ProjectInput, updatedBy: string) {
        rather than three. */
     media:
       input.media && (input.media.publicId || input.media.src) ? input.media : null,
+    gallery: input.gallery,
+    client: input.client.trim(),
     featured: input.featured,
     published: input.published,
     sortOrder: input.sortOrder,

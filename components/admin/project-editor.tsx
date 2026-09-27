@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeftIcon,
   CheckIcon,
+  ChevronUpIcon,
   ExternalLinkIcon,
   ImageIcon,
   LoaderCircleIcon,
@@ -69,7 +70,9 @@ function ProjectEditor({
   const [saved, setSaved] = useState(searchParams.get("saved") === "1");
   const [pending, startTransition] = useTransition();
   const [uploading, setUploading] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const galleryInput = useRef<HTMLInputElement>(null);
 
   /* The slug follows the name for a new project and stops the moment it is
      edited by hand. For an existing one it never does: a published URL that
@@ -96,17 +99,24 @@ function ProjectEditor({
     setErrors((current) => ({ ...current, media: undefined }));
     setUploading(true);
 
+    /* The browser reports the type; the route decides the Cloudinary namespace
+       from it and signs accordingly, so this only needs to record which it
+       was. */
+    const isVideo = file.type.startsWith("video/");
+
     try {
       const uploaded = await uploadAttachment(file, {
         endpoint: "/api/admin/work/upload",
       });
       set("media", {
-        type: "image",
+        type: isVideo ? "video" : "image",
         publicId: uploaded.publicId,
         src: "",
         /* Kept if the project already had one, because re-uploading a better
            screenshot of the same thing should not wipe its description. */
         alt: project.media?.alt ?? "",
+        /* Cloudinary generates the poster from the clip's first frame, so
+           nothing is uploaded for it. */
         poster: "",
       });
     } catch (error) {
@@ -115,11 +125,44 @@ function ProjectEditor({
         media:
           error instanceof UploadError
             ? error.message
-            : "That image could not be uploaded.",
+            : "That file could not be uploaded.",
       }));
     } finally {
       setUploading(false);
       if (fileInput.current) fileInput.current.value = "";
+    }
+  }
+
+  async function addToGallery(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []);
+    if (files.length === 0) return;
+
+    setErrors((current) => ({ ...current, gallery: undefined }));
+    setUploadingGallery(true);
+
+    try {
+      /* Sequential rather than parallel. Cloudinary rate-limits a free account
+         and several large screenshots at once is exactly what trips it; the
+         wait is a few seconds either way. */
+      const added = [] as typeof project.gallery;
+      for (const file of files.slice(0, PROJECT_LIMITS.maxGallery)) {
+        const uploaded = await uploadAttachment(file, {
+          endpoint: "/api/admin/work/upload",
+        });
+        added.push({ publicId: uploaded.publicId, src: "", alt: "", caption: "" });
+      }
+      set("gallery", [...project.gallery, ...added].slice(0, PROJECT_LIMITS.maxGallery));
+    } catch (error) {
+      setErrors((current) => ({
+        ...current,
+        gallery:
+          error instanceof UploadError
+            ? error.message
+            : "Those images could not be uploaded.",
+      }));
+    } finally {
+      setUploadingGallery(false);
+      if (galleryInput.current) galleryInput.current.value = "";
     }
   }
 
@@ -149,11 +192,25 @@ function ProjectEditor({
     });
   }
 
-  /* A Cloudinary delivery URL built here rather than on the server, so a newly
-     uploaded screenshot previews before the project has been saved. */
+  /*
+    Delivery URLs built here rather than on the server, so a newly uploaded
+    file previews before the project has been saved.
+
+    Video comes from its own namespace and its poster is generated from the
+    clip, which is why this is not one template with the type swapped in.
+  */
+  const isVideo = project.media?.type === "video";
+
   const previewSrc = project.media?.publicId
-    ? `https://res.cloudinary.com/${cloudName}/image/upload/w_640,c_fill,f_auto,q_auto/${project.media.publicId}`
+    ? isVideo
+      ? `https://res.cloudinary.com/${cloudName}/video/upload/q_auto,f_auto/${project.media.publicId}`
+      : `https://res.cloudinary.com/${cloudName}/image/upload/w_640,c_fill,f_auto,q_auto/${project.media.publicId}`
     : (project.media?.src ?? "");
+
+  const galleryUrl = (item: { publicId: string; src: string }) =>
+    item.publicId
+      ? `https://res.cloudinary.com/${cloudName}/image/upload/w_320,h_200,c_fill,f_auto,q_auto/${item.publicId}`
+      : item.src;
 
   return (
     <div className="pb-16">
@@ -260,21 +317,31 @@ function ProjectEditor({
             <div className="rounded-xl border border-border bg-card/40 p-4">
               {previewSrc ? (
                 <div className="space-y-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={previewSrc}
-                    alt=""
-                    className="aspect-[16/10] w-full rounded-lg border border-border object-cover"
-                  />
+                  {isVideo ? (
+                    <video
+                      src={previewSrc}
+                      controls
+                      muted
+                      playsInline
+                      className="aspect-[16/10] w-full rounded-lg border border-border bg-black object-cover"
+                    />
+                  ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={previewSrc}
+                      alt=""
+                      className="aspect-[16/10] w-full rounded-lg border border-border object-cover"
+                    />
+                  )}
                   <Input
                     value={project.media?.alt ?? ""}
                     onChange={(event) =>
                       set("media", {
-                        type: "image",
+                        type: project.media?.type ?? "image",
                         publicId: project.media?.publicId ?? "",
                         src: project.media?.src ?? "",
                         alt: event.target.value,
-                        poster: "",
+                        poster: project.media?.poster ?? "",
                       })
                     }
                     placeholder="Describe it, for anybody who cannot see it"
@@ -306,7 +373,8 @@ function ProjectEditor({
                 <div className="flex flex-col items-center gap-3 py-6 text-center">
                   <ImageIcon aria-hidden className="size-6 text-muted-foreground" />
                   <p className="text-xs text-muted-foreground">
-                    Without one, the card shows a generated placeholder.
+                    A screenshot, or a short screen recording. Without one, the
+                    card shows a generated placeholder.
                   </p>
                   <Button
                     type="button"
@@ -323,7 +391,7 @@ function ProjectEditor({
                     ) : (
                       <>
                         <UploadIcon />
-                        Upload a screenshot
+                        Upload an image or video
                       </>
                     )}
                   </Button>
@@ -333,12 +401,141 @@ function ProjectEditor({
               <input
                 ref={fileInput}
                 type="file"
-                accept=".png,.jpg,.jpeg,.webp,.avif"
+                accept=".png,.jpg,.jpeg,.webp,.avif,.mp4,.webm,.mov"
                 onChange={chooseFile}
                 className="sr-only"
               />
             </div>
             <FieldError message={errors.media} />
+          </div>
+
+          {/*
+            More screenshots, shown on the project page below the hero.
+
+            Separate from the hero image on purpose: the card shows exactly one,
+            and a gallery that fed the card would make the grid's geometry
+            depend on how many screenshots somebody happened to upload.
+          */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-end justify-between gap-3">
+              <Label>Gallery</Label>
+              <span className="font-mono text-xs text-muted-foreground">
+                {project.gallery.length}/{PROJECT_LIMITS.maxGallery}
+              </span>
+            </div>
+
+            <div className="rounded-xl border border-border bg-card/40 p-4">
+              {project.gallery.length > 0 ? (
+                <ul className="space-y-3">
+                  {project.gallery.map((item, index) => (
+                    <li key={item.publicId || item.src} className="flex gap-3">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={galleryUrl(item)}
+                        alt=""
+                        className="h-16 w-24 shrink-0 rounded border border-border object-cover"
+                      />
+
+                      <div className="min-w-0 flex-1 space-y-2">
+                        <Input
+                          value={item.alt}
+                          onChange={(event) =>
+                            set(
+                              "gallery",
+                              project.gallery.map((g, i) =>
+                                i === index ? { ...g, alt: event.target.value } : g
+                              )
+                            )
+                          }
+                          placeholder="What it shows"
+                          className="h-8 text-xs"
+                          aria-label={`Description of screenshot ${index + 1}`}
+                        />
+                        <Input
+                          value={item.caption}
+                          onChange={(event) =>
+                            set(
+                              "gallery",
+                              project.gallery.map((g, i) =>
+                                i === index ? { ...g, caption: event.target.value } : g
+                              )
+                            )
+                          }
+                          placeholder="Caption (optional)"
+                          className="h-8 text-xs"
+                          aria-label={`Caption for screenshot ${index + 1}`}
+                        />
+                      </div>
+
+                      <div className="flex shrink-0 flex-col gap-1">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-xs"
+                          disabled={index === 0}
+                          aria-label={`Move screenshot ${index + 1} earlier`}
+                          onClick={() => {
+                            const next = [...project.gallery];
+                            [next[index - 1], next[index]] = [next[index], next[index - 1]];
+                            set("gallery", next);
+                          }}
+                        >
+                          <ChevronUpIcon />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-xs"
+                          aria-label={`Remove screenshot ${index + 1}`}
+                          onClick={() =>
+                            set("gallery", project.gallery.filter((_, i) => i !== index))
+                          }
+                        >
+                          <XIcon />
+                        </Button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-center text-xs text-muted-foreground">
+                  Nothing here yet. The project page shows these below the hero.
+                </p>
+              )}
+
+              {project.gallery.length < PROJECT_LIMITS.maxGallery ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={uploadingGallery}
+                  className="mt-3 w-full"
+                  onClick={() => galleryInput.current?.click()}
+                >
+                  {uploadingGallery ? (
+                    <>
+                      <LoaderCircleIcon className="animate-spin" />
+                      Uploading
+                    </>
+                  ) : (
+                    <>
+                      <PlusIcon />
+                      Add screenshots
+                    </>
+                  )}
+                </Button>
+              ) : null}
+
+              <input
+                ref={galleryInput}
+                type="file"
+                accept=".png,.jpg,.jpeg,.webp,.avif"
+                multiple
+                onChange={addToGallery}
+                className="sr-only"
+              />
+            </div>
+            <FieldError message={errors.gallery} />
           </div>
 
           {/* The case study, which most projects will not have. Folded away so
@@ -430,6 +627,96 @@ function ProjectEditor({
                     placeholder="Paragraphs, separated by a blank line."
                     aria-label={`Body of section ${index + 1}`}
                   />
+
+                  {/* A real image per section. The page used to draw a dashed
+                      placeholder box here, which is fine while no case study
+                      exists and looks unfinished the moment one does. */}
+                  {section.image?.publicId ? (
+                    <div className="mt-2 flex gap-2">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={galleryUrl({ publicId: section.image.publicId, src: "" })}
+                        alt=""
+                        className="h-16 w-24 shrink-0 rounded border border-border object-cover"
+                      />
+                      <Input
+                        value={section.image.alt}
+                        onChange={(event) =>
+                          set(
+                            "body",
+                            project.body.map((s, i) =>
+                              i === index && s.image
+                                ? { ...s, image: { ...s.image, alt: event.target.value } }
+                                : s
+                            )
+                          )
+                        }
+                        placeholder="What it shows"
+                        className="h-8 text-xs"
+                        aria-label={`Description of the image in section ${index + 1}`}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        aria-label={`Remove the image from section ${index + 1}`}
+                        onClick={() =>
+                          set(
+                            "body",
+                            project.body.map((s, i) =>
+                              i === index ? { ...s, image: null } : s
+                            )
+                          )
+                        }
+                      >
+                        <XIcon />
+                      </Button>
+                    </div>
+                  ) : (
+                    <label className="mt-2 inline-flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground">
+                      <ImageIcon className="size-3.5" />
+                      Add an image to this section
+                      <input
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.webp,.avif"
+                        className="sr-only"
+                        onChange={async (event) => {
+                          const file = event.target.files?.[0];
+                          if (!file) return;
+                          try {
+                            const uploaded = await uploadAttachment(file, {
+                              endpoint: "/api/admin/work/upload",
+                            });
+                            set(
+                              "body",
+                              project.body.map((s, i) =>
+                                i === index
+                                  ? {
+                                      ...s,
+                                      image: {
+                                        publicId: uploaded.publicId,
+                                        src: "",
+                                        alt: "",
+                                        caption: "",
+                                      },
+                                    }
+                                  : s
+                              )
+                            );
+                          } catch {
+                            /* Reported against the body rather than silently
+                               dropped, since the upload is the visible act. */
+                            setErrors((current) => ({
+                              ...current,
+                              body: "That image could not be uploaded.",
+                            }));
+                          } finally {
+                            event.target.value = "";
+                          }
+                        }}
+                      />
+                    </label>
+                  )}
                 </div>
               ))}
 
@@ -437,7 +724,7 @@ function ProjectEditor({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => set("body", [...project.body, { heading: "", paragraphs: [""] }])}
+                onClick={() => set("body", [...project.body, { heading: "", paragraphs: [""], image: null }])}
               >
                 <PlusIcon />
                 Add a section
@@ -538,6 +825,21 @@ function ProjectEditor({
               Comma separated, up to {PROJECT_LIMITS.maxTags}.
             </p>
             <FieldError message={errors.tags} />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="client">Built for</Label>
+            <Input
+              id="client"
+              value={project.client}
+              onChange={(event) => set("client", event.target.value)}
+              placeholder="Acme, or leave empty"
+              className="h-10"
+            />
+            <p className="text-xs text-muted-foreground">
+              Leave empty for your own projects. Do not name a client who has
+              not agreed to it.
+            </p>
           </div>
 
           <div className="flex flex-col gap-1.5">

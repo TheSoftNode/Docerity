@@ -15,6 +15,9 @@ export const PROJECT_LIMITS = {
   maxGroups: 4,
   maxResults: 6,
   maxSections: 20,
+  /* Enough to show the product, few enough that the page is still a page
+     rather than a contact sheet. */
+  maxGallery: 8,
 } as const;
 
 export type ProjectStatus = "Live" | "In progress" | "On hold";
@@ -50,9 +53,18 @@ export type ProjectMediaInput = {
   poster: string;
 };
 
+export type ProjectImageInput = {
+  publicId: string;
+  /** A path under `public/`, for anything that came from the import. */
+  src: string;
+  alt: string;
+  caption: string;
+};
+
 export type CaseStudySectionInput = {
   heading: string;
   paragraphs: string[];
+  image: ProjectImageInput | null;
 };
 
 export type ProjectInput = {
@@ -67,6 +79,8 @@ export type ProjectInput = {
   liveUrl: string;
   repoUrl: string;
   media: ProjectMediaInput | null;
+  gallery: ProjectImageInput[];
+  client: string;
   featured: boolean;
   published: boolean;
   sortOrder: number;
@@ -86,6 +100,7 @@ export type ProjectFieldErrors = Partial<
     | "liveUrl"
     | "repoUrl"
     | "media"
+    | "gallery"
     | "body"
     | "form",
     string
@@ -194,6 +209,16 @@ export function validateProject(input: ProjectInput): ProjectFieldErrors {
     errors.body = `That is more than ${PROJECT_LIMITS.maxSections} sections.`;
   }
 
+  /* Same rule as the hero image, for the same reason: a gallery of
+     undescribed screenshots is a gallery of nothing to a screen reader. */
+  if (input.gallery.some((item) => (item.publicId || item.src) && !item.alt.trim())) {
+    errors.gallery = "Every screenshot needs a description.";
+  }
+
+  if (input.gallery.length > PROJECT_LIMITS.maxGallery) {
+    errors.gallery = `Up to ${PROJECT_LIMITS.maxGallery} screenshots.`;
+  }
+
   return errors;
 }
 
@@ -221,9 +246,33 @@ export function cleanSections(
     .map((section) => ({
       heading: section.heading.trim(),
       paragraphs: section.paragraphs.map((p) => p.trim()).filter(Boolean),
+      image:
+        section.image && (section.image.publicId || section.image.src)
+          ? {
+              publicId: section.image.publicId,
+              src: section.image.src.trim(),
+              alt: section.image.alt.trim(),
+              caption: section.image.caption.trim(),
+            }
+          : null,
     }))
-    .filter((section) => section.heading || section.paragraphs.length > 0)
+    .filter(
+      (section) => section.heading || section.paragraphs.length > 0 || section.image
+    )
     .slice(0, PROJECT_LIMITS.maxSections);
+}
+
+/** Drops entries with nothing in them, and trims the rest. */
+export function cleanGallery(items: ProjectImageInput[]): ProjectImageInput[] {
+  return items
+    .filter((item) => item.publicId || item.src.trim())
+    .map((item) => ({
+      publicId: item.publicId,
+      src: item.src.trim(),
+      alt: item.alt.trim(),
+      caption: item.caption.trim(),
+    }))
+    .slice(0, PROJECT_LIMITS.maxGallery);
 }
 
 export function emptyProject(): ProjectInput {
@@ -239,6 +288,8 @@ export function emptyProject(): ProjectInput {
     liveUrl: "",
     repoUrl: "",
     media: null,
+    gallery: [],
+    client: "",
     featured: false,
     published: false,
     sortOrder: 0,

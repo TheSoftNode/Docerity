@@ -42,11 +42,17 @@ function client() {
   return cloudinary;
 }
 
-/** Cloudinary splits uploads by resource type; documents are `raw`. */
-export type ResourceType = "image" | "raw";
+/**
+ * Cloudinary splits uploads by resource type, and they are separate namespaces:
+ * an asset uploaded as `video` is not findable under `image`. Documents are
+ * `raw`, and `video` covers the demo clips on project pages.
+ */
+export type ResourceType = "image" | "raw" | "video";
 
 export function resourceTypeFor(contentType: string): ResourceType {
-  return contentType.startsWith("image/") ? "image" : "raw";
+  if (contentType.startsWith("image/")) return "image";
+  if (contentType.startsWith("video/")) return "video";
+  return "raw";
 }
 
 /**

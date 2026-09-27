@@ -44,6 +44,13 @@ export default async function EditProjectPage({
           poster: project.media.poster ?? "",
         }
       : null,
+    gallery: (project.gallery ?? []).map((item) => ({
+      publicId: item.publicId ?? "",
+      src: item.src ?? "",
+      alt: item.alt ?? "",
+      caption: item.caption ?? "",
+    })),
+    client: project.client ?? "",
     featured: Boolean(project.featured),
     published: Boolean(project.published),
     sortOrder: project.sortOrder ?? 0,
@@ -53,6 +60,14 @@ export default async function EditProjectPage({
     body: (project.body ?? []).map((section) => ({
       heading: section.heading,
       paragraphs: section.paragraphs ?? [],
+      image: section.image
+        ? {
+            publicId: section.image.publicId ?? "",
+            src: "",
+            alt: section.image.alt ?? "",
+            caption: section.image.caption ?? "",
+          }
+        : null,
     })),
   };
 

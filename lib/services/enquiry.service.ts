@@ -72,10 +72,17 @@ async function verifyAttachments(
 
   return Promise.all(
     claimed.map(async (file): Promise<EnquiryAttachment> => {
-      const resourceType: ResourceType =
-        file.resourceType === "image" || file.resourceType === "raw"
-          ? file.resourceType
-          : resourceTypeFor(file.contentType);
+      /*
+        Narrowed to the two an enquiry can carry. `ResourceType` gained
+        "video" for project demo clips, and Cloudinary keeps those in their own
+        namespace, but `ACCEPTED_FILE_TYPES` has never allowed a video through
+        this form. Anything not an image is `raw`, which is how a PDF or a zip
+        is stored.
+      */
+      const resourceType: EnquiryAttachment["resourceType"] =
+        file.resourceType === "image" || resourceTypeFor(file.contentType) === "image"
+          ? "image"
+          : "raw";
 
       const base = {
         originalName: file.originalName,

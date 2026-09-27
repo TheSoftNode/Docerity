@@ -2,7 +2,11 @@ import "server-only";
 
 import { database, storage } from "@/lib/config/env";
 import { createLogger } from "@/lib/core/logger";
-import { cloudinaryImageUrl } from "@/lib/storage/public-url";
+import {
+  cloudinaryImageUrl,
+  cloudinaryVideoPoster,
+  cloudinaryVideoUrl,
+} from "@/lib/storage/public-url";
 import {
   findPublishedProjectBySlug,
   listPublishedProjects,
@@ -12,6 +16,7 @@ import {
   projects as staticProjects,
   projectMedia as staticMedia,
   type Project,
+  type ProjectImage,
   type ProjectMedia,
   type ProjectStatus,
 } from "@/components/sections/work/work-data";
@@ -42,9 +47,43 @@ function indexOf(position: number): string {
   return String(position + 1).padStart(2, "0");
 }
 
+/** A stored image, resolved to a URL. Cloudinary wins over a `public/` path. */
+function imageOf(
+  item:
+    | { publicId?: string; src?: string; alt?: string; caption?: string }
+    | null
+    | undefined
+): ProjectImage | undefined {
+  if (!item) return undefined;
+
+  const src = item.publicId
+    ? storage.isConfigured
+      ? cloudinaryImageUrl(item.publicId, { width: 1400, height: 880 })
+      : ""
+    : (item.src ?? "");
+
+  if (!src) return undefined;
+  return { src, alt: item.alt ?? "", ...(item.caption ? { caption: item.caption } : {}) };
+}
+
 function mediaOf(project: LeanProject): ProjectMedia | undefined {
   const media = project.media;
   if (!media) return undefined;
+
+  /*
+    Video first, because it is delivered from a different Cloudinary namespace
+    and its poster is generated from the clip rather than uploaded. Treating it
+    as an image would produce a 404 for both.
+  */
+  if (media.type === "video" && media.publicId) {
+    if (!storage.isConfigured) return undefined;
+    return {
+      type: "video",
+      src: cloudinaryVideoUrl(media.publicId),
+      poster: media.poster || cloudinaryVideoPoster(media.publicId),
+      alt: media.alt ?? "",
+    };
+  }
 
   /*
     A Cloudinary asset wins over a path. Both can be set on a project that was
@@ -86,12 +125,24 @@ function toProject(project: LeanProject, position: number): Project {
     ...(project.role ? { role: project.role } : {}),
     ...(project.timeline ? { timeline: project.timeline } : {}),
     ...(project.results?.length ? { results: project.results } : {}),
+    ...(project.client ? { client: project.client } : {}),
+    ...(project.gallery?.length
+      ? {
+          gallery: project.gallery
+            .map((item) => imageOf(item))
+            .filter((item): item is ProjectImage => Boolean(item)),
+        }
+      : {}),
     ...(project.body?.length
       ? {
-          body: project.body.map((section) => ({
-            heading: section.heading,
-            paragraphs: section.paragraphs ?? [],
-          })),
+          body: project.body.map((section) => {
+            const image = imageOf(section.image);
+            return {
+              heading: section.heading,
+              paragraphs: section.paragraphs ?? [],
+              ...(image ? { image } : {}),
+            };
+          }),
         }
       : {}),
   };
