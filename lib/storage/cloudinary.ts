@@ -208,3 +208,56 @@ export async function destroyAsset(params: {
 }
 
 export const isStorageConfigured = () => storage.isConfigured;
+
+/** One stored asset, as the media library lists it. */
+export type StoredAsset = {
+  publicId: string;
+  url: string;
+  resourceType: "image" | "video";
+  format: string;
+  bytes: number;
+  width: number;
+  height: number;
+  createdAt: string;
+};
+
+/**
+ * Everything uploaded into one folder, newest first.
+ *
+ * The Admin API rather than the search API: search is rate-limited far more
+ * tightly (a few hundred calls a day on the free tier) and this is a page
+ * somebody opens repeatedly while writing. `max_results` is capped at 500 by
+ * Cloudinary regardless of what is asked for.
+ *
+ * Returns an empty list rather than throwing when storage is unconfigured, so
+ * the page that calls this renders its empty state instead of an error.
+ */
+export async function listAssets(params: {
+  folder: string;
+  resourceType?: "image" | "video";
+  limit?: number;
+}): Promise<StoredAsset[]> {
+  if (!storage.isConfigured) return [];
+
+  const api = client();
+  const resourceType = params.resourceType ?? "image";
+
+  const result = (await api.api.resources({
+    type: "upload",
+    resource_type: resourceType,
+    prefix: params.folder,
+    max_results: Math.min(params.limit ?? 100, 500),
+    direction: "desc",
+  })) as { resources?: Record<string, unknown>[] };
+
+  return (result.resources ?? []).map((asset) => ({
+    publicId: String(asset.public_id ?? ""),
+    url: String(asset.secure_url ?? ""),
+    resourceType,
+    format: String(asset.format ?? ""),
+    bytes: Number(asset.bytes ?? 0),
+    width: Number(asset.width ?? 0),
+    height: Number(asset.height ?? 0),
+    createdAt: String(asset.created_at ?? ""),
+  }));
+}

@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import {
   BriefcaseIcon,
   FileTextIcon,
+  ImagesIcon,
   InboxIcon,
   LayoutDashboardIcon,
   LayoutTemplateIcon,
@@ -51,6 +52,7 @@ const items: NavItem[] = [
      the client logos, the About page, the mentorship programme, the service and
      capability grids, the explainer pairs and the contact steps. */
   { href: "/admin/content", label: "Page content", Icon: LayoutTemplateIcon, visible: can.publishPosts },
+  { href: "/admin/media", label: "Media", Icon: ImagesIcon, visible: can.publishPosts },
   { href: "/admin/subscribers", label: "Subscribers", Icon: MailIcon, visible: can.readSubscribers },
   { href: "/admin/users", label: "Accounts", Icon: UsersIcon, visible: can.manageAccounts },
 ];

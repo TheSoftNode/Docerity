@@ -142,3 +142,40 @@ function MetricDot() {
 }
 
 export { Eyebrow, HeroTitle, SectionTitle, Lede, FramedPanel, HoverCard, Bloom, MetricDot };
+
+/**
+ * A heading where part of the text is picked out in the brand gradient.
+ *
+ * The CTA reads "Got something *worth building*?" with only the middle two
+ * words in colour, and that partial emphasis is the design. Once the copy
+ * became editable the markup could no longer hold the split, so the text
+ * carries it: anything between asterisks is the coloured part.
+ *
+ * A convention rather than a second field, because a heading with its accent
+ * stored separately cannot be read as a sentence in the editor, and whoever is
+ * typing it would have to know which half goes where.
+ */
+function AccentedTitle({ text, className }: { text: string; className?: string }) {
+  /* Split on the asterisk pairs, keeping them, so the odd-numbered pieces are
+     the emphasised ones. An unclosed asterisk simply renders as itself. */
+  const pieces = text.split(/\*([^*]+)\*/g);
+
+  return (
+    <h2 className={className}>
+      {pieces.map((piece, index) =>
+        index % 2 === 1 ? (
+          <span
+            key={index}
+            className="bg-[linear-gradient(120deg,var(--brand-primary),var(--brand-violet))] bg-clip-text text-transparent"
+          >
+            {piece}
+          </span>
+        ) : (
+          piece
+        )
+      )}
+    </h2>
+  );
+}
+
+export { AccentedTitle };

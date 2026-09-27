@@ -20,6 +20,8 @@ export type FounderView = {
   based: string;
   availability: string;
   hours: string;
+  /** "" falls back to the file the page shipped with. */
+  portrait: string;
 };
 
 export type FactView = { value: string; label: string; since: string };
@@ -106,4 +108,13 @@ export type AboutContent = {
   tools: ToolView[];
   education: EducationView[];
   certifications: CertificationView[];
+};
+
+/** The homepage hero: the one section whose buttons are editable too. */
+export type HeroCopy = {
+  eyebrow: string;
+  title: string;
+  lede: string;
+  primaryLabel: string;
+  secondaryLabel: string;
 };

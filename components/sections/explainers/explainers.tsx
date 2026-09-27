@@ -5,7 +5,7 @@ import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { ExplainerBackground } from "@/components/sections/explainers/explainer-background";
 import { ExplainerStage } from "@/components/sections/explainers/explainer-stage";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { PairView } from "@/lib/content/blocks/views";
 
 /* How every post is built: the two halves the stage on the right animates. */
@@ -15,6 +15,7 @@ const format = [
 ] as const;
 
 async function Explainers() {
+  const heading = await getHeading("explainers", "explainers");
   const pairs = await getGroup<PairView[]>("explainers", "pairs");
 
   return (
@@ -29,16 +30,9 @@ async function Explainers() {
 
       <Container className="relative grid gap-12 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:gap-16">
         <div>
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-            Tech Explainers
-          </p>
-          <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
-            Complex ideas, explained through things you already know.
-          </h2>
-          <p className="mt-4 max-w-[44ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[32rem]">
-            Every post pairs a real technical concept with an everyday analogy,
-            so it actually sticks.
-          </p>
+          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">{heading.eyebrow}</p>
+          <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">{heading.title}</h2>
+          <p className="mt-4 max-w-[44ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[32rem]">{heading.lede}</p>
 
           <dl className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
             {format.map((item) => (

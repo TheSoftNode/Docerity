@@ -2,10 +2,11 @@ import { Container } from "@/components/shared/container";
 import { Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { AiCapabilitiesBackground } from "@/components/sections/ai/ai-capabilities-background";
 import { ContentIcon } from "@/components/shared/content-icon";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { CapabilityView } from "@/lib/content/blocks/views";
 
 async function AiCapabilities() {
+  const heading = await getHeading("ai", "ai-capabilities");
   const capabilities = await getGroup<CapabilityView[]>("ai", "capabilities");
 
   return (
@@ -15,13 +16,9 @@ async function AiCapabilities() {
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         {/* The heading holds its place while the list scrolls past. */}
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
-          <Eyebrow>What I build</Eyebrow>
-          <SectionTitle>The part after the demo works.</SectionTitle>
-          <Lede>
-            Getting a model to answer once is the easy part. These are the
-            pieces that keep it answering cheaply, reliably, and at real
-            volume.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
         </div>
 
         <FramedPanel innerClassName="p-2">

@@ -9,7 +9,7 @@ import {
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { GrowthTimeline } from "@/components/sections/mentorship/growth-timeline";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { CheckpointView } from "@/lib/content/blocks/views";
 
 /* The three promises from the lede, given room to breathe. */
@@ -20,6 +20,7 @@ const pillars = [
 ] as const;
 
 async function Mentorship() {
+  const heading = await getHeading("homepage", "home-mentorship");
   const checkpoints = await getGroup<CheckpointView[]>("mentorship", "checkpoints");
 
   return (
@@ -36,16 +37,9 @@ async function Mentorship() {
 
       <Container className="relative grid gap-12 md:grid-cols-[1.05fr_0.95fr] md:items-center lg:gap-16">
         <div>
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-            Mentorship
-          </p>
-          <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
-            A clear path to your next level.
-          </h2>
-          <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[34rem]">
-            Weekly 1:1s, honest code review, and a real plan you can
-            follow between sessions.
-          </p>
+          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">{heading.eyebrow}</p>
+          <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">{heading.title}</h2>
+          <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[34rem]">{heading.lede}</p>
 
           <ul className="mt-8 grid gap-5 sm:grid-cols-3 md:grid-cols-1 xl:grid-cols-3">
             {pillars.map(({ Icon, title, body }) => (

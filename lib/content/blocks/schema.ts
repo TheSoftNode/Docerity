@@ -41,6 +41,23 @@ export type Field = {
  * where a record with one field would be ceremony.
  */
 export type Group =
+  /**
+   * A fixed set of named records, each with the same fields.
+   *
+   * Unlike a `list`, the entries cannot be added, removed or reordered: they
+   * exist because a component reads one by name. Section headings are the
+   * case this is for, where the heading on the capabilities band is looked up
+   * as "ai-capabilities" and renaming that key would not move the heading, it
+   * would lose it.
+   */
+  | {
+      kind: "keyed";
+      name: string;
+      label: string;
+      description?: string;
+      fields: Field[];
+      entries: { key: string; label: string; hint?: string }[];
+    }
   | {
       kind: "list";
       name: string;
@@ -84,6 +101,9 @@ export type Block = {
 };
 
 export const BLOCK_KEYS = [
+  "site",
+  "seo",
+  "homepage",
   "clients",
   "about",
   "mentorship",
@@ -105,7 +125,10 @@ export function isBlockKey(value: unknown): value is BlockKey {
 export type BlockRecord = Record<string, string | string[]>;
 
 /** A whole section's content: group name to whatever that group holds. */
-export type BlockData = Record<string, BlockRecord | BlockRecord[] | string[]>;
+export type BlockData = Record<
+  string,
+  BlockRecord | BlockRecord[] | string[] | Record<string, BlockRecord>
+>;
 
 /* ── Shared field definitions ─────────────────────────────────────────── */
 
@@ -115,6 +138,51 @@ const ICON: Field = {
   kind: "icon",
   hint: "Shown beside the title.",
 };
+
+/*
+  Every section on the site is an eyebrow, a title and usually a lede. Naming
+  the three once means a heading group is three lines wherever it appears, and
+  that the labels are the same on every page of the admin.
+*/
+const HEADING_FIELDS: Field[] = [
+  {
+    name: "eyebrow",
+    label: "Eyebrow",
+    kind: "text",
+    required: true,
+    maxLength: 60,
+    hint: "The small line above the heading.",
+  },
+  {
+    name: "title",
+    label: "Heading",
+    kind: "text",
+    required: true,
+    maxLength: 160,
+    hint: "Wrap part of it in *asterisks* to pick that part out in colour, where the section supports it.",
+  },
+  {
+    name: "lede",
+    label: "Lede",
+    kind: "textarea",
+    maxLength: 400,
+    hint: "Optional. Left blank, the section goes straight from heading to content.",
+  },
+];
+
+function headings(
+  entries: { key: string; label: string; hint?: string }[],
+  description = "The eyebrow, heading and lede above each section."
+): Group {
+  return {
+    kind: "keyed",
+    name: "headings",
+    label: "Section headings",
+    description,
+    fields: HEADING_FIELDS,
+    entries,
+  };
+}
 
 const DESCRIPTION: Field = {
   name: "description",
@@ -128,6 +196,189 @@ const DESCRIPTION: Field = {
 
 export const BLOCKS: Block[] = [
   {
+    key: "site",
+    title: "Site settings",
+    page: "Everywhere",
+    path: "/",
+    description:
+      "Your name, the address people reach you on, the links in the header and footer. These appear on every page, so a mistake here is a mistake everywhere.",
+    groups: [
+      {
+        kind: "object",
+        name: "identity",
+        label: "Identity",
+        fields: [
+          { name: "name", label: "Site name", kind: "text", required: true, maxLength: 60 },
+          {
+            name: "tagline",
+            label: "Tagline",
+            kind: "text",
+            required: true,
+            maxLength: 120,
+            hint: "Under the mark in the footer, and in the social card.",
+          },
+          {
+            name: "description",
+            label: "Description",
+            kind: "textarea",
+            required: true,
+            maxLength: 300,
+            hint: "The default description search engines show. A page with its own overrides it.",
+          },
+          {
+            name: "email",
+            label: "Email",
+            kind: "text",
+            required: true,
+            maxLength: 200,
+            hint: "Shown publicly and used as the reply-to on notifications.",
+          },
+        ],
+      },
+      {
+        kind: "list",
+        name: "socials",
+        label: "Social links",
+        description: "Shown in the footer. An empty list hides the row rather than showing dead icons.",
+        itemNoun: "link",
+        max: 8,
+        fields: [
+          {
+            name: "label",
+            label: "Name",
+            kind: "text",
+            required: true,
+            maxLength: 40,
+            placeholder: "GitHub",
+            hint: "GitHub, LinkedIn and X get their own mark. Anything else gets a link icon.",
+          },
+          { name: "url", label: "URL", kind: "text", required: true, maxLength: 400 },
+        ],
+      },
+      {
+        kind: "list",
+        name: "navLinks",
+        label: "Header links",
+        description:
+          "In order, left to right. The header fits about six before the row crowds the button beside it.",
+        itemNoun: "link",
+        max: 8,
+        fields: [
+          { name: "label", label: "Label", kind: "text", required: true, maxLength: 30 },
+          {
+            name: "href",
+            label: "Path",
+            kind: "text",
+            required: true,
+            maxLength: 200,
+            placeholder: "/work",
+          },
+        ],
+      },
+      {
+        kind: "list",
+        name: "footerLinks",
+        label: "Footer links",
+        description: "Usually the header links plus the pages that do not fit up there.",
+        itemNoun: "link",
+        max: 14,
+        fields: [
+          { name: "label", label: "Label", kind: "text", required: true, maxLength: 30 },
+          { name: "href", label: "Path", kind: "text", required: true, maxLength: 200 },
+        ],
+      },
+    ],
+  },
+
+  {
+    key: "seo",
+    title: "Titles and descriptions",
+    page: "Everywhere",
+    path: "/",
+    description:
+      "What a search result and a shared link say for each page. Blog posts and project pages write their own from their title and hook, so they are not listed here.",
+    groups: [
+      {
+        kind: "keyed",
+        name: "pages",
+        label: "Pages",
+        description:
+          "The title shows in the browser tab and as the headline of a search result; the description is the grey text under it. Around 60 and 155 characters respectively is what most engines show before truncating.",
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 120 },
+          {
+            name: "description",
+            label: "Description",
+            kind: "textarea",
+            required: true,
+            maxLength: 300,
+          },
+        ],
+        entries: [
+          { key: "home", label: "Homepage" },
+          { key: "work", label: "Work" },
+          { key: "ai", label: "AI" },
+          { key: "web3", label: "Web3" },
+          { key: "mentorship", label: "Mentorship" },
+          { key: "blog", label: "Blog" },
+          { key: "about", label: "About" },
+          { key: "contact", label: "Contact" },
+          { key: "reviews", label: "Reviews" },
+          { key: "contribute", label: "Write for us" },
+        ],
+      },
+    ],
+  },
+
+  {
+    key: "homepage",
+    title: "Homepage copy",
+    page: "Homepage",
+    path: "/",
+    description:
+      "The hero and the headings above each band. What each band contains is edited in its own section.",
+    groups: [
+      {
+        kind: "object",
+        name: "hero",
+        label: "Hero",
+        fields: [
+          { name: "eyebrow", label: "Eyebrow", kind: "text", required: true, maxLength: 60 },
+          {
+            name: "title",
+            label: "Heading",
+            kind: "textarea",
+            required: true,
+            maxLength: 200,
+            hint: "Three short sentences work best here; the last one is picked out in colour.",
+          },
+          { name: "lede", label: "Lede", kind: "textarea", required: true, maxLength: 400 },
+          {
+            name: "primaryLabel",
+            label: "Main button",
+            kind: "text",
+            required: true,
+            maxLength: 40,
+          },
+          {
+            name: "secondaryLabel",
+            label: "Second button",
+            kind: "text",
+            required: true,
+            maxLength: 40,
+          },
+        ],
+      },
+      headings([
+        { key: "home-work", label: "Selected work" },
+        { key: "home-testimonials", label: "What people say" },
+        { key: "home-mentorship", label: "Mentorship teaser" },
+        { key: "home-cta", label: "The closing call to action" },
+      ]),
+    ],
+  },
+
+  {
     key: "clients",
     title: "Client logos",
     page: "Homepage",
@@ -135,6 +386,7 @@ export const BLOCKS: Block[] = [
     description:
       "The two rows under the hero. Organisations are who paid for the work; ecosystems are what it was built on, which is why they are not one wall of logos.",
     groups: [
+      headings([{ key: "clients", label: "The logo band" }]),
       {
         kind: "list",
         name: "organisations",
@@ -208,6 +460,12 @@ export const BLOCKS: Block[] = [
             required: true,
             maxLength: 40,
             hint: "The same fact cut to fit the narrow rail. Keep the two in step.",
+          },
+          {
+            name: "portrait",
+            label: "Photo",
+            kind: "image",
+            hint: "The frame is circular, so a square image with the face centred works best. 800px or larger.",
           },
         ],
       },
@@ -332,6 +590,14 @@ export const BLOCKS: Block[] = [
     description:
       "The programme page and the teaser on the homepage. Testimonials are not here: they come from approved reviews.",
     groups: [
+      headings([
+        { key: "mentorship-hero", label: "Hero" },
+        { key: "mentorship-audience", label: "Who it is for" },
+        { key: "mentorship-path", label: "The path" },
+        { key: "mentorship-format", label: "What you get" },
+        { key: "mentorship-testimonials", label: "From mentees" },
+        { key: "mentorship-faq", label: "Questions" },
+      ]),
       {
         kind: "list",
         name: "audiences",
@@ -401,6 +667,14 @@ export const BLOCKS: Block[] = [
     path: "/work",
     description: "The capability grid and the process on the work page. Projects are edited under Work.",
     groups: [
+      headings([
+        { key: "work-hero", label: "Hero" },
+        { key: "work-capabilities", label: "What you build" },
+        { key: "work-showcase", label: "The project grid" },
+        { key: "work-process", label: "How you work" },
+        { key: "work-stack", label: "The stack" },
+        { key: "work-testimonials", label: "From clients" },
+      ]),
       {
         kind: "list",
         name: "capabilities",
@@ -445,6 +719,12 @@ export const BLOCKS: Block[] = [
     path: "/ai",
     description: "The AI work and capabilities. These are separate from the Work section's projects on purpose.",
     groups: [
+      headings([
+        { key: "ai-hero", label: "Hero" },
+        { key: "ai-projects", label: "AI work" },
+        { key: "ai-capabilities", label: "Capabilities" },
+        { key: "ai-models", label: "Models" },
+      ]),
       {
         kind: "list",
         name: "projects",
@@ -490,6 +770,12 @@ export const BLOCKS: Block[] = [
     path: "/web3",
     description: "The Web3 work, ecosystems and capabilities.",
     groups: [
+      headings([
+        { key: "web3-hero", label: "Hero" },
+        { key: "web3-projects", label: "Web3 work" },
+        { key: "web3-ecosystems", label: "Ecosystems" },
+        { key: "web3-capabilities", label: "Capabilities" },
+      ]),
       {
         kind: "list",
         name: "projects",
@@ -537,6 +823,7 @@ export const BLOCKS: Block[] = [
     description:
       "The band that tickers a technical idea against an everyday one. Written articles are edited under Writing.",
     groups: [
+      headings([{ key: "explainers", label: "The band" }]),
       {
         kind: "list",
         name: "pairs",
@@ -572,6 +859,7 @@ export const BLOCKS: Block[] = [
     path: "/contact",
     description: "What happens after somebody sends the form.",
     groups: [
+      headings([{ key: "contact", label: "The page" }]),
       {
         kind: "list",
         name: "steps",

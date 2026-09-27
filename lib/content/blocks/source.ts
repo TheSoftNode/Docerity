@@ -112,3 +112,33 @@ export async function getGroup<T>(key: BlockKey, group: string): Promise<T> {
   const data = await getBlock(key);
   return data[group] as T;
 }
+
+/**
+ * One section's heading: the eyebrow, the title and the optional lede.
+ *
+ * Its own function rather than a `getGroup` call at each site, because the
+ * lookup is by key inside a keyed group and getting that wrong is quiet: a
+ * missing record renders three empty strings, which is a heading that
+ * disappeared rather than an error anybody sees.
+ *
+ * `block` is the section the heading belongs to, and `key` the entry within
+ * it. A key the block does not declare returns blanks, which `cleanBlock`
+ * cannot produce, so it only happens if a caller and the schema disagree;
+ * `e2e/content-blocks.spec.ts` walks every declared key to catch that.
+ */
+export type SectionHeading = { eyebrow: string; title: string; lede: string };
+
+export async function getHeading(
+  key: BlockKey,
+  entry: string
+): Promise<SectionHeading> {
+  const data = await getBlock(key);
+  const headings = (data.headings ?? {}) as Record<string, BlockRecord>;
+  const heading = headings[entry] ?? {};
+
+  return {
+    eyebrow: (heading.eyebrow as string) ?? "",
+    title: (heading.title as string) ?? "",
+    lede: (heading.lede as string) ?? "",
+  };
+}

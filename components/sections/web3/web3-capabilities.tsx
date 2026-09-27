@@ -2,10 +2,11 @@ import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { Web3CapabilitiesBackground } from "@/components/sections/web3/web3-capabilities-background";
 import { ContentIcon } from "@/components/shared/content-icon";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { CapabilityView } from "@/lib/content/blocks/views";
 
 async function Web3Capabilities() {
+  const heading = await getHeading("web3", "web3-capabilities");
   const capabilities = await getGroup<CapabilityView[]>("web3", "capabilities");
 
   return (
@@ -15,12 +16,9 @@ async function Web3Capabilities() {
 
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
-          <Eyebrow>What I build</Eyebrow>
-          <SectionTitle>On-chain systems that hold up under real use.</SectionTitle>
-          <Lede>
-            Contracts are hard to change once they hold real value, so they are
-            designed for security and maintenance from the first line.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
         </div>
 
         <FramedPanel innerClassName="p-2">

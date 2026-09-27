@@ -3,10 +3,11 @@ import { TrophyIcon } from "lucide-react";
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, HoverCard, SectionTitle } from "@/components/shared/section-kit";
 import { ContentIcon } from "@/components/shared/content-icon";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { Web3ProjectView } from "@/lib/content/blocks/views";
 
 async function Web3Projects() {
+  const heading = await getHeading("web3", "web3-projects");
   const projects = await getGroup<Web3ProjectView[]>("web3", "projects");
 
   return (
@@ -18,8 +19,8 @@ async function Web3Projects() {
 
       <Container className="relative">
         <div className="max-w-2xl">
-          <Eyebrow>Projects</Eyebrow>
-          <SectionTitle>Built, shipped, and recognized.</SectionTitle>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-6">

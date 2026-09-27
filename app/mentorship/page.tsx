@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/content/blocks/metadata";
 
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -10,11 +10,9 @@ import { MentorshipFormat } from "@/components/sections/mentorship-program/mento
 import { MentorshipTestimonials } from "@/components/sections/mentorship-program/mentorship-testimonials";
 import { MentorshipFaq } from "@/components/sections/mentorship-program/mentorship-faq";
 
-export const metadata: Metadata = {
-  title: "Mentorship",
-  description:
-    "Weekly 1:1s, honest code review, and a real plan. Mentorship for junior engineers, career switchers, and mid-level engineers leveling up.",
-};
+/* Read per request rather than exported as a constant, so the title and
+   description a search result shows can be edited without a deploy. */
+export const generateMetadata = pageMetadata("mentorship");
 
 export default function MentorshipPage() {
   return (

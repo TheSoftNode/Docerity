@@ -1,9 +1,10 @@
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { WorkStackBackground } from "@/components/sections/work-program/work-stack-background";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 
 async function WorkStack() {
+  const heading = await getHeading("services", "work-stack");
   const stack = await getGroup<string[]>("services", "stack");
 
   return (
@@ -13,12 +14,9 @@ async function WorkStack() {
 
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:gap-16">
         <div>
-          <Eyebrow>The stack</Eyebrow>
-          <SectionTitle>Boring where it counts, sharp where it matters.</SectionTitle>
-          <Lede>
-            Proven tools for the parts that must not surprise anyone, and newer
-            ones only where they earn their place.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
         </div>
 
         <FramedPanel innerClassName="p-6 sm:p-8">

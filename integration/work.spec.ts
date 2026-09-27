@@ -53,9 +53,16 @@ test.describe("Importing", () => {
 
     await expect(page.getByText("Nothing here yet")).toBeVisible();
     await page.getByRole("button", { name: /Import the 25 existing/ }).click();
-    await expect(page.getByText(/Imported 25 projects/)).toBeVisible();
 
-    await page.reload();
+    /*
+      The rows, not the confirmation message.
+
+      The import action revalidates `/admin/work`, and the import button is only
+      rendered while the collection is empty, so the server's re-render unmounts
+      the button and takes its "Imported N" message with it. The message is
+      transient by design; the rows arriving are the outcome worth asserting,
+      and waiting for the message was a race that passed on a fast machine.
+    */
     const rows = page.locator("article");
     await expect(rows).toHaveCount(25);
     /* Order preserved from the file: EEP is first on the site today. */

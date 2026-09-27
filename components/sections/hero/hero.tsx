@@ -7,8 +7,12 @@ import { HeroIllustration } from "@/components/sections/hero/hero-illustration";
 import { HeroAura } from "@/components/sections/hero/hero-aura";
 import { HeroFrame } from "@/components/shared/hero-frame";
 import { ScrambleText } from "@/components/shared/scramble-text";
+import { getGroup } from "@/lib/content/blocks/source";
+import type { HeroCopy } from "@/lib/content/blocks/views";
 
-function Hero() {
+async function Hero() {
+  const hero = (await getGroup<HeroCopy>("homepage", "hero")) ?? null;
+
   return (
     <section className="relative overflow-hidden border-b border-border/80">
       <HeroFrame />
@@ -45,7 +49,7 @@ function Hero() {
               headline began at the column edge, which read as a misalignment
               rather than as a flourish. */}
           <p className="font-mono text-xs tracking-[0.12em] text-brand-iris uppercase sm:tracking-[0.2em]">
-            <ScrambleText text="Engineering · Mentorship · Tech Explainers" />
+            <ScrambleText text={hero.eyebrow} />
           </p>
 
           {/*
@@ -55,20 +59,28 @@ function Hero() {
             step is ever allowed to go.
           */}
           <h1 className="mt-6 max-w-[20ch] text-balance font-heading text-[clamp(2rem,6vw,3rem)] font-semibold leading-[1.05] tracking-tight text-foreground md:max-w-none md:text-[clamp(1.9rem,3.4vw,3.6rem)] lg:mt-7 lg:text-[clamp(2.75rem,3.6vw,3.6rem)]">
-            {/* Three sentences, three lines, but only once the column is wide
-                enough to hold them. Below `lg` they wrap naturally. */}
-            <span className="md:block">Software shipped.</span>{" "}
-            <span className="md:block">Engineers grown.</span>{" "}
-            {/* Violet, not sapphire: the headline accent should not be the
-                same colour as the button sitting directly under it. */}
-            <span className="text-brand-violet md:block">Ideas made simple.</span>
+            {/*
+              One line per line of the stored heading, with the last in violet.
+              It was three hand-written spans; the rule is the same, and it now
+              reads from the copy so the heading can change without the markup.
+              Violet rather than sapphire: the accent should not match the
+              button sitting directly under it.
+            */}
+            {hero.title.split("\n").map((line, index, lines) => (
+              <span
+                key={line}
+                className={
+                  index === lines.length - 1
+                    ? "text-brand-violet md:block"
+                    : "md:block"
+                }
+              >
+                {line}{index < lines.length - 1 ? " " : null}
+              </span>
+            ))}
           </h1>
 
-          <p className="mt-6 max-w-[46ch] text-pretty text-base leading-[1.75] text-muted-foreground lg:mt-8 lg:max-w-[38rem] 2xl:max-w-[40rem]">
-            For teams that need production-ready software, engineers who want
-            real mentorship, and anyone who&apos;d rather have complex ideas
-            explained simply.
-          </p>
+          <p className="mt-6 max-w-[46ch] text-pretty text-base leading-[1.75] text-muted-foreground lg:mt-8 lg:max-w-[38rem] 2xl:max-w-[40rem]">{hero.lede}</p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">
             <Button
@@ -77,7 +89,7 @@ function Hero() {
               nativeButton={false}
               render={<Link href="/contact" />}
             >
-              Start a project
+              {hero.primaryLabel}
               <ArrowRightIcon />
             </Button>
             <Button
@@ -87,7 +99,7 @@ function Hero() {
               nativeButton={false}
               render={<Link href="#work" />}
             >
-              See the work
+              {hero.secondaryLabel}
             </Button>
           </div>
         </div>

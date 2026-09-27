@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { CheckIcon, PaperclipIcon, SendIcon, XIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/lib/config/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -67,7 +66,7 @@ function Field({
   );
 }
 
-function ContactForm() {
+function ContactForm({ email }: { email: string }) {
   const searchParams = useSearchParams();
   const requestedType = searchParams.get("type");
   const initialType = projectTypes.some((type) => type.value === requestedType)
@@ -435,8 +434,8 @@ function ContactForm() {
             {status === "error" ? (
               <p className="text-center text-sm text-destructive">
                 Something went wrong. Please try again, or email{" "}
-                <a href={`mailto:${siteConfig.email}`} className="underline">
-                  {siteConfig.email}
+                <a href={`mailto:${email}`} className="underline">
+                  {email}
                 </a>{" "}
                 directly.
               </p>

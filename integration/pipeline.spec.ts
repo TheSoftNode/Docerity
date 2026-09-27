@@ -418,21 +418,44 @@ test.describe("The review pipeline", () => {
       puts their words under the wrong heading. Before this the remedies were
       leaving it wrong or deleting somebody's genuine review.
 
-      Everything is unpublished by the test above, so this approves one, moves
-      it, and checks both pages.
+      Everything is unpublished by the test above, so this moves one, approves
+      it along with a real mentee review, and checks both pages.
     */
     await signIn(page);
     await page.goto("/admin/reviews?status=rejected");
 
     /* Ada wrote a client review; this moves her to the mentorship page. */
-    const row = page.locator("li, article").filter({ hasText: clientReviews[0].fullName });
-    await row
-      .getByRole("combobox", { name: /Which section the review from/ })
-      .first()
+    await page
+      .getByRole("combobox", {
+        name: `Which section the review from ${clientReviews[0].fullName} appears in`,
+      })
       .selectOption("mentee");
 
-    await page.getByRole("button", { name: "Approve after all" }).first().click();
-    await expect(page.getByText(clientReviews[0].body)).toHaveCount(0);
+    /*
+      Two, not one, and both named rather than "the first row".
+
+      A testimonial section appears at TESTIMONIAL_MINIMUM, so approving only
+      the moved review would leave the mentorship page with a single mentee
+      quote and no section to find it in, which would read as the move having
+      failed. Which two matters as well: one of them has to be an actual mentee
+      review, so the pair is picked by name rather than by position.
+
+      Each click is waited for by the queue getting shorter rather than by the
+      text going away: the row stays on screen until the action's
+      `startTransition` finishes and the page re-renders.
+    */
+    const rowFor = (fullName: string) =>
+      page.locator("article").filter({ hasText: fullName });
+
+    const rejected = page.getByRole("button", { name: "Approve after all" });
+
+    for (const [index, fullName] of [
+      clientReviews[0].fullName,
+      menteeReviews[0].fullName,
+    ].entries()) {
+      await rowFor(fullName).getByRole("button", { name: "Approve after all" }).click();
+      await expect(rejected).toHaveCount(3 - index);
+    }
 
     await page.goto("/mentorship");
     await expect(page.getByText(clientReviews[0].body)).toBeVisible();
@@ -483,10 +506,16 @@ test.describe("The writing pipeline", () => {
     await expect(page.getByText("Nothing written here yet")).toBeVisible();
     await page.getByRole("button", { name: "Import the built-in posts" }).click();
 
-    await expect(page.getByText(/Imported \d+ posts/)).toBeVisible();
+    /*
+      The rows, not the confirmation message.
 
+      The import action revalidates `/admin/posts`, and the import button is only
+      rendered while the collection is empty, so the server's re-render unmounts
+      the button and takes its "Imported N" message with it. The message is
+      transient by design; the rows arriving are the outcome worth asserting,
+      and waiting for the message was a race that passed on a fast machine.
+    */
     /* They are now editable rows rather than a file. */
-    await page.reload();
     await expect(page.getByRole("link", { name: "A sticky note on your monitor" })).toBeVisible();
   });
 

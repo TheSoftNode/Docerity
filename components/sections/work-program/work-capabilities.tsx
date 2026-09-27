@@ -2,10 +2,11 @@ import { Container } from "@/components/shared/container";
 import { Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { WorkCapabilitiesBackground } from "@/components/sections/work-program/work-capabilities-background";
 import { ContentIcon } from "@/components/shared/content-icon";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { CapabilityView } from "@/lib/content/blocks/views";
 
 async function WorkCapabilities() {
+  const heading = await getHeading("services", "work-capabilities");
   const capabilities = await getGroup<CapabilityView[]>("services", "capabilities");
 
   return (
@@ -14,13 +15,9 @@ async function WorkCapabilities() {
 
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
-          <Eyebrow>What I build</Eyebrow>
-          <SectionTitle>Four kinds of problems, one way of working.</SectionTitle>
-          <Lede>
-            Different surfaces, same discipline: understand the problem, design
-            for the version after this one, and ship it in pieces you can
-            review.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
         </div>
 
         <FramedPanel innerClassName="p-2">

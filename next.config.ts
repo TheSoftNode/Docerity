@@ -39,6 +39,23 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  /*
+    Cloudinary is the only remote host images may come from.
+
+    Anything editable in the admin that takes a picture accepts either a path
+    under /public or an upload, and an upload is delivered from here. Next
+    refuses a remote source it has not been told about, so without this the
+    first uploaded client logo or headshot would be a runtime error rather than
+    a picture.
+
+    Narrow on purpose: `remotePatterns` is what stops the image optimiser being
+    an open proxy that will fetch and re-serve anything anybody puts in a URL.
+  */
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "res.cloudinary.com", pathname: "/**" },
+    ],
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

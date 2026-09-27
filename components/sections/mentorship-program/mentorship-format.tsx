@@ -8,12 +8,13 @@ import {
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipFormatBackground } from "@/components/sections/mentorship-program/mentorship-format-background";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { TitledView } from "@/lib/content/blocks/views";
 
 const icons = [VideoIcon, GitPullRequestIcon, RouteIcon, MessageCircleIcon];
 
 async function MentorshipFormat() {
+  const heading = await getHeading("mentorship", "mentorship-format");
   const formatSteps = await getGroup<TitledView[]>("mentorship", "formatSteps");
 
   return (
@@ -23,12 +24,9 @@ async function MentorshipFormat() {
 
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:gap-16">
         <div>
-          <Eyebrow>What you get</Eyebrow>
-          <SectionTitle>Not just office hours.</SectionTitle>
-          <Lede>
-            A standing session, feedback between sessions, a plan that moves
-            with you, and a way to reach out when something can&apos;t wait.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
         </div>
 
         <FramedPanel innerClassName="p-2">

@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import mongoose from "mongoose";
 
 import { hashPassword } from "@/lib/auth/password";
+import { BLOCK_KEYS } from "@/lib/content/blocks/schema";
 
 /**
  * The editable page sections, against a real database.
@@ -69,7 +70,12 @@ test.describe("Before anything is edited", () => {
     /* A database is connected and has nothing to say about these sections, so
        this is the fallback doing its job rather than the absence of one. */
     await page.goto("/");
-    await expect(page.getByText("HitoAI", { exact: true })).toBeVisible();
+    /* Scoped to the logo wall. "HitoAI" is also a project on the homepage, so
+       an unscoped match finds two elements and fails on strict mode. */
+    await expect(
+      page.locator("#clients").getByText("HitoAI", { exact: true })
+    ).toBeVisible();
+    await expect(page.locator("#clients").getByText("Stacks", { exact: true })).toBeVisible();
 
     await page.goto("/contact");
     await expect(page.getByText("You send the details")).toBeVisible();
@@ -83,8 +89,9 @@ test.describe("Before anything is edited", () => {
     await expect(page.getByRole("heading", { name: "About page" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Contact steps" })).toBeVisible();
 
-    /* Every card, because none has been saved. */
-    await expect(page.getByText("As it shipped")).toHaveCount(8);
+    /* Every card, because none has been saved. Counted from the schema rather
+       than typed: adding a section should not fail this test. */
+    await expect(page.getByText("As it shipped")).toHaveCount(BLOCK_KEYS.length);
     await expect(page.getByText("Your version")).toHaveCount(0);
   });
 
@@ -184,8 +191,10 @@ test.describe("A section with an icon", () => {
     await signIn(page, OWNER);
     await page.goto("/admin/content/services");
 
-    await page.getByRole("button", { name: /^Icon for capability 1/ }).click();
-    await page.getByRole("button", { name: "DatabaseIcon", exact: true }).click();
+    /* The picker is collapsed until asked for, and its grid labels each icon
+       without the "Icon" suffix, because that is what somebody reads. */
+    await page.getByRole("button", { name: /^Change icon for capability 1/i }).click();
+    await page.getByRole("button", { name: "Database", exact: true }).click();
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await expect(page.getByText("Saved")).toBeVisible();
 

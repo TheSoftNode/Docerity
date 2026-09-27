@@ -1,9 +1,10 @@
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { AiModelsBackground } from "@/components/sections/ai/ai-models-background";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 
 async function AiModels() {
+  const heading = await getHeading("ai", "ai-models");
   const models = await getGroup<string[]>("ai", "models");
 
   return (
@@ -13,12 +14,9 @@ async function AiModels() {
 
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:gap-16">
         <div>
-          <Eyebrow>Models &amp; platforms</Eyebrow>
-          <SectionTitle>Picked per task, not one model for everything.</SectionTitle>
-          <Lede>
-            Each call goes to the model that fits it, weighing quality against
-            cost instead of paying top price for every request.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
         </div>
 
         <FramedPanel innerClassName="p-6 sm:p-8">

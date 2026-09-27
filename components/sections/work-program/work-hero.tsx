@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { WorkHeroDeck } from "@/components/sections/work-program/work-hero-deck";
 import { getFeaturedWork } from "@/lib/content/work";
+import { getHeading } from "@/lib/content/blocks/source";
 
 async function WorkHero() {
+  const heading = await getHeading("services", "work-hero");
   const { projects, media } = await getFeaturedWork();
 
   return (
@@ -18,13 +20,9 @@ async function WorkHero() {
 
       <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
-          <Eyebrow><ScrambleText text="Selected Work" /></Eyebrow>
-          <HeroTitle>Software built for what happens after launch.</HeroTitle>
-          <Lede className="mt-6 text-base">
-            A few production systems, picked for the problems they actually
-            solved, plus how projects like these usually go, start to
-            finish.
-          </Lede>
+          <Eyebrow><ScrambleText text={heading.eyebrow} /></Eyebrow>
+          <HeroTitle>{heading.title}</HeroTitle>
+          {heading.lede ? <Lede className="mt-6 text-base">{heading.lede}</Lede> : null}
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">
             <Button

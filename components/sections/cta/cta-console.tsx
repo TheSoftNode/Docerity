@@ -10,10 +10,17 @@ import {
   RocketIcon,
 } from "lucide-react";
 
-import { siteConfig } from "@/lib/config/site";
 
 /* One row per way in, each in its own accent from the brand vocabulary. */
-const routes = [
+
+
+/*
+  Built from the address rather than declared beside it: the email route is the
+  address, and that is editable now. A function, so the list is made once the
+  settings have arrived rather than at module load.
+*/
+function buildRoutes(email: string) {
+  return [
   {
     Icon: RocketIcon,
     label: "A new project",
@@ -36,15 +43,16 @@ const routes = [
   },
   {
     Icon: MailIcon,
-    label: siteConfig.email,
+    label: email,
     body: "Just a question? Email directly.",
-    href: `mailto:${siteConfig.email}`,
+    href: `mailto:${email}`,
     external: true,
     accent: "text-brand-teal",
     hoverBorder: "group-hover/row:border-brand-teal/60",
     glow: "group-hover/row:shadow-[0_0_20px_-4px_var(--brand-teal)]",
   },
-] as const;
+] as const;;
+}
 
 const phrases = ["start a project", "apply for mentorship", "say hello"];
 const TYPE_MS = 65;
@@ -93,7 +101,9 @@ function useTypedPhrase(enabled: boolean) {
  * choices below as ordinary links. A screen reader gets three clear
  * destinations instead of a stuttering string of characters.
  */
-function CtaConsole() {
+function CtaConsole({ email }: { email: string }) {
+  const routes = buildRoutes(email);
+
   const reduceMotion = useReducedMotion();
   const typed = useTypedPhrase(!reduceMotion);
 

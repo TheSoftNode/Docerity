@@ -1,12 +1,13 @@
 import Link from "next/link";
 
-import { footerLinks, siteConfig } from "@/lib/config/site";
+import { getSiteSettings } from "@/lib/content/blocks/site";
 import { Container } from "@/components/shared/container";
 import { BrandMark } from "@/components/shared/brand-mark";
-import { GithubIcon, LinkedinIcon, XIcon } from "@/components/shared/social-icons";
+import { SocialIcon } from "@/components/shared/social-icon";
 import { FooterWave } from "@/components/layout/footer-wave";
 
-function Footer() {
+async function Footer() {
+  const site = await getSiteSettings();
   const year = new Date().getFullYear();
 
   return (
@@ -19,12 +20,12 @@ function Footer() {
             <Link href="/" className="flex items-center gap-2.5">
               <BrandMark className="size-8" />
               <span className="font-heading text-base font-medium text-foreground">
-                {siteConfig.name}
+                {site.name}
               </span>
             </Link>
 
             <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              {footerLinks.map((link) => (
+              {site.footerLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
@@ -35,40 +36,33 @@ function Footer() {
               ))}
             </nav>
 
-            <div className="flex items-center gap-5">
-              <Link
-                href={siteConfig.socials.github}
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <GithubIcon className="size-4" />
-                <span className="sr-only">GitHub</span>
-              </Link>
-              <Link
-                href={siteConfig.socials.linkedin}
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <LinkedinIcon className="size-4" />
-                <span className="sr-only">LinkedIn</span>
-              </Link>
-              <Link
-                href={siteConfig.socials.x}
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <XIcon className="size-4" />
-                <span className="sr-only">X</span>
-              </Link>
-            </div>
+            {/* Hidden entirely when there are none, rather than showing a
+                row of dead marks. */}
+            {site.socials.length > 0 ? (
+              <div className="flex items-center gap-5">
+                {site.socials.map((social) => (
+                  <Link
+                    key={social.url}
+                    href={social.url}
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <SocialIcon label={social.label} className="size-4" />
+                    <span className="sr-only">{social.label}</span>
+                  </Link>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div className="flex flex-col items-center gap-2 border-t border-border/80 pt-5 text-xs text-muted-foreground sm:flex-row sm:justify-between">
             <p>
-              &copy; {year} {siteConfig.name}. All rights reserved.
+              &copy; {year} {site.name}. All rights reserved.
             </p>
             <a
-              href={`mailto:${siteConfig.email}`}
+              href={`mailto:${site.email}`}
               className="transition-colors hover:text-foreground"
             >
-              {siteConfig.email}
+              {site.email}
             </a>
           </div>
         </Container>

@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { IconPicker } from "@/components/admin/icon-picker";
+import { MediaPicker } from "@/components/admin/media-picker";
 import { StringList } from "@/components/admin/string-list";
 import { uploadAttachment, UploadError } from "@/lib/storage/upload-client";
 import { cleanBlock, validateBlock, type BlockErrors } from "@/lib/content/blocks/clean";
@@ -285,6 +286,48 @@ function GroupEditor({
               />
             ))}
           </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (group.kind === "keyed") {
+    const stored = (value as Record<string, BlockRecord>) ?? {};
+    return (
+      <section className="space-y-3">
+        {header}
+        <div className="space-y-3">
+          {group.entries.map((entry) => (
+            <fieldset
+              key={entry.key}
+              className="rounded-xl border border-border bg-card/40 px-4 py-4"
+            >
+              <legend className="px-1 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+                {entry.label}
+              </legend>
+              {entry.hint ? (
+                <p className="mb-2 text-[0.6875rem] text-muted-foreground">{entry.hint}</p>
+              ) : null}
+              <div className="grid gap-3 sm:grid-cols-2">
+                {group.fields.map((field) => (
+                  <FieldEditor
+                    key={field.name}
+                    field={field}
+                    value={stored[entry.key]?.[field.name]}
+                    onChange={(next) =>
+                      onChange({
+                        ...stored,
+                        [entry.key]: { ...stored[entry.key], [field.name]: next },
+                      })
+                    }
+                    idPrefix={`${group.name}-${entry.key}-${field.name}`}
+                    label={`${field.label} for ${entry.label}`}
+                    cloudName={cloudName}
+                  />
+                ))}
+              </div>
+            </fieldset>
+          ))}
         </div>
       </section>
     );
@@ -591,6 +634,10 @@ function ImageField({
           </>
         ) : null}
       </div>
+
+      {/* Reuse before re-upload: the same logo in two places should be one
+          file, not two. */}
+      {cloudName ? <MediaPicker onPick={onChange} /> : null}
 
       {error ? (
         <p role="alert" className="text-xs text-destructive">

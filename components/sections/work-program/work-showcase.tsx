@@ -7,6 +7,7 @@ import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { WorkCard } from "@/components/sections/work/work-card";
 import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
+import type { SectionHeading } from "@/lib/content/blocks/source";
 
 const ALL = "All work";
 
@@ -21,7 +22,11 @@ const ALL = "All work";
 function WorkShowcase({
   projects,
   media,
+  heading,
 }: {
+  /* Read by the page: this component filters and animates, so it runs in the
+     browser and cannot read the content source itself. */
+  heading: SectionHeading;
   /* Passed down rather than imported: the content source is `server-only`,
      and this filters client-side on every keystroke of the group buttons. */
   projects: Project[];
@@ -59,12 +64,9 @@ function WorkShowcase({
 
       <Container className="relative">
         <div className="max-w-2xl">
-          <Eyebrow>Selected work</Eyebrow>
-          <SectionTitle>Everything shipped, and where it runs.</SectionTitle>
-          <Lede className="mt-5">
-            {projects.length} projects, every one of them live or in active
-            build. Filter by what you came to see.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede className="mt-5">{heading.lede}</Lede> : null}
         </div>
 
         {/* `role="tablist"` would promise arrow-key navigation between tabs;

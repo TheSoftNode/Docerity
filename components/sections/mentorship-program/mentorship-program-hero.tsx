@@ -6,10 +6,11 @@ import { ScrambleText } from "@/components/shared/scramble-text";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, FramedPanel, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { GrowthTimeline } from "@/components/sections/mentorship/growth-timeline";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { CheckpointView } from "@/lib/content/blocks/views";
 
 async function MentorshipProgramHero() {
+  const heading = await getHeading("mentorship", "mentorship-hero");
   const checkpoints = await getGroup<CheckpointView[]>("mentorship", "checkpoints");
 
   return (
@@ -18,13 +19,9 @@ async function MentorshipProgramHero() {
 
       <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
-          <Eyebrow><ScrambleText text="Mentorship" /></Eyebrow>
-          <HeroTitle>A clear path to your next level.</HeroTitle>
-          <Lede className="mt-6 text-base">
-            Weekly 1:1s, honest code review, and a real plan you can
-            follow between sessions. For engineers who want someone invested in their
-            growth, not a subscription to a video course.
-          </Lede>
+          <Eyebrow><ScrambleText text={heading.eyebrow} /></Eyebrow>
+          <HeroTitle>{heading.title}</HeroTitle>
+          {heading.lede ? <Lede className="mt-6 text-base">{heading.lede}</Lede> : null}
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">
             <Button

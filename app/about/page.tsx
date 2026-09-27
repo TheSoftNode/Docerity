@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/content/blocks/metadata";
 
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -9,11 +9,9 @@ import { getBlock } from "@/lib/content/blocks/source";
 import { getWork } from "@/lib/content/work";
 import type { AboutContent, FactView } from "@/lib/content/blocks/views";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "The engineer behind Docerity: nine years teaching, production software in Python, Node and TypeScript, smart contracts across six blockchain ecosystems.",
-};
+/* Read per request rather than exported as a constant, so the title and
+   description a search result shows can be edited without a deploy. */
+export const generateMetadata = pageMetadata("about");
 
 export default async function AboutPage() {
   /*

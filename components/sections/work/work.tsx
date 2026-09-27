@@ -7,6 +7,7 @@ import { WorkBackground, orbitIcons } from "@/components/sections/work/work-back
 import { OrbitCluster } from "@/components/sections/work/work-orbit";
 import { WorkCard } from "@/components/sections/work/work-card";
 import { getFeaturedWork } from "@/lib/content/work";
+import { getHeading } from "@/lib/content/blocks/source";
 
 /**
  * A Server Component, so the featured projects are read during the render.
@@ -14,6 +15,7 @@ import { getFeaturedWork } from "@/lib/content/work";
  * and that project's media as props.
  */
 async function Work() {
+  const heading = await getHeading("homepage", "home-work");
   const { projects: featuredProjects, media } = await getFeaturedWork();
 
   return (
@@ -28,18 +30,11 @@ async function Work() {
             stack on narrow, rather than the action floating off on its own. */}
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row lg:items-end">
           <div className="max-w-3xl md:flex-1">
-            <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-              Selected Work
-            </p>
+            <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">{heading.eyebrow}</p>
             {/* Same fluid scale and weight as the hero's headline, one step
                 down, so the page reads as one type system. */}
-            <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
-              Recent work, real outcomes.
-            </h2>
-            <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[38rem]">
-              A few production systems, picked for what they solved, not just
-              how they look.
-            </p>
+            <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">{heading.title}</h2>
+            <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground lg:max-w-[38rem]">{heading.lede}</p>
           </div>
 
           <Button

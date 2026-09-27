@@ -6,6 +6,9 @@ import {
 } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
+import { AccentedTitle } from "@/components/shared/section-kit";
+import { getHeading } from "@/lib/content/blocks/source";
+import { getSiteSettings } from "@/lib/content/blocks/site";
 import { Button } from "@/components/ui/button";
 import { CtaAurora } from "@/components/sections/cta/cta-aurora";
 import { CtaPanel } from "@/components/sections/cta/cta-panel";
@@ -17,7 +20,12 @@ const assurances = [
   { Icon: InboxIcon, label: "Goes straight to me" },
 ] as const;
 
-function Cta() {
+async function Cta() {
+  const [site, heading] = await Promise.all([
+    getSiteSettings(),
+    getHeading("homepage", "home-cta"),
+  ]);
+
   return (
     <section
       id="contact"
@@ -34,21 +42,15 @@ function Cta() {
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand-teal opacity-70" />
                   <span className="relative inline-flex size-1.5 rounded-full bg-brand-teal" />
                 </span>
-                Let&apos;s talk
+                {heading.eyebrow}
               </p>
 
-              <h2 className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.4vw,2.65rem)] font-semibold leading-[1.06] tracking-tight text-foreground">
-                Got something{" "}
-                <span className="bg-[linear-gradient(120deg,var(--brand-primary),var(--brand-violet))] bg-clip-text text-transparent">
-                  worth building
-                </span>
-                ?
-              </h2>
+              <AccentedTitle
+                className="mt-4 text-balance font-heading text-[clamp(1.75rem,3.4vw,2.65rem)] font-semibold leading-[1.06] tracking-tight text-foreground"
+                text={heading.title}
+              />
 
-              <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground">
-                A project, mentorship, or just a question. I read every
-                email myself.
-              </p>
+              <p className="mt-4 max-w-[46ch] text-pretty text-[0.9375rem] leading-[1.75] text-muted-foreground">{heading.lede}</p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button
@@ -78,7 +80,7 @@ function Cta() {
               </ul>
             </div>
 
-            <CtaConsole />
+            <CtaConsole email={site.email} />
           </div>
         </CtaPanel>
       </Container>

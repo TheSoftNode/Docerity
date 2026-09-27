@@ -102,6 +102,24 @@ export function cleanBlock(key: BlockKey, raw: unknown): BlockData {
       continue;
     }
 
+    if (group.kind === "keyed") {
+      /* Rebuilt from the declared entries, so a key nobody declared cannot be
+         written and a declared key is always present. A component looks these
+         up by name, and a missing one would render nothing rather than fail. */
+      const stored = (
+        typeof source[group.name] === "object" && source[group.name] !== null
+          ? source[group.name]
+          : {}
+      ) as Record<string, unknown>;
+
+      const record: Record<string, BlockRecord> = {};
+      for (const entry of group.entries) {
+        record[entry.key] = cleanRecord(group.fields, stored[entry.key]);
+      }
+      data[group.name] = record;
+      continue;
+    }
+
     const rows = Array.isArray(source[group.name]) ? (source[group.name] as unknown[]) : [];
     data[group.name] = rows
       .map((row) => cleanRecord(group.fields, row))
@@ -148,6 +166,23 @@ export function validateBlock(key: BlockKey, data: BlockData): BlockErrors {
         "This"
       );
       if (problems.length) errors[group.name] = problems[0];
+      continue;
+    }
+
+    if (group.kind === "keyed") {
+      const stored = (data[group.name] ?? {}) as Record<string, BlockRecord>;
+      for (const entry of group.entries) {
+        const problems = missingFields(
+          group,
+          group.fields,
+          stored[entry.key] ?? {},
+          entry.label
+        );
+        if (problems.length) {
+          errors[group.name] = problems[0];
+          break;
+        }
+      }
       continue;
     }
 

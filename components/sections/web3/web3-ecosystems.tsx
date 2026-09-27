@@ -1,9 +1,10 @@
 import { Container } from "@/components/shared/container";
 import { Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { Web3EcosystemsBackground } from "@/components/sections/web3/web3-ecosystems-background";
-import { getBlock } from "@/lib/content/blocks/source";
+import { getBlock, getHeading } from "@/lib/content/blocks/source";
 
 async function Web3Ecosystems() {
+  const heading = await getHeading("web3", "web3-ecosystems");
   /* One read for both lists: `getBlock` is wrapped in React's `cache`, so two
      `getGroup` calls would share a query anyway, but asking once says so. */
   const web3 = await getBlock("web3");
@@ -16,12 +17,9 @@ async function Web3Ecosystems() {
 
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center lg:gap-16">
         <div>
-          <Eyebrow>Ecosystems</Eyebrow>
-          <SectionTitle>Cross-chain, not locked to one network.</SectionTitle>
-          <Lede>
-            The chain follows the problem. Contracts in Solidity, Clarity or
-            Rust, depending on where the users and the liquidity already are.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
         </div>
 
         <FramedPanel innerClassName="divide-y divide-border/70">

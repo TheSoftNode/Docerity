@@ -1,14 +1,12 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/content/blocks/metadata";
 
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { BlogIndex } from "@/components/sections/blog/blog-index";
 
-export const metadata: Metadata = {
-  title: "Tech Explainers",
-  description:
-    "Complex engineering concepts explained through everyday analogies: caching, load balancing, API requests, concurrency, and more.",
-};
+/* Read per request rather than exported as a constant, so the title and
+   description a search result shows can be edited without a deploy. */
+export const generateMetadata = pageMetadata("blog");
 
 export default function BlogPage() {
   return (

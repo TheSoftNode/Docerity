@@ -4,6 +4,7 @@ import { Container } from "@/components/shared/container";
 import { Eyebrow, HoverCard, SectionTitle } from "@/components/shared/section-kit";
 import { WorkTestimonialsBackground } from "@/components/sections/work-program/work-testimonials-background";
 import { getPublicReviews, TESTIMONIAL_MINIMUM } from "@/lib/reviews/display";
+import { getHeading } from "@/lib/content/blocks/source";
 
 function getInitials(name: string) {
   return name
@@ -27,6 +28,7 @@ function getInitials(name: string) {
  * rather than fictional. See TESTIMONIAL_MINIMUM.
  */
 async function WorkTestimonials() {
+  const heading = await getHeading("services", "work-testimonials");
   const reviews = await getPublicReviews(4, "client");
 
   if (reviews.length < TESTIMONIAL_MINIMUM) return null;
@@ -37,8 +39,8 @@ async function WorkTestimonials() {
 
       <Container className="relative">
         <div className="max-w-2xl">
-          <Eyebrow>From clients</Eyebrow>
-          <SectionTitle>What it&apos;s like to work together.</SectionTitle>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:mt-14 lg:gap-6">

@@ -37,6 +37,23 @@ test.describe("Every content block", () => {
     }
   });
 
+  test("keyed groups have a default for every entry they declare", () => {
+    /* A component looks these up by name. A missing one renders nothing, which
+       is a heading quietly disappearing rather than an error. */
+    for (const block of BLOCKS) {
+      for (const group of block.groups) {
+        if (group.kind !== "keyed") continue;
+        const stored = DEFAULTS[block.key][group.name] as Record<string, BlockRecord>;
+        for (const entry of group.entries) {
+          expect(
+            stored?.[entry.key],
+            `${block.key}.${group.name}.${entry.key} has no default`
+          ).toBeDefined();
+        }
+      }
+    }
+  });
+
   test("describes every group its defaults carry", () => {
     /* The other direction: a default nothing describes is content that renders
        today and cannot be edited, which is the whole problem this replaced. */
@@ -97,7 +114,7 @@ test.describe("Every content block", () => {
   test("fits inside its own limits", () => {
     for (const block of BLOCKS) {
       for (const group of block.groups) {
-        if (group.kind === "object") continue;
+        if (group.kind === "object" || group.kind === "keyed") continue;
         const value = DEFAULTS[block.key][group.name] as unknown[];
         expect(
           value.length,
@@ -190,7 +207,9 @@ test.describe("Cleaning what was posted", () => {
       title: `Step ${i}`,
       description: "A description long enough to count.",
     }));
-    const group = blockFor("contact").groups[0];
+    /* Found by name, not by position: sections gained a headings group and
+       `groups[0]` silently became a different group. */
+    const group = blockFor("contact").groups.find((g) => g.name === "steps")!;
     const cleaned = cleanBlock("contact", { steps: tooMany });
     expect((cleaned.steps as BlockRecord[]).length).toBe(
       group.kind === "list" ? group.max : 0

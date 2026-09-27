@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/content/blocks/metadata";
 
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -8,11 +8,9 @@ import { Web3Projects } from "@/components/sections/web3/web3-projects";
 import { Web3Ecosystems } from "@/components/sections/web3/web3-ecosystems";
 import { Web3Capabilities } from "@/components/sections/web3/web3-capabilities";
 
-export const metadata: Metadata = {
-  title: "Web3",
-  description:
-    "Hackathon-winning dApps and smart contract systems across Solana, Stacks, and beyond: DeFi automation, real-world asset tokenization, and AI x Web3.",
-};
+/* Read per request rather than exported as a constant, so the title and
+   description a search result shows can be edited without a deploy. */
+export const generateMetadata = pageMetadata("web3");
 
 export default function Web3Page() {
   return (

@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { HeroDeck } from "@/components/shared/hero-deck";
 import { ContentIcon } from "@/components/shared/content-icon";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { AiProjectView } from "@/lib/content/blocks/views";
 
 async function AiHero() {
+  const heading = await getHeading("ai", "ai-hero");
   const projects = await getGroup<AiProjectView[]>("ai", "projects");
 
   return (
@@ -20,13 +21,9 @@ async function AiHero() {
 
       <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
-          <Eyebrow><ScrambleText text="AI & LLM Engineering" /></Eyebrow>
-          <HeroTitle>AI systems that run in production, not a demo.</HeroTitle>
-          <Lede className="mt-6 text-base">
-            LLM routing, RAG, multi-modal pipelines, and conversational agents,
-            processing millions of real requests, plus the model evaluation work
-            behind training data that actually improves a model.
-          </Lede>
+          <Eyebrow><ScrambleText text={heading.eyebrow} /></Eyebrow>
+          <HeroTitle>{heading.title}</HeroTitle>
+          {heading.lede ? <Lede className="mt-6 text-base">{heading.lede}</Lede> : null}
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">
             <Button

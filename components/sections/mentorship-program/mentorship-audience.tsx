@@ -3,13 +3,14 @@ import { RepeatIcon, SproutIcon, TrendingUpIcon } from "lucide-react";
 import { Container } from "@/components/shared/container";
 import { Eyebrow, HoverCard, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipAudienceBackground } from "@/components/sections/mentorship-program/mentorship-audience-background";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { TitledView } from "@/lib/content/blocks/views";
 
 /* One per audience, in data order: early-career, switchers, mid-level. */
 const icons = [SproutIcon, RepeatIcon, TrendingUpIcon];
 
 async function MentorshipAudience() {
+  const heading = await getHeading("mentorship", "mentorship-audience");
   const audiences = await getGroup<TitledView[]>("mentorship", "audiences");
 
   return (
@@ -18,8 +19,8 @@ async function MentorshipAudience() {
 
       <Container className="relative">
         <div className="max-w-2xl">
-          <Eyebrow>Who this is for</Eyebrow>
-          <SectionTitle>Three starting points, one honest process.</SectionTitle>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3 lg:mt-14 lg:gap-6">

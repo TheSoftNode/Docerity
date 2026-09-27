@@ -2,14 +2,18 @@ import { Suspense } from "react";
 import { CheckIcon } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
-import { siteConfig } from "@/lib/config/site";
+import { getSiteSettings } from "@/lib/content/blocks/site";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { ContactBackground } from "@/components/sections/contact/contact-background";
 import { ContactForm, ContactFormFallback } from "@/components/sections/contact/contact-form";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { TitledView } from "@/lib/content/blocks/views";
 
 async function Contact() {
+  const [site, heading] = await Promise.all([
+    getSiteSettings(),
+    getHeading("contact", "contact"),
+  ]);
   const steps = await getGroup<TitledView[]>("contact", "steps");
 
   return (
@@ -23,12 +27,9 @@ async function Contact() {
 
       <Container className="relative grid grid-cols-1 gap-12 md:grid-cols-[0.85fr_1fr] lg:gap-16">
         <div className="flex flex-col">
-          <Eyebrow>New project</Eyebrow>
-          <HeroTitle>Tell me what you&apos;re building.</HeroTitle>
-          <Lede className="mt-6">
-            A few details now save a lot of back-and-forth later. I read
-            every message myself.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <HeroTitle>{heading.title}</HeroTitle>
+          {heading.lede ? <Lede className="mt-6">{heading.lede}</Lede> : null}
 
           <ol className="mt-10 flex flex-col gap-6">
             {steps.map((step, index) => (
@@ -53,10 +54,10 @@ async function Contact() {
             <span>
               Prefer email? Reach me directly at{" "}
               <a
-                href={`mailto:${siteConfig.email}`}
+                href={`mailto:${site.email}`}
                 className="font-medium text-foreground underline underline-offset-4"
               >
-                {siteConfig.email}
+                {site.email}
               </a>
             </span>
           </div>
@@ -65,7 +66,7 @@ async function Contact() {
         <div className="relative">
           <ContactBackground />
           <Suspense fallback={<ContactFormFallback />}>
-            <ContactForm />
+            <ContactForm email={site.email} />
           </Suspense>
         </div>
       </Container>

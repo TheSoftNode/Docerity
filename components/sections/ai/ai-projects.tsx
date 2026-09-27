@@ -1,10 +1,11 @@
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, HoverCard, MetricDot, SectionTitle } from "@/components/shared/section-kit";
 import { ContentIcon } from "@/components/shared/content-icon";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { AiProjectView } from "@/lib/content/blocks/views";
 
 async function AiProjects() {
+  const heading = await getHeading("ai", "ai-projects");
   const projects = await getGroup<AiProjectView[]>("ai", "projects");
 
   return (
@@ -16,8 +17,8 @@ async function AiProjects() {
 
       <Container className="relative">
         <div className="max-w-2xl">
-          <Eyebrow>Systems</Eyebrow>
-          <SectionTitle>Built for real traffic, not a proof of concept.</SectionTitle>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-2 lg:mt-14 lg:gap-6">

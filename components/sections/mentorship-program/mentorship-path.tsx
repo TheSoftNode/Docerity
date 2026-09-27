@@ -1,10 +1,11 @@
 import { Container } from "@/components/shared/container";
 import { Eyebrow, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipPathBackground } from "@/components/sections/mentorship-program/mentorship-path-background";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { StageView } from "@/lib/content/blocks/views";
 
 async function MentorshipPath() {
+  const heading = await getHeading("mentorship", "mentorship-path");
   const stages = await getGroup<StageView[]>("mentorship", "stages");
   const last = stages.length - 1;
 
@@ -17,12 +18,9 @@ async function MentorshipPath() {
 
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
-          <Eyebrow>How it works</Eyebrow>
-          <SectionTitle>One path, four stages.</SectionTitle>
-          <Lede>
-            You start where you actually are, and move on when the work shows
-            you are ready, not when a calendar says so.
-          </Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
         </div>
 
         <ol className="relative">

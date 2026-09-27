@@ -4,6 +4,7 @@ import { Container } from "@/components/shared/container";
 import { Eyebrow, HoverCard, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipTestimonialsBackground } from "@/components/sections/mentorship-program/mentorship-testimonials-background";
 import { getPublicReviews, TESTIMONIAL_MINIMUM } from "@/lib/reviews/display";
+import { getHeading } from "@/lib/content/blocks/source";
 
 function getInitials(name: string) {
   return name
@@ -27,6 +28,7 @@ function getInitials(name: string) {
  * once two real mentees have left a review.
  */
 async function MentorshipTestimonials() {
+  const heading = await getHeading("mentorship", "mentorship-testimonials");
   const reviews = await getPublicReviews(6, "mentee");
 
   if (reviews.length < TESTIMONIAL_MINIMUM) return null;
@@ -37,8 +39,8 @@ async function MentorshipTestimonials() {
 
       <Container className="relative">
         <div className="max-w-2xl">
-          <Eyebrow>From mentees</Eyebrow>
-          <SectionTitle>Real progress, in their words.</SectionTitle>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-3 lg:mt-14 lg:gap-6">

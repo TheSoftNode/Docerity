@@ -14,11 +14,11 @@ import type { FactView, FounderView } from "@/lib/content/blocks/views";
 import { CountUp } from "@/components/sections/about/count-up";
 
 /*
-  ── Replacing the portrait ──────────────────────────────────────────────────
-  Drop a new file at `public/about/headshot.webp`. The frame is circular, so a
-  square image with the face centred works best; a portrait-shaped one loses
-  its top and bottom. 800px or larger.
-  ────────────────────────────────────────────────────────────────────────────
+  What the frame falls back to.
+
+  The photo is a field on the About page now, so replacing it is an upload
+  rather than a commit. This is what renders before anybody has set one, and
+  what renders if the field is cleared.
 */
 const PORTRAIT = "/about/headshot.webp";
 
@@ -49,7 +49,7 @@ const markers = [
  * lightest on the left. Lifted, its top edge lands within a few pixels of the
  * headline's, so the two halves start together.
  */
-function PortraitOrbit({ name }: { name: string }) {
+function PortraitOrbit({ name, src }: { name: string; src: string }) {
   const reduceMotion = useReducedMotion();
 
   /* Every rotation is linear and continuous. Anything eased would pulse, and
@@ -113,7 +113,7 @@ function PortraitOrbit({ name }: { name: string }) {
         >
           <div className="relative h-full w-full overflow-hidden rounded-full bg-card">
             <Image
-              src={PORTRAIT}
+              src={src || PORTRAIT}
               alt={`${name}, founder of Docerity`}
               fill
               sizes="(min-width: 1280px) 12rem, 10rem"
@@ -295,7 +295,7 @@ function AboutHero({
                 </dl>
               </div>
 
-              <PortraitOrbit name={founder.name} />
+              <PortraitOrbit name={founder.name} src={founder.portrait} />
             </div>
           </div>
         </motion.div>

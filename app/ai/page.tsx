@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/content/blocks/metadata";
 
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -8,11 +8,9 @@ import { AiProjects } from "@/components/sections/ai/ai-projects";
 import { AiCapabilities } from "@/components/sections/ai/ai-capabilities";
 import { AiModels } from "@/components/sections/ai/ai-models";
 
-export const metadata: Metadata = {
-  title: "AI Engineering",
-  description:
-    "Production LLM systems, RAG, multi-modal AI pipelines, and conversational agents, plus model evaluation and RLHF training data design.",
-};
+/* Read per request rather than exported as a constant, so the title and
+   description a search result shows can be edited without a deploy. */
+export const generateMetadata = pageMetadata("ai");
 
 export default function AiPage() {
   return (

@@ -7,13 +7,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { siteConfig } from "@/lib/config/site";
+import { getSiteSettings } from "@/lib/content/blocks/site";
 import { Eyebrow, FramedPanel, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { MentorshipFaqBackground } from "@/components/sections/mentorship-program/mentorship-faq-background";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { FaqView } from "@/lib/content/blocks/views";
 
 async function MentorshipFaq() {
+  const [site, heading] = await Promise.all([
+    getSiteSettings(),
+    getHeading("mentorship", "mentorship-faq"),
+  ]);
   const faqs = await getGroup<FaqView[]>("mentorship", "faqs");
 
   return (
@@ -22,15 +26,15 @@ async function MentorshipFaq() {
 
       <Container className="relative grid grid-cols-1 gap-10 md:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-[calc(var(--nav-h)+2rem)] lg:self-start">
-          <Eyebrow>FAQ</Eyebrow>
-          <SectionTitle>Questions before you apply.</SectionTitle>
-          <Lede>The things people usually ask before a first call.</Lede>
+          <Eyebrow>{heading.eyebrow}</Eyebrow>
+          <SectionTitle>{heading.title}</SectionTitle>
+          {heading.lede ? <Lede>{heading.lede}</Lede> : null}
           <a
-            href={`mailto:${siteConfig.email}`}
+            href={`mailto:${site.email}`}
             className="mt-7 inline-flex items-center gap-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <MailIcon className="size-4 text-primary" />
-            Something else? <span className="font-medium text-foreground underline underline-offset-4">{siteConfig.email}</span>
+            Something else? <span className="font-medium text-foreground underline underline-offset-4">{site.email}</span>
           </a>
         </div>
 

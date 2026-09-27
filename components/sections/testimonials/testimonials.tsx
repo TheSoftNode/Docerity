@@ -9,6 +9,7 @@ import {
   type SpotlightQuote,
 } from "@/components/sections/testimonials/testimonial-spotlight";
 import { getPublicReviews, TESTIMONIAL_MINIMUM } from "@/lib/reviews/display";
+import { getHeading } from "@/lib/content/blocks/source";
 
 /**
  * A Server Component, so the approved reviews are read during the render rather
@@ -22,11 +23,11 @@ import { getPublicReviews, TESTIMONIAL_MINIMUM } from "@/lib/reviews/display";
   teams, engineers and readers" is a claim, and a claim with no quotes under it
   is the kind of thing this whole change is getting rid of.
 */
-function Header({ title }: { title: string }) {
+function Header({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <>
       <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-        What people say
+        {eyebrow}
       </p>
       <h2 className="mt-4 font-heading text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-tight text-foreground">
         {title}
@@ -70,11 +71,11 @@ function Actions() {
  * the page. It also does the one useful job the section has when there is
  * nothing to show: ask.
  */
-function Invitation() {
+function Invitation({ eyebrow }: { eyebrow: string }) {
   return (
     <div className="grid grid-cols-1 gap-12 md:grid-cols-[0.85fr_1.15fr] md:items-center lg:gap-16">
       <div>
-        <Header title="This is where other people’s words go." />
+        <Header eyebrow={eyebrow} title="This is where other people’s words go." />
         <p className="mt-5 max-w-[46ch] text-sm leading-relaxed text-muted-foreground">
           Reviews on this site are written by the people who left them and
           checked before they go up, so there is nothing here until someone
@@ -113,7 +114,10 @@ async function Testimonials() {
     beyond about six it stops being a list and becomes a column of names.
     `/reviews` is where the full set lives.
   */
-  const reviews = await getPublicReviews(6);
+  const [reviews, heading] = await Promise.all([
+    getPublicReviews(6),
+    getHeading("homepage", "home-testimonials"),
+  ]);
 
   const quotes: SpotlightQuote[] = reviews.map((review) => ({
     quote: review.body,
@@ -137,10 +141,10 @@ async function Testimonials() {
         {quotes.length >= TESTIMONIAL_MINIMUM ? (
           <TestimonialSpotlight
             quotes={quotes}
-            header={<Header title="Trusted by teams, engineers and readers." />}
+            header={<Header eyebrow={heading.eyebrow} title={heading.title} />}
           />
         ) : (
-          <Invitation />
+          <Invitation eyebrow={heading.eyebrow} />
         )}
       </Container>
     </section>

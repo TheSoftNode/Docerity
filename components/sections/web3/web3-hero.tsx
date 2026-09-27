@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { HeroDeck } from "@/components/shared/hero-deck";
 import { ContentIcon } from "@/components/shared/content-icon";
-import { getGroup } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { Web3ProjectView } from "@/lib/content/blocks/views";
 
 async function Web3Hero() {
+  const heading = await getHeading("web3", "web3-hero");
   const projects = await getGroup<Web3ProjectView[]>("web3", "projects");
 
   return (
@@ -20,13 +21,9 @@ async function Web3Hero() {
 
       <Container className="relative grid grid-cols-1 gap-12 pt-12 pb-16 md:grid-cols-[1.1fr_0.9fr] md:items-center lg:gap-16 lg:pt-20 lg:pb-24">
         <div>
-          <Eyebrow><ScrambleText text="Web3 & Blockchain" /></Eyebrow>
-          <HeroTitle>Hackathon-winning dApps, shipped on real chains.</HeroTitle>
-          <Lede className="mt-6 text-base">
-            Smart contract systems, DeFi automation, and real-world asset
-            tokenization across Solana, Stacks, and beyond. Three
-            hackathon wins came out of it, and the contracts are live.
-          </Lede>
+          <Eyebrow><ScrambleText text={heading.eyebrow} /></Eyebrow>
+          <HeroTitle>{heading.title}</HeroTitle>
+          {heading.lede ? <Lede className="mt-6 text-base">{heading.lede}</Lede> : null}
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center lg:mt-10">
             <Button
