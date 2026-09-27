@@ -240,17 +240,49 @@ test.describe("Sections that are on every page", () => {
     await expect(page.getByText("Saved")).toBeVisible();
   });
 
-  test("a page title reaches the page that carries it", async ({ page }) => {
+  /*
+    One case per entry the editor offers.
+
+    Three of them were boxes that did nothing. The homepage has no metadata of
+    its own and takes `title.default` from the root layout, and /reviews and
+    /contribute still exported a static object, so editing any of those three
+    saved happily and changed nothing. Walking the list is the only way that
+    stays caught: adding an entry and forgetting to wire it looks exactly like
+    the working ones from inside the editor.
+  */
+  const titled = [
+    { entry: "Homepage", path: "/", title: "The front door" },
+    { entry: "Work", path: "/work", title: "Things I built" },
+    { entry: "AI", path: "/ai", title: "Models in production" },
+    { entry: "Web3", path: "/web3", title: "On-chain work" },
+    { entry: "Mentorship", path: "/mentorship", title: "Growing engineers" },
+    { entry: "Blog", path: "/blog", title: "Written down" },
+    { entry: "About", path: "/about", title: "Who is behind this" },
+    { entry: "Contact", path: "/contact", title: "Get in touch" },
+    { entry: "Reviews", path: "/reviews", title: "In their words" },
+    { entry: "Write for us", path: "/contribute", title: "Write something" },
+  ];
+
+  test("every page title in the editor reaches its page", async ({ page }) => {
     await signIn(page, OWNER);
     await page.goto("/admin/content/seo");
 
-    await page.getByRole("textbox", { name: "Title for Contact" }).fill("Get in touch");
+    for (const { entry, title } of titled) {
+      await page.getByRole("textbox", { name: `Title for ${entry}` }).fill(title);
+    }
+
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await expect(page.getByText("Saved")).toBeVisible();
 
-    await page.goto("/contact");
-    /* The site name is appended by the template in the root layout. */
-    await expect(page).toHaveTitle(/^Get in touch · /);
+    for (const { path, title } of titled) {
+      await page.goto(path);
+      /*
+        The homepage is `title.default` and gets no template; every other page
+        is threaded through `%s · <site name>`. Both start with the title, so
+        one assertion covers the pair.
+      */
+      await expect(page, `the title on ${path}`).toHaveTitle(new RegExp(`^${title}`));
+    }
   });
 });
 

@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/content/blocks/metadata";
 import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
-import { siteConfig } from "@/lib/config/site";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Container } from "@/components/shared/container";
@@ -11,17 +10,9 @@ import { ScrambleText } from "@/components/shared/scramble-text";
 import { CornerBrackets } from "@/components/sections/explainers/explainer-corner-brackets";
 import { Button } from "@/components/ui/button";
 
-export const metadata: Metadata = {
-  title: "Writing for Docerity",
-  description:
-    "How explainers get written here, and how the engineers I mentor end up with their name on one.",
-  openGraph: {
-    type: "website",
-    title: `Writing for Docerity`,
-    description: "How the engineers I mentor end up with their name on an explainer.",
-    url: `${siteConfig.url}/contribute`,
-  },
-};
+/* Read per request rather than exported as a constant, so the title and
+   description a search result shows can be edited without a deploy. */
+export const generateMetadata = pageMetadata("contribute", "/contribute");
 
 /*
   There is deliberately no submission form on this page.

@@ -1,22 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/content/blocks/metadata";
 
-import { siteConfig } from "@/lib/config/site";
+import { getSiteSettings } from "@/lib/content/blocks/site";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ReviewsPage } from "@/components/sections/reviews/reviews-page";
 import { getPublicReviews } from "@/lib/reviews/display";
 
-export const metadata: Metadata = {
-  title: "Reviews",
-  description:
-    "Reviews from clients and mentees, and a form to leave one. Every review is read before it appears.",
-  openGraph: {
-    type: "website",
-    title: `Reviews · ${siteConfig.name}`,
-    description: "What it is like to work with Docerity, in their words.",
-    url: `${siteConfig.url}/reviews`,
-  },
-};
+/* Read per request rather than exported as a constant, so the title and
+   description a search result shows can be edited without a deploy. */
+export const generateMetadata = pageMetadata("reviews", "/reviews");
 
 /*
   Revalidated rather than dynamic.
@@ -29,15 +21,18 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 export default async function Reviews() {
-  const reviews = await getPublicReviews();
+  const [reviews, site] = await Promise.all([
+    getPublicReviews(),
+    getSiteSettings(),
+  ]);
 
   const jsonLd =
     reviews.length > 0
       ? {
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: siteConfig.name,
-          url: siteConfig.url,
+          name: site.name,
+          url: site.url,
           aggregateRating: {
             "@type": "AggregateRating",
             ratingValue: (
