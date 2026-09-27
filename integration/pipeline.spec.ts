@@ -189,52 +189,126 @@ test.describe("Signing in", () => {
 });
 
 test.describe("The review pipeline", () => {
-  const review = {
-    fullName: "Ada Integration",
-    title: "CTO, Example Ltd",
-    body: "Docerity took a vague brief and came back with a plan we could argue with, which is exactly what we needed at that point.",
-    rating: 5,
-    contactEmail: "ada@example.com",
-  };
+  /*
+    Four reviews, not one.
 
-  test("a submitted review is stored and is not public", async ({ page, request }) => {
-    const response = await request.post("/api/reviews", {
-      data: { ...review, links: [{ title: "Example", url: "example.com" }] },
-    });
+    A testimonial section needs TESTIMONIAL_MINIMUM approved reviews before it
+    shows anything, because none of them falls back to invented quotes any
+    more, and `kind` decides which section each review lands in. Two of each
+    kind is the smallest fixture that can tell "the section appeared" from "the
+    right reviews appeared in it".
+  */
+  const clientReviews = [
+    {
+      fullName: "Ada Integration",
+      kind: "client",
+      title: "CTO, Example Ltd",
+      body: "Docerity took a vague brief and came back with a plan we could argue with, which is exactly what we needed at that point.",
+      rating: 5,
+      contactEmail: "ada@example.com",
+      ip: "203.0.113.11",
+    },
+    {
+      fullName: "Grace Integration",
+      kind: "client",
+      title: "Head of Product, Second Example",
+      body: "We had two months and a migration nobody wanted to own. It shipped on the date we agreed and the rollback plan never got used.",
+      rating: 5,
+      contactEmail: "grace@example.com",
+      ip: "203.0.113.12",
+    },
+  ];
 
-    expect(response.status()).toBe(201);
-    expect((await response.json()).ok).toBe(true);
+  const menteeReviews = [
+    {
+      fullName: "Linus Integration",
+      kind: "mentee",
+      title: "Backend Engineer",
+      body: "The code review was blunt in the way that actually teaches you something. I stopped guessing at architecture about a month in.",
+      rating: 5,
+      contactEmail: "linus@example.com",
+      ip: "203.0.113.13",
+    },
+    {
+      fullName: "Barbara Integration",
+      kind: "mentee",
+      title: "Junior Engineer",
+      body: "Six sessions in I was opening pull requests without checking whether someone would mind. That confidence was the whole point.",
+      rating: 5,
+      contactEmail: "barbara@example.com",
+      ip: "203.0.113.14",
+    },
+  ];
+
+  const allReviews = [...clientReviews, ...menteeReviews];
+
+  test("submitted reviews are stored and none of them is public", async ({
+    page,
+    request,
+  }) => {
+    for (const { ip, ...review } of allReviews) {
+      const response = await request.post("/api/reviews", {
+        /*
+          Each fixture carries its own address, because four reviews from one
+          address is exactly what the submission limit is there to stop: three
+          per day, counted in the database. Four different people submitting is
+          what this test is actually about, and the limit gets its own test
+          below rather than being worked around here.
+        */
+        headers: { "x-forwarded-for": ip },
+        data: { ...review, links: [{ title: "Example", url: "example.com" }] },
+      });
+
+      expect(response.status()).toBe(201);
+      expect((await response.json()).ok).toBe(true);
+    }
 
     /* The gate, asserted from the outside: nothing reaches the public page
        until it is approved. */
     await page.goto("/reviews");
-    await expect(page.getByText(review.body)).toHaveCount(0);
+    for (const review of allReviews) {
+      await expect(page.getByText(review.body)).toHaveCount(0);
+    }
   });
 
-  test("it appears in the moderation queue", async ({ page }) => {
+  test("they appear in the moderation queue", async ({ page }) => {
     await signIn(page);
     await page.goto("/admin/reviews");
 
-    await expect(page.getByText(review.fullName)).toBeVisible();
-    await expect(page.getByText(review.body)).toBeVisible();
-    /* The contact address is shown here and nowhere public, which is the only
-       way to check a testimonial is genuine. */
-    await expect(page.getByText(review.contactEmail)).toBeVisible();
+    for (const review of allReviews) {
+      await expect(page.getByText(review.fullName)).toBeVisible();
+      await expect(page.getByText(review.body)).toBeVisible();
+      /* The contact address is shown here and nowhere public, which is the
+         only way to check a testimonial is genuine. */
+      await expect(page.getByText(review.contactEmail)).toBeVisible();
+    }
   });
 
-  test("approving it publishes it to the reviews page and the homepage", async ({
+  test("approving them publishes them to the reviews page and the homepage", async ({
     page,
   }) => {
     await signIn(page);
     await page.goto("/admin/reviews");
-    await page.getByRole("button", { name: "Approve", exact: true }).click();
+
+    /*
+      One at a time, waiting for the count to drop between clicks. The queue
+      revalidates after each approval, so clicking all four in a row would fire
+      the second click at a button that is about to be replaced.
+    */
+    const approve = page.getByRole("button", { name: "Approve", exact: true });
+    for (let remaining = allReviews.length; remaining > 0; remaining -= 1) {
+      await expect(approve).toHaveCount(remaining);
+      await approve.first().click();
+    }
 
     /* The queue empties, because the tab shows what is waiting. */
     await expect(page.getByText("Nothing waiting")).toBeVisible();
 
     await page.goto("/reviews");
-    await expect(page.getByText(review.body)).toBeVisible();
-    await expect(page.getByText(review.fullName)).toBeVisible();
+    for (const review of allReviews) {
+      await expect(page.getByText(review.body)).toBeVisible();
+      await expect(page.getByText(review.fullName)).toBeVisible();
+    }
     /* The average and its distribution replace the empty-state panel once
        there is something to average. */
     await expect(page.getByText("5.0")).toBeVisible();
@@ -242,12 +316,42 @@ test.describe("The review pipeline", () => {
 
     /* And the structured data, which was absent with no reviews. */
     const jsonLd = await page.locator('script[type="application/ld+json"]').innerText();
-    expect(JSON.parse(jsonLd).aggregateRating.reviewCount).toBe(1);
+    expect(JSON.parse(jsonLd).aggregateRating.reviewCount).toBe(allReviews.length);
 
-    /* revalidatePath("/") on approval, so the homepage rotation has it too
-       rather than showing the placeholder set for another five minutes. */
+    /* revalidatePath("/") on approval, so the homepage band has them rather
+       than standing on its empty state for another five minutes. */
     await page.goto("/");
-    await expect(page.getByText(review.fullName).first()).toBeVisible();
+    await expect(page.getByText(clientReviews[0].fullName).first()).toBeVisible();
+  });
+
+  test("each review reaches the section its kind belongs to", async ({ page }) => {
+    /*
+      `kind` is chosen by the person writing the review, and it is the only
+      thing routing a quote to a page. The work page used to guess by looking
+      for the word "Company" in the job title, which is how a placeholder
+      called "Client Name, Founder, Company" ended up quoted there.
+    */
+    await page.goto("/work");
+    await expect(
+      page.getByRole("heading", { name: "What it's like to work together." })
+    ).toBeVisible();
+    for (const review of clientReviews) {
+      await expect(page.getByText(review.body)).toBeVisible();
+    }
+    for (const review of menteeReviews) {
+      await expect(page.getByText(review.body)).toHaveCount(0);
+    }
+
+    await page.goto("/mentorship");
+    await expect(
+      page.getByRole("heading", { name: "Real progress, in their words." })
+    ).toBeVisible();
+    for (const review of menteeReviews) {
+      await expect(page.getByText(review.body)).toBeVisible();
+    }
+    for (const review of clientReviews) {
+      await expect(page.getByText(review.body)).toHaveCount(0);
+    }
   });
 
   test("the contact address is never in the public page's markup", async ({ page }) => {
@@ -257,13 +361,23 @@ test.describe("The review pipeline", () => {
       returning whole documents, this fails.
     */
     await page.goto("/reviews");
-    expect(await page.content()).not.toContain(review.contactEmail);
+    const markup = await page.content();
+    for (const review of allReviews) {
+      expect(markup).not.toContain(review.contactEmail);
+    }
   });
 
-  test("unpublishing removes it again", async ({ page }) => {
+  test("unpublishing removes them again, and the sections go with them", async ({
+    page,
+  }) => {
     await signIn(page);
     await page.goto("/admin/reviews?status=approved");
-    await page.getByRole("button", { name: "Unpublish" }).click();
+
+    const unpublish = page.getByRole("button", { name: "Unpublish" });
+    for (let remaining = allReviews.length; remaining > 0; remaining -= 1) {
+      await expect(unpublish).toHaveCount(remaining);
+      await unpublish.first().click();
+    }
 
     /*
       Waited for, not assumed. The action runs inside a `startTransition`, so
@@ -274,7 +388,56 @@ test.describe("The review pipeline", () => {
     await expect(page.getByText("Nothing published yet")).toBeVisible();
 
     await page.goto("/reviews");
-    await expect(page.getByText(review.body)).toHaveCount(0);
+    for (const review of allReviews) {
+      await expect(page.getByText(review.body)).toHaveCount(0);
+    }
+
+    /* The other three sections go back to what they show with nothing to
+       show: an invitation on the homepage, and absence elsewhere. */
+    await page.goto("/");
+    await expect(
+      page.getByRole("heading", { name: /other people.s words go/ })
+    ).toBeVisible();
+
+    await page.goto("/work");
+    await expect(
+      page.getByRole("heading", { name: "What it's like to work together." })
+    ).toHaveCount(0);
+
+    await page.goto("/mentorship");
+    await expect(
+      page.getByRole("heading", { name: "Real progress, in their words." })
+    ).toHaveCount(0);
+  });
+
+  test("a fourth review from one address is refused", async ({ request }) => {
+    /*
+      Last in the describe, because it deliberately leaves three pending
+      reviews behind and everything above counts what is in the queue.
+
+      The limit is three per address per day, counted in MongoDB rather than in
+      memory so it survives a serverless instance being recycled. A fresh
+      address, so the count starts at nothing and the fourth attempt is the one
+      that trips it.
+    */
+    const ip = "203.0.113.99";
+
+    for (const attempt of [1, 2, 3, 4]) {
+      const response = await request.post("/api/reviews", {
+        headers: { "x-forwarded-for": ip },
+        data: {
+          fullName: "Repeat Submitter",
+          kind: "client",
+          title: "Persistent, Example Ltd",
+          body: `Attempt number ${attempt}, long enough to clear the minimum body length the validator asks for.`,
+          rating: 5,
+          contactEmail: "repeat@example.com",
+          links: [],
+        },
+      });
+
+      expect(response.status()).toBe(attempt === 4 ? 429 : 201);
+    }
   });
 });
 

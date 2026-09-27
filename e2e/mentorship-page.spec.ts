@@ -22,9 +22,15 @@ test.describe("Mentorship page", () => {
     await expect(
       page.getByRole("heading", { name: "Not just office hours." })
     ).toBeVisible();
+    /*
+      The testimonial section is the one section with no fallback: with no
+      database there are no approved mentee reviews, and it would rather be
+      absent than quote people who do not exist. Its populated state is covered
+      in the integration suite.
+    */
     await expect(
       page.getByRole("heading", { name: "Real progress, in their words." })
-    ).toBeVisible();
+    ).toHaveCount(0);
     await expect(
       page.getByRole("heading", { name: "Questions before you apply." })
     ).toBeVisible();

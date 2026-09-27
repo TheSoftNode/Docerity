@@ -12,9 +12,11 @@ import { StarRating } from "@/components/sections/reviews/star-rating";
 import { uploadAttachment, UploadError } from "@/lib/storage/upload-client";
 import {
   ACCEPTED_PHOTO_EXTENSIONS,
+  REVIEW_KINDS,
   REVIEW_LIMITS,
   validateReview,
   type ReviewFieldErrors,
+  type ReviewKind,
 } from "@/lib/reviews/schema";
 
 /* "uploading" is separate from "submitting" because a photo can take a moment
@@ -63,6 +65,7 @@ function Field({
 
 function ReviewForm() {
   const [rating, setRating] = useState(0);
+  const [kind, setKind] = useState<ReviewKind>("client");
   const [photo, setPhoto] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<ReviewFieldErrors>({});
@@ -96,6 +99,7 @@ function ReviewForm() {
       title: String(data.get("title") ?? ""),
       body: String(data.get("body") ?? ""),
       rating,
+      kind,
       contactEmail: String(data.get("contactEmail") ?? ""),
       links: [
         {
@@ -213,6 +217,45 @@ function ReviewForm() {
       <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label htmlFor="review-website">Website</label>
         <input id="review-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
+      {/*
+        Asked rather than inferred from the role string. "Engineer at Acme"
+        could be a client's engineer or somebody being mentored, and guessing
+        wrong would put a client's quote on the mentorship page.
+      */}
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="kind-group">How do we know each other?</Label>
+        <div
+          id="kind-group"
+          role="radiogroup"
+          aria-label="How do we know each other"
+          className="flex flex-wrap gap-2"
+        >
+          {REVIEW_KINDS.map((option) => (
+            <label
+              key={option.value}
+              className={cn(
+                "cursor-pointer rounded-lg border px-3 py-2 text-xs transition-colors",
+                "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-foreground",
+                kind === option.value
+                  ? "border-primary/40 bg-primary/10 text-foreground"
+                  : "border-border text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <input
+                type="radio"
+                name="kind"
+                value={option.value}
+                checked={kind === option.value}
+                onChange={() => setKind(option.value)}
+                className="sr-only"
+              />
+              {option.label}
+            </label>
+          ))}
+        </div>
+        {errors.kind ? <p className="text-xs text-destructive">{errors.kind}</p> : null}
       </div>
 
       {/* The rating is the one field with no default and the one people skip,

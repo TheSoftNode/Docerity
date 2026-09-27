@@ -3,7 +3,12 @@ import { after } from "next/server";
 import { withRoute } from "@/lib/http/handler";
 import { success } from "@/lib/http/responses";
 import { ValidationError } from "@/lib/core/errors";
-import { REVIEW_LIMITS, type ReviewLinkInput } from "@/lib/reviews/schema";
+import {
+  REVIEW_KINDS,
+  REVIEW_LIMITS,
+  type ReviewKind,
+  type ReviewLinkInput,
+} from "@/lib/reviews/schema";
 import { submitReview } from "@/lib/services/review.service";
 
 /*
@@ -54,6 +59,11 @@ export const POST = withRoute("api.reviews", async (request, { logger, ip }) => 
   const result = await submitReview(
     {
       fullName: text(body.fullName),
+      /* Narrowed against the list rather than cast: this decides which page a
+         quote appears on, so an unrecognised value must not become one. */
+      kind: (REVIEW_KINDS.some((k) => k.value === body.kind)
+        ? body.kind
+        : "client") as ReviewKind,
       title: text(body.title),
       body: text(body.body),
       /* A string from a radio input, a number from JSON. `Number()` on a

@@ -18,6 +18,25 @@ const reviewSchema = new Schema(
     title: { type: String, required: true, trim: true, maxlength: 160 },
     body: { type: String, required: true, trim: true, maxlength: 2000 },
     rating: { type: Number, min: 1, max: 5, required: true },
+
+    /*
+      How the reviewer knows Docerity.
+
+      The mentorship page needs mentee reviews and would otherwise be stuck
+      with the invented ones it shows today: "Mentee Name, Software Engineer",
+      which is the same liability as the invented case studies the work page
+      used to carry.
+
+      Asked on the form rather than inferred from the role string, because
+      "Engineer at Acme" could be either a client's engineer or somebody being
+      mentored, and guessing wrong puts a client quote on the mentorship page.
+    */
+    kind: {
+      type: String,
+      enum: ["client", "mentee", "reader"],
+      default: "client",
+      required: true,
+    },
     /* A Cloudinary public_id, not a URL, for the same reasoning as enquiry
        attachments: the durable fact is the identifier, and a delivery URL is
        derived from it. Empty means no photo, and the UI falls back to

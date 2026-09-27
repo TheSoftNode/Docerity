@@ -162,6 +162,7 @@ test.describe("Review validation", () => {
     body: "A review comfortably longer than the forty character minimum this imposes.",
     rating: 5,
     contactEmail: "person@example.com",
+    kind: "client" as const,
     links: [],
   };
 

@@ -22,9 +22,14 @@ test.describe("Work page", () => {
     await expect(
       page.getByRole("heading", { name: "Boring where it counts, sharp where it matters." })
     ).toBeVisible();
+    /*
+      Absent with no database, like the mentorship page's equivalent: it quotes
+      approved client reviews or it quotes nobody. The integration suite covers
+      it with reviews in place.
+    */
     await expect(
       page.getByRole("heading", { name: "What it's like to work together." })
-    ).toBeVisible();
+    ).toHaveCount(0);
     await expect(
       page.getByRole("heading", { name: "Got something worth building?" })
     ).toBeVisible();

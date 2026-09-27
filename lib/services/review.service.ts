@@ -75,6 +75,7 @@ export async function submitReview(
     title: input.title.trim(),
     body: input.body.trim(),
     rating: input.rating,
+    kind: input.kind,
     photoPublicId,
     links,
     contactEmail: input.contactEmail.trim().toLowerCase(),

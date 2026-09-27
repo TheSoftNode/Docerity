@@ -66,29 +66,6 @@ export const formatSteps = [
   },
 ] as const;
 
-// PLACEHOLDER CONTENT: replace every entry with a real testimonial before
-// launch. Keep the shape (quote/name/role) the same; nothing else depends on it.
-export const mentorshipTestimonials = [
-  {
-    quote:
-      "The most direct, useful mentorship I've had. Real code review, not just pep talks.",
-    name: "Mentee Name",
-    role: "Software Engineer",
-  },
-  {
-    quote:
-      "Went from afraid to touch the codebase to shipping features solo in a few months.",
-    name: "Mentee Name",
-    role: "Junior Engineer",
-  },
-  {
-    quote:
-      "I finally think in systems instead of just files. That shift alone was worth it.",
-    name: "Mentee Name",
-    role: "Mid-level Engineer",
-  },
-] as const;
-
 export const faqs = [
   {
     question: "How much does mentorship cost?",

@@ -26,8 +26,17 @@ export const ACCEPTED_PHOTO_EXTENSIONS = ".png,.jpg,.jpeg,.webp";
 
 export type ReviewLinkInput = { title: string; url: string };
 
+export const REVIEW_KINDS = [
+  { value: "client", label: "You built something for me" },
+  { value: "mentee", label: "You mentored me" },
+  { value: "reader", label: "I read the explainers" },
+] as const;
+
+export type ReviewKind = (typeof REVIEW_KINDS)[number]["value"];
+
 export type ReviewInput = {
   fullName: string;
+  kind: ReviewKind;
   title: string;
   body: string;
   rating: number;
@@ -36,7 +45,18 @@ export type ReviewInput = {
 };
 
 export type ReviewFieldErrors = Partial<
-  Record<"fullName" | "title" | "body" | "rating" | "contactEmail" | "links" | "photo" | "form", string>
+  Record<
+    | "fullName"
+    | "title"
+    | "body"
+    | "rating"
+    | "contactEmail"
+    | "kind"
+    | "links"
+    | "photo"
+    | "form",
+    string
+  >
 >;
 
 /* Deliberately permissive; the same regex the enquiry form uses. */
@@ -102,6 +122,10 @@ export function validateReview(input: ReviewInput): ReviewFieldErrors {
   */
   if (!EMAIL.test(input.contactEmail.trim())) {
     errors.contactEmail = "An email address, so I can verify this is really you.";
+  }
+
+  if (!REVIEW_KINDS.some((kind) => kind.value === input.kind)) {
+    errors.kind = "Tell me how we know each other.";
   }
 
   if (input.links.length > REVIEW_LIMITS.maxLinks) {

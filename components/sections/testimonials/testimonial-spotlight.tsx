@@ -8,7 +8,6 @@ import { ArrowRightIcon, PenLineIcon, QuoteIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
-import { testimonials as placeholderTestimonials } from "@/components/sections/testimonials/testimonials-data";
 
 /**
  * The shape this renders, which approved reviews are mapped into.
@@ -71,22 +70,22 @@ function Avatar({ name, isActive }: { name: string; isActive: boolean }) {
  */
 function TestimonialSpotlight({
   header,
-  quotes,
+  quotes: testimonials,
 }: {
   header?: ReactNode;
   /**
-   * Approved reviews from the database. Omitted or empty falls back to the
-   * placeholder set, so the section renders on a clone with no MONGODB_URI and
-   * before the first review is approved. Without the fallback the homepage
-   * would show an empty band rather than a section.
+   * Approved reviews from the database, and required.
+   *
+   * This used to be optional and fall back to six invented quotes when it was
+   * empty, which is how "Client Name" ended up on the homepage. Deciding
+   * whether there is anything worth showing now belongs to the section above,
+   * which knows how many reviews came back; this component is handed a
+   * non-empty list or is not rendered.
    */
-  quotes?: SpotlightQuote[];
+  quotes: SpotlightQuote[];
 }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
-
-  const testimonials: SpotlightQuote[] =
-    quotes && quotes.length > 0 ? quotes : [...placeholderTestimonials];
 
   useEffect(() => {
     /*
@@ -107,7 +106,16 @@ function TestimonialSpotlight({
        the About page's CountUp had. */
   }, [active, reduceMotion, testimonials.length]);
 
-  const testimonial = testimonials[active];
+  /*
+    `?? testimonials[0]` because the list is a prop: a shorter list arriving
+    while `active` sits past its end would otherwise read `undefined` and take
+    the homepage down on `testimonial.quote`. The empty case cannot happen
+    through the section above, and returns nothing rather than throwing if it
+    ever does.
+  */
+  const testimonial = testimonials[active] ?? testimonials[0];
+
+  if (!testimonial) return null;
 
   return (
     <div className="grid grid-cols-1 gap-12 md:grid-cols-[0.85fr_1.15fr] md:items-center lg:gap-16">

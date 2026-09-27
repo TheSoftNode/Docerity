@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/db/connect";
 import { ReviewModel } from "@/lib/db/models/review.model";
+import type { ReviewKind } from "@/lib/reviews/schema";
 
 /**
  * Review persistence.
@@ -15,6 +16,7 @@ export type CreateReviewInput = {
   title: string;
   body: string;
   rating: number;
+  kind: ReviewKind;
   photoPublicId: string;
   links: { title: string; url: string }[];
   contactEmail: string;
@@ -30,12 +32,18 @@ export async function createReview(input: CreateReviewInput) {
   return ReviewModel.create({ ...input, status: "pending" });
 }
 
-export async function listPublished(limit = 12) {
+/**
+ * Approved reviews, optionally narrowed to one kind.
+ *
+ * The filter is what lets the mentorship page show mentee quotes instead of
+ * the invented ones it used to carry, without a second collection.
+ */
+export async function listPublished(limit = 12, kind?: ReviewKind) {
   await connectDB();
-  return ReviewModel.find({ status: "approved" })
+  return ReviewModel.find({ status: "approved", ...(kind ? { kind } : {}) })
     .sort({ createdAt: -1 })
     .limit(Math.min(limit, 50))
-    .select("fullName title body rating photoPublicId links createdAt")
+    .select("fullName title body rating kind photoPublicId links createdAt")
     .lean();
 }
 
