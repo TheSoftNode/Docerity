@@ -3,6 +3,7 @@ import { test, expect } from "@playwright/test";
 import { isContentIconName } from "@/lib/content/icons";
 import { cleanBlock, safeImagePath, validateBlock } from "@/lib/content/blocks/clean";
 import { DEFAULTS } from "@/lib/content/blocks/defaults";
+import { mergeBlock } from "@/lib/content/blocks/merge";
 import {
   BLOCKS,
   BLOCK_KEYS,
@@ -245,5 +246,78 @@ test.describe("Validating a block", () => {
       ],
     });
     expect(errors.pairs).toBeTruthy();
+  });
+});
+
+test.describe("Merging a stored section over the built-in one", () => {
+  /*
+    The merge decides what a page actually shows, and getting it wrong is
+    silent: the editor saves, says "Saved", and the page keeps rendering the
+    old copy. That is exactly what happened to keyed groups, which are plain
+    objects rather than arrays and fell through an `Array.isArray` check, so
+    every section heading and every page title could be edited and ignored.
+  */
+
+  test("a stored heading wins over the built-in one", () => {
+    const merged = mergeBlock("web3", {
+      headings: { "web3-capabilities": { eyebrow: "Mine", title: "Also mine", lede: "" } },
+    });
+
+    const headings = merged.headings as Record<string, BlockRecord>;
+    expect(headings["web3-capabilities"].title).toBe("Also mine");
+  });
+
+  test("and the entries beside it keep the built-in copy", () => {
+    /* Taking the whole group from the database would blank every heading the
+       person did not touch. */
+    const merged = mergeBlock("web3", {
+      headings: { "web3-capabilities": { eyebrow: "Mine", title: "Also mine", lede: "" } },
+    });
+
+    const headings = merged.headings as Record<string, BlockRecord>;
+    const defaults = DEFAULTS.web3.headings as Record<string, BlockRecord>;
+    expect(headings["web3-hero"]).toEqual(defaults["web3-hero"]);
+  });
+
+  test("a field missing from an older document falls back per field", () => {
+    /* A document written before `lede` existed has no such key, and the entry
+       should not lose it. */
+    const merged = mergeBlock("web3", {
+      headings: { "web3-hero": { title: "A newer heading" } },
+    });
+
+    const headings = merged.headings as Record<string, BlockRecord>;
+    const defaults = DEFAULTS.web3.headings as Record<string, BlockRecord>;
+    expect(headings["web3-hero"].title).toBe("A newer heading");
+    expect(headings["web3-hero"].lede).toBe(defaults["web3-hero"].lede);
+  });
+
+  test("a group emptied to nothing falls back rather than rendering blank", () => {
+    /* Deleting every row is indistinguishable from a group that was never
+       saved, and showing nothing by accident is worse than showing the
+       original. Emptying one for real is what Reset is for. */
+    const merged = mergeBlock("contact", { steps: [] });
+    expect(merged.steps).toEqual(DEFAULTS.contact.steps);
+  });
+
+  test("a stored list wins over the built-in one", () => {
+    const merged = mergeBlock("contact", {
+      steps: [{ title: "One step", description: "That is all." }],
+    });
+    expect((merged.steps as BlockRecord[]).length).toBe(1);
+  });
+
+  test("an object group merges field by field", () => {
+    const merged = mergeBlock("about", { founder: { name: "Someone Else" } });
+    const founder = merged.founder as BlockRecord;
+    const defaults = DEFAULTS.about.founder as BlockRecord;
+
+    expect(founder.name).toBe("Someone Else");
+    expect(founder.role).toBe(defaults.role);
+  });
+
+  test("a group the database says nothing about keeps its default", () => {
+    const merged = mergeBlock("contact", {});
+    expect(merged).toEqual(DEFAULTS.contact);
   });
 });

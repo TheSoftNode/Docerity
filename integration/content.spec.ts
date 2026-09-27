@@ -181,6 +181,113 @@ test.describe("Editing a section", () => {
   });
 });
 
+test.describe("Sections that are on every page", () => {
+  /*
+    The site settings are the header, the footer and the address, and the
+    titles are per page by definition. Saving one used to revalidate a single
+    path, so a new footer link appeared on the homepage and nowhere else until
+    each other page's own five-minute window expired, which read as the save
+    having failed.
+
+    Asserted on a page that is not the homepage, because the homepage passed
+    the whole time the bug existed.
+  */
+  test("a new footer link shows up across the site, not just on the homepage", async ({
+    page,
+  }) => {
+    await signIn(page, OWNER);
+    await page.goto("/admin/content/site");
+
+    /* Somewhere other than the homepage, visited first so it is cached with
+       the old footer and the assertion afterwards means something. */
+    const link = page.getByRole("link", { name: "Press kit" });
+
+    await page.getByRole("button", { name: "Add footer link" }).click();
+
+    /* The new row is the last one. Each list names its rows after itself, so
+       "footer link" cannot match the header list or the socials. */
+    const labels = page.getByRole("textbox", { name: /^Label for footer link/ });
+    const last = (await labels.count()) - 1;
+    await labels.nth(last).fill("Press kit");
+    await page
+      .getByRole("textbox", { name: `Path for footer link ${last + 1}` })
+      .fill("/press");
+
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page.getByText("Saved")).toBeVisible();
+
+    for (const path of ["/", "/about", "/work"]) {
+      await page.goto(path);
+      await expect(link, `the footer on ${path}`).toBeVisible();
+    }
+  });
+
+  test("and the site name reaches every header", async ({ page }) => {
+    await signIn(page, OWNER);
+    await page.goto("/admin/content/site");
+
+    await page.getByRole("textbox", { name: "Site name" }).fill("Docerity Labs");
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page.getByText("Saved")).toBeVisible();
+
+    await page.goto("/contact");
+    await expect(page.getByRole("banner").getByText("Docerity Labs")).toBeVisible();
+
+    /* Put back, so the tests after this one see the name they expect. */
+    await page.goto("/admin/content/site");
+    await page.getByRole("textbox", { name: "Site name" }).fill("Docerity");
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page.getByText("Saved")).toBeVisible();
+  });
+
+  test("a page title reaches the page that carries it", async ({ page }) => {
+    await signIn(page, OWNER);
+    await page.goto("/admin/content/seo");
+
+    await page.getByRole("textbox", { name: "Title for Contact" }).fill("Get in touch");
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page.getByText("Saved")).toBeVisible();
+
+    await page.goto("/contact");
+    /* The site name is appended by the template in the root layout. */
+    await expect(page).toHaveTitle(/^Get in touch · /);
+  });
+});
+
+test.describe("Section headings", () => {
+  /*
+    Headings are stored as a fixed set of named records rather than a list,
+    because a component looks one up by name. That shape took its own branch
+    through the merge in `lib/content/blocks/source.ts`, and without it the
+    stored version was dropped: a heading could be edited, saved, reported as
+    saved, and silently ignored on the page. Nothing else would have noticed.
+  */
+  test("an edited heading reaches the page", async ({ page }) => {
+    await signIn(page, OWNER);
+    await page.goto("/admin/content/web3");
+
+    await page
+      .getByRole("textbox", { name: "Heading for Capabilities" })
+      .fill("Contracts that hold up.");
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page.getByText("Saved")).toBeVisible();
+
+    await page.goto("/web3");
+    await expect(
+      page.getByRole("heading", { name: "Contracts that hold up." })
+    ).toBeVisible();
+  });
+
+  test("and the rest of the page is untouched", async ({ page }) => {
+    /* One entry changed, the others still on the copy built into the site.
+       A merge that took the whole group from the database would blank them. */
+    await page.goto("/web3");
+    await expect(
+      page.getByRole("heading", { name: "Cross-chain, not locked to one network." })
+    ).toBeVisible();
+  });
+});
+
 test.describe("A section with an icon", () => {
   test("the icon a section stores is the icon the page draws", async ({ page }) => {
     /*

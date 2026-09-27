@@ -7,12 +7,8 @@ import { createLogger } from "@/lib/core/logger";
 import { findBlock } from "@/lib/repositories/site-content.repository";
 import { DEFAULTS } from "@/lib/content/blocks/defaults";
 import { cleanBlock } from "@/lib/content/blocks/clean";
-import {
-  blockFor,
-  type BlockData,
-  type BlockKey,
-  type BlockRecord,
-} from "@/lib/content/blocks/schema";
+import { mergeBlock } from "@/lib/content/blocks/merge";
+import type { BlockData, BlockKey, BlockRecord } from "@/lib/content/blocks/schema";
 
 /**
  * Where an editable page section's content comes from.
@@ -38,44 +34,14 @@ import {
  * It is cleaned on the way out as well as on the way in. A document written
  * before a field existed is reshaped to the current description, so a render
  * never reads a field that is not there.
+ *
+ * The merge itself lives in `./merge`, which is not `server-only`, so the part
+ * that decides what the page sees can be tested directly. It was worth
+ * separating: a bug there is silent, and was, until an integration test caught
+ * every section heading being saved and then ignored.
  */
 
 const logger = createLogger("content.blocks");
-
-/**
- * Merges a stored section over the built-in one, group by group.
- *
- * A group is taken from the database when it is present and non-empty, and from
- * the defaults otherwise. "Non-empty" matters: deleting every row of a group is
- * a legitimate thing to want (a client list with no ecosystems, say), but it is
- * indistinguishable from a group that was never saved, and showing nothing by
- * accident is worse than showing the original. Emptying a group for real is
- * done by resetting the section and is called out in the editor.
- */
-function merge(key: BlockKey, stored: BlockData): BlockData {
-  const fallback = DEFAULTS[key];
-  const merged: BlockData = { ...fallback };
-
-  for (const group of blockFor(key).groups) {
-    const value = stored[group.name];
-    if (value === undefined || value === null) continue;
-
-    if (group.kind === "object") {
-      /* An object group merges field by field, so a document written before a
-         field was added keeps the built-in value for it rather than an
-         undefined that renders as nothing. */
-      merged[group.name] = {
-        ...(fallback[group.name] as BlockRecord),
-        ...(value as BlockRecord),
-      };
-      continue;
-    }
-
-    if (Array.isArray(value) && value.length > 0) merged[group.name] = value;
-  }
-
-  return merged;
-}
 
 /**
  * One section's content.
@@ -91,7 +57,7 @@ export const getBlock = cache(async (key: BlockKey): Promise<BlockData> => {
     const stored = await findBlock(key);
     if (!stored?.data) return DEFAULTS[key];
 
-    return cleanBlock(key, merge(key, stored.data));
+    return cleanBlock(key, mergeBlock(key, stored.data));
   } catch (error) {
     logger.error("could not load a content block, falling back", error, { key });
     return DEFAULTS[key];

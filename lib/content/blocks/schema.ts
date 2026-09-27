@@ -240,7 +240,7 @@ export const BLOCKS: Block[] = [
         name: "socials",
         label: "Social links",
         description: "Shown in the footer. An empty list hides the row rather than showing dead icons.",
-        itemNoun: "link",
+        itemNoun: "social link",
         max: 8,
         fields: [
           {
@@ -261,7 +261,7 @@ export const BLOCKS: Block[] = [
         label: "Header links",
         description:
           "In order, left to right. The header fits about six before the row crowds the button beside it.",
-        itemNoun: "link",
+        itemNoun: "header link",
         max: 8,
         fields: [
           { name: "label", label: "Label", kind: "text", required: true, maxLength: 30 },
@@ -280,7 +280,7 @@ export const BLOCKS: Block[] = [
         name: "footerLinks",
         label: "Footer links",
         description: "Usually the header links plus the pages that do not fit up there.",
-        itemNoun: "link",
+        itemNoun: "footer link",
         max: 14,
         fields: [
           { name: "label", label: "Label", kind: "text", required: true, maxLength: 30 },

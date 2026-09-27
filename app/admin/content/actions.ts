@@ -26,20 +26,40 @@ export type BlockResult =
   | { ok: false; message: string; errors?: BlockErrors };
 
 /**
- * Every page a section appears on, so an edit is live rather than live in five
- * minutes.
+ * Invalidates every page a section appears on, so an edit is live rather than
+ * live in five minutes.
  *
- * `/` is in every list because the homepage pulls from several sections, and
- * the layout is revalidated for the ones that feed the navigation or footer.
+ * Two sections appear on all of them. The site settings are the header, the
+ * footer and the address, and the titles and descriptions are per page by
+ * definition; for those, `revalidatePath("/", "layout")` invalidates the root
+ * layout and everything beneath it, which is the only way to reach pages the
+ * editor does not enumerate.
+ *
+ * That was the bug this replaced: saving a new footer link revalidated `/` and
+ * nothing else, so the link appeared on the homepage and nowhere else until
+ * each other page's own five-minute window expired. It looked like the save
+ * had not worked.
+ *
+ * Everything else is listed, because invalidating the whole site to change one
+ * heading on /web3 would throw away every other page's cache for nothing.
  */
-function pathsFor(key: BlockKey): string[] {
+function revalidateFor(key: BlockKey): void {
+  if (key === "site" || key === "seo") {
+    revalidatePath("/", "layout");
+    /* Not covered by the layout sweep: both are route handlers rather than
+       pages, and both embed the site name and URL. */
+    revalidatePath("/sitemap.xml");
+    revalidatePath("/blog/rss.xml");
+    return;
+  }
+
   const paths = new Set<string>([blockFor(key).path]);
 
   /* The homepage carries the client logos, the explainer band and the
      mentorship teaser alongside their own pages. */
   if (key === "clients" || key === "explainers" || key === "mentorship") paths.add("/");
 
-  return [...paths];
+  for (const path of paths) revalidatePath(path);
 }
 
 export async function saveContentBlock(key: string, input: unknown): Promise<BlockResult> {
@@ -62,7 +82,7 @@ export async function saveContentBlock(key: string, input: unknown): Promise<Blo
 
     await saveBlock(key, data, user.email);
 
-    for (const path of pathsFor(key)) revalidatePath(path);
+    revalidateFor(key);
 
     logger.info("content block saved", { key, by: user.email });
 
@@ -90,7 +110,7 @@ export async function resetContentBlock(key: string): Promise<BlockResult> {
 
     await resetBlock(key);
 
-    for (const path of pathsFor(key)) revalidatePath(path);
+    revalidateFor(key);
 
     logger.info("content block reset", { key, by: user.email });
 
