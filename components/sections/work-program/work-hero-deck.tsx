@@ -7,7 +7,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 
 import { MetricDot } from "@/components/shared/section-kit";
 import { WorkMedia } from "@/components/sections/work/work-media";
-import { featuredProjects as projects } from "@/components/sections/work/work-data";
+import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
 
 const INTERVAL = 4600;
 
@@ -27,18 +27,35 @@ const layout = [
  * tab order, otherwise keyboard users would tab through three links to pages
  * they cannot see.
  */
-function WorkHeroDeck() {
+function WorkHeroDeck({
+  projects,
+  media,
+}: {
+  /* The featured set and its media, resolved on the server. This component
+     cycles through them on a timer, so it stays a Client Component. */
+  projects: Project[];
+  media: Partial<Record<string, ProjectMedia>>;
+}) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     if (reduceMotion) return;
+    if (projects.length < 2) return;
+
     const id = window.setInterval(
       () => setActive((current) => (current + 1) % projects.length),
       INTERVAL
     );
     return () => window.clearInterval(id);
-  }, [reduceMotion, active]);
+    /* `.length`, not the array: the parent builds a fresh array on every
+       render, so depending on its identity would clear and restart the
+       interval each time and the deck would never advance. */
+  }, [reduceMotion, active, projects.length]);
+
+  /* `active` can point past the end after a project is unpublished and the
+     list re-renders shorter. */
+  const safeActive = active < projects.length ? active : 0;
 
   return (
     <div>
@@ -53,7 +70,7 @@ function WorkHeroDeck() {
 
       <div className="relative aspect-[16/12] w-full sm:aspect-[16/10]">
         {projects.map((project, index) => {
-          const position = (index - active + projects.length) % projects.length;
+          const position = (index - safeActive + projects.length) % projects.length;
           const style = layout[Math.min(position, layout.length - 1)];
           const isFront = position === 0;
 
@@ -72,7 +89,11 @@ function WorkHeroDeck() {
                 className="group/card flex h-full flex-col outline-none"
               >
                 <div className="relative flex-1 overflow-hidden">
-                  <WorkMedia slug={project.slug} variant={project.preview} className="h-full" />
+                  <WorkMedia
+                    media={media[project.slug]}
+                    variant={project.preview}
+                    className="h-full"
+                  />
                   <div
                     aria-hidden
                     className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(to_top,var(--card),transparent)]"
@@ -110,12 +131,12 @@ function WorkHeroDeck() {
             type="button"
             onClick={() => setActive(index)}
             aria-label={`Show ${project.name}`}
-            aria-pressed={index === active}
+            aria-pressed={index === safeActive}
             className="h-1 flex-1 overflow-hidden rounded-full bg-border transition-colors"
           >
             <span
               className={
-                index === active
+                index === safeActive
                   ? "block h-full w-full rounded-full bg-[linear-gradient(to_right,var(--brand-primary),var(--brand-violet))]"
                   : "block h-full w-0"
               }

@@ -2,11 +2,12 @@ import type { MetadataRoute } from "next";
 
 import { siteConfig } from "@/lib/config/site";
 import { getPublishedEntries } from "@/lib/content/posts";
-import { projects } from "@/components/sections/work/work-data";
+import { getWork } from "@/lib/content/work";
 
 /* Async now, because the post list is a query rather than an import. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries = await getPublishedEntries();
+  const { projects } = await getWork();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: siteConfig.url, changeFrequency: "monthly", priority: 1 },

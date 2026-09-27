@@ -6,7 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Container } from "@/components/shared/container";
 import { Bloom, Eyebrow, Lede, SectionTitle } from "@/components/shared/section-kit";
 import { WorkCard } from "@/components/sections/work/work-card";
-import { projects } from "@/components/sections/work/work-data";
+import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
 
 const ALL = "All work";
 
@@ -18,7 +18,15 @@ const ALL = "All work";
   buckets come from the projects themselves, so adding a project with a new
   group adds its filter without touching this file.
 */
-function WorkShowcase() {
+function WorkShowcase({
+  projects,
+  media,
+}: {
+  /* Passed down rather than imported: the content source is `server-only`,
+     and this filters client-side on every keystroke of the group buttons. */
+  projects: Project[];
+  media: Partial<Record<string, ProjectMedia>>;
+}) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(ALL);
 
@@ -32,14 +40,14 @@ function WorkShowcase() {
     /* Busiest first, so the filters read as a summary of the work rather than
        an alphabetical list where a one-project bucket leads. */
     return [...counts.entries()].sort((a, b) => b[1] - a[1]);
-  }, []);
+  }, [projects]);
 
   const shown = useMemo(
     () =>
       active === ALL
         ? projects
         : projects.filter((project) => project.groups.includes(active)),
-    [active]
+    [active, projects]
   );
 
   return (
@@ -109,7 +117,7 @@ function WorkShowcase() {
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: reduceMotion ? 0 : 0.25, ease: "easeOut" }}
               >
-                <WorkCard project={project} index={index} />
+                <WorkCard project={project} index={index} media={media[project.slug]} />
               </motion.div>
             ))}
           </AnimatePresence>

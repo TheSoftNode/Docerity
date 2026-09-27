@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import {
+  BriefcaseIcon,
   FileTextIcon,
   InboxIcon,
   LayoutDashboardIcon,
@@ -44,6 +45,7 @@ const items: NavItem[] = [
   { href: "/admin/enquiries", label: "Enquiries", Icon: InboxIcon, visible: can.readEnquiries },
   { href: "/admin/reviews", label: "Reviews", Icon: StarIcon, visible: can.moderateReviews },
   { href: "/admin/posts", label: "Writing", Icon: FileTextIcon, visible: can.writePosts },
+  { href: "/admin/work", label: "Work", Icon: BriefcaseIcon, visible: can.publishPosts },
   { href: "/admin/subscribers", label: "Subscribers", Icon: MailIcon, visible: can.readSubscribers },
   { href: "/admin/users", label: "Accounts", Icon: UsersIcon, visible: can.manageAccounts },
 ];

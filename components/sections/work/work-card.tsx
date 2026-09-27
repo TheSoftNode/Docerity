@@ -10,7 +10,7 @@ import {
 } from "framer-motion";
 import { ArrowUpRightIcon } from "lucide-react";
 
-import type { projects } from "@/components/sections/work/work-data";
+import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
 import { WorkMedia } from "@/components/sections/work/work-media";
 
 const MAX_TILT = 5;
@@ -18,9 +18,12 @@ const MAX_TILT = 5;
 function WorkCard({
   project,
   index,
+  media,
 }: {
-  project: (typeof projects)[number];
+  project: Project;
   index: number;
+  /** Resolved by whichever server component built the list. */
+  media?: ProjectMedia;
 }) {
   const reduceMotion = useReducedMotion();
   const cardRef = useRef<HTMLElement>(null);
@@ -76,7 +79,7 @@ function WorkCard({
     >
       <div className="@container relative flex h-full flex-col overflow-hidden rounded-[calc(1rem-1px)] bg-card">
         <div className="relative">
-          <WorkMedia slug={project.slug} variant={project.preview} />
+          <WorkMedia media={media} variant={project.preview} />
 
           {/* Scrim: the media dissolves into the card instead of ending on a
               hard rule, so the two halves read as one surface. */}

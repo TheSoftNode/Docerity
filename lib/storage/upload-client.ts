@@ -39,7 +39,10 @@ export class UploadError extends Error {}
  * accepted types and size ceiling. Sharing them would mean one endpoint that
  * signs a PDF as a headshot.
  */
-export type UploadEndpoint = "/api/contact/upload" | "/api/reviews/upload";
+export type UploadEndpoint =
+  | "/api/contact/upload"
+  | "/api/reviews/upload"
+  | "/api/admin/work/upload";
 
 export async function uploadAttachment(
   file: File,

@@ -5,7 +5,7 @@ import { PlayIcon } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
-import { projectMedia, type ProjectSlug } from "@/components/sections/work/work-data";
+import type { ProjectMedia } from "@/components/sections/work/work-data";
 import { WorkPreview, type PreviewVariant } from "@/components/sections/work/work-preview";
 
 /*
@@ -24,7 +24,7 @@ const CARD_SIZES = "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw";
  * real media never changes the grid's geometry.
  */
 function WorkMedia({
-  slug,
+  media,
   variant,
   className,
   /* Defaults to the card grid's geometry; a project page overrides it,
@@ -32,13 +32,18 @@ function WorkMedia({
      a full-width frame. */
   sizes = CARD_SIZES,
 }: {
-  slug: ProjectSlug;
+  /*
+    Passed in rather than looked up here. The map used to be imported from the
+    data file, which stopped working the moment projects came from the
+    database: this is a Client Component, and the content source is
+    `server-only`. The parent resolves it and hands it down.
+  */
+  media?: ProjectMedia;
   variant: PreviewVariant;
   className?: string;
   sizes?: string;
 }) {
   const reduceMotion = useReducedMotion();
-  const media = projectMedia[slug];
 
   return (
     <div

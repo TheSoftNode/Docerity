@@ -11,9 +11,19 @@ import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { MediaPlaceholder } from "@/components/shared/media-placeholder";
 import { WorkMedia } from "@/components/sections/work/work-media";
-import { projects, type Project } from "@/components/sections/work/work-data";
+import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
 
-function WorkCaseStudy({ project }: { project: Project }) {
+function WorkCaseStudy({
+  project,
+  projects,
+  media,
+}: {
+  project: Project;
+  /* The full published list, for the previous and next links. Passed in
+     rather than imported, because it now comes from the database. */
+  projects: Project[];
+  media?: ProjectMedia;
+}) {
   const currentIndex = projects.findIndex((p) => p.slug === project.slug);
   const prevProject = currentIndex > 0 ? projects[currentIndex - 1] : null;
   const nextProject =
@@ -119,7 +129,7 @@ function WorkCaseStudy({ project }: { project: Project }) {
               an abstract one. */}
           <div className="mt-10 overflow-hidden rounded-2xl border border-border">
             <WorkMedia
-              slug={project.slug}
+              media={media}
               variant={project.preview}
               /* Wider than a card here, so it asks for a bigger source. */
               sizes="(min-width: 1024px) 56rem, 100vw"

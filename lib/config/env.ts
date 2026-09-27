@@ -132,6 +132,9 @@ export const storage = {
   /** Enquiry attachments are namespaced so they never collide with site media. */
   enquiryFolder: read("CLOUDINARY_ENQUIRY_FOLDER") ?? "docerity/enquiries",
   reviewFolder: read("CLOUDINARY_REVIEW_FOLDER") ?? "docerity/reviews",
+  /* Project screenshots, kept apart from the other two so a stray delete in
+     one folder cannot take the work page's images with it. */
+  workFolder: read("CLOUDINARY_WORK_FOLDER") ?? "docerity/work",
 };
 
 /* ── Auth ─────────────────────────────────────────────────────────────── */

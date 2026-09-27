@@ -6,9 +6,16 @@ import { Button } from "@/components/ui/button";
 import { WorkBackground, orbitIcons } from "@/components/sections/work/work-background";
 import { OrbitCluster } from "@/components/sections/work/work-orbit";
 import { WorkCard } from "@/components/sections/work/work-card";
-import { featuredProjects } from "@/components/sections/work/work-data";
+import { getFeaturedWork } from "@/lib/content/work";
 
-function Work() {
+/**
+ * A Server Component, so the featured projects are read during the render.
+ * The card below animates and stays a Client Component, receiving its project
+ * and that project's media as props.
+ */
+async function Work() {
+  const { projects: featuredProjects, media } = await getFeaturedWork();
+
   return (
     <section
       id="work"
@@ -58,7 +65,12 @@ function Work() {
             hold its media and a readable description. */}
         <div className="mt-10 grid gap-5 lg:mt-14 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {featuredProjects.map((project, index) => (
-            <WorkCard key={project.name} project={project} index={index} />
+            <WorkCard
+              key={project.slug}
+              project={project}
+              index={index}
+              media={media[project.slug]}
+            />
           ))}
         </div>
       </Container>

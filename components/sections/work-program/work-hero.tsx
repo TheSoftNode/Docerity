@@ -6,8 +6,11 @@ import { ScrambleText } from "@/components/shared/scramble-text";
 import { Button } from "@/components/ui/button";
 import { Bloom, Eyebrow, HeroTitle, Lede } from "@/components/shared/section-kit";
 import { WorkHeroDeck } from "@/components/sections/work-program/work-hero-deck";
+import { getFeaturedWork } from "@/lib/content/work";
 
-function WorkHero() {
+async function WorkHero() {
+  const { projects, media } = await getFeaturedWork();
+
   return (
     <section className="relative overflow-hidden border-b border-border/80 bg-background">
       <Bloom className="top-1/2 right-0 translate-x-1/3 -translate-y-1/2" />
@@ -45,7 +48,7 @@ function WorkHero() {
           </div>
         </div>
 
-        <WorkHeroDeck />
+        <WorkHeroDeck projects={projects} media={media} />
       </Container>
     </section>
   );
