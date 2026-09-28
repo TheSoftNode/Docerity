@@ -1,17 +1,17 @@
 export const steps = [
   {
-    title: "You send the details",
+    title: "You tell us what you need",
     description:
-      "Project, mentorship, or just a question. Tell me what's on your mind.",
+      "A build, data work, an assistant, mentorship, or just a question. Whatever is on your mind.",
   },
   {
-    title: "I read it myself",
+    title: "A person reads it",
     description:
-      "No inbox triage, no sales team. Every message reaches me directly.",
+      "No inbox triage and no sales team. It goes to someone who would actually do the work.",
   },
   {
     title: "We talk it through",
     description:
-      "Expect a reply within 1–2 business days, then we find time for a call if it's a fit.",
+      "Expect a reply within 1\u20132 business days, then we find time for a call if it's a fit.",
   },
 ] as const;

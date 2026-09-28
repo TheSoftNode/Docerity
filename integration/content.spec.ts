@@ -78,7 +78,7 @@ test.describe("Before anything is edited", () => {
     await expect(page.locator("#clients").getByText("Stacks", { exact: true })).toBeVisible();
 
     await page.goto("/contact");
-    await expect(page.getByText("You send the details")).toBeVisible();
+    await expect(page.getByText("You tell us what you need")).toBeVisible();
   });
 
   test("the admin lists every section as unedited", async ({ page }) => {
@@ -104,8 +104,8 @@ test.describe("Before anything is edited", () => {
     await signIn(page, OWNER);
     await page.goto("/admin/content/contact");
 
-    await expect(page.getByLabel("Title for step 1")).toHaveValue("You send the details");
-    await expect(page.getByLabel("Title for step 2")).toHaveValue("I read it myself");
+    await expect(page.getByLabel("Title for step 1")).toHaveValue("You tell us what you need");
+    await expect(page.getByLabel("Title for step 2")).toHaveValue("A person reads it");
   });
 });
 
@@ -114,15 +114,15 @@ test.describe("Editing a section", () => {
     await signIn(page, OWNER);
     await page.goto("/admin/content/contact");
 
-    await page.getByLabel("Title for step 1").fill("You send me the details");
+    await page.getByLabel("Title for step 1").fill("You send us the details");
     await page.getByRole("button", { name: "Save" }).click();
     await expect(page.getByText("Saved")).toBeVisible();
 
     /* `revalidatePath` on save, so the page has it rather than showing the old
        copy for another five minutes. */
     await page.goto("/contact");
-    await expect(page.getByText("You send me the details")).toBeVisible();
-    await expect(page.getByText("You send the details", { exact: true })).toHaveCount(0);
+    await expect(page.getByText("You send us the details")).toBeVisible();
+    await expect(page.getByText("You tell us what you need", { exact: true })).toHaveCount(0);
   });
 
   test("the section is now marked as edited", async ({ page }) => {
@@ -159,7 +159,7 @@ test.describe("Editing a section", () => {
 
     /* And nothing was written: the live page still has the old second step. */
     await page.goto("/contact");
-    await expect(page.getByText("I read it myself")).toBeVisible();
+    await expect(page.getByText("A person reads it")).toBeVisible();
   });
 
   test("resetting puts the built-in copy back", async ({ page }) => {
@@ -173,7 +173,7 @@ test.describe("Editing a section", () => {
     await expect(page.getByText("Saved")).toBeVisible();
 
     await page.goto("/contact");
-    await expect(page.getByText("You send the details")).toBeVisible();
+    await expect(page.getByText("You tell us what you need")).toBeVisible();
     await expect(page.getByText("A fourth thing happens")).toHaveCount(0);
 
     await page.goto("/admin/content");

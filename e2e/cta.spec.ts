@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { heading } from "./copy";
+
 test.describe("Final CTA", () => {
   test("renders with no console errors and both contact actions", async ({ page }) => {
     const errors: string[] = [];
@@ -12,7 +14,7 @@ test.describe("Final CTA", () => {
     await page.locator("#contact").scrollIntoViewIfNeeded();
 
     await expect(
-      page.getByRole("heading", { name: "Got something worth building?" })
+      page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
     ).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Start the conversation" })

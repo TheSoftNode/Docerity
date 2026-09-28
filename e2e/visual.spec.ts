@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { heading } from "./copy";
+
 /*
   Sections animate in with `whileInView`, and Playwright counts an element at
   `opacity: 0` as visible, since it has a box. So waiting for a heading proves
@@ -102,10 +104,10 @@ test.describe("Visual regression", () => {
     await page.goto("/");
     await page.locator("#contact").scrollIntoViewIfNeeded();
     await page
-      .getByRole("heading", { name: "Got something worth building?" })
+      .getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
       .waitFor();
     await waitForReveal(
-      page.getByRole("heading", { name: "Got something worth building?" })
+      page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
     );
 
     await expect(page).toHaveScreenshot("cta-desktop.png", {

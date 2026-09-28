@@ -202,8 +202,8 @@ function ReviewForm() {
           Thank you, genuinely.
         </h3>
         <p className="mx-auto mt-2 max-w-[44ch] text-sm leading-relaxed text-muted-foreground">
-          I read every review myself before it goes up, so it will appear on this
-          page shortly rather than instantly. If I need to check anything I will
+          Every review is read before it goes up, so it will appear on this
+          page shortly rather than instantly. If anything needs checking we will
           email you first.
         </p>
       </div>
@@ -315,7 +315,7 @@ function ReviewForm() {
       <Field
         id="contactEmail"
         label="Your email"
-        hint="Never shown on the site. It is how I check a review is really from you."
+        hint="Never shown on the site. It is how we check a review is really from you."
         error={errors.contactEmail}
       >
         <Input
@@ -331,7 +331,7 @@ function ReviewForm() {
 
       <Field
         id="body"
-        label="What you would tell someone considering working with me"
+        label="What you would tell someone considering working with us"
         error={errors.body}
       >
         <Textarea

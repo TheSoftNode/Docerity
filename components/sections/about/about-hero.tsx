@@ -231,10 +231,10 @@ function AboutHero({
                 {/* 58ch and 1.8 leading: the lede was once capped at 52ch,
                     which is a caption measure rather than a paragraph one. */}
                 <p className="mt-5 max-w-[58ch] text-pretty text-[0.9375rem] leading-[1.8] text-muted-foreground">
-                  Docerity is the company around work I have been doing for
-                  years: shipping production software, writing the explanation
-                  that makes it make sense, and mentoring the engineers who will
-                  maintain it.
+                  Docerity ships production software, prepares the data behind
+                  AI systems, and runs the operational work around both. Below
+                  is the record of the engineer who founded it and leads the
+                  team: his work, his experience, his certifications.
                 </p>
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">

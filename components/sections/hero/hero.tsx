@@ -97,7 +97,7 @@ async function Hero() {
               variant="outline"
               className="h-11 w-full px-6 text-sm sm:w-auto"
               nativeButton={false}
-              render={<Link href="#work" />}
+              render={<Link href="/services" />}
             >
               {hero.secondaryLabel}
             </Button>

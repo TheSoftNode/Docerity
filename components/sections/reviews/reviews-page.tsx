@@ -39,7 +39,7 @@ function RailItem({ label, value }: { label: string; value: string }) {
   What happens to a submission, stated plainly.
 
   It is here because the honest answer is a selling point: on a page where every
-  other site publishes whatever it is sent, saying "I read these first" is the
+  other site publishes whatever it is sent, saying "these are read first" is the
   difference between a testimonial wall and a record.
 */
 const PROCESS = [
@@ -48,8 +48,8 @@ const PROCESS = [
     detail: "Two minutes. Honest is more useful to the next person than flattering.",
   },
   {
-    title: "I read it",
-    detail: "Every one, myself. If something needs checking I email you before it goes up.",
+    title: "We read it",
+    detail: "Every one. If something needs checking we email you before it goes up.",
   },
   {
     title: "It goes up",
@@ -118,8 +118,8 @@ function ReviewsPage({ reviews }: { reviews: PublicReview[] }) {
 
                   <p className="mt-5 max-w-[54ch] text-[0.9375rem] leading-[1.75] text-muted-foreground">
                     {total > 0
-                      ? "Clients and the engineers I have mentored. Nothing here was written by me, and nothing appears until I have read it."
-                      : "Clients and the engineers I have mentored. There is nothing here yet, which is the honest state of a page that only publishes what people actually send."}
+                      ? "Clients and the engineers we have mentored. Nothing here was written by us, and nothing appears until it has been read."
+                      : "Clients and the engineers we have mentored. There is nothing here yet, which is the honest state of a page that only publishes what people actually send."}
                   </p>
 
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">

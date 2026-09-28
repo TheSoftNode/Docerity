@@ -16,7 +16,7 @@ function getInitials(name: string) {
 }
 
 /**
- * Reviews from people I built something for, or nothing at all.
+ * Reviews from people we built something for, or nothing at all.
  *
  * It used to read the placeholder set and pick the entries whose role happened
  * to contain the word "Company", which is how "Client Name, Founder, Company"

@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { heading } from "./copy";
+
 test.describe("Mentorship page", () => {
   test("renders all sections with no console errors", async ({ page }) => {
     const errors: string[] = [];
@@ -35,7 +37,7 @@ test.describe("Mentorship page", () => {
       page.getByRole("heading", { name: "Questions before you apply." })
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Got something worth building?" })
+      page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
     ).toBeVisible();
 
     expect(errors).toEqual([]);

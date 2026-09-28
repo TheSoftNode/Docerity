@@ -94,8 +94,8 @@ function Invitation({ eyebrow }: { eyebrow: string }) {
           />
           <div className="relative min-h-[12rem] sm:min-h-[10rem]">
             <p className="text-pretty font-heading text-xl leading-snug font-medium text-foreground sm:text-2xl">
-              I would rather leave this empty than fill it with quotes nobody
-              said.
+              We would rather leave this empty than fill it with quotes
+              nobody said.
             </p>
             <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
               Every other section of this site has something to fall back on

@@ -72,7 +72,7 @@ export const capabilities: {
   {
     title: "Model evaluation & RLHF",
     description:
-      "Designed training samples and evaluation rubrics, and annotated model responses across 150+ technical tasks. I know what makes training data actually improve a model.",
+      "Designed training samples and evaluation rubrics, and annotated model responses across 150+ technical tasks. We know what makes training data actually improve a model.",
     Icon: ClipboardCheckIcon,
   },
 ];

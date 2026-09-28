@@ -2,10 +2,13 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
+/* The three things named in the headline, so the artwork agrees with it. It
+   used to say "Tech Explainers", which is one blog section rather than a line
+   of work anybody hires for. */
 const chips = [
   { label: "Production Systems", top: "2%", left: "56%", delay: 1.1, floatDelay: 0 },
-  { label: "Mentorship", top: "44%", left: "-6%", delay: 1.25, floatDelay: 1.1 },
-  { label: "Tech Explainers", top: "84%", left: "42%", delay: 1.4, floatDelay: 2.2 },
+  { label: "Data & Annotation", top: "44%", left: "-6%", delay: 1.25, floatDelay: 1.1 },
+  { label: "Operations", top: "84%", left: "42%", delay: 1.4, floatDelay: 2.2 },
 ] as const;
 
 function TagChips() {

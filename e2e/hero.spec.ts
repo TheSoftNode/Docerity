@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { hero } from "./copy";
+
 test.describe("Hero", () => {
   test("renders the headline and both CTAs with no console errors", async ({ page }) => {
     const errors: string[] = [];
@@ -10,11 +12,18 @@ test.describe("Hero", () => {
 
     await page.goto("/");
 
+    /* Read from the copy, which is editable. The headline's first line is
+       enough to prove the hero rendered the heading it was given. */
+    const copy = hero();
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Software shipped"
+      (copy.title as string).split("\n")[0]
     );
-    await expect(page.getByRole("button", { name: "Start a project" }).first()).toBeVisible();
-    await expect(page.getByRole("button", { name: "See the work" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: copy.primaryLabel as string }).first()
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: copy.secondaryLabel as string })
+    ).toBeVisible();
 
     expect(errors).toEqual([]);
   });

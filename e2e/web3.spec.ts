@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { heading } from "./copy";
+
 test.describe("Web3 page", () => {
   test("renders all sections with no console errors", async ({ page }) => {
     const errors: string[] = [];
@@ -23,7 +25,7 @@ test.describe("Web3 page", () => {
       page.getByRole("heading", { name: "On-chain systems that hold up under real use." })
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Got something worth building?" })
+      page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
     ).toBeVisible();
 
     for (const name of ["VeriAI", "MetaPilot", "RealPayTag Protocol"]) {
@@ -33,10 +35,26 @@ test.describe("Web3 page", () => {
     expect(errors).toEqual([]);
   });
 
-  test("navbar 'Web3' link navigates to the dedicated page", async ({ page }) => {
+  test("the page is reachable from the services list and the footer", async ({ page }) => {
+    /*
+      Not from the header any more. It fits six items and Services made a
+      seventh, so the specialisms moved under Services, which is where
+      somebody looking for them would go. Both routes are asserted because
+      they are the only two there now.
+    */
     await page.setViewportSize({ width: 1440, height: 900 });
+
+    await page.goto("/services");
+    await page
+      .locator("#services")
+      .getByRole("heading", { name: /Web3/i })
+      .first()
+      .scrollIntoViewIfNeeded();
+    await page.locator(`#services a[href="/web3"]`).first().click();
+    await expect(page).toHaveURL("/web3");
+
     await page.goto("/");
-    await page.locator("header").getByRole("link", { name: "Web3", exact: true }).click();
+    await page.locator("footer").getByRole("link", { name: "Web3", exact: true }).click();
     await expect(page).toHaveURL("/web3");
   });
 

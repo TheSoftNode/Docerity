@@ -211,7 +211,7 @@ function ContactForm({ email }: { email: string }) {
             Message sent.
           </p>
           <p className="max-w-xs text-sm text-muted-foreground">
-            Thanks for reaching out. I read every message myself and will
+            Thanks for reaching out. A person reads every message, and will
             reply within 1–2 business days.
           </p>
         </CardContent>

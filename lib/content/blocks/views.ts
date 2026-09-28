@@ -118,3 +118,12 @@ export type HeroCopy = {
   primaryLabel: string;
   secondaryLabel: string;
 };
+
+/** One line of work on the services page. `href` is "" where no page exists. */
+export type ServiceLineView = {
+  title: string;
+  summary: string;
+  description: string;
+  href: string;
+  iconName: string;
+};

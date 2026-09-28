@@ -104,6 +104,7 @@ export const BLOCK_KEYS = [
   "site",
   "seo",
   "homepage",
+  "services-page",
   "clients",
   "about",
   "mentorship",
@@ -316,6 +317,7 @@ export const BLOCKS: Block[] = [
         ],
         entries: [
           { key: "home", label: "Homepage" },
+          { key: "services", label: "Services" },
           { key: "work", label: "Work" },
           { key: "ai", label: "AI" },
           { key: "web3", label: "Web3" },
@@ -375,6 +377,48 @@ export const BLOCKS: Block[] = [
         { key: "home-mentorship", label: "Mentorship teaser" },
         { key: "home-cta", label: "The closing call to action" },
       ]),
+    ],
+  },
+
+  {
+    key: "services-page",
+    title: "Services page",
+    page: "Services",
+    path: "/services",
+    description:
+      "Every line of work Docerity takes on, and the page that says so. The grid on the Work page is the shorter version of this, and the projects themselves are edited under Work.",
+    groups: [
+      headings([{ key: "services-hero", label: "Hero" }, { key: "services-lines", label: "The list" }]),
+      {
+        kind: "list",
+        name: "lines",
+        label: "What we do",
+        description:
+          "In order. A line with a page of its own carries a link to it; the rest are described here and nowhere else.",
+        itemNoun: "service",
+        max: 12,
+        min: 1,
+        fields: [
+          { name: "title", label: "Service", kind: "text", required: true, maxLength: 80 },
+          {
+            name: "summary",
+            label: "One line",
+            kind: "text",
+            required: true,
+            maxLength: 160,
+            hint: "What it is, in the words somebody would use when asking for it.",
+          },
+          DESCRIPTION,
+          {
+            name: "href",
+            label: "Its own page",
+            kind: "text",
+            maxLength: 200,
+            hint: "Optional. A path like /ai, where one exists.",
+          },
+          ICON,
+        ],
+      },
     ],
   },
 

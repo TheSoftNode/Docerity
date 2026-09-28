@@ -77,7 +77,15 @@ test.describe("Page shell", () => {
 
     const spread = Math.max(...gaps) - Math.min(...gaps);
     expect(spread, `top gap varies too much across laptops: ${gaps.join(", ")}`).toBeLessThanOrEqual(24);
-    expect(Math.max(...gaps), `too much space above the headline: ${gaps.join(", ")}`).toBeLessThanOrEqual(115);
+    /*
+      120, up from 115.
+
+      The copy column is centred against a fixed-height illustration, so a
+      shorter headline sits lower: the hero went from three lines to two and
+      the widest gap moved 115 to 118. The guard is still meaningful, because
+      the problem it was written for was 121 to 140.
+    */
+    expect(Math.max(...gaps), `too much space above the headline: ${gaps.join(", ")}`).toBeLessThanOrEqual(120);
   });
 
   test("no horizontal overflow from phone to ultrawide", async ({ page }) => {
