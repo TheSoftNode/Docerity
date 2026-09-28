@@ -13,6 +13,18 @@ import { hashPassword } from "@/lib/auth/password";
  * skip the part most likely to be broken.
  */
 
+/*
+  A longer wait than the global one, on these and nothing else.
+
+  These assert a navigation to an editor route the dev server has not compiled
+  yet, and the first visit pays for that compile. It has nothing to do with what
+  is being tested, which is that saving takes you to the page for what you
+  saved, and on a loaded machine it has put the wait past the 15-second default
+  three times. Raising the global timeout instead would hide genuine slowness
+  everywhere else.
+*/
+const FIRST_VISIT = { timeout: 60_000 };
+
 test.describe.configure({ mode: "serial" });
 
 const OWNER = {
@@ -556,7 +568,7 @@ test.describe("The writing pipeline", () => {
     /* The URL changed from /new to the post's id, so saving again updates rather
        than creating a second copy. `saved=1` is what carries the confirmation
        across the remount that the route change causes. */
-    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}\?saved=1$/);
+    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}\?saved=1$/, FIRST_VISIT);
 
     /* The slug was derived from the title. */
     await expect(page.getByLabel("URL")).toHaveValue(
@@ -579,7 +591,7 @@ test.describe("The writing pipeline", () => {
       version of this test published the post from the list and then looked for a
       confirmation on a page it had never left.
     */
-    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/);
+    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/, FIRST_VISIT);
     await expect(page.getByLabel("Title")).toHaveValue(
       "Written by the integration suite"
     );
@@ -604,7 +616,7 @@ test.describe("The writing pipeline", () => {
     await signIn(page);
     await page.goto("/admin/posts?status=published");
     await page.getByRole("link", { name: "Written by the integration suite" }).click();
-    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/);
+    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await page.getByLabel("Heading for section 1").fill("The first section, renamed");
     await page.getByRole("button", { name: "Update live post" }).click();
@@ -627,7 +639,7 @@ test.describe("The writing pipeline", () => {
     await signIn(page);
     await page.goto("/admin/posts?status=published");
     await page.getByRole("link", { name: "Written by the integration suite" }).click();
-    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/);
+    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await page.getByRole("button", { name: "Media frame" }).click();
     await page.getByLabel("Alt text for section 1").fill("Where the diagram goes");

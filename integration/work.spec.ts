@@ -12,6 +12,18 @@ import { projects as builtIn } from "@/components/sections/work/work-data";
  * reorder any of them.
  */
 
+/*
+  A longer wait than the global one, on these and nothing else.
+
+  These assert a navigation to an editor route the dev server has not compiled
+  yet, and the first visit pays for that compile. It has nothing to do with what
+  is being tested, which is that saving takes you to the page for what you
+  saved, and on a loaded machine it has put the wait past the 15-second default
+  three times. Raising the global timeout instead would hide genuine slowness
+  everywhere else.
+*/
+const FIRST_VISIT = { timeout: 60_000 };
+
 test.describe.configure({ mode: "serial" });
 
 const OWNER = { email: "owner@d.test", name: "Test Owner", password: "an-owner-password-here" };
@@ -133,7 +145,7 @@ test.describe("Adding a project", () => {
     await page.getByLabel("Live URL").fill("harbour.example");
 
     await page.getByRole("button", { name: "Save draft" }).click();
-    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}\?saved=1$/);
+    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}\?saved=1$/, FIRST_VISIT);
     /* `exact`, because the sidebar also has a "Live URL" field and the loose
        match hits both. */
     await expect(page.getByLabel("URL", { exact: true })).toHaveValue("harbour");
@@ -146,7 +158,7 @@ test.describe("Adding a project", () => {
     await signIn(page);
     await page.goto("/admin/work");
     await page.getByRole("link", { name: "Harbour" }).click();
-    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}/);
+    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await page.getByRole("button", { name: "Publish", exact: true }).click();
     await expect(page.getByText("Saved")).toBeVisible();
@@ -191,7 +203,7 @@ test.describe("Video, gallery and case study", () => {
     await signIn(page);
     await page.goto("/admin/work");
     await page.getByRole("link", { name: "Harbour" }).click();
-    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}/);
+    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await expect(page.getByText(/Nothing here yet/)).toBeVisible();
     /* The count is shown so it is obvious there is a ceiling. */
@@ -232,6 +244,117 @@ test.describe("Video, gallery and case study", () => {
       page.getByRole("heading", { name: "The netting problem" })
     ).toBeVisible();
     await expect(page.getByText(/Every transfer paid its own fee/)).toBeVisible();
+  });
+});
+
+test.describe("Getting a file into an upload", () => {
+  /*
+    Three ways in: pick it, drop it, paste it.
+
+    Paste is the one worth testing, and the one that was missing. Almost
+    everything going onto this site is a screenshot, and the path from taking
+    one to publishing it was: find where the system put the file, open a
+    picker, navigate to it, choose it.
+
+    A paste has no natural target on a page with several upload fields, so a
+    zone claims the clipboard while the pointer is over it and a single
+    document listener hands the image to whichever zone claimed it. Both halves
+    are asserted here, because the claim failing is silent: the paste simply
+    does nothing.
+  */
+
+  /* A 1x1 PNG, which is what a pasted screenshot looks like to the page. */
+  const PNG =
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+
+  async function countSignatures(page: Page) {
+    /* Intercepted rather than sent: what is being checked is that the gesture
+       produces an upload attempt, not that Cloudinary accepts the bytes. */
+    const state = { signed: 0 };
+    await page.route("**/api/admin/work/upload", async (route) => {
+      state.signed += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ ok: true, data: {} }),
+      });
+    });
+    return state;
+  }
+
+  test("pasting a screenshot reaches the upload", async ({ page }) => {
+    await signIn(page);
+    const state = await countSignatures(page);
+
+    await page.goto("/admin/work/new");
+    await page.getByLabel("Name").fill("Paste test");
+
+    const zone = page.getByRole("group", { name: /paste a screenshot/i }).first();
+    await zone.scrollIntoViewIfNeeded();
+    await zone.hover();
+
+    /* The zone says so, which is also how anybody discovers the feature. */
+    await expect(zone).toHaveAttribute("data-armed", "true");
+
+    await zone.evaluate((node, png) => {
+      const bytes = Uint8Array.from(atob(png), (c) => c.charCodeAt(0));
+      const data = new DataTransfer();
+      data.items.add(new File([bytes], "screenshot.png", { type: "image/png" }));
+      node.dispatchEvent(new ClipboardEvent("paste", { clipboardData: data, bubbles: true }));
+    }, PNG);
+
+    await expect.poll(() => state.signed, { timeout: 10_000 }).toBeGreaterThan(0);
+  });
+
+  test("dropping a file reaches the upload", async ({ page }) => {
+    await signIn(page);
+    const state = await countSignatures(page);
+
+    await page.goto("/admin/work/new");
+    await page.getByLabel("Name").fill("Drop test");
+
+    const zone = page.getByRole("group", { name: /paste a screenshot/i }).first();
+    await zone.scrollIntoViewIfNeeded();
+
+    await zone.evaluate((node, png) => {
+      const bytes = Uint8Array.from(atob(png), (c) => c.charCodeAt(0));
+      const data = new DataTransfer();
+      data.items.add(new File([bytes], "screenshot.png", { type: "image/png" }));
+      node.dispatchEvent(new DragEvent("drop", { dataTransfer: data, bubbles: true }));
+    }, PNG);
+
+    await expect.poll(() => state.signed, { timeout: 10_000 }).toBeGreaterThan(0);
+  });
+
+  test("a paste goes to the zone under the pointer, not the first one", async ({
+    page,
+  }) => {
+    /* The whole reason for the claim. With two zones on the page, a paste that
+       always went to the first would put a gallery screenshot in the hero. */
+    await signIn(page);
+    const state = await countSignatures(page);
+
+    await page.goto("/admin/work/new");
+    await page.getByLabel("Name").fill("Second zone test");
+
+    const zones = page.getByRole("group", { name: /paste a screenshot/i });
+    await expect(zones).toHaveCount(2);
+
+    const gallery = zones.nth(1);
+    await gallery.scrollIntoViewIfNeeded();
+    await gallery.hover();
+
+    await expect(gallery).toHaveAttribute("data-armed", "true");
+    await expect(zones.nth(0)).toHaveAttribute("data-armed", "false");
+
+    await gallery.evaluate((node, png) => {
+      const bytes = Uint8Array.from(atob(png), (c) => c.charCodeAt(0));
+      const data = new DataTransfer();
+      data.items.add(new File([bytes], "screenshot.png", { type: "image/png" }));
+      node.dispatchEvent(new ClipboardEvent("paste", { clipboardData: data, bubbles: true }));
+    }, PNG);
+
+    await expect.poll(() => state.signed, { timeout: 10_000 }).toBeGreaterThan(0);
   });
 });
 

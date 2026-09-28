@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { emptySectionMedia, type SectionInput } from "@/lib/content/post-schema";
+import { ImageDrop } from "@/components/admin/image-drop";
 import { uploadAttachment, UploadError } from "@/lib/storage/upload-client";
 
 /**
@@ -96,10 +97,9 @@ function SectionEditor({
    * which is what keeps a 200MB screen recording from being a serverless
    * function's problem.
    */
-  async function chooseFile(index: number, event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  /* Takes a File rather than an input event, so the picker, a drop and a paste
+     all arrive the same way. */
+  async function uploadFile(index: number, file: File) {
     setUploadError((current) => ({ ...current, [index]: "" }));
     setUploading(index);
 
@@ -329,7 +329,12 @@ function SectionEditor({
                   which is what it always was.
                 */}
                 {cloudName ? (
-                  <div className="mt-3">
+                  <ImageDrop
+                    className="mt-3"
+                    disabled={uploading === index}
+                    onFile={(file) => void uploadFile(index, file)}
+                    hint="Drop a file here, or paste a screenshot"
+                  >
                     {previewUrl(section.media) ? (
                       <div className="mb-2 overflow-hidden rounded-lg border border-border bg-card">
                         {section.media.type === "video" ? (
@@ -357,7 +362,10 @@ function SectionEditor({
                       type="file"
                       accept="image/png,image/jpeg,image/webp,image/avif,video/mp4,video/webm,video/quicktime"
                       className="hidden"
-                      onChange={(event) => chooseFile(index, event)}
+                      onChange={(event) => {
+                        const file = event.target.files?.[0];
+                        if (file) void uploadFile(index, file);
+                      }}
                     />
                     <Button
                       type="button"
@@ -386,7 +394,7 @@ function SectionEditor({
                         {uploadError[index]}
                       </p>
                     ) : null}
-                  </div>
+                  </ImageDrop>
                 ) : null}
 
                 <div className="mt-2 grid gap-2 sm:grid-cols-2">

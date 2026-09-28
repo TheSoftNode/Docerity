@@ -11,6 +11,18 @@ import { hashPassword } from "@/lib/auth/password";
  * outside until somebody types a URL.
  */
 
+/*
+  A longer wait than the global one, on these and nothing else.
+
+  These assert a navigation to an editor route the dev server has not compiled
+  yet, and the first visit pays for that compile. It has nothing to do with what
+  is being tested, which is that saving takes you to the page for what you
+  saved, and on a loaded machine it has put the wait past the 15-second default
+  three times. Raising the global timeout instead would hide genuine slowness
+  everywhere else.
+*/
+const FIRST_VISIT = { timeout: 60_000 };
+
 test.describe.configure({ mode: "serial" });
 
 const OWNER = { email: "owner@d.test", name: "Test Owner", password: "an-owner-password-here" };
@@ -179,7 +191,7 @@ test.describe("Writing as a contributor", () => {
     await page.getByLabel("Paragraph 1 of section 1").fill("A query that scans every row gets slower as the table grows, which is the whole story.");
 
     await page.getByRole("button", { name: "Save draft" }).click();
-    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}\?saved=1$/);
+    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}\?saved=1$/, FIRST_VISIT);
 
     /* A draft is not on the blog. */
     await page.goto("/blog/what-a-database-index-actually-does");
@@ -190,7 +202,7 @@ test.describe("Writing as a contributor", () => {
     await signIn(page, MENTEE);
     await page.goto("/admin/posts?status=draft");
     await page.getByRole("link", { name: "What a database index actually does" }).click();
-    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/);
+    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await page.getByRole("button", { name: "Submit for review" }).click();
     await expect(page.getByText("Waiting to be read")).toBeVisible();
@@ -211,7 +223,7 @@ test.describe("Writing as a contributor", () => {
     await signIn(page, OWNER);
     await page.goto("/admin/posts?status=submitted");
     await page.getByRole("link", { name: "What a database index actually does" }).click();
-    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/);
+    await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await page.getByRole("button", { name: "Publish", exact: true }).click();
     await expect(page.getByText("Saved")).toBeVisible();

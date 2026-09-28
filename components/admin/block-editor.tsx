@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { IconPicker } from "@/components/admin/icon-picker";
+import { ImageDrop } from "@/components/admin/image-drop";
 import { MediaPicker } from "@/components/admin/media-picker";
 import { StringList } from "@/components/admin/string-list";
 import { uploadAttachment, UploadError } from "@/lib/storage/upload-client";
@@ -565,6 +566,14 @@ function FieldEditor({
  * with uploads to make the field work would be a lot of churn for nothing. The
  * path is checked on save; see `safeImagePath`.
  */
+/**
+ * An image: a file uploaded here, or a path to something already in /public.
+ *
+ * Both, rather than uploads only, because the logos and certificate scans
+ * already on the site are files in the repository and replacing all of them
+ * with uploads to make the field work would be a lot of churn for nothing. The
+ * path is checked on save; see `safeImagePath`.
+ */
 function ImageField({
   value,
   onChange,
@@ -580,10 +589,9 @@ function ImageField({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
-  async function choose(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  /* Takes a File rather than an input event, so the file picker, a drop and a
+     paste all arrive the same way. */
+  async function upload(file: File) {
     setError("");
     setUploading(true);
     try {
@@ -604,51 +612,66 @@ function ImageField({
     }
   }
 
+  const row = (
+    <div className="flex items-center gap-2">
+      {value ? (
+        <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={value} alt="" className="size-8 object-contain" />
+        </span>
+      ) : (
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-border text-muted-foreground">
+          <ImageIcon className="size-4" />
+        </span>
+      )}
+
+      <Input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="/clients/name.webp"
+        className="h-9 text-xs"
+        aria-label={label}
+      />
+
+      {cloudName ? (
+        <>
+          <input
+            ref={input}
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/avif"
+            className="hidden"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) void upload(file);
+            }}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="shrink-0"
+            disabled={uploading}
+            onClick={() => input.current?.click()}
+            aria-label={`Upload ${label}`}
+          >
+            {uploading ? <Loader2Icon className="animate-spin" /> : <UploadIcon />}
+          </Button>
+        </>
+      ) : null}
+    </div>
+  );
+
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2">
-        {value ? (
-          <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-white">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={value} alt="" className="size-8 object-contain" />
-          </span>
-        ) : (
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-border text-muted-foreground">
-            <ImageIcon className="size-4" />
-          </span>
-        )}
-
-        <Input
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          placeholder="/clients/name.webp"
-          className="h-9 text-xs"
-          aria-label={label}
-        />
-
-        {cloudName ? (
-          <>
-            <input
-              ref={input}
-              type="file"
-              accept="image/png,image/jpeg,image/webp,image/avif"
-              className="hidden"
-              onChange={choose}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="shrink-0"
-              disabled={uploading}
-              onClick={() => input.current?.click()}
-              aria-label={`Upload ${label}`}
-            >
-              {uploading ? <Loader2Icon className="animate-spin" /> : <UploadIcon />}
-            </Button>
-          </>
-        ) : null}
-      </div>
+      {/* Wrapped only when there is somewhere for a file to go. Offering paste
+          with no storage configured would be an invitation to a 503. */}
+      {cloudName ? (
+        <ImageDrop onFile={(file) => void upload(file)} disabled={uploading}>
+          {row}
+        </ImageDrop>
+      ) : (
+        row
+      )}
 
       {/* Reuse before re-upload: the same logo in two places should be one
           file, not two. */}
@@ -662,5 +685,6 @@ function ImageField({
     </div>
   );
 }
+
 
 export { BlockEditor };

@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageDrop } from "@/components/admin/image-drop";
 import { uploadAttachment, UploadError } from "@/lib/storage/upload-client";
 import { saveProject } from "@/app/admin/work/actions";
 import {
@@ -92,10 +93,9 @@ function ProjectEditor({
     );
   }
 
-  async function chooseFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  /* Takes Files rather than input events, so the picker, a drop and a paste
+     all reach the same upload. */
+  async function uploadHero(file: File) {
     setErrors((current) => ({ ...current, media: undefined }));
     setUploading(true);
 
@@ -133,8 +133,28 @@ function ProjectEditor({
     }
   }
 
-  async function addToGallery(event: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files ?? []);
+  async function uploadSectionImage(index: number, file: File) {
+    try {
+      const uploaded = await uploadAttachment(file, { endpoint: "/api/admin/work/upload" });
+      set(
+        "body",
+        project.body.map((section, i) =>
+          i === index
+            ? {
+                ...section,
+                image: { publicId: uploaded.publicId, src: "", alt: "", caption: "" },
+              }
+            : section
+        )
+      );
+    } catch {
+      /* Reported against the body rather than silently dropped, since the
+         upload is the visible act. */
+      setErrors((current) => ({ ...current, body: "That image could not be uploaded." }));
+    }
+  }
+
+  async function addToGallery(files: File[]) {
     if (files.length === 0) return;
 
     setErrors((current) => ({ ...current, gallery: undefined }));
@@ -314,7 +334,12 @@ function ProjectEditor({
           <div className="flex flex-col gap-2">
             <Label>Screenshot</Label>
 
-            <div className="rounded-xl border border-border bg-card/40 p-4">
+            <ImageDrop
+              className="rounded-xl border border-border bg-card/40 p-4"
+              disabled={uploading}
+              onFile={(file) => void uploadHero(file)}
+              hint="Drop a file here, or paste a screenshot"
+            >
               {previewSrc ? (
                 <div className="space-y-3">
                   {isVideo ? (
@@ -402,10 +427,13 @@ function ProjectEditor({
                 ref={fileInput}
                 type="file"
                 accept=".png,.jpg,.jpeg,.webp,.avif,.mp4,.webm,.mov"
-                onChange={chooseFile}
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) void uploadHero(file);
+                }}
                 className="sr-only"
               />
-            </div>
+            </ImageDrop>
             <FieldError message={errors.media} />
           </div>
 
@@ -424,7 +452,14 @@ function ProjectEditor({
               </span>
             </div>
 
-            <div className="rounded-xl border border-border bg-card/40 p-4">
+            <ImageDrop
+              className="rounded-xl border border-border bg-card/40 p-4"
+              disabled={uploadingGallery || project.gallery.length >= PROJECT_LIMITS.maxGallery}
+              /* Appended, not swapped: a gallery is a set, so a pasted
+                 screenshot joins it rather than replacing what is there. */
+              onFile={(file) => void addToGallery([file])}
+              hint="Drop files here, or paste a screenshot"
+            >
               {project.gallery.length > 0 ? (
                 <ul className="space-y-3">
                   {project.gallery.map((item, index) => (
@@ -531,10 +566,10 @@ function ProjectEditor({
                 type="file"
                 accept=".png,.jpg,.jpeg,.webp,.avif"
                 multiple
-                onChange={addToGallery}
+                onChange={(event) => void addToGallery(Array.from(event.target.files ?? []))}
                 className="sr-only"
               />
-            </div>
+            </ImageDrop>
             <FieldError message={errors.gallery} />
           </div>
 
@@ -673,49 +708,26 @@ function ProjectEditor({
                       </Button>
                     </div>
                   ) : (
-                    <label className="mt-2 inline-flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground">
+                    <ImageDrop
+                      className="mt-2"
+                      onFile={(file) => void uploadSectionImage(index, file)}
+                      hint="Drop an image here, or paste one"
+                    >
+                    <label className="inline-flex cursor-pointer items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground">
                       <ImageIcon className="size-3.5" />
                       Add an image to this section
                       <input
                         type="file"
                         accept=".png,.jpg,.jpeg,.webp,.avif"
                         className="sr-only"
-                        onChange={async (event) => {
+                        onChange={(event) => {
                           const file = event.target.files?.[0];
-                          if (!file) return;
-                          try {
-                            const uploaded = await uploadAttachment(file, {
-                              endpoint: "/api/admin/work/upload",
-                            });
-                            set(
-                              "body",
-                              project.body.map((s, i) =>
-                                i === index
-                                  ? {
-                                      ...s,
-                                      image: {
-                                        publicId: uploaded.publicId,
-                                        src: "",
-                                        alt: "",
-                                        caption: "",
-                                      },
-                                    }
-                                  : s
-                              )
-                            );
-                          } catch {
-                            /* Reported against the body rather than silently
-                               dropped, since the upload is the visible act. */
-                            setErrors((current) => ({
-                              ...current,
-                              body: "That image could not be uploaded.",
-                            }));
-                          } finally {
-                            event.target.value = "";
-                          }
+                          if (file) void uploadSectionImage(index, file);
+                          event.target.value = "";
                         }}
                       />
                     </label>
+                    </ImageDrop>
                   )}
                 </div>
               ))}
