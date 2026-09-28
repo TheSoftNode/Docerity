@@ -78,12 +78,16 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       ],
       "navLinks": [
     {
-      "label": "Services",
-      "href": "/services"
-    },
-    {
       "label": "Work",
       "href": "/work"
+    },
+    {
+      "label": "AI",
+      "href": "/ai"
+    },
+    {
+      "label": "Web3",
+      "href": "/web3"
     },
     {
       "label": "Mentorship",

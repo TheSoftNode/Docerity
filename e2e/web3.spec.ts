@@ -35,26 +35,10 @@ test.describe("Web3 page", () => {
     expect(errors).toEqual([]);
   });
 
-  test("the page is reachable from the services list and the footer", async ({ page }) => {
-    /*
-      Not from the header any more. It fits six items and Services made a
-      seventh, so the specialisms moved under Services, which is where
-      somebody looking for them would go. Both routes are asserted because
-      they are the only two there now.
-    */
+  test("navbar 'Web3' link navigates to the dedicated page", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-
-    await page.goto("/services");
-    await page
-      .locator("#services")
-      .getByRole("heading", { name: /Web3/i })
-      .first()
-      .scrollIntoViewIfNeeded();
-    await page.locator(`#services a[href="/web3"]`).first().click();
-    await expect(page).toHaveURL("/web3");
-
     await page.goto("/");
-    await page.locator("footer").getByRole("link", { name: "Web3", exact: true }).click();
+    await page.locator("header").getByRole("link", { name: "Web3", exact: true }).click();
     await expect(page).toHaveURL("/web3");
   });
 
