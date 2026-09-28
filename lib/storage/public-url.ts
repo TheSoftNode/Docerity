@@ -15,6 +15,11 @@ import { storage } from "@/lib/config/env";
  * centre, so a photo taken in landscape does not become a picture of someone's
  * shoulder.
  *
+ * `width` is the width the image is *displayed* at, not the number of pixels to
+ * fetch: `dpr_2.0` below doubles it, so a 900 here delivers 1800. Passing the
+ * pixel count instead is how a body image ended up asking Cloudinary for 3200
+ * pixels to fill a 700-pixel column.
+ *
  * Leaving `height` out asks for the other mode: scaled to fit the width, whole,
  * with no crop. That is what a diagram or a screenshot inside an article needs.
  * Cropping one to a fixed ratio cuts the bottom off a tall flowchart, and the
@@ -22,6 +27,27 @@ import { storage } from "@/lib/config/env";
  * never upscales, so a small image stays its own size rather than being blown
  * up into mush.
  */
+export function imageTransform(options: { width: number; height?: number }): string {
+  return [
+    `w_${options.width}`,
+    /*
+      A height is the whole difference between the two modes, and getting it
+      wrong is invisible until somebody looks at a picture. With one, the image
+      is cropped to exactly that box and the crop hunts for a face. Without one,
+      it is scaled whole.
+    */
+    ...(options.height ? [`h_${options.height}`, "c_fill", "g_face"] : ["c_limit"]),
+    /* `f_auto` serves AVIF or WebP by Accept header, `q_auto` picks a quality
+       per image rather than a fixed number; together they are usually a 60-80%
+       saving over the original with no visible difference at this size. */
+    "f_auto",
+    "q_auto",
+    /* Retina without doubling the requested dimensions in every caller, which
+       is why `width` above is a CSS width. */
+    "dpr_2.0",
+  ].join(",");
+}
+
 export function cloudinaryImageUrl(
   publicId: string,
   options: { width: number; height?: number } = { width: 192, height: 192 }
@@ -30,19 +56,7 @@ export function cloudinaryImageUrl(
 
   const { cloudName } = storage.credentials;
 
-  const transformation = [
-    `w_${options.width}`,
-    ...(options.height ? [`h_${options.height}`, "c_fill", "g_face"] : ["c_limit"]),
-    /* `f_auto` serves AVIF or WebP by Accept header, `q_auto` picks a quality
-       per image rather than a fixed number; together they are usually a 60-80%
-       saving over the original with no visible difference at this size. */
-    "f_auto",
-    "q_auto",
-    /* Retina without doubling the requested dimensions in every caller. */
-    "dpr_2.0",
-  ].join(",");
-
-  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformation}/${publicId}`;
+  return `https://res.cloudinary.com/${cloudName}/image/upload/${imageTransform(options)}/${publicId}`;
 }
 
 /**

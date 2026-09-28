@@ -216,6 +216,12 @@ function ProjectEditor({
     Delivery URLs built here rather than on the server, so a newly uploaded
     file previews before the project has been saved.
 
+    `dpr_2.0` on each, because these are shown on the screen somebody is
+    editing on, and a 640px source in a 600px box is soft on every display
+    made in the last decade. The hero preview is `c_limit` rather than
+    `c_fill` for the same reason the public one is: it should show the
+    screenshot, not a crop of it.
+
     Video comes from its own namespace and its poster is generated from the
     clip, which is why this is not one template with the type swapped in.
   */
@@ -224,12 +230,12 @@ function ProjectEditor({
   const previewSrc = project.media?.publicId
     ? isVideo
       ? `https://res.cloudinary.com/${cloudName}/video/upload/q_auto,f_auto/${project.media.publicId}`
-      : `https://res.cloudinary.com/${cloudName}/image/upload/w_640,c_fill,f_auto,q_auto/${project.media.publicId}`
+      : `https://res.cloudinary.com/${cloudName}/image/upload/w_640,c_limit,f_auto,q_auto,dpr_2.0/${project.media.publicId}`
     : (project.media?.src ?? "");
 
   const galleryUrl = (item: { publicId: string; src: string }) =>
     item.publicId
-      ? `https://res.cloudinary.com/${cloudName}/image/upload/w_320,h_200,c_fill,f_auto,q_auto/${item.publicId}`
+      ? `https://res.cloudinary.com/${cloudName}/image/upload/w_320,h_200,c_fill,f_auto,q_auto,dpr_2.0/${item.publicId}`
       : item.src;
 
   return (

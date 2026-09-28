@@ -146,7 +146,7 @@ function SectionEditor({
     if (!cloudName) return "";
     return media.type === "video"
       ? `https://res.cloudinary.com/${cloudName}/video/upload/q_auto,f_auto/${media.publicId}`
-      : `https://res.cloudinary.com/${cloudName}/image/upload/w_480,c_limit,f_auto,q_auto/${media.publicId}`;
+      : `https://res.cloudinary.com/${cloudName}/image/upload/w_480,c_limit,f_auto,q_auto,dpr_2.0/${media.publicId}`;
   }
 
   return (

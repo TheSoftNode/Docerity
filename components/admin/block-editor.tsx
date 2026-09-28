@@ -596,11 +596,19 @@ function ImageField({
     setUploading(true);
     try {
       const uploaded = await uploadAttachment(file, { endpoint: "/api/admin/posts/upload" });
-      /* Stored as a delivery URL rather than a public_id, because this field
-         is rendered straight into an <img src> by sections that know nothing
-         about Cloudinary. */
+      /*
+        Stored as a delivery URL rather than a public_id, because this field is
+        rendered straight into an <img src> by sections that know nothing about
+        Cloudinary.
+
+        1600 rather than 400. The width is baked into what is stored, so it is
+        a permanent ceiling on how large that image can ever be delivered, and
+        400 was below what the About page's portrait alone needs on a retina
+        screen. `c_limit` never upscales and `f_auto,q_auto` decide the bytes,
+        so a generous ceiling costs nothing for the small consumers.
+      */
       onChange(
-        `https://res.cloudinary.com/${cloudName}/image/upload/w_400,c_limit,f_auto,q_auto/${uploaded.publicId}`
+        `https://res.cloudinary.com/${cloudName}/image/upload/w_1600,c_limit,f_auto,q_auto/${uploaded.publicId}`
       );
     } catch (thrown) {
       setError(

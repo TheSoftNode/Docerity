@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 import { isContentIconName } from "@/lib/content/icons";
+import { cloudinaryImageUrl, imageTransform } from "@/lib/storage/public-url";
 import { cleanBlock, safeImagePath, validateBlock } from "@/lib/content/blocks/clean";
 import { DEFAULTS } from "@/lib/content/blocks/defaults";
 import { mergeBlock } from "@/lib/content/blocks/merge";
@@ -319,5 +320,50 @@ test.describe("Merging a stored section over the built-in one", () => {
   test("a group the database says nothing about keeps its default", () => {
     const merged = mergeBlock("contact", {});
     expect(merged).toEqual(DEFAULTS.contact);
+  });
+});
+
+test.describe("Image delivery transforms", () => {
+  /*
+    What Cloudinary is asked for, which is invisible until somebody looks at a
+    picture and says it is blurry.
+
+    A height means crop, and no height means the whole image. A caller that
+    renders with `object-contain` must not pass a height, or Cloudinary crops
+    the picture before the renderer ever decides not to. That is exactly what
+    was happening to uploaded project screenshots.
+  */
+
+  test("no height scales the whole image", () => {
+    const transform = imageTransform({ width: 900 });
+    expect(transform).toContain("c_limit");
+    expect(transform).not.toContain("c_fill");
+    expect(transform).not.toContain("g_face");
+    expect(transform).not.toContain("h_");
+  });
+
+  test("a height crops to it, and looks for a face", () => {
+    /* Which is right for a review photo and wrong for a screenshot. */
+    const transform = imageTransform({ width: 192, height: 192 });
+    expect(transform).toContain("h_192");
+    expect(transform).toContain("c_fill");
+    expect(transform).toContain("g_face");
+  });
+
+  test("both are served retina and in a modern format", () => {
+    for (const transform of [
+      imageTransform({ width: 900 }),
+      imageTransform({ width: 192, height: 192 }),
+    ]) {
+      expect(transform).toContain("dpr_2.0");
+      expect(transform).toContain("f_auto");
+      expect(transform).toContain("q_auto");
+    }
+  });
+
+  test("the helper returns nothing without credentials", () => {
+    /* The guard that keeps a missing cloud name from producing a URL that
+       404s on every page. */
+    expect(cloudinaryImageUrl("anything", { width: 900 })).toBe("");
   });
 });

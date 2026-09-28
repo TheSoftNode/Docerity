@@ -58,7 +58,10 @@ function imageOf(
 
   const src = item.publicId
     ? storage.isConfigured
-      ? cloudinaryImageUrl(item.publicId, { width: 1400, height: 880 })
+      /* Width only. A height turns this into `c_fill,g_face`, which crops, and
+         a gallery screenshot is rendered whole at the full width of the
+         column: roughly 440 CSS pixels in the two-column grid. */
+      ? cloudinaryImageUrl(item.publicId, { width: 700 })
       : ""
     : (item.src ?? "");
 
@@ -94,9 +97,23 @@ function mediaOf(project: LeanProject): ProjectMedia | undefined {
     `f_auto,q_auto` mean the bytes are decided by the format rather than by the
     dimensions.
   */
+  /*
+    Width only, no height.
+
+    Passing a height asks for `c_fill,g_face`, which crops to exactly 16:10 and
+    hunts for a face while doing it. `work-media.tsx` renders these with
+    `object-contain` precisely because it must not crop: the screenshots range
+    from 1.06 to 2.38 against that frame, and cropping the wide ones cut off the
+    part worth reading. Cloudinary was undoing that decision before the renderer
+    ever saw the image, so a pasted screenshot arrived already sliced and scaled
+    down to fit a box it was then letterboxed inside again.
+
+    Only uploads went through this path, which is why it went unnoticed: the
+    twenty-five built-in projects are files under /public.
+  */
   const src = media.publicId
     ? storage.isConfigured
-      ? cloudinaryImageUrl(media.publicId, { width: 1200, height: 750 })
+      ? cloudinaryImageUrl(media.publicId, { width: 900 })
       : ""
     : media.src;
 

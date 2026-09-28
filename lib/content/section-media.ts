@@ -31,12 +31,12 @@ export type StoredSectionMedia = {
 };
 
 /*
-  1600 wide because a body image spans the article column on a large screen and
-  is likely a diagram or a screenshot with text in it, where the difference
-  between 1200 and 1600 is legibility rather than polish. No height, so it
-  scales whole instead of being cropped to a ratio: see `cloudinaryImageUrl`.
+  The CSS width a body image is shown at, which is roughly the article column.
+  `cloudinaryImageUrl` doubles it for retina, so this delivers 1600 actual
+  pixels: enough that a diagram or a screenshot with text in it stays legible.
+  No height, so it scales whole instead of being cropped to a ratio.
 */
-const BODY_IMAGE_WIDTH = 1600;
+const BODY_IMAGE_WIDTH = 800;
 
 export function sectionMediaOf(
   media: StoredSectionMedia | null | undefined
