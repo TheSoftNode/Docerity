@@ -9,7 +9,9 @@ import { WorkCard } from "@/components/sections/work/work-card";
 import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
 import type { SectionHeading } from "@/lib/content/blocks/source";
 
-const ALL = "All projects";
+/* Exported so the filter test can name the chip without typing the label,
+   which is how renaming the section broke a test about counts. */
+export const ALL_FILTER = "All projects";
 
 /*
   Filtered rather than one undifferentiated wall of 25.
@@ -33,7 +35,7 @@ function WorkShowcase({
   media: Partial<Record<string, ProjectMedia>>;
 }) {
   const reduceMotion = useReducedMotion();
-  const [active, setActive] = useState(ALL);
+  const [active, setActive] = useState(ALL_FILTER);
 
   const groups = useMemo(() => {
     const counts = new Map<string, number>();
@@ -49,7 +51,7 @@ function WorkShowcase({
 
   const shown = useMemo(
     () =>
-      active === ALL
+      active === ALL_FILTER
         ? projects
         : projects.filter((project) => project.groups.includes(active)),
     [active, projects]
@@ -77,7 +79,7 @@ function WorkShowcase({
           role="group"
           aria-label="Filter projects by category"
         >
-          {[[ALL, projects.length] as const, ...groups].map(([group, count]) => {
+          {[[ALL_FILTER, projects.length] as const, ...groups].map(([group, count]) => {
             const isActive = group === active;
             return (
               <button

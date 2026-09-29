@@ -22,3 +22,29 @@ export function hero() {
 export function navLabels(): string[] {
   return (DEFAULTS.site.navLinks as BlockRecord[]).map((link) => link.label as string);
 }
+
+/**
+ * What the header calls the page at `href`.
+ *
+ * For the tests that click a nav link to check where it goes: what matters is
+ * the destination, and naming the label instead is what broke those tests when
+ * Work became Projects. Throws rather than returning nothing, because a
+ * missing link is a real failure and an empty selector reads as a flaky one.
+ */
+export function navLabelFor(href: string): string {
+  const link = (DEFAULTS.site.navLinks as BlockRecord[]).find((item) => item.href === href);
+  if (!link) throw new Error(`No header link points at ${href}.`);
+  return link.label as string;
+}
+
+/**
+ * The footer links, in order. Same reasoning as the header's, and the same
+ * lesson: these were typed out in the footer test, so renaming Work to
+ * Projects broke a test that had nothing to do with the rename.
+ */
+export function footerLinks(): { label: string; href: string }[] {
+  return (DEFAULTS.site.footerLinks as BlockRecord[]).map((link) => ({
+    label: link.label as string,
+    href: link.href as string,
+  }));
+}

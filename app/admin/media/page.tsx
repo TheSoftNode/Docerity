@@ -12,14 +12,14 @@ export const metadata: Metadata = { title: "Media" };
 const logger = createLogger("admin.media");
 
 /**
- * Everything uploaded, in one place.
+ * Everything uploaded, in one place, and deletable from here.
  *
- * Read-only on purpose. Deleting from here would be deleting a file that some
- * page may still point at, and the failure is silent: a broken image on a
- * public page, days later, with nothing to connect it to the click that caused
- * it. Working out what still references an asset means walking every project,
- * post and content block, which is worth building when somebody actually needs
- * to reclaim space and is not worth guessing at now.
+ * This was read-only for a while, because deleting a file some page still
+ * points at fails silently: a broken image on a public page, days later, with
+ * nothing to connect it to the click that caused it. What makes the delete
+ * safe is `findMediaUsage`, which walks every project, post and content block
+ * and names what would break — so the warning is specific and the guard is the
+ * server's, not the page's.
  */
 export default async function AdminMediaPage() {
   await requireStaff("/admin/media");

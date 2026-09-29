@@ -44,7 +44,7 @@ async function Work() {
             nativeButton={false}
             render={<Link href="/projects" />}
           >
-            See all work
+            See all projects
             <ArrowRightIcon />
           </Button>
         </div>

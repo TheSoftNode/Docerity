@@ -66,7 +66,7 @@ async function ServicesLines() {
                     href={line.href}
                     className="mt-5 inline-flex items-center gap-1.5 border-t border-border/80 pt-4 text-sm text-foreground transition-colors hover:text-primary"
                   >
-                    See the work
+                    See the projects
                     <ArrowRightIcon className="size-3.5 shrink-0" />
                   </Link>
                 ) : null}

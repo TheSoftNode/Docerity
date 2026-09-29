@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import mongoose from "mongoose";
 
 import { hashPassword } from "@/lib/auth/password";
-import { BLOCK_KEYS } from "@/lib/content/blocks/schema";
+import { BLOCK_KEYS, blockFor } from "@/lib/content/blocks/schema";
 
 /**
  * The editable page sections, against a real database.
@@ -116,7 +116,17 @@ test.describe("Editing a section", () => {
 
     await page.getByLabel("Title for step 1").fill("You send us the details");
     await page.getByRole("button", { name: "Save" }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    /*
+      `exact`, and it matters everywhere this waits for a save.
+
+      An edited section also carries a notice reading "This section is your
+      version, saved by … on …". A loose match finds that too, so the wait
+      either fails on strict mode with two elements or — worse — is satisfied
+      by the notice before the save has landed, and the test walks on to read
+      the old copy off the live page. Both failure modes were showing up here
+      as unrelated flakiness in whichever assertion happened to lose the race.
+    */
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     /* `revalidatePath` on save, so the page has it rather than showing the old
        copy for another five minutes. */
@@ -141,7 +151,7 @@ test.describe("Editing a section", () => {
       .getByLabel("Description for step 4")
       .fill("Which is enough of a sentence to count as one.");
     await page.getByRole("button", { name: "Save" }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/contact");
     await expect(page.getByText("A fourth thing happens")).toBeVisible();
@@ -170,7 +180,7 @@ test.describe("Editing a section", () => {
 
     await page.getByRole("button", { name: "Reset to the original" }).click();
     await page.getByRole("button", { name: "Yes, reset it" }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/contact");
     await expect(page.getByText("You tell us what you need")).toBeVisible();
@@ -214,7 +224,7 @@ test.describe("Sections that are on every page", () => {
       .fill("/press");
 
     await page.getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     for (const path of ["/", "/about", "/projects"]) {
       await page.goto(path);
@@ -228,7 +238,7 @@ test.describe("Sections that are on every page", () => {
 
     await page.getByRole("textbox", { name: "Site name" }).fill("Docerity Labs");
     await page.getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/contact");
     await expect(page.getByRole("banner").getByText("Docerity Labs")).toBeVisible();
@@ -237,7 +247,7 @@ test.describe("Sections that are on every page", () => {
     await page.goto("/admin/content/site");
     await page.getByRole("textbox", { name: "Site name" }).fill("Docerity");
     await page.getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
   });
 
   /*
@@ -250,18 +260,45 @@ test.describe("Sections that are on every page", () => {
     stays caught: adding an entry and forgetting to wire it looks exactly like
     the working ones from inside the editor.
   */
-  const titled = [
-    { entry: "Homepage", path: "/", title: "The front door" },
-    { entry: "Work", path: "/projects", title: "Things I built" },
-    { entry: "AI", path: "/ai", title: "Models in production" },
-    { entry: "Web3", path: "/web3", title: "On-chain work" },
-    { entry: "Mentorship", path: "/mentorship", title: "Growing engineers" },
-    { entry: "Blog", path: "/blog", title: "Written down" },
-    { entry: "About", path: "/about", title: "Who is behind this" },
-    { entry: "Contact", path: "/contact", title: "Get in touch" },
-    { entry: "Reviews", path: "/reviews", title: "In their words" },
-    { entry: "Write for us", path: "/contribute", title: "Write something" },
-  ];
+  /*
+    The page each entry is supposed to reach, and a title distinctive enough
+    that finding it proves the wiring rather than the fallback.
+
+    Keyed by the stored key, not the label, and the entries themselves come
+    from the schema below. A hand-written list is what let two changes through:
+    the Work entry's label became "Projects" and a Services entry was added,
+    and in both cases this test went on passing while covering less than it
+    claimed to. Deriving the list means a new entry fails here until somebody
+    says which page it belongs to.
+  */
+  const SEO_PAGES: Record<string, { path: string; title: string }> = {
+    home: { path: "/", title: "The front door" },
+    services: { path: "/services", title: "What the team takes on" },
+    work: { path: "/projects", title: "Things I built" },
+    ai: { path: "/ai", title: "Models in production" },
+    web3: { path: "/web3", title: "On-chain work" },
+    mentorship: { path: "/mentorship", title: "Growing engineers" },
+    blog: { path: "/blog", title: "Written down" },
+    about: { path: "/about", title: "Who is behind this" },
+    contact: { path: "/contact", title: "Get in touch" },
+    reviews: { path: "/reviews", title: "In their words" },
+    contribute: { path: "/contribute", title: "Write something" },
+  };
+
+  const seoEntries = blockFor("seo").groups.flatMap((group) =>
+    group.kind === "keyed" ? group.entries : []
+  );
+
+  const titled = seoEntries.map(({ key, label }) => {
+    const page = SEO_PAGES[key];
+    if (!page) {
+      throw new Error(
+        `The SEO editor has an entry "${key}" that this test knows no page for. ` +
+          "Add it to SEO_PAGES, or the entry is wired to nothing and nobody would notice."
+      );
+    }
+    return { entry: label, ...page };
+  });
 
   test("every page title in the editor reaches its page", async ({ page }) => {
     await signIn(page, OWNER);
@@ -272,7 +309,7 @@ test.describe("Sections that are on every page", () => {
     }
 
     await page.getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     for (const { path, title } of titled) {
       await page.goto(path);
@@ -302,7 +339,7 @@ test.describe("Section headings", () => {
       .getByRole("textbox", { name: "Heading for Capabilities" })
       .fill("Contracts that hold up.");
     await page.getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/web3");
     await expect(
@@ -406,7 +443,7 @@ test.describe("A section with an icon", () => {
     await page.getByRole("button", { name: /^Change icon for capability 1/i }).click();
     await page.getByRole("button", { name: "Database", exact: true }).click();
     await page.getByRole("button", { name: "Save", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/projects");
     /* Lucide renders its name into the class list, which is the one part of an

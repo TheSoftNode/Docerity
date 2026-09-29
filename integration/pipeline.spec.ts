@@ -563,7 +563,7 @@ test.describe("The writing pipeline", () => {
       .fill("A paragraph long enough to look like prose rather than a placeholder.");
 
     await page.getByRole("button", { name: "Save draft" }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     /* The URL changed from /new to the post's id, so saving again updates rather
        than creating a second copy. `saved=1` is what carries the confirmation
@@ -597,7 +597,7 @@ test.describe("The writing pipeline", () => {
     );
 
     await page.getByRole("button", { name: "Publish", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
     await expect(page.getByText("Live", { exact: true }).first()).toBeVisible();
 
     await page.goto("/blog/written-by-the-integration-suite");
@@ -620,7 +620,7 @@ test.describe("The writing pipeline", () => {
 
     await page.getByLabel("Heading for section 1").fill("The first section, renamed");
     await page.getByRole("button", { name: "Update live post" }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/blog/written-by-the-integration-suite");
     await expect(
@@ -649,7 +649,7 @@ test.describe("The writing pipeline", () => {
     await expect(page.getByText(/renders as a placeholder frame/)).toBeVisible();
 
     await page.getByRole("button", { name: "Update live post" }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/blog/written-by-the-integration-suite");
     await expect(page.getByText("Image placeholder")).toBeVisible();

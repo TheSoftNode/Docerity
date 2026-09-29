@@ -1,17 +1,20 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import {
   AlertTriangleIcon,
   DownloadIcon,
   LoaderCircleIcon,
   MailIcon,
+  Trash2Icon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { formatBytes } from "@/lib/contact/schema";
 import {
+  deleteEnquiryRecord,
   getAttachmentUrl,
   updateEnquiryStatus,
   type EnquiryStatus,
@@ -113,9 +116,16 @@ function Attachment({
 }
 
 function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
+  const router = useRouter();
   const [status, setStatus] = useState(enquiry.status);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  /* The delete keeps its own message rather than sharing the status card's.
+     Sharing it put "that could not be deleted" under the status buttons,
+     which is the one place somebody pressing Delete is not looking. */
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   function change(next: EnquiryStatus) {
     /* Set locally first so the row responds immediately, then reverted if the
@@ -130,6 +140,33 @@ function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
         setStatus(previous);
         setError(result.message);
       }
+    });
+  }
+
+  function remove() {
+    setDeleting(true);
+    setDeleteError(null);
+
+    startTransition(async () => {
+      const result = await deleteEnquiryRecord(enquiry.id);
+
+      if (!result.ok) {
+        setDeleting(false);
+        setDeleteError(result.message);
+        return;
+      }
+
+      /*
+        Back to the list, because this page's subject no longer exists.
+        `replace` rather than `push`: Back would land on a deleted enquiry.
+
+        The count of files Cloudinary would not destroy is carried across in
+        the URL. It is not an error — the enquiry is gone either way — but it
+        is the only moment anybody could learn that a file outlived the record
+        it belonged to, and it would otherwise be visible only in the log.
+      */
+      const query = result.orphaned > 0 ? `?orphaned=${result.orphaned}` : "";
+      router.replace(`/admin/enquiries${query}`);
     });
   }
 
@@ -275,6 +312,69 @@ function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
             </p>
           ) : null}
         </dl>
+      </div>
+
+      {/*
+        Deleting, kept in its own card at the bottom and behind a second press.
+        Archiving is the usual answer to "done with this"; this is for a spam
+        submission whose attachment should not stay on the account.
+      */}
+      <div className="rounded-xl border border-destructive/30 bg-destructive/[0.03] px-4 py-4 sm:px-5">
+        <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+          Delete
+        </p>
+
+        {confirming ? (
+          <>
+            <p className="mt-2 text-sm text-foreground">
+              Delete {enquiry.reference} for good?
+              {enquiry.attachments.length > 0
+                ? ` Its ${enquiry.attachments.length} ${
+                    enquiry.attachments.length === 1 ? "attachment" : "attachments"
+                  } will be removed from storage too.`
+                : ""}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              This cannot be undone. Archive it instead if you only want it out
+              of the inbox.
+            </p>
+            {deleteError ? (
+              <p role="alert" className="mt-2 text-xs text-destructive">
+                {deleteError}
+              </p>
+            ) : null}
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <Button variant="destructive" size="sm" disabled={deleting} onClick={remove}>
+                {deleting ? <LoaderCircleIcon className="animate-spin" /> : <Trash2Icon />}
+                {deleting ? "Deleting" : "Delete for good"}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={deleting}
+                onClick={() => setConfirming(false)}
+              >
+                Keep it
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Removes the enquiry and any files attached to it. Archiving is
+              usually what you want.
+            </p>
+            <Button
+              variant="subtle-danger"
+              size="sm"
+              className="mt-3"
+              onClick={() => setConfirming(true)}
+            >
+              <Trash2Icon />
+              Delete this enquiry
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

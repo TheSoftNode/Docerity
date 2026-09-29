@@ -6,8 +6,9 @@ import { requireStaffOrThrow } from "@/lib/auth/dal";
 import { isAppError } from "@/lib/core/errors";
 import { createLogger } from "@/lib/core/logger";
 import { storage } from "@/lib/config/env";
-import { signedUrlFor, type ResourceType } from "@/lib/storage/cloudinary";
+import { destroyAsset, signedUrlFor, type ResourceType } from "@/lib/storage/cloudinary";
 import {
+  deleteEnquiry,
   findEnquiryById,
   setEnquiryStatus,
 } from "@/lib/repositories/enquiry.repository";
@@ -85,5 +86,60 @@ export async function getAttachmentUrl(
     if (isAppError(error)) return { ok: false, message: error.publicMessage };
     logger.error("signing an attachment url failed", error);
     return { ok: false, message: "Could not prepare that download." };
+  }
+}
+
+/**
+ * Deleting an enquiry and the files that came with it.
+ *
+ * Archiving covers "dealt with", so this is for the other case: a spam
+ * submission carrying an attachment nobody should keep. The attachments go
+ * first — if the row went first, their public_ids would be gone and the files
+ * would sit in Cloudinary unreachable and unaccounted for.
+ *
+ * A file Cloudinary will not destroy does not stop the delete. The alternative
+ * is an enquiry that cannot be removed because of a file that may already be
+ * gone, so the count of what survived is reported instead.
+ */
+export async function deleteEnquiryRecord(
+  id: string
+): Promise<{ ok: true; orphaned: number } | { ok: false; message: string }> {
+  try {
+    const user = await requireStaffOrThrow();
+
+    const enquiry = await findEnquiryById(id);
+    if (!enquiry) return { ok: false, message: "That enquiry no longer exists." };
+
+    let orphaned = 0;
+
+    for (const attachment of enquiry.attachments ?? []) {
+      const destroyed = await destroyAsset({
+        publicId: attachment.publicId,
+        resourceType: attachment.resourceType as ResourceType,
+        /* `authenticated`, matching how attachments are uploaded. Destroying
+           the wrong delivery type reports success and leaves the file. */
+        deliveryType: "authenticated",
+      });
+
+      if (!destroyed) orphaned += 1;
+    }
+
+    const removed = await deleteEnquiry(id);
+    if (!removed) return { ok: false, message: "That enquiry no longer exists." };
+
+    revalidatePath("/admin/enquiries");
+    logger.info("enquiry deleted", {
+      id,
+      reference: enquiry.reference,
+      attachments: enquiry.attachments?.length ?? 0,
+      orphaned,
+      by: user.email,
+    });
+
+    return { ok: true, orphaned };
+  } catch (error) {
+    if (isAppError(error)) return { ok: false, message: error.publicMessage };
+    logger.error("deleting an enquiry failed", error, { id });
+    return { ok: false, message: "That could not be deleted. Please try again." };
   }
 }

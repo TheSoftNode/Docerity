@@ -31,7 +31,7 @@ async function WorkHero() {
               nativeButton={false}
               render={<Link href="#showcase" />}
             >
-              See the work
+              See the projects
               <ArrowRightIcon />
             </Button>
             <Button

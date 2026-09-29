@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { footerLinks } from "./copy";
+
 test.describe("Footer", () => {
   test("renders nav links, socials, and copyright with no console errors", async ({
     page,
@@ -14,8 +16,14 @@ test.describe("Footer", () => {
     const footer = page.locator("footer");
     await footer.scrollIntoViewIfNeeded();
 
-    for (const label of ["Work", "Web3", "Mentorship", "Blog"]) {
-      await expect(footer.getByRole("link", { name: label, exact: true })).toHaveCount(1);
+    /* Read from the copy rather than named here: these labels are editable,
+       and a test that types them out fails when somebody renames one, which
+       is a decision rather than a defect. What is worth asserting is that
+       every link the footer was given is on the page exactly once. */
+    for (const { label, href } of footerLinks()) {
+      const link = footer.getByRole("link", { name: label, exact: true });
+      await expect(link, `the footer's ${label} link`).toHaveCount(1);
+      await expect(link).toHaveAttribute("href", href);
     }
     await expect(footer.getByText("All rights reserved.")).toBeVisible();
 

@@ -226,7 +226,7 @@ test.describe("Writing as a contributor", () => {
     await expect(page).toHaveURL(/\/admin\/posts\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await page.getByRole("button", { name: "Publish", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/blog/what-a-database-index-actually-does");
     await expect(page.getByText("Written by")).toBeVisible();

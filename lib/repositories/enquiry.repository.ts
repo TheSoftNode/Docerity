@@ -182,3 +182,16 @@ export async function setEnquiryStatus(
   const result = await EnquiryModel.updateOne({ _id: id }, { $set: { status } });
   return result.matchedCount > 0;
 }
+
+/**
+ * Removes an enquiry, handing back its attachments on the way out.
+ *
+ * The document is returned rather than a boolean because its attachments live
+ * in Cloudinary under `authenticated` delivery: deleting the row without them
+ * leaves files nobody can reach through the tool and nobody knows to remove,
+ * and the public_ids are only recoverable from the row being deleted.
+ */
+export async function deleteEnquiry(id: string) {
+  await connectDB();
+  return EnquiryModel.findByIdAndDelete(id).lean();
+}

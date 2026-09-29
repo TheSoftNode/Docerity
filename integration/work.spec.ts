@@ -161,7 +161,7 @@ test.describe("Adding a project", () => {
     await expect(page).toHaveURL(/\/admin\/projects\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await page.getByRole("button", { name: "Publish", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/projects/harbour");
     await expect(page.getByRole("heading", { name: "Harbour" })).toBeVisible();
@@ -217,7 +217,7 @@ test.describe("Video, gallery and case study", () => {
 
     await page.getByLabel("Built for").fill("Meridian Bank");
     await page.getByRole("button", { name: "Publish", exact: true }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/projects/harbour");
     await expect(page.getByText("Built for")).toBeVisible();
@@ -237,7 +237,7 @@ test.describe("Video, gallery and case study", () => {
       .fill("Every transfer paid its own fee, so a hundred small payments cost a hundred times what one large one did.");
 
     await page.getByRole("button", { name: "Update live" }).click();
-    await expect(page.getByText("Saved")).toBeVisible();
+    await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
     await page.goto("/projects/harbour");
     await expect(

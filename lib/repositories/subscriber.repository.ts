@@ -71,3 +71,43 @@ export async function countSubscribersByStatus() {
   ]);
   return { subscribed, unsubscribed, total: subscribed + unsubscribed };
 }
+
+/**
+ * Unsubscribing somebody from the tool rather than from their own link.
+ *
+ * Matched on the address, since that is what the list shows and what somebody
+ * asking to be taken off gives you. Kept as a status change rather than a
+ * delete so a later re-subscribe does not silently mint a new token for an
+ * address that already had one, and so the record of them having asked
+ * survives.
+ */
+export async function setSubscriberStatus(
+  email: string,
+  status: "subscribed" | "unsubscribed"
+): Promise<boolean> {
+  await connectDB();
+  const result = await SubscriberModel.updateOne(
+    { email },
+    {
+      $set: {
+        status,
+        unsubscribedAt: status === "unsubscribed" ? new Date() : null,
+      },
+    }
+  );
+  return result.matchedCount > 0;
+}
+
+/**
+ * Erasing an address entirely.
+ *
+ * Distinct from unsubscribing on purpose: unsubscribing keeps the address so
+ * it is never mailed again, and erasing is for somebody asking to be forgotten
+ * or for a typo that should not sit in the list. Nothing stops them
+ * subscribing again afterwards, which is the right outcome for both.
+ */
+export async function deleteSubscriber(email: string): Promise<boolean> {
+  await connectDB();
+  const result = await SubscriberModel.deleteOne({ email });
+  return result.deletedCount > 0;
+}

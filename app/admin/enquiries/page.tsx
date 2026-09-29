@@ -37,16 +37,21 @@ function labelFor(options: readonly { value: string; label: string }[], value: s
 export default async function AdminEnquiriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; orphaned?: string }>;
 }) {
   /* Staff only: a contributor has no business in here, and typing the URL
      sends them to the one page they can use rather than showing an error. */
   await requireStaff("/admin/enquiries");
 
-  const { status } = await searchParams;
+  const { status, orphaned } = await searchParams;
   const tab: Tab = TABS.some((option) => option.value === status)
     ? (status as Tab)
     : "new";
+
+  /* Set by a delete that could not destroy every attachment. Parsed rather
+     than trusted: it arrives in the URL and anybody can type one. */
+  const stranded = Number.parseInt(orphaned ?? "", 10);
+  const strandedFiles = Number.isInteger(stranded) && stranded > 0 ? stranded : 0;
 
   if (!database.isConfigured) {
     return (
@@ -75,6 +80,23 @@ export default async function AdminEnquiriesPage({
         title="Enquiries"
         description="Everything sent through the contact form, with its delivery record."
       />
+
+      {/*
+        A deleted enquiry whose attachments Cloudinary would not destroy. Not
+        an error — the enquiry itself is gone — but the files outlived the only
+        record naming them, so this is the one chance anybody has to know.
+      */}
+      {strandedFiles > 0 ? (
+        <p
+          role="status"
+          className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/[0.06] px-4 py-3 text-xs leading-relaxed text-muted-foreground"
+        >
+          The enquiry was deleted, but {strandedFiles}{" "}
+          {strandedFiles === 1 ? "attachment" : "attachments"} could not be
+          removed from storage. They may already have been gone. If not, they
+          are in the uploads for that enquiry and nothing points at them now.
+        </p>
+      ) : null}
 
       <nav aria-label="Filter by status" className="mt-5 flex flex-wrap gap-2">
         {TABS.map((option) => {

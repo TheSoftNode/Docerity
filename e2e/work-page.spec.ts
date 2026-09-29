@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-import { heading } from "./copy";
+import { heading, navLabelFor } from "./copy";
 
 test.describe("The old work URLs", () => {
   /*
@@ -63,14 +63,16 @@ test.describe("Work page", () => {
     expect(errors).toEqual([]);
   });
 
-  test("navbar 'Work' link navigates to the dedicated page", async ({ page }) => {
+  test("the navbar link for this page navigates to it", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    await page.locator("header").getByRole("link", { name: "Work", exact: true }).click();
+    /* Found by where it goes, not by what it says. The label is editable, and
+       naming it here is what broke this test when Work became Projects. */
+    await page.locator("header").getByRole("link", { name: navLabelFor("/projects"), exact: true }).click();
     await expect(page).toHaveURL("/projects");
   });
 
-  test("'See the work' scrolls to the showcase, 'Start a project' goes to contact", async ({
+  test("'See the projects' scrolls to the showcase, 'Start a project' goes to contact", async ({
     page,
   }) => {
     await page.goto("/projects");
@@ -79,20 +81,20 @@ test.describe("Work page", () => {
     await expect(page).toHaveURL("/contact");
 
     await page.goto("/projects");
-    await page.getByRole("button", { name: "See the work" }).click();
+    await page.getByRole("button", { name: "See the projects" }).click();
     await expect(page.locator("#showcase")).toBeInViewport();
   });
 
-  test("homepage 'See all work' button links here", async ({ page }) => {
+  test("the homepage's 'see all' button links here", async ({ page }) => {
     await page.goto("/");
     await page.locator("#work").scrollIntoViewIfNeeded();
-    await page.getByRole("button", { name: "See all work" }).click();
+    await page.getByRole("button", { name: "See all projects" }).click();
     await expect(page).toHaveURL("/projects");
   });
 
-  test("project page 'All work' back link points to the dedicated page", async ({ page }) => {
+  test("a project page's back link points to the dedicated page", async ({ page }) => {
     await page.goto("/projects/eep");
-    await page.getByRole("link", { name: "All work" }).click();
+    await page.getByRole("link", { name: "All projects" }).click();
     await expect(page).toHaveURL("/projects");
   });
 });

@@ -15,6 +15,7 @@ import {
   AdminPageHeader,
 } from "@/components/admin/admin-page-header";
 import { Button } from "@/components/ui/button";
+import { SubscriberActions } from "@/components/admin/subscriber-actions";
 
 export const metadata: Metadata = { title: "Subscribers" };
 
@@ -124,6 +125,9 @@ export default async function AdminSubscribersPage() {
                   <th scope="col" className="px-4 py-2.5 text-right font-medium text-muted-foreground">
                     Joined
                   </th>
+                  <th scope="col" className="px-4 py-2.5 text-right font-medium text-muted-foreground">
+                    <span className="sr-only">Actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -154,6 +158,14 @@ export default async function AdminSubscribersPage() {
                         month: "short",
                         year: "numeric",
                       })}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2.5 text-right">
+                      <SubscriberActions
+                        email={subscriber.email}
+                        status={
+                          subscriber.status === "subscribed" ? "subscribed" : "unsubscribed"
+                        }
+                      />
                     </td>
                   </tr>
                 ))}

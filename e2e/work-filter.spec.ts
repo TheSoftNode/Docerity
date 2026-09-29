@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 import { projects } from "@/components/sections/work/work-data";
+import { ALL_FILTER } from "@/components/sections/work-program/work-showcase";
 
 test.describe("Work filtering", () => {
   test("filters narrow the grid and the counts are real", async ({ page }) => {
@@ -23,7 +24,7 @@ test.describe("Work filtering", () => {
       expect(claimed).toBeLessThan(all);
     }
 
-    await page.getByRole("button", { name: /^All work/ }).click();
+    await page.getByRole("button", { name: new RegExp(`^${ALL_FILTER}`) }).click();
     await expect(cards).toHaveCount(all);
   });
 
@@ -47,12 +48,22 @@ test.describe("Project media", () => {
     expect(await images.count()).toBeGreaterThanOrEqual(12);
 
     /* Check a sample actually decoded; Next serves these through the image
-       optimiser, so a bad source path fails at request time, not build time. */
+       optimiser, so a bad source path fails at request time, not build time.
+
+       Scrolled to first, and waited for: these are lazy, and on a phone-width
+       viewport the grid is one card wide, so the sixth is a long way down the
+       page and has not started loading. Asserting on it there measures the
+       viewport rather than the image. */
     for (let i = 0; i < 6; i++) {
-      const ok = await images.nth(i).evaluate(
-        (img: HTMLImageElement) => img.complete && img.naturalWidth > 0
-      );
-      expect(ok, `screenshot ${i} failed to load`).toBe(true);
+      const image = images.nth(i);
+      await image.scrollIntoViewIfNeeded();
+      await expect
+        .poll(
+          () =>
+            image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
+          { message: `screenshot ${i} failed to load` }
+        )
+        .toBe(true);
     }
   });
 });
