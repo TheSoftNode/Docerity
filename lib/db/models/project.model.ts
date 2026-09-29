@@ -145,8 +145,26 @@ const projectSchema = new Schema(
        reads as "mine" rather than as missing data. */
     client: { type: String, default: "", trim: true, maxlength: 160 },
 
-    /* The homepage shows the featured ones; /work shows everything published. */
+    /* The homepage shows the featured ones; /projects shows everything
+       published. Capped at MAX_FEATURED_PROJECTS, enforced in the action
+       rather than here: the model cannot count its own siblings. */
     featured: { type: Boolean, default: false },
+
+    /*
+      Where it sits in the homepage band, independent of `sortOrder`.
+
+      A separate field because the two lists answer different questions. The
+      /projects grid is the whole catalogue, ordered so it reads well at
+      twenty-five entries; the homepage band is six picked to make a case to
+      somebody who has been on the site for four seconds. Reusing one number
+      for both means every homepage rearrangement quietly reshuffles the
+      catalogue, which is how it behaved before and why it could not be
+      curated.
+
+      Zero on anything not featured, so unfeaturing does not leave a stale
+      position to trip over when it is featured again later.
+    */
+    featuredOrder: { type: Number, default: 0 },
 
     /*
       Whether it appears on the site at all.
@@ -179,7 +197,7 @@ const projectSchema = new Schema(
 
 /* The public list, and the homepage's featured subset. */
 projectSchema.index({ published: 1, sortOrder: 1, createdAt: -1 });
-projectSchema.index({ featured: 1, sortOrder: 1 });
+projectSchema.index({ featured: 1, featuredOrder: 1 });
 
 export type ProjectDocument = InferSchemaType<typeof projectSchema>;
 

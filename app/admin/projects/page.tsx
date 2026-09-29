@@ -7,6 +7,7 @@ import { requireStaff } from "@/lib/auth/dal";
 import { database, storage } from "@/lib/config/env";
 import {
   countProjectsByState,
+  MAX_FEATURED_PROJECTS,
   listAllProjects,
 } from "@/lib/repositories/project.repository";
 import { cloudinaryImageUrl } from "@/lib/storage/public-url";
@@ -16,6 +17,7 @@ import {
   AdminPageHeader,
 } from "@/components/admin/admin-page-header";
 import { ProjectRow, type ProjectSummary } from "@/components/admin/project-row";
+import { FeaturedBand, type FeaturedProject } from "@/components/admin/featured-band";
 import { ImportProjectsButton } from "@/components/admin/import-projects-button";
 import { projects as staticProjects } from "@/components/sections/work/work-data";
 import { Button } from "@/components/ui/button";
@@ -78,6 +80,24 @@ export default async function AdminWorkPage() {
     isLast: index === rows.length - 1,
   }));
 
+  /*
+    The homepage band, derived from the rows already loaded rather than queried
+    again. Sorted by `featuredOrder`, which is the homepage's own order and not
+    the catalogue's; ties fall back to the list order so a set featured before
+    that field existed still has a stable arrangement to start rearranging.
+  */
+  const band: FeaturedProject[] = rows
+    .map((row, index) => ({ row, index }))
+    .filter(({ row }) => row.featured)
+    .sort((a, b) => (a.row.featuredOrder ?? 0) - (b.row.featuredOrder ?? 0) || a.index - b.index)
+    .map(({ row, index }) => ({
+      id: String(row._id),
+      name: row.name,
+      category: row.category ?? "",
+      thumbnailUrl: projects[index].thumbnailUrl,
+      published: Boolean(row.published),
+    }));
+
   /* Which of the built-in projects have never been imported. Compared by slug
      because that is what `importProjects` deduplicates on. */
   const stored = new Set(projects.map((project) => project.slug));
@@ -127,6 +147,8 @@ export default async function AdminWorkPage() {
           </div>
         ))}
       </dl>
+
+      <FeaturedBand projects={band} max={MAX_FEATURED_PROJECTS} />
 
       {/*
         Offered whenever the file has projects the database does not, not only

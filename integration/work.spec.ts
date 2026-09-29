@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import { hashPassword } from "@/lib/auth/password";
 import { projects as builtIn } from "@/components/sections/work/work-data";
+import { MAX_FEATURED_PROJECTS } from "@/lib/repositories/project.repository";
 
 /**
  * The work section, against a real database.
@@ -169,9 +170,39 @@ test.describe("Adding a project", () => {
     await expect(page.locator('a[href="https://harbour.example/"]').first()).toBeVisible();
   });
 
-  test("featuring it puts it on the homepage", async ({ page }) => {
+  test("the homepage refuses a seventh project", async ({ page }) => {
+    /*
+      The imported set arrives with six already featured, which is the whole
+      band. Featuring is refused rather than silently accepted-and-ignored:
+      a starred project that never appears is the worst of the three possible
+      behaviours, because nothing on the page says why.
+    */
     await signIn(page);
     await page.goto("/admin/projects");
+
+    await expect(page.getByText(`6 of ${MAX_FEATURED_PROJECTS}`)).toBeVisible();
+
+    await page.getByRole("button", { name: "Show Harbour on the homepage" }).click();
+    await expect(page.getByText(/holds 6 projects/i)).toBeVisible();
+
+    await page.goto("/");
+    await expect(
+      page.getByRole("heading", { name: /Harbour, view project/ })
+    ).toHaveCount(0);
+  });
+
+  test("featuring it puts it on the homepage once there is room", async ({ page }) => {
+    await signIn(page);
+    await page.goto("/admin/projects");
+
+    /* Whichever is last in the band, taken off from the band's own panel. */
+    const band = page.getByRole("region", { name: "On the homepage" });
+    await band
+      .getByRole("button", { name: /^Take .* off the homepage$/ })
+      .last()
+      .click();
+    await expect(page.getByText(`5 of ${MAX_FEATURED_PROJECTS}`)).toBeVisible();
+
     await page.getByRole("button", { name: "Show Harbour on the homepage" }).click();
     await expect(
       page.getByRole("button", { name: "Remove Harbour from the homepage" })
@@ -179,6 +210,44 @@ test.describe("Adding a project", () => {
 
     await page.goto("/");
     await expect(page.getByRole("heading", { name: /Harbour, view project/ })).toBeVisible();
+  });
+
+  test("the band's order is the homepage's order, and is its own", async ({ page }) => {
+    await signIn(page);
+    await page.goto("/admin/projects");
+
+    const band = page.getByRole("region", { name: "On the homepage" });
+    const names = () => band.locator("ol > li").locator("span.font-medium");
+
+    const before = await names().allInnerTexts();
+    /* Harbour was featured last, so it is at the end of the band. Moving it to
+       the top is the arrangement being tested. */
+    expect(before.at(-1)).toBe("Harbour");
+
+    /* One place per click, so Harbour's own index is what to watch: asserting
+       on the first row instead only changes on the final swap, and waiting for
+       it earlier is waiting for something that is not going to happen. */
+    for (let target = before.length - 2; target >= 0; target -= 1) {
+      await band.getByRole("button", { name: "Move Harbour up" }).click();
+      await expect(names().nth(target)).toHaveText("Harbour");
+    }
+
+    await expect(names().first()).toHaveText("Harbour");
+
+    /* The homepage reads the same order. */
+    await page.goto("/");
+    const firstCard = page.locator("#work").getByRole("heading", { level: 3 }).first();
+    await expect(firstCard).toContainText("Harbour");
+
+    /*
+      And the catalogue did not move. This is the point of the separate order:
+      before it existed, arranging the homepage reshuffled /projects, so
+      curating six rearranged twenty-five.
+    */
+    await page.goto("/projects");
+    await expect(
+      page.locator("#showcase").getByRole("heading", { level: 3 }).first()
+    ).not.toContainText("Harbour");
   });
 
   test("unpublishing takes it off again", async ({ page }) => {

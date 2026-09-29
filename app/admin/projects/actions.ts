@@ -21,12 +21,15 @@ import {
 import {
   createProject,
   deleteProject,
+  featureProject,
   findProjectById,
   importProjects,
   isProjectSlugTaken,
+  moveFeaturedProject,
   moveProject,
   setProjectFlags,
   updateProject,
+  MAX_FEATURED_PROJECTS,
 } from "@/lib/repositories/project.repository";
 import {
   projects as staticProjects,
@@ -164,7 +167,14 @@ export async function setProjectFeatured(
 ): Promise<SimpleResult> {
   try {
     const user = await requireStaffOrThrow();
-    const updated = await setProjectFlags(id, { featured }, user.email);
+    const updated = await featureProject(id, featured, user.email);
+
+    if (updated === "full") {
+      return {
+        ok: false,
+        message: `The homepage holds ${MAX_FEATURED_PROJECTS} projects. Take one off first.`,
+      };
+    }
     if (!updated) return { ok: false, message: "That project no longer exists." };
 
     revalidateWork(updated.slug);
@@ -173,6 +183,31 @@ export async function setProjectFeatured(
   } catch (error) {
     if (isAppError(error)) return { ok: false, message: error.publicMessage };
     logger.error("featuring a project failed", error);
+    return { ok: false, message: "That did not work. Please try again." };
+  }
+}
+
+/**
+ * Moves a project within the homepage band.
+ *
+ * Separate from `reorderProject`, which moves it within the whole catalogue.
+ * The two orders are independent on purpose: curating the six on the homepage
+ * should not reshuffle the twenty-five on /projects.
+ */
+export async function reorderFeatured(
+  id: string,
+  direction: -1 | 1
+): Promise<SimpleResult> {
+  try {
+    await requireStaffOrThrow();
+    const moved = await moveFeaturedProject(id, direction);
+    if (!moved) return { ok: false, message: "It is already at the end." };
+
+    revalidateWork();
+    return { ok: true };
+  } catch (error) {
+    if (isAppError(error)) return { ok: false, message: error.publicMessage };
+    logger.error("reordering the homepage band failed", error);
     return { ok: false, message: "That did not work. Please try again." };
   }
 }

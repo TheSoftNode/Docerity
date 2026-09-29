@@ -9,7 +9,9 @@ import {
 } from "@/lib/storage/public-url";
 import {
   findPublishedProjectBySlug,
+  listFeaturedProjects,
   listPublishedProjects,
+  MAX_FEATURED_PROJECTS,
   type LeanProject,
 } from "@/lib/repositories/project.repository";
 import {
@@ -48,6 +50,26 @@ function indexOf(position: number): string {
 }
 
 /** A stored image, resolved to a URL. Cloudinary wins over a `public/` path. */
+/**
+ * Repoints a stored path at the folder the screenshots actually live in.
+ *
+ * The section was renamed from work to projects, which moved
+ * `public/work/` to `public/projects/`. The files moved; the rows that point
+ * at them did not, because they are in the database and `git mv` does not
+ * reach there. The result was a 400 from the image optimiser for every project
+ * imported before the rename — the page-level redirect rescues a browser
+ * asking for `/work/eep.webp`, but the optimiser fetches the path it is given
+ * and does not follow one.
+ *
+ * Fixed on read rather than by a migration, so it holds for any database this
+ * code meets — production, a local copy, a colleague's — without anybody
+ * remembering to run something. Anchored on the leading slash so it cannot
+ * touch a Cloudinary URL or a path that merely contains the word.
+ */
+function repoint(src: string): string {
+  return src.startsWith("/work/") ? `/projects/${src.slice("/work/".length)}` : src;
+}
+
 function imageOf(
   item:
     | { publicId?: string; src?: string; alt?: string; caption?: string }
@@ -63,7 +85,7 @@ function imageOf(
          column: roughly 440 CSS pixels in the two-column grid. */
       ? cloudinaryImageUrl(item.publicId, { width: 700 })
       : ""
-    : (item.src ?? "");
+    : repoint(item.src ?? "");
 
   if (!src) return undefined;
   return { src, alt: item.alt ?? "", ...(item.caption ? { caption: item.caption } : {}) };
@@ -115,7 +137,7 @@ function mediaOf(project: LeanProject): ProjectMedia | undefined {
     ? storage.isConfigured
       ? cloudinaryImageUrl(media.publicId, { width: 900 })
       : ""
-    : media.src;
+    : repoint(media.src ?? "");
 
   if (!src) return undefined;
 
@@ -202,14 +224,45 @@ export async function getWork(): Promise<WorkContent> {
   }
 }
 
-/** The homepage's subset. */
+/**
+ * The homepage's band.
+ *
+ * Its own query rather than a filter over `getWork()`, because the band has
+ * its own order. `featuredOrder` is what the admin's homepage panel arranges,
+ * and it is deliberately independent of the catalogue's `sortOrder`: curating
+ * the six shown to somebody four seconds into the site should not reshuffle
+ * the twenty-five on /projects.
+ */
 export async function getFeaturedWork(): Promise<WorkContent> {
+  if (database.isConfigured) {
+    try {
+      const rows = await listFeaturedProjects();
+
+      if (rows.length > 0) {
+        const projects = rows.map(toProject);
+        const media: Partial<Record<string, ProjectMedia>> = {};
+        for (const [position, row] of rows.entries()) {
+          const item = mediaOf(row);
+          if (item) media[projects[position].slug] = item;
+        }
+        return { projects, media };
+      }
+    } catch (error) {
+      logger.error("could not load the featured projects", error);
+    }
+  }
+
+  /*
+    Nothing featured, no database, or the query failed: fall back to the front
+    of the catalogue rather than rendering an empty band. A set imported
+    without featured flags would otherwise blank the homepage, which reads as
+    a broken site rather than as an empty decision.
+  */
   const { projects, media } = await getWork();
   const featured = projects.filter((project) => project.featured);
+  const band = featured.length > 0 ? featured : projects;
 
-  /* Every project when none is flagged, rather than an empty homepage section.
-     A set imported without featured flags would otherwise blank the band. */
-  return { projects: featured.length > 0 ? featured : projects.slice(0, 6), media };
+  return { projects: band.slice(0, MAX_FEATURED_PROJECTS), media };
 }
 
 /**

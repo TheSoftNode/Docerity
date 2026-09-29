@@ -17,6 +17,19 @@ export type LeanProject = ProjectDocument & {
   updatedAt: Date;
 };
 
+/**
+ * How many projects the homepage band will show.
+ *
+ * Six, because the band is a three-wide grid and six fills two rows evenly at
+ * every breakpoint it has. It is also about as many as somebody four seconds
+ * into the site will look at, which is the actual reason: the band is a case,
+ * not a catalogue, and /projects is one click away for the rest.
+ *
+ * Exported so the cap, the homepage slice and the message that explains the
+ * refusal are all the same number.
+ */
+export const MAX_FEATURED_PROJECTS = 6;
+
 /** Published only, in display order. */
 export async function listPublishedProjects(): Promise<LeanProject[]> {
   await connectDB();
@@ -165,6 +178,119 @@ export async function setProjectFlags(
 }
 
 /**
+ * The homepage band, in the order it will be shown.
+ *
+ * Published as well as featured, and the `published` gate lives here for the
+ * same reason every other public read path's does: a featured draft is still a
+ * draft, and leaving that condition to the caller is how one gets onto the
+ * homepage. The admin's own list is built from `listAllProjects`, which is why
+ * there is no unpublished variant of this.
+ */
+export async function listFeaturedProjects(): Promise<LeanProject[]> {
+  await connectDB();
+  return ProjectModel.find({ featured: true, published: true })
+    .sort({ featuredOrder: 1, sortOrder: 1, createdAt: -1 })
+    .limit(MAX_FEATURED_PROJECTS)
+    .lean<LeanProject[]>();
+}
+
+export async function countFeaturedProjects(): Promise<number> {
+  await connectDB();
+  return ProjectModel.countDocuments({ featured: true });
+}
+
+/**
+ * Puts a project on the homepage, or takes it off.
+ *
+ * Featuring appends: a newly featured project goes last in the band rather
+ * than jumping to the front, because where it belongs is a decision to make
+ * deliberately with the reorder controls, not a side effect of the order
+ * things happened to be starred in.
+ *
+ * Unfeaturing clears the position as well as the flag, so a project featured
+ * again months later appends like any other rather than reappearing wherever
+ * it used to sit among projects that have since changed.
+ *
+ * Returns `null` when the project is gone and `"full"` when the band already
+ * holds its limit, so the caller can say which happened. The count is taken
+ * here rather than in the action because it has to be read in the same place
+ * it is acted on; two staff featuring a seventh at the same moment is not a
+ * scenario worth a transaction on a site with one editor, and the band is
+ * sliced to the limit when it renders either way.
+ */
+export async function featureProject(
+  id: string,
+  featured: boolean,
+  updatedBy: string
+): Promise<{ slug: string } | null | "full"> {
+  await connectDB();
+
+  if (featured) {
+    const already = await ProjectModel.findById(id).select("featured").lean();
+    if (!already) return null;
+
+    if (!already.featured && (await countFeaturedProjects()) >= MAX_FEATURED_PROJECTS) {
+      return "full";
+    }
+  }
+
+  const last = featured
+    ? await ProjectModel.findOne({ featured: true })
+        .sort({ featuredOrder: -1 })
+        .select("featuredOrder")
+        .lean()
+    : null;
+
+  const updated = await ProjectModel.findByIdAndUpdate(
+    id,
+    {
+      $set: {
+        featured,
+        featuredOrder: featured ? (last?.featuredOrder ?? 0) + 1 : 0,
+        updatedBy,
+      },
+    },
+    { new: true }
+  )
+    .select("slug")
+    .lean();
+
+  return updated ? { slug: updated.slug } : null;
+}
+
+/**
+ * Moves a project one place up or down within the homepage band.
+ *
+ * The same swap as `moveProject`, over `featuredOrder` and over the featured
+ * projects only: moving the third of six must not depend on, or disturb, the
+ * nineteen projects that are not on the homepage at all.
+ */
+export async function moveFeaturedProject(id: string, direction: -1 | 1) {
+  await connectDB();
+
+  const featured = await ProjectModel.find({ featured: true })
+    .sort({ featuredOrder: 1, sortOrder: 1, createdAt: -1 })
+    .select("_id")
+    .lean();
+
+  const index = featured.findIndex((project) => String(project._id) === id);
+  if (index === -1) return false;
+
+  const target = index + direction;
+  if (target < 0 || target >= featured.length) return false;
+
+  /* Positions rather than the stored values, for the same reason the catalogue
+     swap uses them: a set featured before this field existed shares a
+     `featuredOrder` of zero, and swapping two zeroes moves nothing. */
+  await Promise.all([
+    ProjectModel.updateOne({ _id: featured[index]._id }, { $set: { featuredOrder: target + 1 } }),
+    ProjectModel.updateOne({ _id: featured[target]._id }, { $set: { featuredOrder: index + 1 } }),
+  ]);
+
+  return true;
+}
+
+/**
  * Moves a project one place up or down by swapping `sortOrder` with its
  * neighbour.
  *
@@ -230,12 +356,19 @@ export async function importProjects(
   const fresh = projects.filter((p) => !taken.has(p.slug.toLowerCase()));
 
   if (fresh.length > 0) {
+    /* The featured ones get their homepage positions here rather than all
+       landing on the default zero, so the band arrives in the file's order and
+       is arrangeable from the first click instead of after one that appears to
+       do nothing. Counted separately from `index`, which walks every project. */
+    let bandPosition = 0;
+
     await ProjectModel.insertMany(
       fresh.map((project, index) => ({
         ...toDocument(project, updatedBy),
         /* Order preserved from the file, which is the order they appear on the
            site today. */
         sortOrder: project.sortOrder || index + 1,
+        featuredOrder: project.featured ? (bandPosition += 1) : 0,
       }))
     );
   }
