@@ -24,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageDrop } from "@/components/admin/image-drop";
 import { uploadAttachment, UploadError } from "@/lib/storage/upload-client";
-import { saveProject } from "@/app/admin/work/actions";
+import { saveProject } from "@/app/admin/projects/actions";
 import {
   PROJECT_LIMITS,
   PROJECT_PREVIEWS,
@@ -208,7 +208,7 @@ function ProjectEditor({
       setProject(candidate);
       setSaved(true);
 
-      if (!projectId) router.replace(`/admin/work/${result.id}?saved=1`);
+      if (!projectId) router.replace(`/admin/projects/${result.id}?saved=1`);
     });
   }
 
@@ -241,9 +241,9 @@ function ProjectEditor({
   return (
     <div className="pb-16">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/80 pb-4">
-        <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/admin/work" />}>
+        <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/admin/projects" />}>
           <ArrowLeftIcon />
-          All work
+          All projects
         </Button>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -259,7 +259,7 @@ function ProjectEditor({
               variant="ghost"
               size="sm"
               nativeButton={false}
-              render={<Link href={`/work/${project.slug}`} target="_blank" />}
+              render={<Link href={`/projects/${project.slug}`} target="_blank" />}
             >
               <ExternalLinkIcon />
               View

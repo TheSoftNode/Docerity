@@ -60,7 +60,7 @@ function revalidatePublicReviews() {
 /**
  * Moves a review to a different section.
  *
- * `/work` reads client reviews, `/mentorship` reads mentee ones, and the
+ * `/projects` reads client reviews, `/mentorship` reads mentee ones, and the
  * homepage reads all of them, so this is the difference between a mentee's
  * words appearing under "From clients" and appearing where they belong.
  *
@@ -77,7 +77,7 @@ export async function changeReviewKind(id: string, kind: string): Promise<Action
     await setKind(id, kind as ReviewKind);
     /* Both the page it left and the page it arrives on, plus the homepage. */
     revalidatePublicReviews();
-    revalidatePath("/work");
+    revalidatePath("/projects");
     revalidatePath("/mentorship");
     logger.info("review kind changed", { id, kind, by: actor.email });
   });

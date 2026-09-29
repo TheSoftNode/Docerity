@@ -33,11 +33,11 @@ function WorkCaseStudy({
     <section className="border-b border-border/80 bg-background pt-12 pb-28 sm:pt-16 sm:pb-32">
       <Container>
         <Link
-          href="/work"
+          href="/projects"
           className="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeftIcon className="size-3.5" />
-          All work
+          All projects
         </Link>
 
         <div className="mx-auto mt-8 max-w-4xl">
@@ -302,7 +302,7 @@ function WorkCaseStudy({
               <div>
                 {prevProject && (
                   <Link
-                    href={`/work/${prevProject.slug}`}
+                    href={`/projects/${prevProject.slug}`}
                     className="flex flex-col gap-1 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
                   >
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -318,7 +318,7 @@ function WorkCaseStudy({
               <div>
                 {nextProject && (
                   <Link
-                    href={`/work/${nextProject.slug}`}
+                    href={`/projects/${nextProject.slug}`}
                     className="flex flex-col items-end gap-1 rounded-xl border border-border bg-card p-4 text-right transition-colors hover:border-primary/40"
                   >
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">

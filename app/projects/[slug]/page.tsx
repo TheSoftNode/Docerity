@@ -40,7 +40,7 @@ export async function generateMetadata({
       type: "article",
       title: `${project.name} · Work`,
       description: project.description,
-      url: `${siteConfig.url}/work/${project.slug}`,
+      url: `${siteConfig.url}/projects/${project.slug}`,
     },
     twitter: {
       card: "summary_large_image",

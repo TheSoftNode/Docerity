@@ -20,7 +20,7 @@ function getInitials(name: string) {
  *
  * This section used to render three invented quotes attributed to "Mentee
  * Name, Software Engineer". Invented testimonials are the same liability as
- * the invented case studies the work page used to carry: the first prospect
+ * the invented case studies the projects page used to carry: the first prospect
  * who asks who said it is a bad moment.
  *
  * So there is no fallback here, unlike every other section. An absent section

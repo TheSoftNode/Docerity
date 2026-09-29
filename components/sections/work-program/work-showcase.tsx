@@ -9,7 +9,7 @@ import { WorkCard } from "@/components/sections/work/work-card";
 import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
 import type { SectionHeading } from "@/lib/content/blocks/source";
 
-const ALL = "All work";
+const ALL = "All projects";
 
 /*
   Filtered rather than one undifferentiated wall of 25.

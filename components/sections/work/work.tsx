@@ -42,7 +42,7 @@ async function Work() {
             variant="outline"
             className="h-11 w-full shrink-0 px-6 text-sm sm:w-auto"
             nativeButton={false}
-            render={<Link href="/work" />}
+            render={<Link href="/projects" />}
           >
             See all work
             <ArrowRightIcon />

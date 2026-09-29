@@ -59,10 +59,10 @@ export type SimpleResult = { ok: true; message?: string } | { ok: false; message
  */
 function revalidateWork(slug?: string) {
   revalidatePath("/");
-  revalidatePath("/work");
-  if (slug) revalidatePath(`/work/${slug}`);
+  revalidatePath("/projects");
+  if (slug) revalidatePath(`/projects/${slug}`);
   revalidatePath("/sitemap.xml");
-  revalidatePath("/admin/work");
+  revalidatePath("/admin/projects");
 }
 
 function normalise(input: ProjectInput): ProjectInput {

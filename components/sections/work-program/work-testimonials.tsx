@@ -20,7 +20,7 @@ function getInitials(name: string) {
  *
  * It used to read the placeholder set and pick the entries whose role happened
  * to contain the word "Company", which is how "Client Name, Founder, Company"
- * ended up quoted on the work page. Who left a review is now a field on the
+ * ended up quoted on the projects page. Who left a review is now a field on the
  * review (`kind`) chosen by the person writing it, not a guess made from their
  * job title.
  *

@@ -9,7 +9,7 @@ import { AdminNoDatabase, AdminPageHeader } from "@/components/admin/admin-page-
 export const metadata: Metadata = { title: "New project" };
 
 export default async function NewProjectPage() {
-  await requireStaff("/admin/work/new");
+  await requireStaff("/admin/projects/new");
 
   if (!database.isConfigured) {
     return (

@@ -156,10 +156,22 @@ function BlockEditor({
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           {block.description}
         </p>
+        {/*
+          What "edited" actually means, which is the part that caught somebody
+          out: a saved section stops taking copy from the code. That is the
+          point, so a deploy cannot wipe your wording, and it also means a
+          rewrite shipped in a release never reaches this page until it is
+          reset. Saying only "Edited by X" left the consequence invisible.
+        */}
         {overridden ? (
-          <p className="mt-3 font-mono text-[0.6875rem] text-muted-foreground">
-            Edited{updatedBy ? ` by ${updatedBy}` : ""}
-            {updatedAt ? ` on ${updatedAt}` : ""}
+          <p className="mt-3 max-w-[70ch] rounded-lg border border-amber-500/30 bg-amber-500/[0.06] px-3 py-2 text-xs leading-relaxed text-muted-foreground">
+            <span className="font-medium text-foreground">
+              This section is your version
+            </span>
+            {updatedBy ? `, saved by ${updatedBy}` : ""}
+            {updatedAt ? ` on ${updatedAt}` : ""}. It no longer takes copy from
+            the code, so wording changed in a release will not appear here until
+            you reset it below.
           </p>
         ) : (
           <p className="mt-3 font-mono text-[0.6875rem] text-muted-foreground">

@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: siteConfig.url, changeFrequency: "monthly", priority: 1 },
     { url: `${siteConfig.url}/reviews`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${siteConfig.url}/contribute`, changeFrequency: "yearly", priority: 0.4 },
-    { url: `${siteConfig.url}/work`, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${siteConfig.url}/projects`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteConfig.url}/ai`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteConfig.url}/web3`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteConfig.url}/mentorship`, changeFrequency: "monthly", priority: 0.8 },
@@ -30,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const workRoutes: MetadataRoute.Sitemap = projects.map((project) => ({
-    url: `${siteConfig.url}/work/${project.slug}`,
+    url: `${siteConfig.url}/projects/${project.slug}`,
     changeFrequency: "monthly",
     priority: 0.7,
   }));

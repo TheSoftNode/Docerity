@@ -24,7 +24,7 @@ const reviewSchema = new Schema(
 
       The mentorship page needs mentee reviews and would otherwise be stuck
       with the invented ones it shows today: "Mentee Name, Software Engineer",
-      which is the same liability as the invented case studies the work page
+      which is the same liability as the invented case studies the projects page
       used to carry.
 
       Asked on the form rather than inferred from the role string, because

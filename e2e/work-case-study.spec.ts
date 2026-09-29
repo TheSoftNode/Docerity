@@ -9,7 +9,7 @@ test.describe("Work project pages", () => {
     page.on("pageerror", (err) => errors.push(String(err)));
 
     for (const slug of ["eep", "metapilot", "softinven"]) {
-      await page.goto(`/work/${slug}`);
+      await page.goto(`/projects/${slug}`);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       /* Status is known for every project; "Results" is part of a written
          case study and most do not have one yet. */
@@ -25,7 +25,7 @@ test.describe("Work project pages", () => {
       write-up exists the page has to say that plainly rather than fill the
       space, so the absence is asserted.
     */
-    await page.goto("/work/metapilot");
+    await page.goto("/projects/metapilot");
 
     await expect(page.getByText(/hasn't been written up yet/i)).toBeVisible();
     await expect(
@@ -38,21 +38,21 @@ test.describe("Work project pages", () => {
     await page.locator("#work").scrollIntoViewIfNeeded();
 
     await page.getByRole("link", { name: /view project/i }).first().click();
-    await expect(page).toHaveURL("/work/eep");
+    await expect(page).toHaveURL("/projects/eep");
   });
 
   test("next/previous navigation links between projects", async ({ page }) => {
-    await page.goto("/work/eep");
+    await page.goto("/projects/eep");
 
     await page.getByRole("link", { name: /Next/ }).click();
-    await expect(page).toHaveURL("/work/hitoai");
+    await expect(page).toHaveURL("/projects/hitoai");
 
     await page.getByRole("link", { name: /Previous/ }).click();
-    await expect(page).toHaveURL("/work/eep");
+    await expect(page).toHaveURL("/projects/eep");
   });
 
   test("returns 404 for an unknown project slug", async ({ page }) => {
-    const response = await page.goto("/work/not-a-real-project");
+    const response = await page.goto("/projects/not-a-real-project");
     expect(response?.status()).toBe(404);
   });
 });

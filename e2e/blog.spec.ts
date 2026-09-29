@@ -183,7 +183,7 @@ test.describe("Blog SEO plumbing", () => {
     expect(body).toContain("/blog/caching");
     expect(body).toContain("/blog/checkout-redesign-case-study");
     expect(body).toContain("/mentorship");
-    expect(body).toContain("/work/eep");
+    expect(body).toContain("/projects/eep");
     expect(body).toContain("/web3");
   });
 

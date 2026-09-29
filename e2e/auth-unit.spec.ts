@@ -337,9 +337,9 @@ test.describe("Post body media", () => {
       over, and the picture swappable afterwards.
     */
     const [kept] = cleanSections([
-      { heading: "H", paragraphs: ["P"], sidenote: "", media: { ...emptySectionMedia(), src: "/work/eep.webp" } },
+      { heading: "H", paragraphs: ["P"], sidenote: "", media: { ...emptySectionMedia(), src: "/projects/eep.webp" } },
     ]);
-    expect(kept.media?.src).toBe("/work/eep.webp");
+    expect(kept.media?.src).toBe("/projects/eep.webp");
 
     for (const hostile of [
       "https://evil.example/x.png",
@@ -404,10 +404,10 @@ test.describe("Rendering a stored media frame", () => {
   });
 
   test("a static path is used as given", () => {
-    expect(sectionMediaOf({ type: "image", src: "/work/eep.webp", alt: "EEP" })).toEqual({
+    expect(sectionMediaOf({ type: "image", src: "/projects/eep.webp", alt: "EEP" })).toEqual({
       type: "image",
       alt: "EEP",
-      src: "/work/eep.webp",
+      src: "/projects/eep.webp",
     });
   });
 
@@ -427,7 +427,7 @@ test.describe("Rendering a stored media frame", () => {
     const media = sectionMediaOf({
       type: "video",
       publicId: "docerity/posts/clip",
-      poster: "/work/poster.webp",
+      poster: "/projects/poster.webp",
     });
     expect(media && "src" in media).toBe(false);
     expect(media && "poster" in media).toBe(false);

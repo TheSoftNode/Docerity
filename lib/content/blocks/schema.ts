@@ -272,7 +272,7 @@ export const BLOCKS: Block[] = [
             kind: "text",
             required: true,
             maxLength: 200,
-            placeholder: "/work",
+            placeholder: "/projects",
           },
         ],
       },
@@ -318,7 +318,7 @@ export const BLOCKS: Block[] = [
         entries: [
           { key: "home", label: "Homepage" },
           { key: "services", label: "Services" },
-          { key: "work", label: "Work" },
+          { key: "work", label: "Projects" },
           { key: "ai", label: "AI" },
           { key: "web3", label: "Web3" },
           { key: "mentorship", label: "Mentorship" },
@@ -386,7 +386,7 @@ export const BLOCKS: Block[] = [
     page: "Services",
     path: "/services",
     description:
-      "Every line of work Docerity takes on, and the page that says so. The grid on the Work page is the shorter version of this, and the projects themselves are edited under Work.",
+      "Every line of work Docerity takes on, and the page that says so. The grid on the Projects page is the shorter version of this, and the projects themselves are edited under Projects.",
     groups: [
       headings([{ key: "services-hero", label: "Hero" }, { key: "services-lines", label: "The list" }]),
       {
@@ -707,9 +707,9 @@ export const BLOCKS: Block[] = [
   {
     key: "services",
     title: "Services",
-    page: "Work",
-    path: "/work",
-    description: "The capability grid and the process on the work page. Projects are edited under Work.",
+    page: "Projects",
+    path: "/projects",
+    description: "The capability grid and the process on the projects page. Projects are edited under Work.",
     groups: [
       headings([
         { key: "work-hero", label: "Hero" },

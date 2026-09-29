@@ -90,6 +90,12 @@ export default async function AdminContentPage() {
                   <CheckIcon className="size-3" />
                   Your version
                 </p>
+              ) : null}
+              {edited.has(block.key) ? (
+                <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted-foreground">
+                  Not taking copy from the code. Reset it to pick up changes
+                  shipped in a release.
+                </p>
               ) : (
                 <p className="mt-4 inline-flex w-fit items-center rounded-full border border-border px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
                   As it shipped

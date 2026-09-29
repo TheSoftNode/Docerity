@@ -54,7 +54,7 @@ test.describe("Before anything is imported", () => {
   test("the work page still serves the ones built into the code", async ({ page }) => {
     /* The fallback is the whole point: an empty database must not empty the
        work page. */
-    await page.goto("/work");
+    await page.goto("/projects");
     await expect(page.getByRole("heading", { name: /EEP, view project/ })).toBeVisible();
   });
 });
@@ -62,7 +62,7 @@ test.describe("Before anything is imported", () => {
 test.describe("Importing", () => {
   test("moves all of them in, in order", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
 
     await expect(page.getByText("Nothing here yet")).toBeVisible();
     await page.getByRole("button", { name: /Import the built-in projects/ }).click();
@@ -70,7 +70,7 @@ test.describe("Importing", () => {
     /*
       The rows, not the confirmation message.
 
-      The import action revalidates `/admin/work`, and the import button is only
+      The import action revalidates `/admin/projects`, and the import button is only
       rendered while the collection is empty, so the server's re-render unmounts
       the button and takes its "Imported N" message with it. The message is
       transient by design; the rows arriving are the outcome worth asserting,
@@ -84,7 +84,7 @@ test.describe("Importing", () => {
 
   test("is idempotent", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
     await expect(page.locator("article")).toHaveCount(builtIn.length);
     /* The button is gone once every built-in project is stored: it is offered
        when the file has something the database does not, and now it does not.
@@ -109,7 +109,7 @@ test.describe("Importing", () => {
     await mongoose.connection.collection("projects").deleteOne({ slug: builtIn[0].slug });
     await mongoose.disconnect();
 
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
     await expect(page.getByText(/built into the code/)).toBeVisible();
 
     await page.getByRole("button", { name: /Import the built-in projects/ }).click();
@@ -123,7 +123,7 @@ test.describe("Importing", () => {
   });
 
   test("the public page now reads from the database", async ({ page }) => {
-    await page.goto("/work");
+    await page.goto("/projects");
     await expect(page.getByRole("heading", { name: /EEP, view project/ })).toBeVisible();
     /* The screenshots imported with their public/ paths rather than being lost. */
     await expect(page.locator('img[src*="eep"]').first()).toBeVisible();
@@ -133,7 +133,7 @@ test.describe("Importing", () => {
 test.describe("Adding a project", () => {
   test("a draft is not on the site", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work/new");
+    await page.goto("/admin/projects/new");
 
     await page.getByLabel("Name").fill("Harbour");
     await page.getByLabel("Caption").fill("Web3 · Settlement");
@@ -145,25 +145,25 @@ test.describe("Adding a project", () => {
     await page.getByLabel("Live URL").fill("harbour.example");
 
     await page.getByRole("button", { name: "Save draft" }).click();
-    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}\?saved=1$/, FIRST_VISIT);
+    await expect(page).toHaveURL(/\/admin\/projects\/[0-9a-f]{24}\?saved=1$/, FIRST_VISIT);
     /* `exact`, because the sidebar also has a "Live URL" field and the loose
        match hits both. */
     await expect(page.getByLabel("URL", { exact: true })).toHaveValue("harbour");
 
-    await page.goto("/work/harbour");
+    await page.goto("/projects/harbour");
     await expect(page.getByText("404")).toBeVisible();
   });
 
   test("publishing puts it on the work page", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
     await page.getByRole("link", { name: "Harbour" }).click();
-    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}/, FIRST_VISIT);
+    await expect(page).toHaveURL(/\/admin\/projects\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await page.getByRole("button", { name: "Publish", exact: true }).click();
     await expect(page.getByText("Saved")).toBeVisible();
 
-    await page.goto("/work/harbour");
+    await page.goto("/projects/harbour");
     await expect(page.getByRole("heading", { name: "Harbour" })).toBeVisible();
     /* The bare hostname was normalised into a usable href. */
     await expect(page.locator('a[href="https://harbour.example/"]').first()).toBeVisible();
@@ -171,7 +171,7 @@ test.describe("Adding a project", () => {
 
   test("featuring it puts it on the homepage", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
     await page.getByRole("button", { name: "Show Harbour on the homepage" }).click();
     await expect(
       page.getByRole("button", { name: "Remove Harbour from the homepage" })
@@ -183,11 +183,11 @@ test.describe("Adding a project", () => {
 
   test("unpublishing takes it off again", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
     await page.getByRole("button", { name: "Unpublish Harbour" }).click();
     await expect(page.getByRole("button", { name: "Publish Harbour" })).toBeVisible();
 
-    await page.goto("/work/harbour");
+    await page.goto("/projects/harbour");
     await expect(page.getByText("404")).toBeVisible();
   });
 });
@@ -201,9 +201,9 @@ test.describe("Video, gallery and case study", () => {
   */
   test("a gallery screenshot with no description is refused", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
     await page.getByRole("link", { name: "Harbour" }).click();
-    await expect(page).toHaveURL(/\/admin\/work\/[0-9a-f]{24}/, FIRST_VISIT);
+    await expect(page).toHaveURL(/\/admin\/projects\/[0-9a-f]{24}/, FIRST_VISIT);
 
     await expect(page.getByText(/Nothing here yet/)).toBeVisible();
     /* The count is shown so it is obvious there is a ceiling. */
@@ -212,21 +212,21 @@ test.describe("Video, gallery and case study", () => {
 
   test("the client field reaches the project page", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
     await page.getByRole("link", { name: "Harbour" }).click();
 
     await page.getByLabel("Built for").fill("Meridian Bank");
     await page.getByRole("button", { name: "Publish", exact: true }).click();
     await expect(page.getByText("Saved")).toBeVisible();
 
-    await page.goto("/work/harbour");
+    await page.goto("/projects/harbour");
     await expect(page.getByText("Built for")).toBeVisible();
     await expect(page.getByText("Meridian Bank")).toBeVisible();
   });
 
   test("a case study section renders on the page", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work");
+    await page.goto("/admin/projects");
     await page.getByRole("link", { name: "Harbour" }).click();
 
     await page.getByRole("group").filter({ hasText: "Written case study" }).click();
@@ -239,7 +239,7 @@ test.describe("Video, gallery and case study", () => {
     await page.getByRole("button", { name: "Update live" }).click();
     await expect(page.getByText("Saved")).toBeVisible();
 
-    await page.goto("/work/harbour");
+    await page.goto("/projects/harbour");
     await expect(
       page.getByRole("heading", { name: "The netting problem" })
     ).toBeVisible();
@@ -286,7 +286,7 @@ test.describe("Getting a file into an upload", () => {
     await signIn(page);
     const state = await countSignatures(page);
 
-    await page.goto("/admin/work/new");
+    await page.goto("/admin/projects/new");
     await page.getByLabel("Name").fill("Paste test");
 
     const zone = page.getByRole("group", { name: /paste a screenshot/i }).first();
@@ -310,7 +310,7 @@ test.describe("Getting a file into an upload", () => {
     await signIn(page);
     const state = await countSignatures(page);
 
-    await page.goto("/admin/work/new");
+    await page.goto("/admin/projects/new");
     await page.getByLabel("Name").fill("Drop test");
 
     const zone = page.getByRole("group", { name: /paste a screenshot/i }).first();
@@ -334,7 +334,7 @@ test.describe("Getting a file into an upload", () => {
     await signIn(page);
     const state = await countSignatures(page);
 
-    await page.goto("/admin/work/new");
+    await page.goto("/admin/projects/new");
     await page.getByLabel("Name").fill("Second zone test");
 
     const zones = page.getByRole("group", { name: /paste a screenshot/i });
@@ -415,7 +415,7 @@ test.describe("The upload endpoint", () => {
 test.describe("Rules", () => {
   test("a duplicate slug is refused against the field", async ({ page }) => {
     await signIn(page);
-    await page.goto("/admin/work/new");
+    await page.goto("/admin/projects/new");
 
     await page.getByLabel("Name").fill("EEP");
     await page
@@ -430,7 +430,7 @@ test.describe("Rules", () => {
     /* A published project with no group is invisible to every filter except
        All, which looks like the filters are broken. */
     await signIn(page);
-    await page.goto("/admin/work/new");
+    await page.goto("/admin/projects/new");
 
     await page.getByLabel("Name").fill("Bucketless");
     await page
@@ -462,7 +462,7 @@ test.describe("Rules", () => {
     await expect(
       menteePage.getByRole("navigation", { name: "Admin sections" }).getByText("Work")
     ).toHaveCount(0);
-    await menteePage.goto("/admin/work");
+    await menteePage.goto("/admin/projects");
     await expect(menteePage).toHaveURL("/admin/posts");
 
     /* And the upload endpoint refuses them rather than relying on the page. */

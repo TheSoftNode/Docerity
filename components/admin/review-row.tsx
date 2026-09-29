@@ -151,7 +151,7 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
         corrected after the fact.
 
         The writer picks it on the public form, and a wrong choice puts their
-        words under the wrong heading: a mentee's quote on the work page, or a
+        words under the wrong heading: a mentee's quote on the projects page, or a
         client's on the mentorship page. Before this the remedies were leaving
         it wrong or deleting a genuine review. Nothing else about the review is
         editable, so the text stays exactly as they wrote it.

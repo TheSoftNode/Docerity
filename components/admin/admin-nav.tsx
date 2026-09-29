@@ -47,7 +47,7 @@ const items: NavItem[] = [
   { href: "/admin/enquiries", label: "Enquiries", Icon: InboxIcon, visible: can.readEnquiries },
   { href: "/admin/reviews", label: "Reviews", Icon: StarIcon, visible: can.moderateReviews },
   { href: "/admin/posts", label: "Writing", Icon: FileTextIcon, visible: can.writePosts },
-  { href: "/admin/work", label: "Work", Icon: BriefcaseIcon, visible: can.publishPosts },
+  { href: "/admin/projects", label: "Projects", Icon: BriefcaseIcon, visible: can.publishPosts },
   /* Everything written on the site that is not a project, a post or a review:
      the client logos, the About page, the mentorship programme, the service and
      capability grids, the explainer pairs and the contact steps. */

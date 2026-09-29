@@ -26,7 +26,7 @@ export default async function AboutPage() {
     The shipped-project count is counted, not typed.
 
     A hand-written "20+" drifts the moment a project is added or removed, and a
-    number nobody can reconcile with the work page is worth less than no number
+    number nobody can reconcile with the projects page is worth less than no number
     at all. It used to be derived from the static file, which stopped being the
     truth once projects moved into the database; this counts what is actually
     published. Appended rather than stored, so it is not offered for editing and
@@ -37,7 +37,7 @@ export default async function AboutPage() {
     {
       value: String(work.projects.length),
       label: "Shipped projects",
-      since: "every one listed on the work page",
+      since: "every one listed on the projects page",
     },
   ];
 

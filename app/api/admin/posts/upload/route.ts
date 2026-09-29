@@ -15,7 +15,7 @@ import { signMediaUpload } from "@/lib/storage/media-upload";
   pasting links to images on someone else's server.
 
   Its own Cloudinary folder, apart from the work one, so nothing a contributor
-  uploads can land where the work page reads from.
+  uploads can land where the projects page reads from.
 */
 
 export const runtime = "nodejs";

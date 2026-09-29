@@ -32,7 +32,7 @@ export type ReviewLinkInput = { title: string; url: string };
   where "You mentored me" beside a moderation queue reads as nonsense.
 */
 export const REVIEW_KINDS = [
-  { value: "client", label: "You built something for me", section: "Work page" },
+  { value: "client", label: "You built something for me", section: "Projects page" },
   { value: "mentee", label: "You mentored me", section: "Mentorship page" },
   { value: "reader", label: "I read the explainers", section: "Homepage only" },
 ] as const;

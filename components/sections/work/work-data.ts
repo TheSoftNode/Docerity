@@ -28,7 +28,7 @@ export type Project = {
   slug: string;
   name: string;
   category: string;
-  /** Filter buckets for the work page. A project can sit in more than one. */
+  /** Filter buckets for the projects page. A project can sit in more than one. */
   groups: readonly string[];
   description: string;
   tags: readonly string[];
@@ -630,7 +630,7 @@ export const featuredProjects = projects.filter((project) => project.featured);
 
 /**
  * Drop real project media here: one entry per slug, keyed to the projects
- * above. Files live in `public/`, so `/work/eep.webp` means
+ * above. Files live in `public/`, so `/projects/eep.webp` means
  * `public/work/eep.webp`.
  *
  * The portfolio carries 40MB of screenshots in its own `public/work`. They are
@@ -641,35 +641,35 @@ export const featuredProjects = projects.filter((project) => project.featured);
  * the section is presentable with no assets at all and each card upgrades
  * independently as real media arrives. Nothing else needs editing.
  *
- *   eep:       { type: "image", src: "/work/eep.webp", alt: "The EEP dashboard" },
- *   metapilot: { type: "video", src: "/work/metapilot.mp4", poster: "/work/metapilot.webp", alt: "MetaPilot rule builder" },
+ *   eep:       { type: "image", src: "/projects/eep.webp", alt: "The EEP dashboard" },
+ *   metapilot: { type: "video", src: "/projects/metapilot.mp4", poster: "/projects/metapilot.webp", alt: "MetaPilot rule builder" },
  */
 export const projectMedia: Partial<Record<string, ProjectMedia>> = {
-  "eep": { type: "image", src: "/work/eep.webp", alt: "The EEP learning dashboard" },
-  "hitoai": { type: "image", src: "/work/hitoai.webp", alt: "The HitoAI platform home page" },
-  "easmark": { type: "image", src: "/work/easmark.webp", alt: "Easmark's grading workspace" },
-  "talentchain-pro": { type: "image", src: "/work/talentchain-pro.webp", alt: "TalentChainPro skill credentials" },
-  "metapilot": { type: "image", src: "/work/metapilot.webp", alt: "MetaPilot's automation rule builder" },
-  "stacktip": { type: "image", src: "/work/stacktip.webp", alt: "StackTip's tipping interface" },
-  "eep-admin": { type: "image", src: "/work/eep-admin.webp", alt: "The EEP admin dashboard" },
-  "neuraltradex": { type: "image", src: "/work/neuraltradex.webp", alt: "NeuralTradeX strategy view" },
-  "yieldnexus": { type: "image", src: "/work/yieldnexus.webp", alt: "YieldNexus Bitcoin DeFi dashboard" },
-  "icplearn": { type: "image", src: "/work/icplearn.webp", alt: "ICPLearn course and staking view" },
-  "realpaytag": { type: "image", src: "/work/realpaytag.webp", alt: "RealPayTag payments interface" },
-  "cryptopilot": { type: "image", src: "/work/cryptopilot.webp", alt: "CryptoPilot's natural-language wallet" },
-  "crossflow": { type: "image", src: "/work/crossflow.webp", alt: "CrossFlow cross-chain transfer screen" },
-  "susnet": { type: "image", src: "/work/susnet.webp", alt: "SusNet energy analytics" },
-  "ai4energy": { type: "image", src: "/work/ai4energy.webp", alt: "AI4Energy pricing forecasts" },
-  "biasadra": { type: "image", src: "/work/biasadra.webp", alt: "The Biasadra academy site" },
-  "smart-treasures": { type: "image", src: "/work/smart-treasures.webp", alt: "Smart Treasures investment platform" },
-  "loan-me": { type: "image", src: "/work/loan-me.webp", alt: "The loan application flow" },
-  "softmeet": { type: "image", src: "/work/softmeet.webp", alt: "SoftMeet video conferencing" },
-  "docmeet": { type: "image", src: "/work/docmeet.webp", alt: "DocMeet appointment booking" },
-  "easmark-api": { type: "image", src: "/work/easmark-api.webp", alt: "The Easmark API documentation" },
-  "alx-connect-api": { type: "image", src: "/work/alx-connect-api.webp", alt: "ALX Connect API documentation" },
-  "tours-api": { type: "image", src: "/work/tours-api.webp", alt: "The Tours API documentation" },
-  "softinven": { type: "image", src: "/work/softinven.webp", alt: "SoftInven inventory dashboard" },
-  "lms-api": { type: "image", src: "/work/lms-api.webp", alt: "The LMS API documentation" },
+  "eep": { type: "image", src: "/projects/eep.webp", alt: "The EEP learning dashboard" },
+  "hitoai": { type: "image", src: "/projects/hitoai.webp", alt: "The HitoAI platform home page" },
+  "easmark": { type: "image", src: "/projects/easmark.webp", alt: "Easmark's grading workspace" },
+  "talentchain-pro": { type: "image", src: "/projects/talentchain-pro.webp", alt: "TalentChainPro skill credentials" },
+  "metapilot": { type: "image", src: "/projects/metapilot.webp", alt: "MetaPilot's automation rule builder" },
+  "stacktip": { type: "image", src: "/projects/stacktip.webp", alt: "StackTip's tipping interface" },
+  "eep-admin": { type: "image", src: "/projects/eep-admin.webp", alt: "The EEP admin dashboard" },
+  "neuraltradex": { type: "image", src: "/projects/neuraltradex.webp", alt: "NeuralTradeX strategy view" },
+  "yieldnexus": { type: "image", src: "/projects/yieldnexus.webp", alt: "YieldNexus Bitcoin DeFi dashboard" },
+  "icplearn": { type: "image", src: "/projects/icplearn.webp", alt: "ICPLearn course and staking view" },
+  "realpaytag": { type: "image", src: "/projects/realpaytag.webp", alt: "RealPayTag payments interface" },
+  "cryptopilot": { type: "image", src: "/projects/cryptopilot.webp", alt: "CryptoPilot's natural-language wallet" },
+  "crossflow": { type: "image", src: "/projects/crossflow.webp", alt: "CrossFlow cross-chain transfer screen" },
+  "susnet": { type: "image", src: "/projects/susnet.webp", alt: "SusNet energy analytics" },
+  "ai4energy": { type: "image", src: "/projects/ai4energy.webp", alt: "AI4Energy pricing forecasts" },
+  "biasadra": { type: "image", src: "/projects/biasadra.webp", alt: "The Biasadra academy site" },
+  "smart-treasures": { type: "image", src: "/projects/smart-treasures.webp", alt: "Smart Treasures investment platform" },
+  "loan-me": { type: "image", src: "/projects/loan-me.webp", alt: "The loan application flow" },
+  "softmeet": { type: "image", src: "/projects/softmeet.webp", alt: "SoftMeet video conferencing" },
+  "docmeet": { type: "image", src: "/projects/docmeet.webp", alt: "DocMeet appointment booking" },
+  "easmark-api": { type: "image", src: "/projects/easmark-api.webp", alt: "The Easmark API documentation" },
+  "alx-connect-api": { type: "image", src: "/projects/alx-connect-api.webp", alt: "ALX Connect API documentation" },
+  "tours-api": { type: "image", src: "/projects/tours-api.webp", alt: "The Tours API documentation" },
+  "softinven": { type: "image", src: "/projects/softinven.webp", alt: "SoftInven inventory dashboard" },
+  "lms-api": { type: "image", src: "/projects/lms-api.webp", alt: "The LMS API documentation" },
 };
 
 export function getProjectBySlug(slug: string) {

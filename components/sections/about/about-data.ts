@@ -40,7 +40,7 @@ export const story = [
 
   The project count is derived rather than typed, because a hand-written "20+"
   drifts the moment a project is added or removed, and a number nobody can
-  reconcile with the work page is worth less than no number at all.
+  reconcile with the projects page is worth less than no number at all.
 */
 export const facts = [
   {
@@ -54,7 +54,7 @@ export const facts = [
   {
     value: String(projects.length),
     label: "Shipped projects",
-    since: "every one listed on the work page",
+    since: "every one listed on the projects page",
   },
   {
     value: "7",

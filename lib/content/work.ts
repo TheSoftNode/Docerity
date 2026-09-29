@@ -26,7 +26,7 @@ import {
  *
  * The database when there is one, and `work-data.ts` when there is not. Exactly
  * the arrangement `lib/content/posts.ts` uses for the blog, and for the same
- * reasons: it keeps the work page rendering on a fresh clone with no
+ * reasons: it keeps the projects page rendering on a fresh clone with no
  * MONGODB_URI, keeps the e2e suite passing without a database, and keeps
  * twenty-five real projects online if Atlas is unreachable during a deploy.
  *

@@ -78,8 +78,12 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       ],
       "navLinks": [
     {
-      "label": "Work",
-      "href": "/work"
+      "label": "Services",
+      "href": "/services"
+    },
+    {
+      "label": "Projects",
+      "href": "/projects"
     },
     {
       "label": "AI",
@@ -108,8 +112,8 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "href": "/services"
     },
     {
-      "label": "Work",
-      "href": "/work"
+      "label": "Projects",
+      "href": "/projects"
     },
     {
       "label": "AI",
@@ -153,7 +157,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
           "description": "Software engineering, AI and LLM work, data annotation and evaluation, data engineering, virtual assistants, Web3 and mentorship, from one team."
         },
         "work": {
-          "title": "Work",
+          "title": "Projects",
           "description": "Production software shipped for real teams: fintech dashboards, commerce platforms, offline-first mobile apps, and the process behind them."
         },
         "ai": {
@@ -200,61 +204,61 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       },
       "services-lines": {
         "eyebrow": "Services",
-        "title": "Seven lines of work.",
+        "title": "What we build, and what we run alongside it.",
         "lede": ""
       }
     },
     "lines": [
-      {
-        "title": "Software engineering",
-        "summary": "Web applications, APIs and mobile, built to survive production",
-        "description": "Full-stack products from first commit to the version after launch: the interface somebody uses, the services behind it, and the data model that decides how much of it has to be rewritten in a year.",
-        "href": "/work",
-        "iconName": "MonitorSmartphoneIcon"
-      },
-      {
-        "title": "AI and LLM engineering",
-        "summary": "Retrieval, routing and evaluation that hold up at real volume",
-        "description": "Getting a model to answer once is the easy part. We build the routing that keeps it affordable, the retrieval that keeps it grounded, and the evaluation that tells you whether either is working.",
-        "href": "/ai",
-        "iconName": "BrainIcon"
-      },
-      {
-        "title": "Data annotation and evaluation",
-        "summary": "Labelling and rubrics by people who can read what they are judging",
-        "description": "Training samples, annotation rubrics and RLHF evaluation across technical tasks, done by engineers rather than by a crowd. On code, the difference between an answer that is correct and one that only sounds correct is the whole job.",
-        "href": "",
-        "iconName": "ClipboardCheckIcon"
-      },
-      {
-        "title": "Data engineering",
-        "summary": "Pipelines, migrations and the plumbing under a reporting layer",
-        "description": "Getting data out of wherever it is stuck and into something you can query: ingestion, transformation, vector and relational stores, and the monitoring that tells you when a feed went quiet.",
-        "href": "",
-        "iconName": "DatabaseIcon"
-      },
-      {
-        "title": "Virtual assistants and operations",
-        "summary": "Trained assistants for the repeatable work that eats a week",
-        "description": "Inbox, scheduling, research, data entry and customer replies, handled by assistants we train and supervise. Useful when the bottleneck is not a feature but the hours around it.",
-        "href": "",
-        "iconName": "UsersIcon"
-      },
-      {
-        "title": "Web3 and blockchain",
-        "summary": "Smart contract systems across several ecosystems",
-        "description": "Contracts in Solidity, Clarity and Rust, plus the DeFi automation and asset tokenisation around them. Designed for the fact that a contract holding real value is hard to change once it is live.",
-        "href": "/web3",
-        "iconName": "LinkIcon"
-      },
-      {
-        "title": "Mentorship and training",
-        "summary": "Weekly 1:1s and honest code review for engineers levelling up",
-        "description": "The reason the bench exists. Engineers are trained here before they are put on client work, and the same programme is open to anyone who wants it.",
-        "href": "/mentorship",
-        "iconName": "CompassIcon"
-      }
-    ]
+    {
+      "title": "Software engineering",
+      "summary": "Web applications, APIs and mobile, built to survive production",
+      "description": "Full-stack products from first commit to the version after launch: the interface somebody uses, the services behind it, and the data model that decides how much of it has to be rewritten in a year.",
+      "href": "/projects",
+      "iconName": "MonitorSmartphoneIcon"
+    },
+    {
+      "title": "AI and LLM engineering",
+      "summary": "Retrieval, routing and evaluation that hold up at real volume",
+      "description": "Getting a model to answer once is the easy part. We build the routing that keeps it affordable, the retrieval that keeps it grounded, and the evaluation that tells you whether either is working.",
+      "href": "/ai",
+      "iconName": "BrainIcon"
+    },
+    {
+      "title": "Web3 and blockchain",
+      "summary": "Smart contract systems across several ecosystems",
+      "description": "Contracts in Solidity, Clarity and Rust, plus the DeFi automation and asset tokenisation around them. Designed for the fact that a contract holding real value is hard to change once it is live.",
+      "href": "/web3",
+      "iconName": "LinkIcon"
+    },
+    {
+      "title": "Data annotation and evaluation",
+      "summary": "Labelling and rubrics by people who can read what they are judging",
+      "description": "Training samples, annotation rubrics and RLHF evaluation across technical tasks, done by engineers rather than by a crowd. On code, the difference between an answer that is correct and one that only sounds correct is the whole job.",
+      "href": "",
+      "iconName": "ClipboardCheckIcon"
+    },
+    {
+      "title": "Data engineering",
+      "summary": "Pipelines, migrations and the plumbing under a reporting layer",
+      "description": "Getting data out of wherever it is stuck and into something you can query: ingestion, transformation, vector and relational stores, and the monitoring that tells you when a feed went quiet.",
+      "href": "",
+      "iconName": "DatabaseIcon"
+    },
+    {
+      "title": "Virtual assistants and operations",
+      "summary": "Trained assistants for the repeatable work that eats a week",
+      "description": "Inbox, scheduling, research, data entry and customer replies, handled by assistants we train and supervise. Useful when the bottleneck is not a feature but the hours around it.",
+      "href": "",
+      "iconName": "UsersIcon"
+    },
+    {
+      "title": "Mentorship and training",
+      "summary": "Weekly 1:1s and honest code review for engineers levelling up",
+      "description": "The reason the bench exists. Engineers are trained here before they are put on client work, and the same programme is open to anyone who wants it.",
+      "href": "/mentorship",
+      "iconName": "CompassIcon"
+    }
+  ]
   },
 
   homepage: {

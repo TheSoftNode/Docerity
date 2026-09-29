@@ -115,7 +115,7 @@ function WorkCard({
               focus; the arrow in the footer is decoration.
             */}
             <Link
-              href={`/work/${project.slug}`}
+              href={`/projects/${project.slug}`}
               aria-label={`${project.name}, view project`}
               className="outline-none after:absolute after:inset-0 after:z-10 after:rounded-2xl"
             >

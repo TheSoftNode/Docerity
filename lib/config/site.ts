@@ -13,7 +13,7 @@ export const siteConfig = {
 } as const;
 
 export const navLinks = [
-  { label: "Work", href: "/work" },
+  { label: "Projects", href: "/projects" },
   { label: "AI", href: "/ai" },
   { label: "Web3", href: "/web3" },
   { label: "Mentorship", href: "/mentorship" },
@@ -22,12 +22,16 @@ export const navLinks = [
 ] as const;
 
 /*
-  The footer carries one more than the header.
+  The footer carries more than the header.
 
-  Reviews is deliberately not in `navLinks`: the header is already six items
-  wide and a seventh pushes the row into the primary button at the widths the
-  layout tests cover. The page is reached from the testimonials section, which
-  is where somebody is already reading reviews when they want more of them.
+  Reviews is deliberately not in `navLinks`: it is reached from the testimonials
+  section, which is where somebody is already reading reviews when they want
+  more of them.
+
+  This used to claim the header could not hold a seventh item. Measured across
+  1024 to 1728, seven fit with room to spare: at the tightest width the nav ends
+  59px short of the button. The claim cost two pages their place in the header
+  before anybody checked it.
 */
 export const footerLinks = [
   ...navLinks,

@@ -216,7 +216,7 @@ test.describe("Sections that are on every page", () => {
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await expect(page.getByText("Saved")).toBeVisible();
 
-    for (const path of ["/", "/about", "/work"]) {
+    for (const path of ["/", "/about", "/projects"]) {
       await page.goto(path);
       await expect(link, `the footer on ${path}`).toBeVisible();
     }
@@ -252,7 +252,7 @@ test.describe("Sections that are on every page", () => {
   */
   const titled = [
     { entry: "Homepage", path: "/", title: "The front door" },
-    { entry: "Work", path: "/work", title: "Things I built" },
+    { entry: "Work", path: "/projects", title: "Things I built" },
     { entry: "AI", path: "/ai", title: "Models in production" },
     { entry: "Web3", path: "/web3", title: "On-chain work" },
     { entry: "Mentorship", path: "/mentorship", title: "Growing engineers" },
@@ -408,7 +408,7 @@ test.describe("A section with an icon", () => {
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await expect(page.getByText("Saved")).toBeVisible();
 
-    await page.goto("/work");
+    await page.goto("/projects");
     /* Lucide renders its name into the class list, which is the one part of an
        SVG icon that is addressable from a test. */
     await expect(page.locator("svg.lucide-database").first()).toBeVisible();

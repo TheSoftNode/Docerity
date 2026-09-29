@@ -39,7 +39,14 @@ function NavbarView({ site }: { site: Pick<SiteSettings, "name" | "navLinks"> })
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-9 md:flex">
+        {/*
+          Tighter between `md` and `lg`, roomier above.
+
+          The bar appears at `md`, which is 768px, and seven items at the old
+          uniform gap-9 overflowed that width by 72px. It reads as generous at
+          1024 and up, where there is room for it.
+        */}
+        <nav className="hidden items-center gap-5 md:flex lg:gap-9">
           {site.navLinks.map((link) => (
             <Link
               key={link.label}

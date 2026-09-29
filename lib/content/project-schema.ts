@@ -29,7 +29,7 @@ export const PROJECT_PREVIEWS: ProjectPreview[] = ["dashboard", "grid", "list"];
 /*
   The buckets currently in use, offered as suggestions rather than enforced.
 
-  The filter on the work page derives its list from whatever the projects
+  The filter on the projects page derives its list from whatever the projects
   actually carry, so a new bucket needs no code change. These are here so the
   editor can offer the existing ones and stop "Web3" and "web3" both becoming
   facets.
@@ -119,7 +119,7 @@ export function slugifyProject(input: string): string {
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-/* Slugs the work routes already use. `/work` itself is a page, so a project
+/* Slugs the work routes already use. `/projects` itself is a page, so a project
    slugged "work" would be unreachable. */
 const RESERVED_SLUGS = new Set(["work", "new", "edit", "admin"]);
 

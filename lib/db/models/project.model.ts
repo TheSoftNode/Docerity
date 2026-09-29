@@ -95,7 +95,7 @@ const projectSchema = new Schema(
     category: { type: String, default: "", trim: true, maxlength: 160 },
 
     /*
-      Filter buckets on the work page. A project can sit in more than one, and
+      Filter buckets on the projects page. A project can sit in more than one, and
       several genuinely do: a hackathon build is often Web3 and Full-stack too.
       The filter UI derives its list from whatever is in use rather than from a
       fixed enum, so a new bucket needs no code change.

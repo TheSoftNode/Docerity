@@ -20,7 +20,7 @@ import { ImportProjectsButton } from "@/components/admin/import-projects-button"
 import { projects as staticProjects } from "@/components/sections/work/work-data";
 import { Button } from "@/components/ui/button";
 
-export const metadata: Metadata = { title: "Work" };
+export const metadata: Metadata = { title: "Projects" };
 
 /*
   The accent hairline the overview counts carry, so a number reads as a number
@@ -34,21 +34,21 @@ const STRIP_EDGES = [
 ] as const;
 
 export default async function AdminWorkPage() {
-  await requireStaff("/admin/work");
+  await requireStaff("/admin/projects");
 
   if (!database.isConfigured) {
     return (
       <>
         <AdminPageHeader
           eyebrow="Projects"
-          title="Work"
-          description="The projects on the work page and the homepage."
+          title="Projects"
+          description="The projects on the projects page and the homepage."
         />
         <div className="mt-6">
           <AdminNoDatabase what="Projects" />
           <p className="mt-4 text-center text-sm text-muted-foreground">
             The site is still serving the {staticProjects.length} projects built
-            into the code, so the work page is unaffected.
+            into the code, so the projects page is unaffected.
           </p>
         </div>
       </>
@@ -87,10 +87,10 @@ export default async function AdminWorkPage() {
     <>
       <AdminPageHeader
         eyebrow="Projects"
-        title="Work"
+        title="Projects"
         description="The order here is the order on the site. Starred projects also show on the homepage."
       >
-        <Button size="sm" nativeButton={false} render={<Link href="/admin/work/new" />}>
+        <Button size="sm" nativeButton={false} render={<Link href="/admin/projects/new" />}>
           <PlusIcon />
           New project
         </Button>
@@ -98,10 +98,10 @@ export default async function AdminWorkPage() {
           variant="outline"
           size="sm"
           nativeButton={false}
-          render={<Link href="/work" target="_blank" />}
+          render={<Link href="/projects" target="_blank" />}
         >
           <ExternalLinkIcon />
-          Work page
+          Projects page
         </Button>
       </AdminPageHeader>
 

@@ -209,7 +209,7 @@ test.describe("About page", () => {
       array the work page renders. A headline figure nobody can reconcile with
       the work is worth less than no figure at all.
     */
-    await page.goto("/work");
+    await page.goto("/projects");
     await page.locator("#showcase").scrollIntoViewIfNeeded();
     const actual = await page.locator("#showcase h3 a").count();
 

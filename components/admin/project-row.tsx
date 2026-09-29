@@ -22,7 +22,7 @@ import {
   setProjectFeatured,
   setProjectPublished,
   type SimpleResult,
-} from "@/app/admin/work/actions";
+} from "@/app/admin/projects/actions";
 
 export type ProjectSummary = {
   id: string;
@@ -83,7 +83,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <Link
-              href={`/admin/work/${project.id}`}
+              href={`/admin/projects/${project.id}`}
               className="truncate font-heading text-sm font-semibold text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
             >
               {project.name || "Untitled"}
@@ -173,7 +173,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
               size="icon-sm"
               nativeButton={false}
               render={
-                <Link href={`/work/${project.slug}`} target="_blank" aria-label={`View ${project.name}`} />
+                <Link href={`/projects/${project.slug}`} target="_blank" aria-label={`View ${project.name}`} />
               }
             >
               <ExternalLinkIcon />
@@ -184,7 +184,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
             variant="subtle"
             size="icon-sm"
             nativeButton={false}
-            render={<Link href={`/admin/work/${project.id}`} aria-label={`Edit ${project.name}`} />}
+            render={<Link href={`/admin/projects/${project.id}`} aria-label={`Edit ${project.name}`} />}
           >
             <PencilIcon />
           </Button>

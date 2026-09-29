@@ -15,7 +15,7 @@ export default async function EditProjectPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await requireStaff(`/admin/work/${id}`);
+  await requireStaff(`/admin/projects/${id}`);
 
   /* Mongoose throws a CastError on anything that is not 24 hex characters,
      which would surface as a 500 rather than a 404. */

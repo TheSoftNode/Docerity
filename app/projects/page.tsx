@@ -18,7 +18,7 @@ export const generateMetadata = pageMetadata("work");
 
 /*
   Revalidated, because the projects come from the database now. Editing one
-  calls `revalidatePath("/work")`, so a change appears immediately; this is the
+  calls `revalidatePath("/projects")`, so a change appears immediately; this is the
   ceiling on staleness if that invalidation never lands.
 */
 export const revalidate = 300;

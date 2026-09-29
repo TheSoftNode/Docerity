@@ -4,7 +4,7 @@ import { projects } from "@/components/sections/work/work-data";
 
 test.describe("Work filtering", () => {
   test("filters narrow the grid and the counts are real", async ({ page }) => {
-    await page.goto("/work");
+    await page.goto("/projects");
     await page.locator("#showcase").scrollIntoViewIfNeeded();
 
     const cards = page.locator("#showcase h3 a");
@@ -28,7 +28,7 @@ test.describe("Work filtering", () => {
   });
 
   test("the active filter is announced, not just coloured", async ({ page }) => {
-    await page.goto("/work");
+    await page.goto("/projects");
     await page.locator("#showcase").scrollIntoViewIfNeeded();
 
     const web3 = page.getByRole("button", { name: /^Web3/ });
@@ -40,7 +40,7 @@ test.describe("Work filtering", () => {
 
 test.describe("Project media", () => {
   test("cards show real screenshots, not placeholders", async ({ page }) => {
-    await page.goto("/work");
+    await page.goto("/projects");
     await page.locator("#showcase").scrollIntoViewIfNeeded();
 
     const images = page.locator("#showcase img");

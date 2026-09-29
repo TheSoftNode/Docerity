@@ -56,6 +56,23 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com", pathname: "/**" },
     ],
   },
+  /*
+    The work section became the projects section.
+
+    Permanent, because /work and /work/<slug> were live and indexed, and every
+    link anybody has shared to a project points at the old path. A rename
+    without these turns each of those into a 404 and throws away whatever
+    ranking the pages had.
+  */
+  async redirects() {
+    return [
+      { source: "/work", destination: "/projects", permanent: true },
+      { source: "/work/:slug", destination: "/projects/:slug", permanent: true },
+      { source: "/admin/work", destination: "/admin/projects", permanent: false },
+      { source: "/admin/work/:path*", destination: "/admin/projects/:path*", permanent: false },
+    ];
+  },
+
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

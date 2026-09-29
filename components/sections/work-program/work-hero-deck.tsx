@@ -84,7 +84,7 @@ function WorkHeroDeck({
               style={{ transformOrigin: "bottom center" }}
             >
               <Link
-                href={`/work/${project.slug}`}
+                href={`/projects/${project.slug}`}
                 tabIndex={isFront ? 0 : -1}
                 className="group/card flex h-full flex-col outline-none"
               >

@@ -343,7 +343,7 @@ test.describe("The review pipeline", () => {
       for the word "Company" in the job title, which is how a placeholder
       called "Client Name, Founder, Company" ended up quoted there.
     */
-    await page.goto("/work");
+    await page.goto("/projects");
     await expect(
       page.getByRole("heading", { name: "What it's like to work together." })
     ).toBeVisible();
@@ -411,7 +411,7 @@ test.describe("The review pipeline", () => {
       page.getByRole("heading", { name: /other people.s words go/ })
     ).toBeVisible();
 
-    await page.goto("/work");
+    await page.goto("/projects");
     await expect(
       page.getByRole("heading", { name: "What it's like to work together." })
     ).toHaveCount(0);
@@ -475,7 +475,7 @@ test.describe("The review pipeline", () => {
     /* And she is no longer quoted as a client. With one client review left the
        work section is below its minimum and absent entirely, which is the
        same rule as everywhere else. */
-    await page.goto("/work");
+    await page.goto("/projects");
     await expect(page.getByText(clientReviews[0].body)).toHaveCount(0);
   });
 

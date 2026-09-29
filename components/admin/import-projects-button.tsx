@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { DownloadIcon, LoaderCircleIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { importBuiltInProjects } from "@/app/admin/work/actions";
+import { importBuiltInProjects } from "@/app/admin/projects/actions";
 
 /**
  * Moves the projects in `work-data.ts` into the database.
