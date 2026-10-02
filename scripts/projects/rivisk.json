@@ -1,0 +1,80 @@
+{
+  "slug": "rivisk",
+  "name": "Rivisk",
+  "category": "Web3 · Risk intelligence",
+  "groups": ["Web3", "Backend / API", "Full-stack"],
+  "description": "Risk intelligence for Bitcoin capital on Stacks. Rivisk indexes a wallet's positions across protocols, normalises them into one portfolio, calculates deterministic risk, runs stress scenarios, and anchors verifiable risk attestations on-chain through Clarity contracts. Non-custodial: it observes and explains, it never holds funds or trades.",
+  "tags": [
+    "TypeScript",
+    "Next.js",
+    "NestJS",
+    "PostgreSQL",
+    "Prisma",
+    "Redis",
+    "BullMQ",
+    "Clarity",
+    "Stacks.js",
+    "Socket.IO",
+    "Turborepo",
+    "Docker"
+  ],
+  "status": "In progress",
+  "preview": "dashboard",
+  "liveUrl": "https://rivisk-lilac.vercel.app",
+  "repoUrl": "https://github.com/TheSoftNode/rivisk",
+  "client": "",
+  "role": "Architecture, smart contracts and full-stack implementation",
+  "timeline": "September 2026 — ongoing",
+  "published": false,
+  "featured": false,
+  "results": [
+    "Five Clarity contracts live on Stacks testnet, with Chainhook recording each attestation's on-chain snapshot id back into the API seconds after it mines",
+    "Zest V2 lending adapter validated against a real mainnet obligation, reproducing the protocol's own debt figure to eight significant figures",
+    "@rivisk/sdk published to npm — zero-dependency and isomorphic, so the same risk data is consumable without rebuilding the indexing stack",
+    "Native Stacks balances indexed at a named block and matched against chain state to the last micro-STX",
+    "A wallet refresh reaches a subscribed browser in about two seconds over WSS",
+    "13 documentation pages with a per-capability status page separating what is live, what is built but unproven, and what is not built"
+  ],
+  "body": [
+    {
+      "heading": "One wallet, several protocols, no single answer",
+      "paragraphs": [
+        "As more Bitcoin-linked capital became usable on Stacks, a single address started holding several different kinds of exposure at once: sBTC sitting in the wallet, capital in a streaming contract, a position in a lending market, liquidity somewhere else. Every protocol shows its own state correctly. Nobody shows the portfolio.",
+        "That leaves questions nothing can answer from one interface. Where is my sBTC actually deployed? How much is liquid right now versus locked? Which protocol is my largest concentration? How far is this position from liquidation, and what happens to all of it if BTC falls 20%?",
+        "Rivisk is the layer between protocol-specific state and those portfolio-level questions. It never takes custody — the normal product path never asks for a seed phrase or a private key — because you do not need to hold assets to analyse them."
+      ]
+    },
+    {
+      "heading": "Deterministic before intelligent",
+      "paragraphs": [
+        "The risk engine is a pure package. It does not fetch over HTTP, it does not touch Prisma, and it does not sign transactions. Concentration, capital accessibility, loan-to-value, health factor, liquidation distance and price shocks are ordinary testable code with no network in the path.",
+        "That boundary is the product decision, not an implementation detail. A number somebody might act on has to be reproducible, and reproducible means the same inputs give the same output every time, with no model in the middle. An explanation layer is planned — it reads the finished report and says in plain language what is driving the risk — but it sits at the end of the chain and never inside it. Nothing it writes is ever hashed or published on chain, and every number stays reproducible from the report hash with the explainer switched off.",
+        "Floating point is avoided wherever precision matters: atomic token amounts are strings and bigints, USD maths runs through Decimal, contract percentages are basis points, and health factors are E4 fixed point. 1.4700 is stored as 14700, not as a float that is almost 1.47."
+      ]
+    },
+    {
+      "heading": "What goes on chain, and what deliberately does not",
+      "paragraphs": [
+        "The full risk report stays off chain. What goes on chain is a canonical serialisation of it, hashed with SHA-256, alongside compact metrics and the source block. The risk-registry contract stores that snapshot, and only authorised publishers can write one.",
+        "The point is verifiability without putting a financial model into a contract that cannot be edited once it is live. Anyone can take the off-chain report, serialise it the same way, hash it, and check it against the registry. The contracts hold no user funds.",
+        "A risk-policy contract lets a wallet store its own threshold policy on chain, which the off-chain worker reads and acts on, and protocol-registry records supported protocol principals and adapter versions. A reference consumer reads a snapshot through the shared trait and approves or rejects a position — which is the actual test of whether the composability is real rather than claimed."
+      ]
+    },
+    {
+      "heading": "Proving the lending adapter against a real position",
+      "paragraphs": [
+        "Every protocol integration implements one interface: metadata, supports, getPositions. A normalised position can describe a wallet balance, a stream, a lending obligation, an LP position or vault exposure, and the risk engine never learns which protocol it came from. Protocol-specific logic stays in the adapter; once a position is normalised, nothing downstream branches on its origin.",
+        "The Zest V2 adapter was the real test of that claim, because lending is where the maths gets unforgiving: obligation reads, zToken-to-underlying conversion, scaled-debt normalisation, and the protocol's own LTV and liquidation parameters. It was validated against a live mainnet obligation and reproduced Zest's own debt figure to eight significant figures.",
+        "It ships disabled. Mainnet defaults track the current public Zest deployment, testnet and devnet require explicit contract overrides, and the testnet beta runs with it off because Zest does not exist there. An adapter that is on by default against a network where its contracts are absent is a source of confident wrong numbers."
+      ]
+    },
+    {
+      "heading": "Saying plainly what is not built",
+      "paragraphs": [
+        "The documentation sorts every capability into exactly three states: live, meaning running in the beta and checked against real chain or protocol state; built, meaning implemented and tested but never proven end to end; and not built.",
+        "The BitPay stream adapter is built, not live — the reader matches the contract interface, but no BitPay contract exists on the current testnet, so it stays off. Email delivery is implemented with no SMTP server configured. Market-depth liquidity analysis is not built at all, which is why today's score is labelled capital accessibility rather than liquidity. Mainnet deployment follows an independent review.",
+        "This is the same principle as the engine returning unavailable or stale rather than a confident guess. A status page that only lists wins is a brochure, and anyone technical enough to integrate is technical enough to notice."
+      ]
+    }
+  ]
+}
