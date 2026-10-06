@@ -302,3 +302,50 @@
     }
   }
 }
+
+/*
+  The logo marquee.
+
+  Plain CSS keyframes rather than a JS animation loop: this runs continuously
+  for as long as the homepage is open, and a transform animated by the
+  compositor costs nothing per frame where a requestAnimationFrame loop costs
+  a wake-up. The track holds the list twice and travels exactly half its own
+  width, so the second copy lands where the first began and the seam never
+  arrives.
+*/
+@keyframes doc-marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes doc-marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Stopped entirely rather than slowed: a row that keeps moving under the
+   pointer is a row somebody cannot read. */
+.doc-marquee:hover .doc-marquee-track,
+.doc-marquee:focus-within .doc-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+  /* With the travel gone the row still has to reach its contents, so it
+     becomes an ordinary scrollable strip rather than a clipped one. */
+  .doc-marquee {
+    overflow-x: auto;
+  }
+}
