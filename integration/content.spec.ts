@@ -273,7 +273,6 @@ test.describe("Sections that are on every page", () => {
   */
   const SEO_PAGES: Record<string, { path: string; title: string }> = {
     home: { path: "/", title: "The front door" },
-    services: { path: "/services", title: "What the team takes on" },
     work: { path: "/projects", title: "Things I built" },
     ai: { path: "/ai", title: "Models in production" },
     web3: { path: "/web3", title: "On-chain work" },

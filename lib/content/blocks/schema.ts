@@ -317,7 +317,6 @@ export const BLOCKS: Block[] = [
         ],
         entries: [
           { key: "home", label: "Homepage" },
-          { key: "services", label: "Services" },
           { key: "work", label: "Projects" },
           { key: "ai", label: "AI" },
           { key: "web3", label: "Web3" },
@@ -382,11 +381,11 @@ export const BLOCKS: Block[] = [
 
   {
     key: "services-page",
-    title: "Services page",
-    page: "Services",
-    path: "/services",
+    title: "What else we do",
+    page: "Homepage",
+    path: "/",
     description:
-      "Every line of work Docerity takes on, and the page that says so. The grid on the Projects page is the shorter version of this, and the projects themselves are edited under Projects.",
+      "The band on the homepage listing every line of work Docerity takes on. It had a page of its own once; seven lines, three of which already have their own section, did not need a destination — they needed to be visible to somebody already on the site. The key is unchanged so the saved content came with it.",
     groups: [
       headings([{ key: "services-hero", label: "Hero" }, { key: "services-lines", label: "The list" }]),
       {

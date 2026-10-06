@@ -78,10 +78,6 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       ],
       "navLinks": [
     {
-      "label": "Services",
-      "href": "/services"
-    },
-    {
       "label": "Projects",
       "href": "/projects"
     },
@@ -107,10 +103,6 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
     }
   ],
       "footerLinks": [
-    {
-      "label": "Services",
-      "href": "/services"
-    },
     {
       "label": "Projects",
       "href": "/projects"

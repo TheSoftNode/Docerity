@@ -70,6 +70,18 @@ const nextConfig: NextConfig = {
       { source: "/work/:slug", destination: "/projects/:slug", permanent: true },
       { source: "/admin/work", destination: "/admin/projects", permanent: false },
       { source: "/admin/work/:path*", destination: "/admin/projects/:path*", permanent: false },
+      /*
+        The services page became a band on the homepage. The address stays
+        alive and lands on that band rather than the top of the page, because
+        it is indexed and it is the landing page of a running ad campaign — a
+        redirect that drops somebody at the top of the homepage has technically
+        not broken while entirely failing the person who clicked.
+
+        Temporary, not permanent: a 308 is cached by browsers indefinitely and
+        is painful to undo, and this is a layout decision that may be revisited
+        rather than a URL that is gone for good.
+      */
+      { source: "/services", destination: "/#services", permanent: false },
     ];
   },
 
