@@ -43,6 +43,24 @@ test.describe("Homepage header", () => {
     await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible();
   });
 
+  test("the phone menu fits on a small screen without scrolling", async ({ page }) => {
+    /* iPhone SE: the smallest phone still in common use. Every link, the
+       colour theme and the call to action should be in view at once. */
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/");
+
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const close = page.getByRole("button", { name: "Close menu" });
+    const menu = page.locator(`#${await close.getAttribute("aria-controls")}`);
+
+    const box = await menu.evaluate((element) => ({
+      bottom: element.getBoundingClientRect().bottom,
+      overflow: element.scrollHeight - element.clientHeight,
+    }));
+    expect(box.bottom, "the menu runs below the screen").toBeLessThanOrEqual(667);
+    expect(box.overflow, "the menu has to scroll").toBeLessThanOrEqual(1);
+  });
+
   test("choosing a link in the phone menu closes it", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");

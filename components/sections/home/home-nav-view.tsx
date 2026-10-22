@@ -116,15 +116,14 @@ function HomeNavView({ name, navLinks, email }: Props) {
           <div
             id={menuId}
             className={cn(
-              "ld-zoom mt-2 max-h-[calc(100svh-6rem)] overflow-y-auto rounded-[28px] border p-2 backdrop-blur-[18px] xl:hidden",
+              "ld-zoom mt-2 max-h-[calc(100svh-5.5rem)] overflow-y-auto rounded-[26px] border p-1.5 backdrop-blur-[18px] xl:hidden",
               "border-[rgb(var(--ld-paper-rgb)/0.12)] bg-[rgb(var(--ld-ink-rgb)/0.92)] text-[var(--ld-paper)]",
               "shadow-[0_40px_80px_-30px_rgb(0_0_0/0.7)]"
             )}
           >
-            {/* Rows rather than a list of large words: each carries a small
-                index and an arrow, so the menu reads as an instrument panel in
-                the same language as the Now Board, and every row is a full
-                44px+ target. */}
+            {/* Compact rows, each a full 44px target, sized so the whole menu
+                (links, theme and call to action) fits on a small phone without
+                scrolling. */}
             <ul className="px-2">
               {navLinks.map((link, index) => (
                 <li
@@ -134,12 +133,9 @@ function HomeNavView({ name, navLinks, email }: Props) {
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="group flex min-h-13 items-center gap-4 rounded-2xl px-3 transition-colors hover:bg-[rgb(var(--ld-paper-rgb)/0.06)] focus-visible:bg-[rgb(var(--ld-paper-rgb)/0.06)] focus-visible:outline-none"
+                    className="group flex min-h-11 items-center justify-between gap-4 rounded-xl px-3 transition-colors hover:bg-[rgb(var(--ld-paper-rgb)/0.06)] focus-visible:bg-[rgb(var(--ld-paper-rgb)/0.06)] focus-visible:outline-none"
                   >
-                    <span aria-hidden="true" className="w-5 font-mono text-[11px] text-[var(--ld-muted-3)]">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="flex-1 text-[17px] font-medium tracking-[-0.01em]">{link.label}</span>
+                    <span className="text-base font-medium tracking-[-0.01em]">{link.label}</span>
                     <ArrowUpRightIcon
                       aria-hidden="true"
                       className="size-4 text-[var(--ld-muted-3)] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[var(--ld-accent)]"
@@ -149,28 +145,28 @@ function HomeNavView({ name, navLinks, email }: Props) {
               ))}
             </ul>
 
-            <div className="mt-2 rounded-[22px] bg-[rgb(var(--ld-paper-rgb)/0.05)] px-4 pt-3.5 pb-2">
+            <div className="mt-1.5 rounded-[20px] bg-[rgb(var(--ld-paper-rgb)/0.05)] px-3.5 pt-2.5 pb-1">
               <div className="flex items-baseline justify-between gap-3">
                 <p className="font-mono text-[10px] tracking-[0.14em] text-[var(--ld-muted-3)] uppercase">
                   Colour theme
                 </p>
                 <p className="text-[13px] font-medium text-[var(--ld-muted)]">{currentPalette.name}</p>
               </div>
-              <PaletteSwatchRow className="mt-1 -ml-1.5 justify-between" />
+              <PaletteSwatchRow className="-mx-1.5 justify-between" />
             </div>
 
-            <div className="p-2 pt-3">
+            <div className="px-1.5 pt-2.5 pb-1.5">
               <Link
                 href="/contact"
                 onClick={() => setOpen(false)}
-                className="group flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--ld-accent)] text-[15px] font-semibold text-[var(--ld-ink)]"
+                className="group flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--ld-accent)] text-[15px] font-semibold text-[var(--ld-ink)]"
               >
                 Start a project
                 <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
               <a
                 href={`mailto:${email}`}
-                className="mt-3 block pb-1 text-center font-mono text-xs text-[var(--ld-muted-3)] transition-colors hover:text-[var(--ld-paper)]"
+                className="mt-2 block text-center font-mono text-[11px] text-[var(--ld-muted-3)] transition-colors hover:text-[var(--ld-paper)]"
               >
                 {email}
               </a>
