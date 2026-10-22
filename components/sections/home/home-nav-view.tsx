@@ -117,10 +117,12 @@ function HomeNavView({ name, navLinks, email }: Props) {
               onClick={() => setOpen((value) => !value)}
               className={cn(
                 "group grid size-10 place-items-center rounded-full border outline-none transition-colors duration-300 xl:hidden",
-                "focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]",
-                open
-                  ? "border-transparent bg-[var(--ld-paper)] text-[var(--ld-ink)]"
-                  : "border-[rgb(var(--ld-paper-rgb)/0.18)] bg-[rgb(var(--ld-paper-rgb)/0.06)] text-[var(--ld-paper)] hover:bg-[rgb(var(--ld-paper-rgb)/0.12)]"
+                "border-[rgb(var(--ld-paper-rgb)/0.18)] bg-[rgb(var(--ld-paper-rgb)/0.06)] hover:bg-[rgb(var(--ld-paper-rgb)/0.12)]",
+                "focus-visible:ring-1 focus-visible:ring-[rgb(var(--ld-accent-rgb)/0.7)]",
+                /* Open is marked by the cross itself, in the accent, rather than
+                   by filling the button: a solid disc read as a different
+                   control from the glass one it replaced. */
+                open ? "text-[var(--ld-accent)]" : "text-[var(--ld-paper)]"
               )}
             >
               <MenuIcon open={open} />
