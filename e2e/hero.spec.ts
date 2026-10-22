@@ -76,6 +76,26 @@ test.describe("Hero", () => {
     await expect(page.locator('.ld-tile[data-searching="true"]')).toHaveCount(0);
   });
 
+  test("fits inside the viewport on common laptop screens", async ({ page }) => {
+    /* The hero, header included, is designed to open as one complete picture:
+       nothing of it, the floating boarding pass included, should sit below
+       the fold on a laptop. */
+    for (const [width, height] of [
+      [1366, 768],
+      [1440, 900],
+      [1536, 864],
+      [1920, 1080],
+    ]) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/");
+
+      const bottom = await page.evaluate(
+        () => (document.querySelector("main section") as HTMLElement).getBoundingClientRect().bottom
+      );
+      expect(bottom, `hero overflows the viewport at ${width}×${height}`).toBeLessThanOrEqual(height);
+    }
+  });
+
   test("the header sits above the hero with real breathing room", async ({ page }) => {
     await page.goto("/");
 

@@ -66,7 +66,7 @@ function HeroShowcase({
       <div className="min-w-0">
         {eyebrow}
 
-        <h1 className="ld-display ld-up ld-delay-1 text-[clamp(44px,7vw,112px)] leading-none font-extrabold tracking-[-0.05em] text-balance">
+        <h1 className="ld-display ld-up ld-delay-1 text-[clamp(40px,min(6vw,10.5vh),96px)] leading-[0.98] font-extrabold tracking-[-0.05em] text-balance">
           {/* The whole title, once, for screen readers and search. The
               rotating phrases below are decoration over the same words, and a
               heading whose name changed every few seconds would be announced
@@ -93,7 +93,7 @@ function HeroShowcase({
         </h1>
 
         {count > 1 ? (
-          <div aria-hidden="true" className="ld-up ld-delay-2 mt-6 flex gap-2">
+          <div aria-hidden="true" className="ld-up ld-delay-2 mt-5 flex gap-2">
             {phrases.map((_, index) => (
               <span
                 key={index}

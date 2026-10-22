@@ -47,89 +47,94 @@ function HomeNavView({ name, navLinks }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  /* No side padding on the header from `lg`: there the pill itself is the page
-     shell, so its edge lines up with every section's content edge. */
+  /* The page shell is a wrapper around the pill, not the pill itself. The shell
+     zeroes its own padding on wide screens, and on the pill that also stripped
+     the pill's inner padding, pressing the logo and the button against its
+     rounded ends. As a wrapper it still lines the pill up with every
+     section's content edge. */
   return (
-    <header className="sticky top-3.5 z-40 px-3 sm:px-6 lg:px-0">
-      <nav
-        aria-label="Main"
-        className={cn(
-          "doc-shell flex items-center justify-between gap-3 rounded-full border py-2.5 pr-2.5 pl-4 backdrop-blur-[14px] transition-colors duration-300 sm:pl-5",
-          "border-[rgb(var(--ld-paper-rgb)/0.14)] text-[var(--ld-paper)]",
-          scrolled ? "bg-[rgb(var(--ld-ink-rgb)/0.86)]" : "bg-[rgb(var(--ld-ink-rgb)/0.6)]"
-        )}
-      >
-        <Link
-          href="/"
-          className="ld-display flex items-center gap-3 text-[21px] font-extrabold tracking-[-0.02em]"
+    <header className="sticky top-3 z-40">
+      <div className="doc-shell">
+        <nav
+          aria-label="Main"
+          className={cn(
+            "flex items-center justify-between gap-3 rounded-full border py-1.5 pr-1.5 pl-3.5 backdrop-blur-[14px] transition-colors duration-300 sm:pl-4",
+            "border-[rgb(var(--ld-paper-rgb)/0.14)] text-[var(--ld-paper)]",
+            scrolled ? "bg-[rgb(var(--ld-ink-rgb)/0.86)]" : "bg-[rgb(var(--ld-ink-rgb)/0.6)]"
+          )}
         >
-          <PaletteLogo className="size-[34px]" priority />
-          {name}
-        </Link>
-
-        {/* The full row appears only where all of it fits. Below that the links
-            move into the menu, rather than the bar quietly overflowing. */}
-        <ul className="hidden items-center gap-7 text-[15px] font-medium text-[var(--ld-muted)] xl:flex">
-          {navLinks.map((link) => (
-            <li key={link.label}>
-              <Link href={link.href} className="transition-opacity hover:opacity-70">
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex items-center gap-2">
-          <PaletteSwitcher className="hidden sm:grid" />
           <Link
-            href="/contact"
-            className="group hidden min-h-11 items-center gap-2 rounded-full bg-[var(--ld-accent)] px-5 text-[15px] font-semibold text-[var(--ld-ink)] transition-transform hover:-translate-y-0.5 sm:inline-flex"
+            href="/"
+            className="ld-display flex items-center gap-2.5 text-[19px] font-extrabold tracking-[-0.02em]"
           >
-            Start a project
-            <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <PaletteLogo className="size-[30px]" priority />
+            {name}
           </Link>
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-controls={menuId}
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((value) => !value)}
-            className="grid size-11 place-items-center rounded-full bg-[var(--ld-paper)] text-[var(--ld-ink)] xl:hidden"
-          >
-            <Hamburger open={open} />
-          </button>
-        </div>
-      </nav>
 
-      {open ? (
-        <div
-          id={menuId}
-          className="ld-zoom doc-shell mt-2.5 rounded-3xl bg-[var(--ld-paper)] p-6 text-[var(--ld-ink)] shadow-[0_30px_60px_-24px_rgb(0_0_0/0.5)] xl:hidden"
-        >
-          <ul className="ld-display flex flex-col text-[28px] font-bold">
+          {/* The full row appears only where all of it fits. Below that the links
+              move into the menu, rather than the bar quietly overflowing. */}
+          <ul className="hidden items-center gap-6 text-[14.5px] font-medium text-[var(--ld-muted)] xl:flex">
             {navLinks.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} onClick={() => setOpen(false)} className="block py-2">
+                <Link href={link.href} className="transition-opacity hover:opacity-70">
                   {link.label}
                 </Link>
               </li>
             ))}
           </ul>
 
-          <p className="mt-5 mb-1 font-mono text-[11px] tracking-[0.12em] text-[var(--ld-text-muted)] uppercase">
-            Colour theme
-          </p>
-          <PaletteSwatchRow className="-ml-1.5" />
+          <div className="flex items-center gap-2">
+            <PaletteSwitcher className="hidden size-10 sm:grid" />
+            <Link
+              href="/contact"
+              className="group hidden min-h-10 items-center gap-1.5 rounded-full bg-[var(--ld-accent)] px-4.5 text-sm font-semibold text-[var(--ld-ink)] transition-transform hover:-translate-y-0.5 sm:inline-flex"
+            >
+              Start a project
+              <ArrowUpRightIcon className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+            <button
+              type="button"
+              aria-expanded={open}
+              aria-controls={menuId}
+              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen((value) => !value)}
+              className="grid size-10 place-items-center rounded-full bg-[var(--ld-paper)] text-[var(--ld-ink)] xl:hidden"
+            >
+              <Hamburger open={open} />
+            </button>
+          </div>
+        </nav>
 
-          <Link
-            href="/contact"
-            onClick={() => setOpen(false)}
-            className="mt-5 flex min-h-13 items-center justify-center rounded-full bg-[var(--ld-accent)] font-semibold text-[var(--ld-ink)]"
+        {open ? (
+          <div
+            id={menuId}
+            className="ld-zoom mt-2.5 rounded-3xl bg-[var(--ld-paper)] p-6 text-[var(--ld-ink)] shadow-[0_30px_60px_-24px_rgb(0_0_0/0.5)] xl:hidden"
           >
-            Start a project
-          </Link>
-        </div>
-      ) : null}
+            <ul className="ld-display flex flex-col text-[28px] font-bold">
+              {navLinks.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} onClick={() => setOpen(false)} className="block py-2">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-5 mb-1 font-mono text-[11px] tracking-[0.12em] text-[var(--ld-text-muted)] uppercase">
+              Colour theme
+            </p>
+            <PaletteSwatchRow className="-ml-1.5" />
+
+            <Link
+              href="/contact"
+              onClick={() => setOpen(false)}
+              className="mt-5 flex min-h-13 items-center justify-center rounded-full bg-[var(--ld-accent)] font-semibold text-[var(--ld-ink)]"
+            >
+              Start a project
+            </Link>
+          </div>
+        ) : null}
+      </div>
     </header>
   );
 }

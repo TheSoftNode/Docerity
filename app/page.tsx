@@ -30,7 +30,7 @@ export const revalidate = 300;
  */
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3.5">
+    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <HomeNav />
       <main className="flex-1">
         <HomeHero />
