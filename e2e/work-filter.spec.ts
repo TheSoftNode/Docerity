@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 import { projects } from "@/components/sections/work/work-data";
-import { ALL_FILTER } from "@/components/sections/work-program/work-showcase";
+import { ALL_FILTER } from "@/components/sections/projects/projects-content";
 
 test.describe("Work filtering", () => {
   test("filters narrow the grid and the counts are real", async ({ page }) => {
@@ -36,6 +36,38 @@ test.describe("Work filtering", () => {
     await expect(web3).toHaveAttribute("aria-pressed", "false");
     await web3.click();
     await expect(web3).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("the filter survives a switch to the index view", async ({ page }) => {
+    await page.goto("/projects");
+    const showcase = page.locator("#showcase");
+    await showcase.scrollIntoViewIfNeeded();
+
+    const web3 = showcase.getByRole("button", { name: /^Web3/ });
+    const claimed = Number((await web3.innerText()).match(/(\d+)\s*$/)?.[1]);
+    await web3.click();
+
+    const index = showcase.getByRole("button", { name: "index", exact: true });
+    await index.click();
+    await expect(index).toHaveAttribute("aria-pressed", "true");
+    /* The index is rows of links rather than cards with headings. */
+    await expect(showcase.locator("h3")).toHaveCount(0);
+    await expect(showcase.locator('a[href^="/projects/"]')).toHaveCount(claimed);
+  });
+});
+
+test.describe("Command bar", () => {
+  test("a category in the hero filters the showcase and jumps to it", async ({ page }) => {
+    await page.goto("/projects");
+    const bar = page.getByRole("navigation", { name: "Jump to projects" });
+    const link = bar.getByRole("link").nth(1);
+    const label = (await link.innerText()).replace(/\s*\d+\s*$/, "").trim();
+
+    await link.click();
+    await expect(page.locator("#showcase")).toBeInViewport();
+    await expect(
+      page.locator("#showcase").getByRole("button", { name: new RegExp(`^${label.replace(/[/]/g, "\\/")}`) })
+    ).toHaveAttribute("aria-pressed", "true");
   });
 });
 

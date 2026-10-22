@@ -5,14 +5,14 @@ import { SocialIcon } from "@/components/shared/social-icon";
 import { PaletteLogo } from "@/components/shared/palette/palette-logo";
 
 /**
- * The homepage's footer, continuing the contact section's dark band.
+ * The footer of the redesigned pages, continuing the contact band's ink.
  *
  * The same editable footer links, socials and address the shared footer reads,
  * so the two never disagree about where the site's pages are. It ends on the
  * outlined wordmark beside the palette-matched mark: decoration, hidden from
  * assistive technology, since the name is already in the copyright line.
  */
-async function HomeFooter() {
+async function SiteFooter() {
   const site = await getSiteSettings();
   const year = new Date().getFullYear();
 
@@ -62,4 +62,4 @@ async function HomeFooter() {
   );
 }
 
-export { HomeFooter };
+export { SiteFooter };

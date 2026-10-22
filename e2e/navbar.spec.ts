@@ -4,7 +4,7 @@ import { navLabels } from "./copy";
 
 /*
   The shared navbar, which every page except the homepage renders. The
-  homepage has its own floating header (see home-nav.spec.ts), so these run
+  homepage has its own floating header (see site-header.spec.ts), so these run
   against /about, a page that carries the shared one.
 */
 test.describe("Navbar", () => {

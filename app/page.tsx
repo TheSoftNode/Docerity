@@ -1,4 +1,4 @@
-import { HomeNav } from "@/components/sections/home/home-nav";
+import { SiteHeader } from "@/components/layout/site-header";
 import { HomeHero } from "@/components/sections/home/home-hero";
 import { HomeBands } from "@/components/sections/home/home-bands";
 import { HomeTracks } from "@/components/sections/home/home-tracks";
@@ -6,8 +6,8 @@ import { HomeWork } from "@/components/sections/home/home-work";
 import { HomeMentorship } from "@/components/sections/home/home-mentorship";
 import { HomeExplainers } from "@/components/sections/home/home-explainers";
 import { HomeReviews } from "@/components/sections/home/home-reviews";
-import { HomeContact } from "@/components/sections/home/home-contact";
-import { HomeFooter } from "@/components/sections/home/home-footer";
+import { ContactBand } from "@/components/sections/contact-band/contact-band";
+import { SiteFooter } from "@/components/layout/site-footer";
 
 /*
   Revalidated, because the reviews section reads approved reviews.
@@ -31,7 +31,7 @@ export const revalidate = 300;
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
-      <HomeNav />
+      <SiteHeader />
       <main className="flex-1">
         <HomeHero />
         <HomeBands />
@@ -40,9 +40,9 @@ export default function Home() {
         <HomeMentorship />
         <HomeExplainers />
         <HomeReviews />
-        <HomeContact />
+        <ContactBand />
       </main>
-      <HomeFooter />
+      <SiteFooter />
     </div>
   );
 }

@@ -56,7 +56,7 @@ test.describe("Work page", () => {
 
     for (const name of ["MetaPilot", "TalentChainPro", "SoftInven"]) {
       await expect(
-        page.getByRole("heading", { name: `${name}, view project`, exact: true })
+        page.locator("#showcase").getByRole("heading", { name, exact: true })
       ).toBeVisible();
     }
 
@@ -72,17 +72,25 @@ test.describe("Work page", () => {
     await expect(page).toHaveURL("/projects");
   });
 
-  test("'See the projects' scrolls to the showcase, 'Start a project' goes to contact", async ({
-    page,
-  }) => {
+  test("a project card opens that project's page", async ({ page }) => {
     await page.goto("/projects");
+    await page.locator("#showcase").getByRole("link", { name: "EEP", exact: true }).click();
+    await expect(page).toHaveURL("/projects/eep");
+  });
 
-    await page.locator("main").getByRole("button", { name: "Start a project" }).click();
-    await expect(page).toHaveURL("/contact");
-
+  test("the header marks this page as the current one", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/projects");
-    await page.getByRole("button", { name: "See the projects" }).click();
-    await expect(page.locator("#showcase")).toBeInViewport();
+    await expect(
+      page.locator("header").getByRole("link", { name: navLabelFor("/projects"), exact: true })
+    ).toHaveAttribute("aria-current", "page");
+  });
+
+  test("the closing contact band starts a project", async ({ page }) => {
+    await page.goto("/projects");
+    const contact = page.locator("#contact");
+    await contact.scrollIntoViewIfNeeded();
+    await expect(contact.getByRole("link", { name: /A new project/ })).toHaveAttribute("href", "/contact");
   });
 
   test("the homepage's 'all projects' link leads here", async ({ page }) => {
@@ -97,5 +105,31 @@ test.describe("Work page", () => {
     await page.goto("/projects/eep");
     await page.getByRole("link", { name: "All projects" }).click();
     await expect(page).toHaveURL("/projects");
+  });
+});
+
+test.describe("Process console", () => {
+  test("a stage can be chosen, and its log is shown", async ({ page }) => {
+    await page.goto("/projects");
+    const stages = page.getByRole("list", { name: "Stages" }).getByRole("button");
+    await stages.last().scrollIntoViewIfNeeded();
+    await stages.last().click();
+    await expect(stages.last()).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("progressbar", { name: "Pipeline progress" })).toHaveAttribute(
+      "aria-valuenow",
+      "100"
+    );
+  });
+
+  test("it advances on its own, and holds still under reduced motion", async ({ page }) => {
+    await page.goto("/projects");
+    const stages = page.getByRole("list", { name: "Stages" }).getByRole("button");
+    await expect(stages.first()).toHaveAttribute("aria-pressed", "true");
+    await expect(stages.nth(1)).toHaveAttribute("aria-pressed", "true", { timeout: 9000 });
+
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.reload();
+    await page.waitForTimeout(6500);
+    await expect(stages.first()).toHaveAttribute("aria-pressed", "true");
   });
 });

@@ -184,7 +184,7 @@ test.describe("About page", () => {
 
   test("navbar 'About' link navigates to the page", async ({ page }) => {
     /* Wide enough for the homepage header to show its links in the bar; below
-       1280px they live in the menu, which home-nav.spec.ts covers. */
+       1280px they live in the menu, which site-header.spec.ts covers. */
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
     await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "About" }).click();

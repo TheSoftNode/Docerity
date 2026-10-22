@@ -5,12 +5,13 @@ import { getSiteSettings } from "@/lib/content/blocks/site";
 import { splitEmphasis } from "@/components/sections/home/hero-content";
 
 /**
- * The closing call to action: three ways to get in touch, as large rows.
+ * The closing call to action of the redesigned pages: three ways to get in
+ * touch, as large rows.
  *
  * The title and lede are the editable `home-cta` heading, emphasis included,
  * and the address is the site's own contact email from settings.
  */
-async function HomeContact() {
+async function ContactBand() {
   const [heading, site] = await Promise.all([
     getHeading("homepage", "home-cta"),
     getSiteSettings(),
@@ -50,7 +51,7 @@ async function HomeContact() {
   return (
     <section
       id="contact"
-      aria-labelledby="home-contact-title"
+      aria-labelledby="contact-band-title"
       className="scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]"
     >
       <div className="doc-shell pt-[clamp(72px,10vw,140px)]">
@@ -59,7 +60,7 @@ async function HomeContact() {
           {heading.eyebrow}
         </p>
         <h2
-          id="home-contact-title"
+          id="contact-band-title"
           className="ld-display max-w-[14ch] text-[clamp(48px,10vw,156px)] leading-[0.9] font-extrabold tracking-[-0.055em]"
         >
           {splitEmphasis(heading.title).map((piece, index) =>
@@ -120,4 +121,4 @@ async function HomeContact() {
   );
 }
 
-export { HomeContact };
+export { ContactBand };

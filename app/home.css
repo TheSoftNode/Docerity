@@ -393,6 +393,52 @@
 .ld-pan-x {
   animation: ld-pan-x 14s ease-in-out infinite alternate;
 }
+/* In a grid the tour waits for its card to be hovered or focused. */
+.ld-pan-on-hover {
+  animation-play-state: paused;
+}
+.group:hover .ld-pan-on-hover,
+.group:has(:focus-visible) .ld-pan-on-hover {
+  animation-play-state: running;
+}
+
+/* The Projects hero's wall: columns drift past each other, each holding its
+   projects twice so the loop at -50% is seamless. */
+@keyframes ld-wall {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+.ld-wall-up {
+  animation: ld-wall 52s linear infinite;
+}
+.ld-wall-down {
+  animation: ld-wall 58s linear infinite reverse;
+}
+.ld-wall-up-slow {
+  animation: ld-wall 66s linear infinite;
+}
+.ld-wall-down-slow {
+  animation: ld-wall 72s linear infinite reverse;
+}
+
+/* A deploy log line arriving: each line is delayed in turn by its style. */
+@keyframes ld-log-line {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-log-line {
+  animation: ld-log-line 0.35s ease-out both;
+}
 .ld-progress {
   animation-name: ld-progress;
   animation-timing-function: linear;
@@ -482,6 +528,11 @@
   .ld-blink,
   .ld-drift,
   .ld-sway,
+  .ld-wall-up,
+  .ld-wall-down,
+  .ld-wall-up-slow,
+  .ld-wall-down-slow,
+  .ld-log-line,
   .ld-tile[data-searching="true"]::before {
     animation: none !important;
   }

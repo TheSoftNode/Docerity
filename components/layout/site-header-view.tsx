@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { ArrowUpRightIcon } from "lucide-react";
 
@@ -46,10 +47,15 @@ function MenuIcon({ open }: { open: boolean }) {
   );
 }
 
-function HomeNavView({ name, navLinks, email }: Props) {
+function SiteHeaderView({ name, navLinks, email }: Props) {
   const scrolled = useScrolled();
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const pathname = usePathname();
+  /* A link is current on its own page and on the pages beneath it, so the
+     Projects link stays marked on a project's case study too. */
+  const isCurrent = (href: string) =>
+    href !== "/" && (pathname === href || pathname.startsWith(`${href}/`));
   const { palette } = usePalette();
   const currentPalette = PALETTES.find((entry) => entry.key === palette) ?? PALETTES[0];
 
@@ -93,7 +99,15 @@ function HomeNavView({ name, navLinks, email }: Props) {
           <ul className="hidden items-center gap-6 text-[14.5px] font-medium text-[var(--ld-muted)] xl:flex">
             {navLinks.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} className="transition-opacity hover:opacity-70">
+                <Link
+                  href={link.href}
+                  aria-current={isCurrent(link.href) ? "page" : undefined}
+                  className={cn(
+                    "relative transition-opacity hover:opacity-70",
+                    isCurrent(link.href) &&
+                      "text-[var(--ld-paper)] after:absolute after:inset-x-0 after:-bottom-2 after:h-0.5 after:rounded-full after:bg-[var(--ld-accent)]"
+                  )}
+                >
                   {link.label}
                 </Link>
               </li>
@@ -151,9 +165,17 @@ function HomeNavView({ name, navLinks, email }: Props) {
                   <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
+                    aria-current={isCurrent(link.href) ? "page" : undefined}
                     className="group flex min-h-11 items-center justify-between gap-4 rounded-xl px-3 transition-colors hover:bg-[rgb(var(--ld-paper-rgb)/0.06)] focus-visible:bg-[rgb(var(--ld-paper-rgb)/0.06)] focus-visible:outline-none"
                   >
-                    <span className="text-base font-medium tracking-[-0.01em]">{link.label}</span>
+                    <span
+                      className={cn(
+                        "text-base font-medium tracking-[-0.01em]",
+                        isCurrent(link.href) && "text-[var(--ld-accent)]"
+                      )}
+                    >
+                      {link.label}
+                    </span>
                     <ArrowUpRightIcon
                       aria-hidden="true"
                       className="size-4 text-[var(--ld-muted-3)] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[var(--ld-accent)]"
@@ -196,4 +218,4 @@ function HomeNavView({ name, navLinks, email }: Props) {
   );
 }
 
-export { HomeNavView };
+export { SiteHeaderView };

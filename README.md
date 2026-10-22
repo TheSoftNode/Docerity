@@ -140,7 +140,9 @@ confirmed against Cloudinary before being stored.
 ```
 app/                 routes: public pages, /admin, /api
 components/
-  sections/          page sections, one folder per section (home/ is the homepage)
+  layout/            site-header and site-footer: the redesigned pages' chrome
+  sections/          page sections, one folder per section (home/ is the
+                     homepage, projects/ is /projects, contact-band/ closes both)
   shared/palette/    the palette switcher, its no-flash script and logo
   admin/             the admin area's own components
   ui/                shadcn base-nova on @base-ui/react
