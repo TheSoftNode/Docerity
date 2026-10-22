@@ -21,17 +21,27 @@ type Props = Pick<SiteSettings, "name" | "navLinks" | "email">;
 const CASCADE = ["ld-delay-1", "ld-delay-2", "ld-delay-3", "ld-delay-4", "ld-delay-5", "ld-delay-6"];
 
 /**
- * Three lines that become a cross. Drawn as spans rather than swapped icons so
- * the change is a motion, which is what tells somebody the same button closes
- * what it opened.
+ * Two fine lines of unequal length that become a cross.
+ *
+ * The shorter line reaches full width when the button is hovered or focused,
+ * a small sign that it responds, and both swing into a cross when the menu is
+ * open. Drawn as spans rather than swapped icons, so the change is a motion,
+ * which is what tells somebody the same button closes what it opened.
  */
-function Hamburger({ open }: { open: boolean }) {
-  const bar = "absolute inset-x-0 h-0.5 rounded-full bg-current transition-all duration-300";
+function MenuIcon({ open }: { open: boolean }) {
+  const line =
+    "absolute right-0 h-[1.5px] rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(.2,.7,.2,1)]";
   return (
-    <span aria-hidden="true" className="relative block h-3.5 w-5">
-      <span className={cn(bar, "top-0", open && "translate-y-1.5 rotate-45")} />
-      <span className={cn(bar, "top-1.5", open && "opacity-0")} />
-      <span className={cn(bar, "top-3", open && "-translate-y-1.5 -rotate-45")} />
+    <span aria-hidden="true" className="relative block h-3 w-[18px]">
+      <span className={cn(line, open ? "top-[5px] w-full rotate-45" : "top-[2px] w-full")} />
+      <span
+        className={cn(
+          line,
+          open
+            ? "top-[5px] w-full -rotate-45"
+            : "top-[8px] w-[11px] group-hover:w-full group-focus-visible:w-full"
+        )}
+      />
     </span>
   );
 }
@@ -105,9 +115,15 @@ function HomeNavView({ name, navLinks, email }: Props) {
               aria-controls={menuId}
               aria-label={open ? "Close menu" : "Open menu"}
               onClick={() => setOpen((value) => !value)}
-              className="grid size-10 place-items-center rounded-full bg-[var(--ld-paper)] text-[var(--ld-ink)] xl:hidden"
+              className={cn(
+                "group grid size-10 place-items-center rounded-full border outline-none transition-colors duration-300 xl:hidden",
+                "focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]",
+                open
+                  ? "border-transparent bg-[var(--ld-paper)] text-[var(--ld-ink)]"
+                  : "border-[rgb(var(--ld-paper-rgb)/0.18)] bg-[rgb(var(--ld-paper-rgb)/0.06)] text-[var(--ld-paper)] hover:bg-[rgb(var(--ld-paper-rgb)/0.12)]"
+              )}
             >
-              <Hamburger open={open} />
+              <MenuIcon open={open} />
             </button>
           </div>
         </nav>
