@@ -46,14 +46,14 @@ async function HomeHero() {
           rows={rows}
           eyebrow={
             <p
-              className="ld-fade mb-6 inline-flex items-center gap-2 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.18)] py-1.5 pr-3.5 pl-3 text-[13px] text-[var(--ld-muted)]"
+              className="ld-fade mb-7 inline-flex items-center gap-2.5 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.18)] py-1.5 pr-4 pl-3 text-sm text-[var(--ld-muted)]"
             >
               <span className="ld-live size-2 rounded-full bg-[#54D696]" aria-hidden="true" />
               {hero.eyebrow}
             </p>
           }
         >
-          <p className="ld-up ld-delay-3 mt-6 max-w-[32rem] text-[clamp(16px,1.2vw,18px)] leading-relaxed text-[var(--ld-muted)]">
+          <p className="ld-up ld-delay-3 mt-7 max-w-[34rem] text-[clamp(17px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">
             {hero.lede}
           </p>
           <div className="ld-up ld-delay-4 mt-7 flex flex-wrap gap-3">
