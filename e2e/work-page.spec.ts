@@ -85,10 +85,11 @@ test.describe("Work page", () => {
     await expect(page.locator("#showcase")).toBeInViewport();
   });
 
-  test("the homepage's 'see all' button links here", async ({ page }) => {
+  test("the homepage's 'all projects' link leads here", async ({ page }) => {
     await page.goto("/");
-    await page.locator("#work").scrollIntoViewIfNeeded();
-    await page.getByRole("button", { name: "See all projects" }).click();
+    const work = page.locator("#work");
+    await work.scrollIntoViewIfNeeded();
+    await work.getByRole("link", { name: /All projects/ }).click();
     await expect(page).toHaveURL("/projects");
   });
 

@@ -2,9 +2,14 @@ import { test, expect } from "@playwright/test";
 
 import { navLabels } from "./copy";
 
+/*
+  The shared navbar, which every page except the homepage renders. The
+  homepage has its own floating header (see home-nav.spec.ts), so these run
+  against /about, a page that carries the shared one.
+*/
 test.describe("Navbar", () => {
   test("is transparent at the top and gains a background once scrolled", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/about");
 
     const header = page.locator("header");
     await expect(header).toHaveClass(/bg-transparent/);
@@ -15,7 +20,7 @@ test.describe("Navbar", () => {
 
   test("mobile menu opens, lists all nav links, and closes", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/");
+    await page.goto("/about");
 
     await page.getByRole("button", { name: "Open menu" }).click();
 

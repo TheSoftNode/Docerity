@@ -80,21 +80,14 @@ test.describe("Reviews page", () => {
     await expect(page.getByLabel("Your name")).toBeFocused();
   });
 
-  test("is reachable from the footer and the homepage testimonials", async ({ page }) => {
+  test("is reachable from the footer and the homepage reviews", async ({ page }) => {
     await page.goto("/");
 
-    /*
-      `getByRole("button")`, not "link". base-ui's Button sets `role="button"` on
-      the element it renders into, so an anchor rendered through it is announced
-      as a button. Every other test here queries these the same way.
-    */
+    /* With no reviews yet the homepage invites the first one, and does not
+       offer to "read all" of nothing; once there are reviews it names their
+       authors and links here (see integration/pipeline.spec.ts). */
     await expect(
-      page.getByRole("button", { name: "Read all of them" })
-    ).toHaveAttribute("href", "/reviews");
-    /* Filled rather than ghost. A borderless button beside a filled one read as
-       stray text, which is why nobody found the form from the homepage. */
-    await expect(
-      page.getByRole("button", { name: "Write a review" })
+      page.locator("#reviews").getByRole("link", { name: "Write the first one" })
     ).toHaveAttribute("href", "/reviews#leave-a-review");
     await expect(
       page.locator('footer a[href="/reviews"]')

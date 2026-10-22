@@ -23,18 +23,29 @@ test.describe("Contact page", () => {
     expect(errors).toEqual([]);
   });
 
-  test("navbar, hero, mentorship, and CTA buttons all navigate here", async ({
+  test("the homepage's header, mentorship and contact links all navigate here", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    await page.getByRole("button", { name: "Start a project" }).first().click();
+    await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Start a project" }).click();
     await expect(page).toHaveURL("/contact");
 
     await page.goto("/");
-    await page.getByRole("button", { name: "Apply for mentorship" }).click();
+    const mentorship = page.locator("#mentorship");
+    await mentorship.scrollIntoViewIfNeeded();
+    await mentorship.getByRole("link", { name: "Apply" }).click();
     await expect(page).toHaveURL("/contact?type=mentorship");
 
     await page.goto("/");
+    const contact = page.locator("#contact");
+    await contact.scrollIntoViewIfNeeded();
+    await contact.getByRole("link", { name: /A new project/ }).click();
+    await expect(page).toHaveURL("/contact");
+  });
+
+  test("the shared closing call to action navigates here", async ({ page }) => {
+    await page.goto("/about");
     await page.locator("#contact").scrollIntoViewIfNeeded();
     await page.getByRole("button", { name: "Start the conversation" }).click();
     await expect(page).toHaveURL("/contact");

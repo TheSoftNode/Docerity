@@ -407,9 +407,7 @@ test.describe("The review pipeline", () => {
     /* The other three sections go back to what they show with nothing to
        show: an invitation on the homepage, and absence elsewhere. */
     await page.goto("/");
-    await expect(
-      page.getByRole("heading", { name: /other people.s words go/ })
-    ).toBeVisible();
+    await expect(page.locator("#reviews").getByText("Your review goes here")).toBeVisible();
 
     await page.goto("/projects");
     await expect(

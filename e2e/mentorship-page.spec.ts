@@ -72,12 +72,15 @@ test.describe("Mentorship page", () => {
     page,
   }) => {
     await page.goto("/");
+    const mentorship = page.locator("#mentorship");
+    await mentorship.scrollIntoViewIfNeeded();
 
-    await page.getByRole("button", { name: "See the full program" }).click();
+    await mentorship.getByRole("link", { name: "The program" }).click();
     await expect(page).toHaveURL("/mentorship");
 
     await page.goto("/");
-    await page.getByRole("button", { name: "Apply for mentorship" }).click();
+    await mentorship.scrollIntoViewIfNeeded();
+    await mentorship.getByRole("link", { name: "Apply" }).click();
     await expect(page).toHaveURL("/contact?type=mentorship");
   });
 });

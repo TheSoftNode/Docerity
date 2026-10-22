@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { featuredProjects } from "@/components/sections/work/work-data";
+
 test.describe("Work project pages", () => {
   test("renders each project page with no console errors", async ({ page }) => {
     const errors: string[] = [];
@@ -33,12 +35,14 @@ test.describe("Work project pages", () => {
     ).toHaveAttribute("href", "https://metapilot-frontend.vercel.app/");
   });
 
-  test("homepage 'View project' links navigate to the real page", async ({ page }) => {
+  test("the homepage's 'Case study' link navigates to the real page", async ({ page }) => {
     await page.goto("/");
-    await page.locator("#work").scrollIntoViewIfNeeded();
+    const work = page.locator("#work");
+    await work.scrollIntoViewIfNeeded();
 
-    await page.getByRole("link", { name: /view project/i }).first().click();
-    await expect(page).toHaveURL("/projects/eep");
+    /* The preview opens on the first featured project. */
+    await work.getByRole("link", { name: "Case study" }).click();
+    await expect(page).toHaveURL(`/projects/${featuredProjects[0].slug}`);
   });
 
   test("next/previous navigation links between projects", async ({ page }) => {

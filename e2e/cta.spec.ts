@@ -2,6 +2,11 @@ import { test, expect } from "@playwright/test";
 
 import { heading } from "./copy";
 
+/*
+  The shared closing call to action, which the inner pages render. The
+  homepage closes with its own contact section (see home.spec.ts), so this runs
+  against /about.
+*/
 test.describe("Final CTA", () => {
   test("renders with no console errors and both contact actions", async ({ page }) => {
     const errors: string[] = [];
@@ -10,7 +15,7 @@ test.describe("Final CTA", () => {
     });
     page.on("pageerror", (err) => errors.push(String(err)));
 
-    await page.goto("/");
+    await page.goto("/about");
     await page.locator("#contact").scrollIntoViewIfNeeded();
 
     await expect(

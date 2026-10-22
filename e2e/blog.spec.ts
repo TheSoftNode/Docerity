@@ -45,8 +45,9 @@ test.describe("Blog index", () => {
 
   test("homepage 'Read the blog' button navigates here", async ({ page }) => {
     await page.goto("/");
-    await page.locator("#blog").scrollIntoViewIfNeeded();
-    await page.getByRole("button", { name: "Read the blog" }).click();
+    const explainers = page.locator("#explainers");
+    await explainers.scrollIntoViewIfNeeded();
+    await explainers.getByRole("link", { name: "Read the blog" }).click();
     await expect(page).toHaveURL("/blog");
   });
 });

@@ -37,11 +37,11 @@ export default defineConfig({
         Visual baselines are recorded on Desktop Chrome, so running them here
         would compare a phone viewport against a desktop screenshot.
 
-        The unit spec never opens a page: it imports server modules and calls
-        them in Node. Running it under a second device would repeat the scrypt
+        The unit specs never open a page: they import modules and call them in
+        Node. Running it under a second device would repeat the scrypt
         work, which is deliberately slow, to assert exactly the same thing.
       */
-      testIgnore: [/visual\.spec\.ts/, /auth-unit\.spec\.ts/],
+      testIgnore: [/visual\.spec\.ts/, /auth-unit\.spec\.ts/, /home-content\.spec\.ts/],
     },
   ],
   webServer: {

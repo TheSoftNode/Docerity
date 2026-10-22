@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 import { readPageMeta } from "@/lib/content/blocks/metadata";
 import { Providers } from "@/app/providers";
+import { PaletteScript } from "@/components/shared/palette/palette-script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +19,17 @@ const geistMono = Geist_Mono({
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
   subsets: ["latin"],
+});
+
+/*
+  The homepage's display face, for its large headlines and the Now Board.
+  Exposed as a variable rather than applied, so loading it costs the other
+  pages nothing they render; `.ld-display` in home.css is what uses it.
+*/
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  weight: ["500", "700", "800"],
 });
 
 /**
@@ -76,8 +88,11 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${bricolage.variable} h-full antialiased`}
     >
+      <head>
+        <PaletteScript />
+      </head>
       <body className="min-h-full flex flex-col overflow-x-hidden bg-background text-foreground">
         <Providers>{children}</Providers>
       </body>

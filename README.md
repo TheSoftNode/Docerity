@@ -140,13 +140,15 @@ confirmed against Cloudinary before being stored.
 ```
 app/                 routes: public pages, /admin, /api
 components/
-  sections/          page sections, one folder per section
+  sections/          page sections, one folder per section (home/ is the homepage)
+  shared/palette/    the palette switcher, its no-flash script and logo
   admin/             the admin area's own components
   ui/                shadcn base-nova on @base-ui/react
 lib/
   auth/              token (pure), session (cookies), dal (authorization)
   config/            env, site
   content/           post schema, icon registry, the DB-or-static source
+  theme/             the homepage's colour palettes
   core/              errors, logger
   db/                connection and models
   repositories/      queries, and nothing else
@@ -181,6 +183,17 @@ drafts by forgetting a `where`.
 site up when Atlas is unreachable, keeps a fresh clone working, and keeps the
 test suite honest about the degraded path.
 
+**The homepage has its own palettes, separate from light and dark.** Sapphire
+Navy is the brand and the default; Swiss Mono, Oxblood & Brass and Midnight
+Volt are alternates a visitor can pick from the header. The values are custom
+properties keyed off `data-palette` on `<html>` (`app/home.css`), the list a
+script needs is `lib/theme/palettes.ts`, and a blocking script in the root
+layout applies a returning visitor's choice before first paint. The logo is
+recoloured per palette in `public/brand/`, and CSS rather than React picks
+which one shows, so the right mark is in the first paint too. To drop the
+switcher, remove `PaletteSwitcher` and `PaletteSwatchRow` from the homepage
+header; the page then stays on the default palette with nothing else to change.
+
 **Icons are stored as names.** A React component cannot round-trip through
 MongoDB, so a post stores a name from the explicit registry in
 `lib/content/icons.ts`. Explicit rather than a dynamic import, because an
@@ -190,7 +203,7 @@ cannot tree-shake an import it cannot see.
 ## Tests
 
 ```bash
-npm run test:e2e             # 234 tests, no database needed
+npm run test:e2e             # no database needed
 npm run test:integration     # 36 tests against a real MongoDB
 ```
 

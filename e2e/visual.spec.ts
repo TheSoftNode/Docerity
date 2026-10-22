@@ -1,117 +1,76 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
-import { heading } from "./copy";
+import { PALETTE_STORAGE_KEY, PALETTES } from "@/lib/theme/palettes";
 
 /*
-  Sections animate in with `whileInView`, and Playwright counts an element at
-  `opacity: 0` as visible, since it has a box. So waiting for a heading proves
-  nothing about whether the section has actually appeared, and a screenshot
-  taken at that moment captures an empty band. One baseline was recorded that
-  way: a blank page that would have matched any blank render.
+  Visual regression for the homepage.
 
-  Waiting on the computed opacity is deterministic, and under emulated
-  reduced motion the transition is instant, so it costs a frame rather than a
-  fixed sleep.
+  Every test runs under emulated reduced motion, which the page honours by
+  holding still: entrances are instant, the bands stop, the board's tiles do
+  not scramble and the explainer card does not turn on its own. That is what
+  makes a screenshot of an animated page deterministic.
+
+  Two things still change by themselves even then, because they are content
+  rather than motion: the board's clock and the word on each of its rows. Both
+  are masked, so the baseline checks the board's frame and layout without
+  depending on which second or which word the capture landed on.
+
+  Baselines are recorded on Desktop Chrome (see playwright.config.ts). After an
+  intentional visual change, re-record them with
+  `npm run test:e2e:update-snapshots -- e2e/visual.spec.ts`.
 */
-async function waitForReveal(locator: import("@playwright/test").Locator) {
-  await expect(locator).toHaveCSS("opacity", "1");
+
+const OPTIONS = { maxDiffPixelRatio: 0.02 } as const;
+
+/** The parts of the hero that change on their own, masked out of every capture. */
+const liveParts = (page: Page) => [
+  page.locator(".ld-board .tabular-nums"),
+  page.locator(".ld-board ul"),
+];
+
+async function open(page: Page, width: number, height: number) {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width, height });
+  await page.goto("/");
+  await page.getByRole("heading", { level: 1 }).waitFor();
+  /* The pointer off the page, so nothing is in its hover state. */
+  await page.mouse.move(0, 0);
 }
 
 test.describe("Visual regression", () => {
   test("hero looks correct on desktop", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
-    await page.getByRole("heading", { level: 1 }).waitFor();
-
-    await expect(page).toHaveScreenshot("hero-desktop.png", {
-      maxDiffPixelRatio: 0.02,
-    });
+    await open(page, 1440, 900);
+    await expect(page).toHaveScreenshot("hero-desktop.png", { ...OPTIONS, mask: liveParts(page) });
   });
 
   test("hero looks correct on mobile", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/");
-    await page.getByRole("heading", { level: 1 }).waitFor();
-
-    await expect(page).toHaveScreenshot("hero-mobile.png", {
-      maxDiffPixelRatio: 0.02,
-    });
+    await open(page, 390, 844);
+    await expect(page).toHaveScreenshot("hero-mobile.png", { ...OPTIONS, mask: liveParts(page) });
   });
 
-  test("work section looks correct on desktop", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
-    await page.locator("#work").scrollIntoViewIfNeeded();
-    await page.getByRole("heading", { name: "Recent work, real outcomes." }).waitFor();
-    await waitForReveal(page.locator("#work h3").first());
-
-    await expect(page).toHaveScreenshot("work-desktop.png", {
-      maxDiffPixelRatio: 0.02,
+  /* One capture per palette, so a change to a palette's tokens, or a token a
+     section forgot to use, shows up as a diff rather than in production. */
+  for (const palette of PALETTES) {
+    test(`hero in the ${palette.name} palette`, async ({ page }) => {
+      await page.addInitScript(
+        ([key, value]) => window.localStorage.setItem(key, value),
+        [PALETTE_STORAGE_KEY, palette.key] as const
+      );
+      await open(page, 1440, 900);
+      await expect(page).toHaveScreenshot(`hero-${palette.key}.png`, {
+        ...OPTIONS,
+        mask: liveParts(page),
+      });
     });
-  });
+  }
 
-  test("mentorship section looks correct on desktop", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
-    await page.locator("#mentorship").scrollIntoViewIfNeeded();
-    await page.getByRole("heading", { name: "A clear path to your next level." }).waitFor();
-    await waitForReveal(
-      page.getByRole("heading", { name: "A clear path to your next level." })
-    );
+  for (const id of ["clients", "services", "work", "mentorship", "explainers", "reviews", "contact"]) {
+    test(`${id} section looks correct on desktop`, async ({ page }) => {
+      await open(page, 1440, 900);
+      const section = page.locator(`#${id}`);
+      await section.scrollIntoViewIfNeeded();
 
-    await expect(page).toHaveScreenshot("mentorship-desktop.png", {
-      maxDiffPixelRatio: 0.02,
+      await expect(section).toHaveScreenshot(`${id}-desktop.png`, OPTIONS);
     });
-  });
-
-  test("explainers section looks correct on desktop", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
-    await page.locator("#blog").scrollIntoViewIfNeeded();
-    await page
-      .getByRole("heading", { name: "Complex ideas, explained through things you already know." })
-      .waitFor();
-    await waitForReveal(
-      page.getByRole("heading", {
-        name: "Complex ideas, explained through things you already know.",
-      })
-    );
-
-    await expect(page).toHaveScreenshot("explainers-desktop.png", {
-      maxDiffPixelRatio: 0.02,
-    });
-  });
-
-  test("testimonials section looks correct on desktop", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
-    await page.getByText("What people say").scrollIntoViewIfNeeded();
-
-    await expect(page).toHaveScreenshot("testimonials-desktop.png", {
-      maxDiffPixelRatio: 0.02,
-    });
-  });
-
-  test("final CTA section looks correct on desktop", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/");
-    await page.locator("#contact").scrollIntoViewIfNeeded();
-    await page
-      .getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
-      .waitFor();
-    await waitForReveal(
-      page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
-    );
-
-    await expect(page).toHaveScreenshot("cta-desktop.png", {
-      maxDiffPixelRatio: 0.02,
-    });
-  });
+  }
 });
