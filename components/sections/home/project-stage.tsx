@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowUpRightIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
@@ -58,7 +57,7 @@ function Poster({ project }: { project: Project }) {
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-[var(--ld-panel)] p-[clamp(18px,3vw,36px)]">
       <div
         aria-hidden="true"
-        className="ld-drift absolute -right-16 -bottom-24 size-[min(60%,420px)] rounded-full border-[48px] border-[rgb(var(--ld-accent-rgb)/0.9)]"
+        className="ld-drift absolute -right-16 -bottom-24 size-[min(60%,420px)] rounded-full border-[32px] border-[rgb(var(--ld-accent-rgb)/0.75)]"
       />
       <p className="relative font-mono text-[11px] tracking-[0.12em] text-[var(--ld-tint)] uppercase">
         {project.category}
@@ -86,8 +85,8 @@ function Poster({ project }: { project: Project }) {
 
 /**
  * The project showcase's stage: a browser frame whose whole viewport is the
- * project, plus a glass strip carrying its status and a way to the live site,
- * and the progress line that times the move to the next project.
+ * project, and the progress line that times the move to the next one. Nothing
+ * is laid over the picture; the project's name, status and links sit below.
  *
  * Keyed by project in the parent, so each change replays the entrance.
  */
@@ -103,8 +102,6 @@ function ProjectStage({
   /** The auto-advance timer, drawn along the frame's bottom edge; null when it is not running. */
   progress: { durationMs: number; paused: boolean } | null;
 }) {
-  const live = project.status === "Live";
-
   return (
     <div className="relative">
       <div
@@ -143,33 +140,6 @@ function ProjectStage({
               className="absolute inset-0 h-full w-full object-cover object-top"
             />
           )}
-
-          {/* The glass strip. Inside the frame rather than under it, so the
-              project's status and its live site read as part of the picture. */}
-          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-3 rounded-2xl border border-[rgb(var(--ld-paper-rgb)/0.14)] bg-[rgb(var(--ld-ink-rgb)/0.72)] py-2 pr-2 pl-3.5 text-[var(--ld-paper)] backdrop-blur-md sm:inset-x-4 sm:bottom-4">
-            <span className="flex min-w-0 items-center gap-2.5">
-              <span
-                aria-hidden="true"
-                className={cn("size-2 shrink-0 rounded-full", live ? "ld-live bg-[#54D696]" : "bg-[#FFC94A]")}
-              />
-              <span className="truncate text-sm font-semibold">{project.name}</span>
-              <span className="hidden truncate font-mono text-[11px] text-[var(--ld-muted-2)] uppercase sm:inline">
-                {project.status}
-              </span>
-            </span>
-            {project.liveUrl ? (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl bg-[var(--ld-accent)] px-3 text-[13px] font-semibold text-[var(--ld-ink)]"
-              >
-                Visit live
-                <ArrowUpRightIcon className="size-3.5" />
-                <span className="sr-only">(opens in a new tab)</span>
-              </a>
-            ) : null}
-          </div>
 
           {progress ? (
             <span

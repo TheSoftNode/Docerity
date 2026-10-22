@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeftIcon, ArrowRightIcon, CodeIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, ArrowUpRightIcon, CodeIcon } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
@@ -24,9 +24,9 @@ type Props = {
  *
  * It plays through the projects on its own, with a progress line on the
  * active row and along the stage, and any row or the arrows take over at
- * once. It holds while the pointer is over it or focus is inside it (WCAG
- * 2.2.2: moving content needs a way to stop it), while the tab is hidden, and
- * entirely under reduced motion.
+ * once. It holds while the pointer is over the picture or keyboard focus is
+ * inside the section (WCAG 2.2.2: moving content needs a way to stop it),
+ * while the tab is hidden, and entirely under reduced motion.
  *
  * The rows are toggle buttons rather than tabs: the stage is a detail view of
  * the pressed row, and each project's own page is one click away below it.
@@ -63,9 +63,12 @@ function WorkIndex({ projects, media }: Props) {
   return (
     <div
       className="grid items-start gap-[clamp(32px,5vw,72px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.35fr)]"
-      onPointerEnter={() => setHovered(true)}
-      onPointerLeave={() => setHovered(false)}
-      onFocus={() => setFocused(true)}
+      /* Keyboard focus only. A mouse click also focuses the row it lands on,
+         and counting that would leave the section paused for good after
+         anybody picked a project by hand. */
+      onFocus={(event) => {
+        if ((event.target as HTMLElement).matches(":focus-visible")) setFocused(true);
+      }}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
       }}
@@ -162,12 +165,21 @@ function WorkIndex({ projects, media }: Props) {
         {/* Keyed by project, so changing it replays the stage's entrance
             instead of swapping the picture in place under a static frame. */}
         <article key={project.slug}>
-          <ProjectStage
-            project={project}
-            media={media[project.slug]}
-            reduceMotion={reduceMotion}
-            progress={progress}
-          />
+          {/* Hovering the picture is what pauses it: somebody looking closely
+              at a project should not have it change under them. The rest of
+              the section keeps playing under the pointer. */}
+          <div
+            data-stage=""
+            onPointerEnter={() => setHovered(true)}
+            onPointerLeave={() => setHovered(false)}
+          >
+            <ProjectStage
+              project={project}
+              media={media[project.slug]}
+              reduceMotion={reduceMotion}
+              progress={progress}
+            />
+          </div>
 
           <div className="ld-up ld-delay-1 mt-8 flex flex-wrap items-start justify-between gap-x-10 gap-y-5">
             <div className="min-w-0 flex-[1_1_320px]">
@@ -181,6 +193,18 @@ function WorkIndex({ projects, media }: Props) {
             </div>
 
             <div className="flex flex-wrap gap-2">
+              {project.liveUrl ? (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--ld-accent)] px-4 text-sm font-semibold text-[var(--ld-ink)] transition-transform hover:-translate-y-0.5"
+                >
+                  Visit live site
+                  <ArrowUpRightIcon className="size-3.5" />
+                  <span className="sr-only">(opens in a new tab)</span>
+                </a>
+              ) : null}
               <Link
                 href={`/projects/${project.slug}`}
                 className="inline-flex min-h-11 items-center rounded-full border border-[rgb(var(--ld-paper-rgb)/0.3)] px-4 text-sm font-semibold transition-transform hover:-translate-y-0.5"

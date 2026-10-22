@@ -101,15 +101,30 @@ test.describe("Work", () => {
     });
   });
 
-  test("holds still while the pointer is over it", async ({ page }) => {
+  test("holds still while the pointer is over the picture", async ({ page }) => {
     await page.goto("/");
     const section = page.locator("#work");
     await section.scrollIntoViewIfNeeded();
     const index = section.getByRole("list", { name: "Featured projects" });
 
-    await index.hover();
+    await section.locator("[data-stage]").hover();
     await page.waitForTimeout(PROJECT_INTERVAL_MS + 1_500);
     await expect(rowFor(index, featuredProjects[0].name)).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("keeps playing after a project is picked with the mouse", async ({ page }) => {
+    await page.goto("/");
+    const section = page.locator("#work");
+    await section.scrollIntoViewIfNeeded();
+    const index = section.getByRole("list", { name: "Featured projects" });
+
+    /* The click leaves focus on the row. That must not count as the pause,
+       which is keyboard focus only. */
+    await rowFor(index, featuredProjects[0].name).click();
+    await page.mouse.move(0, 0);
+    await expect(rowFor(index, featuredProjects[1].name)).toHaveAttribute("aria-pressed", "true", {
+      timeout: PROJECT_INTERVAL_MS + 5_000,
+    });
   });
 
   test("stays on the chosen project under reduced motion", async ({ page }) => {
