@@ -7,13 +7,18 @@ import { ArrowUpRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/content/blocks/site";
 import { useScrolled } from "@/hooks/use-scrolled";
+import { usePalette } from "@/hooks/use-palette";
+import { PALETTES } from "@/lib/theme/palettes";
 import { PaletteLogo } from "@/components/shared/palette/palette-logo";
 import {
   PaletteSwatchRow,
   PaletteSwitcher,
 } from "@/components/shared/palette/palette-switcher";
 
-type Props = Pick<SiteSettings, "name" | "navLinks">;
+type Props = Pick<SiteSettings, "name" | "navLinks" | "email">;
+
+/* Delay utilities in order, so the menu's rows cascade in when it opens. */
+const CASCADE = ["ld-delay-1", "ld-delay-2", "ld-delay-3", "ld-delay-4", "ld-delay-5", "ld-delay-6"];
 
 /**
  * Three lines that become a cross. Drawn as spans rather than swapped icons so
@@ -31,10 +36,12 @@ function Hamburger({ open }: { open: boolean }) {
   );
 }
 
-function HomeNavView({ name, navLinks }: Props) {
+function HomeNavView({ name, navLinks, email }: Props) {
   const scrolled = useScrolled();
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const { palette } = usePalette();
+  const currentPalette = PALETTES.find((entry) => entry.key === palette) ?? PALETTES[0];
 
   /* Escape closes the menu, as it would a dialog. Listening only while it is
      open keeps the handler from competing with the palette popover's own. */
@@ -108,30 +115,66 @@ function HomeNavView({ name, navLinks }: Props) {
         {open ? (
           <div
             id={menuId}
-            className="ld-zoom mt-2.5 rounded-3xl bg-[var(--ld-paper)] p-6 text-[var(--ld-ink)] shadow-[0_30px_60px_-24px_rgb(0_0_0/0.5)] xl:hidden"
+            className={cn(
+              "ld-zoom mt-2 max-h-[calc(100svh-6rem)] overflow-y-auto rounded-[28px] border p-2 backdrop-blur-[18px] xl:hidden",
+              "border-[rgb(var(--ld-paper-rgb)/0.12)] bg-[rgb(var(--ld-ink-rgb)/0.92)] text-[var(--ld-paper)]",
+              "shadow-[0_40px_80px_-30px_rgb(0_0_0/0.7)]"
+            )}
           >
-            <ul className="ld-display flex flex-col text-[28px] font-bold">
-              {navLinks.map((link) => (
-                <li key={link.label}>
-                  <Link href={link.href} onClick={() => setOpen(false)} className="block py-2">
-                    {link.label}
+            {/* Rows rather than a list of large words: each carries a small
+                index and an arrow, so the menu reads as an instrument panel in
+                the same language as the Now Board, and every row is a full
+                44px+ target. */}
+            <ul className="px-2">
+              {navLinks.map((link, index) => (
+                <li
+                  key={link.label}
+                  className={cn("ld-up border-b border-[rgb(var(--ld-paper-rgb)/0.08)] last:border-b-0", CASCADE[index % CASCADE.length])}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="group flex min-h-13 items-center gap-4 rounded-2xl px-3 transition-colors hover:bg-[rgb(var(--ld-paper-rgb)/0.06)] focus-visible:bg-[rgb(var(--ld-paper-rgb)/0.06)] focus-visible:outline-none"
+                  >
+                    <span aria-hidden="true" className="w-5 font-mono text-[11px] text-[var(--ld-muted-3)]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="flex-1 text-[17px] font-medium tracking-[-0.01em]">{link.label}</span>
+                    <ArrowUpRightIcon
+                      aria-hidden="true"
+                      className="size-4 text-[var(--ld-muted-3)] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[var(--ld-accent)]"
+                    />
                   </Link>
                 </li>
               ))}
             </ul>
 
-            <p className="mt-5 mb-1 font-mono text-[11px] tracking-[0.12em] text-[var(--ld-text-muted)] uppercase">
-              Colour theme
-            </p>
-            <PaletteSwatchRow className="-ml-1.5" />
+            <div className="mt-2 rounded-[22px] bg-[rgb(var(--ld-paper-rgb)/0.05)] px-4 pt-3.5 pb-2">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="font-mono text-[10px] tracking-[0.14em] text-[var(--ld-muted-3)] uppercase">
+                  Colour theme
+                </p>
+                <p className="text-[13px] font-medium text-[var(--ld-muted)]">{currentPalette.name}</p>
+              </div>
+              <PaletteSwatchRow className="mt-1 -ml-1.5 justify-between" />
+            </div>
 
-            <Link
-              href="/contact"
-              onClick={() => setOpen(false)}
-              className="mt-5 flex min-h-13 items-center justify-center rounded-full bg-[var(--ld-accent)] font-semibold text-[var(--ld-ink)]"
-            >
-              Start a project
-            </Link>
+            <div className="p-2 pt-3">
+              <Link
+                href="/contact"
+                onClick={() => setOpen(false)}
+                className="group flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--ld-accent)] text-[15px] font-semibold text-[var(--ld-ink)]"
+              >
+                Start a project
+                <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+              <a
+                href={`mailto:${email}`}
+                className="mt-3 block pb-1 text-center font-mono text-xs text-[var(--ld-muted-3)] transition-colors hover:text-[var(--ld-paper)]"
+              >
+                {email}
+              </a>
+            </div>
           </div>
         ) : null}
       </div>

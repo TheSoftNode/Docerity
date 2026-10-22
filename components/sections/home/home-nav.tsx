@@ -12,7 +12,7 @@ import { HomeNavView } from "@/components/sections/home/home-nav-view";
 async function HomeNav() {
   const site = await getSiteSettings();
 
-  return <HomeNavView name={site.name} navLinks={site.navLinks} />;
+  return <HomeNavView name={site.name} navLinks={site.navLinks} email={site.email} />;
 }
 
 export { HomeNav };
