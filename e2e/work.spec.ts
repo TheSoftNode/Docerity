@@ -1,6 +1,7 @@
 import { test, expect, type Locator } from "@playwright/test";
 
 import { featuredProjects } from "@/components/sections/work/work-data";
+import { PROJECT_INTERVAL_MS } from "@/components/sections/home/home-data";
 
 import { heading } from "./copy";
 
@@ -64,7 +65,7 @@ test.describe("Work", () => {
     );
 
     if (project.liveUrl) {
-      const live = section.getByRole("link", { name: /Visit live site/ });
+      const live = section.getByRole("link", { name: /Visit live/ });
       await expect(live).toHaveAttribute("href", project.liveUrl);
       await expect(live).toHaveAttribute("target", "_blank");
       await expect(live).toHaveAttribute("rel", /noopener/);
@@ -84,6 +85,40 @@ test.describe("Work", () => {
     );
 
     await section.getByRole("button", { name: "Next project" }).click();
+    await expect(rowFor(index, featuredProjects[0].name)).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("plays through the projects by itself", async ({ page }) => {
+    await page.goto("/");
+    const section = page.locator("#work");
+    await section.scrollIntoViewIfNeeded();
+    /* Off the section, since hovering it is what pauses it. */
+    await page.mouse.move(0, 0);
+
+    const index = section.getByRole("list", { name: "Featured projects" });
+    await expect(rowFor(index, featuredProjects[1].name)).toHaveAttribute("aria-pressed", "true", {
+      timeout: PROJECT_INTERVAL_MS + 5_000,
+    });
+  });
+
+  test("holds still while the pointer is over it", async ({ page }) => {
+    await page.goto("/");
+    const section = page.locator("#work");
+    await section.scrollIntoViewIfNeeded();
+    const index = section.getByRole("list", { name: "Featured projects" });
+
+    await index.hover();
+    await page.waitForTimeout(PROJECT_INTERVAL_MS + 1_500);
+    await expect(rowFor(index, featuredProjects[0].name)).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("stays on the chosen project under reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.mouse.move(0, 0);
+    const index = page.locator("#work").getByRole("list", { name: "Featured projects" });
+
+    await page.waitForTimeout(PROJECT_INTERVAL_MS + 1_500);
     await expect(rowFor(index, featuredProjects[0].name)).toHaveAttribute("aria-pressed", "true");
   });
 });

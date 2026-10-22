@@ -342,6 +342,67 @@
 }
 
 /* ---------------------------------------------------------------
+   The project stage.
+
+   A screenshot fills the frame and slowly tours itself, down a tall capture
+   or across a wide one, out and back, so what `cover` crops is still seen.
+   The progress line times the move to the next project; its play state is
+   set inline so hovering the section pauses it in step with the timer.
+   --------------------------------------------------------------- */
+@keyframes ld-pan-y {
+  0%,
+  12% {
+    object-position: 50% 0%;
+  }
+  88%,
+  100% {
+    object-position: 50% 100%;
+  }
+}
+@keyframes ld-pan-x {
+  0%,
+  12% {
+    object-position: 0% 0%;
+  }
+  88%,
+  100% {
+    object-position: 100% 0%;
+  }
+}
+@keyframes ld-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes ld-stage-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-pan-y {
+  animation: ld-pan-y 14s ease-in-out infinite alternate;
+}
+.ld-pan-x {
+  animation: ld-pan-x 14s ease-in-out infinite alternate;
+}
+.ld-progress {
+  animation-name: ld-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+.ld-stage-in {
+  animation: ld-stage-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* ---------------------------------------------------------------
    The Now Board's split-flap tiles.
 
    The tile size is one custom property so the whole board scales from one
@@ -408,6 +469,9 @@
 @media (prefers-reduced-motion: reduce) {
   .ld-up,
   .ld-fade,
+  .ld-pan-x,
+  .ld-pan-y,
+  .ld-stage-in,
   .ld-zoom,
   .ld-marquee,
   .ld-marquee-reverse,

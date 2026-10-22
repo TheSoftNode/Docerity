@@ -80,6 +80,9 @@ export const BOARD_WIDTH = 13;
 /** How long the board holds a word, and the headline a line, before moving on. */
 export const BOARD_INTERVAL_MS = 3600;
 
+/** How long each featured project holds the work section's stage. */
+export const PROJECT_INTERVAL_MS = 7000;
+
 /** The boarding pass that floats in front of the board and leads to /contact. */
 export const boardingPass = {
   code: "DCR 001",
