@@ -425,6 +425,34 @@
   animation: ld-wall 72s linear infinite reverse;
 }
 
+/* The project page's product frame lifting into place, and a rule drawing
+   itself in. */
+@keyframes ld-lift {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotateX(14deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-lift {
+  animation: ld-lift 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s both;
+}
+@keyframes ld-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.ld-grow {
+  animation: ld-grow 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transform-origin: left;
+}
+
 /* A deploy log line arriving: each line is delayed in turn by its style. */
 @keyframes ld-log-line {
   from {
@@ -533,6 +561,8 @@
   .ld-wall-up-slow,
   .ld-wall-down-slow,
   .ld-log-line,
+  .ld-lift,
+  .ld-grow,
   .ld-tile[data-searching="true"]::before {
     animation: none !important;
   }
