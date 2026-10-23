@@ -144,8 +144,8 @@ components/
   sections/          page sections, one folder per section (home/ is the
                      homepage, projects/ is /projects, project-detail/ is
                      /projects/[slug], mentorship-page/ is /mentorship,
-                     blog-page/ is /blog and its posts,
-                     contact-band/ closes the first three)
+                     blog-page/ is /blog and its posts, ai-page/ is /ai,
+                     web3-page/ is /web3, contact-band/ closes them)
   shared/palette/    the palette switcher, its no-flash script and logo
   admin/             the admin area's own components
   ui/                shadcn base-nova on @base-ui/react

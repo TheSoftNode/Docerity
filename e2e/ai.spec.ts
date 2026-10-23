@@ -12,32 +12,44 @@ test.describe("AI page", () => {
 
     await page.goto("/ai");
 
-    await expect(
-      page.getByRole("heading", { name: "AI systems that run in production, not a demo." })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Built for real traffic, not a proof of concept." })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "The part after the demo works." })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Picked per task, not one model for everything." })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
-    ).toBeVisible();
-
     for (const name of [
-      "SmartLLMRouter",
-      "Production RAG system",
-      "Multi-modal vision pipeline",
-      "WhatsApp AI assistant",
+      "AI systems that run in production, not a demo.",
+      "Built for real traffic, not a proof of concept.",
+      "The part after the demo works.",
+      "Picked per task, not one model for everything.",
+      heading("homepage", "home-cta").replace(/\*/g, ""),
     ]) {
-      await expect(page.getByRole("heading", { name })).toBeVisible();
+      await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
+    }
+
+    for (const name of ["SmartLLMRouter", "Production RAG system", "Multi-modal vision pipeline", "WhatsApp AI assistant"]) {
+      await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
     }
 
     expect(errors).toEqual([]);
+  });
+
+  test("the router routes what a visitor types", async ({ page }) => {
+    await page.goto("/ai");
+    const request = page.getByLabel(/Your request/);
+
+    await request.fill("Is this comment spam?");
+    await expect(page.getByText("Has a short, known answer")).toBeVisible();
+    await expect(page.getByText("Rule-based", { exact: true }).first()).toBeVisible();
+
+    await request.fill("Describe this product photo for our launch");
+    await expect(page.getByText("Needs to see an image")).toBeVisible();
+    await expect(page.getByText("GPT-4o", { exact: true }).first()).toBeVisible();
+    await expect(page.getByText("Full price")).toBeVisible();
+  });
+
+  test("the examples fill the request and are marked as chosen", async ({ page }) => {
+    await page.goto("/ai");
+    const example = page.getByRole("button", { name: "Summarise these 40 replies" });
+    await example.click();
+    await expect(example).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByLabel(/Your request/)).toHaveValue("Summarise these 40 replies");
+    await expect(page.getByText("Transforms existing text")).toBeVisible();
   });
 
   test("navbar 'AI' link navigates to the dedicated page", async ({ page }) => {
@@ -47,16 +59,9 @@ test.describe("AI page", () => {
     await expect(page).toHaveURL("/ai");
   });
 
-  test("hero CTAs work: see systems scrolls, start a project goes to contact", async ({
-    page,
-  }) => {
+  test("'see the systems' scrolls to them", async ({ page }) => {
     await page.goto("/ai");
-
-    await page.getByRole("button", { name: "See the systems" }).click();
-    await expect(page.locator("#projects")).toBeInViewport();
-
-    await page.goto("/ai");
-    await page.locator("main").getByRole("button", { name: "Start a project" }).click();
-    await expect(page).toHaveURL("/contact");
+    await page.getByRole("link", { name: "see the systems" }).click();
+    await expect(page.locator("#systems")).toBeInViewport();
   });
 });
