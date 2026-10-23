@@ -1,6 +1,6 @@
 import { ArrowUpRightIcon } from "lucide-react";
 
-import { getHeading } from "@/lib/content/blocks/source";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import { getSiteSettings } from "@/lib/content/blocks/site";
 import { splitEmphasis } from "@/components/sections/home/hero-content";
 
@@ -12,30 +12,35 @@ import { splitEmphasis } from "@/components/sections/home/hero-content";
  * and the address is the site's own contact email from settings.
  */
 async function ContactBand() {
-  const [heading, site] = await Promise.all([
+  const [heading, site, stored] = await Promise.all([
     getHeading("homepage", "home-cta"),
     getSiteSettings(),
+    getGroup<Record<string, { title?: string; detail?: string }>>("homepage", "contactOptions"),
   ]);
+  /* The words are edited in the admin; where each one goes stays here. */
+  const words = (key: string, title: string, detail: string) => ({
+    title: stored?.[key]?.title || title,
+    detail: stored?.[key]?.detail || detail,
+  });
 
   const options = [
     {
       number: "01",
-      title: "A new project",
-      detail: "Scope, build and ship production software.",
+      ...words("project", "A new project", "Scope, build and ship production software."),
       href: "/contact",
       tone: "accent" as const,
+      mono: false,
     },
     {
       number: "02",
-      title: "Mentorship",
-      detail: "Weekly 1:1s and honest code review.",
+      ...words("mentorship", "Mentorship", "Weekly 1:1s and honest code review."),
       href: "/contact?type=mentorship",
       tone: "paper" as const,
+      mono: false,
     },
     {
       number: "03",
-      title: "Just a question",
-      detail: site.email,
+      ...words("question", "Just a question", site.email),
       href: `mailto:${site.email}`,
       tone: "tint" as const,
       mono: true,

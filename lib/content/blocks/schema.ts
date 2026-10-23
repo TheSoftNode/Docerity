@@ -379,6 +379,27 @@ export const BLOCKS: Block[] = [
         { key: "home-mentorship", label: "Mentorship teaser" },
         { key: "home-cta", label: "The closing call to action" },
       ]),
+      {
+        kind: "keyed",
+        name: "contactOptions",
+        label: "The closing call to action's options",
+        description: "The three ways in, under the closing heading on every page. Where each one goes is fixed.",
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 40 },
+          {
+            name: "detail",
+            label: "Under it",
+            kind: "text",
+            maxLength: 80,
+            hint: "For the question, leave blank to show the site's email address.",
+          },
+        ],
+        entries: [
+          { key: "project", label: "A new project", hint: "Goes to the contact form." },
+          { key: "mentorship", label: "Mentorship", hint: "Goes to the contact form with mentorship chosen." },
+          { key: "question", label: "A question", hint: "Opens an email to the site's address." },
+        ],
+      },
     ],
   },
 

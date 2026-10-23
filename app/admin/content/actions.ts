@@ -44,9 +44,10 @@ export type BlockResult =
  * heading on /web3 would throw away every other page's cache for nothing.
  */
 function revalidateFor(key: BlockKey): void {
-  /* The not-found page renders under any path that matches nothing, so
-     only the layout sweep reaches it. */
-  if (key === "site" || key === "seo" || key === "pages") {
+  /* The not-found page renders under any path that matches nothing, and the
+     homepage block carries the closing call to action every page ends on, so
+     only the layout sweep reaches all of them. */
+  if (key === "site" || key === "seo" || key === "pages" || key === "homepage") {
     revalidatePath("/", "layout");
     /* Not covered by the layout sweep: both are route handlers rather than
        pages, and both embed the site name and URL. */

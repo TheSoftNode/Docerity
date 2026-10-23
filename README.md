@@ -140,7 +140,7 @@ confirmed against Cloudinary before being stored.
 ```
 app/                 routes: public pages, /admin, /api
 components/
-  layout/            site-header and site-footer: the redesigned pages' chrome
+  layout/            site-header and site-footer, on every public page
   sections/          page sections, one folder per section (home/ is the
                      homepage, projects/ is /projects, project-detail/ is
                      /projects/[slug], mentorship-page/ is /mentorship,

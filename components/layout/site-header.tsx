@@ -2,12 +2,9 @@ import { getSiteSettings } from "@/lib/content/blocks/site";
 import { SiteHeaderView } from "@/components/layout/site-header-view";
 
 /**
- * The floating header of the redesigned pages (the homepage and /projects).
- *
- * Separate from the older `Navbar`, which the pages not yet redesigned still
- * render: this one floats over a dark band as a pill and carries the palette
- * switcher. Both read the same editable settings, so the links and the name
- * are managed in one place.
+ * The site's floating header, on every public page: a pill over the dark
+ * band each hero starts on, carrying the palette switcher. The links and the
+ * name are the editable site settings, managed in one place.
  */
 async function SiteHeader() {
   const site = await getSiteSettings();

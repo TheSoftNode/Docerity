@@ -286,7 +286,12 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
           "title": "Got work *worth doing properly*?",
           "lede": "A build, a data set, an assistant, or just a question. A person reads every email, and replies."
         }
-      }
+      },
+      contactOptions: {
+        project: { title: "A new project", detail: "Scope, build and ship production software." },
+        mentorship: { title: "Mentorship", detail: "Weekly 1:1s and honest code review." },
+        question: { title: "Just a question", detail: "" },
+      },
     },
 
   clients: {

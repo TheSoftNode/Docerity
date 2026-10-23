@@ -3,13 +3,12 @@ import { test, expect } from "@playwright/test";
 import { navLabels } from "./copy";
 
 /*
-  The homepage's floating header.
+  The floating header every public page carries.
 
-  The inner pages keep the shared navbar, covered by navbar.spec.ts. This one
-  shows every link in the bar from 1280px, where they all fit, and moves them
-  into a menu below that rather than letting the bar overflow.
+  It shows every link in the bar from 1280px, where they all fit, and moves
+  them into a menu below that rather than letting the bar overflow.
 */
-test.describe("Homepage header", () => {
+test.describe("Site header", () => {
   test("shows every link in the bar on a wide screen", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
