@@ -122,14 +122,32 @@ test.describe("404 page", () => {
     await expect(
       page.getByRole("heading", { name: "This page doesn't exist." })
     ).toBeVisible();
-    await expect(page.getByRole("button", { name: "Back to home" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Back to home" })).toBeVisible();
 
     expect(errors.filter((e) => !e.includes("404"))).toEqual([]);
   });
 
   test("'Back to home' navigates to the homepage", async ({ page }) => {
     await page.goto("/this-route-does-not-exist");
-    await page.getByRole("button", { name: "Back to home" }).click();
+    await page.getByRole("link", { name: "Back to home" }).click();
     await expect(page).toHaveURL("/");
+  });
+
+  test("every page in the menus is on the shelf, and each spine is a link", async ({ page }) => {
+    await page.goto("/this-route-does-not-exist");
+    const shelf = page.getByRole("list", { name: "Pages on this site" });
+    for (const href of ["/projects", "/ai", "/web3", "/mentorship", "/blog", "/about"]) {
+      await expect(shelf.locator(`a[href="${href}"]`)).toHaveCount(1);
+    }
+    await expect(shelf.getByText("/this-route-does-not-exist")).toBeVisible();
+  });
+
+  test("a near miss offers the page somebody meant", async ({ page }) => {
+    await page.goto("/projets");
+    const guess = page.getByRole("link", { name: /Did you mean Projects\?/ });
+    await expect(guess).toHaveAttribute("href", "/projects");
+
+    await page.goto("/qwertyuiop");
+    await expect(page.getByRole("link", { name: /Did you mean/ })).toHaveCount(0);
   });
 });

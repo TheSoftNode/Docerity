@@ -717,6 +717,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       lede: "The link might be broken, or the page may have moved. Let's get you back on track.",
       primaryLabel: "Back to home",
       secondaryLabel: "Read the blog",
+      concept: "404 Not Found",
+      conceptCaption: "The server looked, and nothing lives at that address.",
+      analogy: "A gap on a bookshelf",
+      analogyCaption: "The shelf is real. That one book is not on it.",
+      shelfNote: "Every spine is a page that exists. Pick one.",
     },
     unsubscribe: {
       doneTitle: "You are unsubscribed",
@@ -725,6 +730,8 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       failedBody: "The link may have been cut short by your mail client, or it may already have been used. Email us and we will take you off the list ourselves.",
       blogLabel: "Read the explainers",
       contactLabel: "Get in touch",
+      listName: "Docerity explainers",
+      listTagline: "One idea, one analogy, now and then",
     },
   },
 };

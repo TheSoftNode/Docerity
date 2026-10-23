@@ -146,7 +146,8 @@ components/
                      /projects/[slug], mentorship-page/ is /mentorship,
                      blog-page/ is /blog and its posts, ai-page/ is /ai,
                      web3-page/ is /web3, about-page/ is /about,
-                     contribute-page/ is /contribute, reviews-page/ is /reviews,
+                     contribute-page/ is /contribute, reviews-page/ is /reviews, small-pages/ is
+                     the 404 and unsubscribe pages,
                      contact-band/ closes them)
   shared/palette/    the palette switcher, its no-flash script and logo
   admin/             the admin area's own components
