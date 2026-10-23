@@ -642,6 +642,25 @@
   animation: ld-fill-b linear both;
 }
 
+/* A caption arriving a word at a time: each word is delayed in turn by its style. */
+@keyframes ld-word {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+.ld-word {
+  display: inline-block;
+  white-space: pre;
+  animation: ld-word 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
 /* An editor's stamp landing, and a margin note sliding in beside its mark. */
 @keyframes ld-stamp {
   0% {
@@ -812,6 +831,7 @@
   .ld-fill-b,
   .ld-draw,
   .ld-note-in,
+  .ld-word,
   .ld-tile[data-searching="true"]::before {
     animation: none !important;
   }

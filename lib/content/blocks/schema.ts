@@ -1173,6 +1173,7 @@ export const BLOCKS: Block[] = [
     groups: [
       headings([
         { key: "reviews-hero", label: "Hero" },
+        { key: "reviews-record", label: "The record" },
         { key: "reviews-form", label: "Leave a review" },
       ]),
       {

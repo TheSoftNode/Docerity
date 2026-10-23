@@ -688,6 +688,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "title": "The people who *paid for the work*, in their words.",
         "lede": "Clients and the engineers we have mentored. Nothing here was written by us, and nothing appears until it has been read."
       },
+      "reviews-record": {
+        "eyebrow": "Every one read first",
+        "title": "Nothing here was written by us.",
+        "lede": ""
+      },
       "reviews-form": {
         "eyebrow": "Leave a review",
         "title": "Worked together? Add yours.",

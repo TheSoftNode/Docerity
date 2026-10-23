@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { StarDisplay } from "@/components/sections/reviews/star-rating";
-import { initialsOf } from "@/components/sections/reviews/review-card";
+import { initialsOf } from "@/components/sections/reviews-page/reviews-content";
 import {
   approveReview,
   changeReviewKind,
