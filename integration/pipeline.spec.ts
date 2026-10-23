@@ -745,6 +745,58 @@ test.describe("The enquiry pipeline", () => {
     await expect(page.getByText("not delivered").first()).toBeVisible();
   });
 
+  test("a mentorship application keeps its starting point and code link", async ({
+    page,
+    request,
+  }) => {
+    const response = await request.post("/api/contact", {
+      data: {
+        name: "Linus Mentee",
+        email: "linus@example.com",
+        projectType: "mentorship",
+        timeline: "asap",
+        stage: "Career switchers & self-taught",
+        codeLink: "github.com/linus-mentee",
+        message: "I came from accounting and want to get to a backend role within the year.",
+        attachments: [],
+      },
+    });
+    expect(response.status()).toBe(200);
+
+    await signIn(page);
+    await page.goto("/admin/enquiries");
+    await page.getByText("Linus Mentee").click();
+
+    await expect(page.getByText("Starting point")).toBeVisible();
+    await expect(page.getByText("Career switchers & self-taught")).toBeVisible();
+    /* Typed without a scheme, stored with one. */
+    await expect(page.getByText("https://github.com/linus-mentee")).toBeVisible();
+  });
+
+  test("the mentorship details are dropped from any other kind of enquiry", async ({
+    page,
+    request,
+  }) => {
+    const response = await request.post("/api/contact", {
+      data: {
+        name: "Ada Client",
+        email: "ada.client@example.com",
+        projectType: "software",
+        stage: "Career switchers & self-taught",
+        codeLink: "github.com/ada-client",
+        message: "We need a payments reconciliation service built against our ledger.",
+        attachments: [],
+      },
+    });
+    expect(response.status()).toBe(200);
+
+    await signIn(page);
+    await page.goto("/admin/enquiries");
+    await page.getByText("Ada Client").click();
+    await expect(page.getByText(/payments reconciliation/)).toBeVisible();
+    await expect(page.getByText("Starting point")).toHaveCount(0);
+  });
+
   test("opening one moves it out of the new queue", async ({ page }) => {
     await signIn(page);
     await page.goto("/admin/enquiries?status=new");

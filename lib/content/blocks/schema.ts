@@ -957,21 +957,37 @@ export const BLOCKS: Block[] = [
 
   {
     key: "contact",
-    title: "Contact steps",
+    title: "Contact",
     page: "Contact",
     path: "/contact",
-    description: "What happens after somebody sends the form.",
+    description:
+      "The contact page's heading for each kind of enquiry, and what happens after somebody sends the form.",
     groups: [
-      headings([{ key: "contact", label: "The page" }]),
+      headings(
+        [
+          { key: "contact", label: "Software project", hint: "Also the page's default." },
+          { key: "contact-mentorship", label: "Mentorship" },
+          { key: "contact-speaking", label: "Speaking" },
+          { key: "contact-other", label: "Something else" },
+        ],
+        "The page's heading changes with what somebody picks on the form. The last word, or the words in *asterisks*, is lit."
+      ),
       {
         kind: "list",
         name: "steps",
         label: "Steps",
         itemNoun: "step",
-        max: 6,
+        max: 4,
         fields: [
           { name: "title", label: "Title", kind: "text", required: true, maxLength: 120 },
           DESCRIPTION,
+          {
+            name: "when",
+            label: "When",
+            kind: "text",
+            maxLength: 30,
+            hint: "A short time label beside the step, such as \"Same day\". Only promise what actually happens.",
+          },
         ],
       },
     ],

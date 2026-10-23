@@ -1,5 +1,6 @@
 import {
   FILE_LIMITS,
+  normaliseLink,
   validateEnquiry,
   type EnquiryInput,
 } from "@/lib/contact/schema";
@@ -180,6 +181,10 @@ export async function submitEnquiry(
     budget: input.budget,
     timeline: input.timeline,
     message: input.message.trim(),
+    /* Only a mentorship application carries these; anything else posted
+       with them is dropped rather than stored against the wrong kind. */
+    stage: input.projectType === "mentorship" ? (input.stage ?? "").trim() : "",
+    codeLink: input.projectType === "mentorship" ? normaliseLink(input.codeLink ?? "") : "",
     attachments,
     submittedFromIp: input.submittedFromIp,
     userAgent: input.userAgent.slice(0, 400),
@@ -230,6 +235,8 @@ async function deliverEnquiryEmails(
     budget: input.budget,
     timeline: input.timeline,
     message: input.message,
+    stage: input.projectType === "mentorship" ? (input.stage ?? "").trim() : "",
+    codeLink: input.projectType === "mentorship" ? normaliseLink(input.codeLink ?? "") : "",
     attachments: views,
   };
 

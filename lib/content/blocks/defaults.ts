@@ -514,8 +514,23 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
     headings: {
       "contact": {
         "eyebrow": "New project",
-        "title": "Tell me what you're building.",
+        "title": "Tell us what you're building.",
         "lede": "A few details now save a lot of back-and-forth later. Every message is read by a person who could do the work."
+      },
+      "contact-mentorship": {
+        "eyebrow": "Mentorship · taking new mentees",
+        "title": "Tell us where you are.",
+        "lede": "Where you are now, where you want to get to, and a little of your code if you have it. The intro call takes it from there."
+      },
+      "contact-speaking": {
+        "eyebrow": "Speaking & workshops",
+        "title": "Tell us about your audience.",
+        "lede": "Who will be in the room, what they should leave knowing, and when. Talks, workshops and team sessions."
+      },
+      "contact-other": {
+        "eyebrow": "Say hello",
+        "title": "Ask us anything.",
+        "lede": "A question, an idea, a collaboration. It still goes to a person, not a queue."
       }
     },
     steps: contactSteps.map((step) => ({ ...step })),

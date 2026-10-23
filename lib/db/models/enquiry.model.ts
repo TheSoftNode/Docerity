@@ -47,6 +47,12 @@ const enquirySchema = new Schema(
     budget: { type: String, default: "", enum: ["", ...values(budgets)] },
     timeline: { type: String, default: "", enum: ["", ...values(timelines)] },
     message: { type: String, required: true, maxlength: 20000 },
+    /* Mentorship applications only: the starting point picked on the form,
+       as its title read when it was picked, and a link to the applicant's
+       code. Free text rather than an enum, because the starting points are
+       edited in the admin and an old application must keep what it said. */
+    stage: { type: String, default: "", trim: true, maxlength: 120 },
+    codeLink: { type: String, default: "", trim: true, maxlength: 300 },
     attachments: { type: [attachmentSchema], default: [] },
 
     /** Where this sits in your pipeline; set from the admin area. */

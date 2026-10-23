@@ -88,7 +88,7 @@ test.describe("Before anything is edited", () => {
 
     await expect(page.getByRole("heading", { name: "Client logos" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "About page" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Contact steps" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Contact", exact: true })).toBeVisible();
 
     /* Every card, because none has been saved. Counted from the schema rather
        than typed: adding a section should not fail this test. */

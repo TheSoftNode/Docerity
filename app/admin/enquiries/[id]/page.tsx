@@ -55,6 +55,8 @@ export default async function EnquiryPage({
     projectType: labelFor(projectTypes, enquiry.projectType ?? ""),
     budget: labelFor(budgets, enquiry.budget ?? ""),
     timeline: labelFor(timelines, enquiry.timeline ?? ""),
+    stage: enquiry.stage ?? "",
+    codeLink: enquiry.codeLink ?? "",
     message: enquiry.message,
     /* "read" rather than the stored "new", since opening this page just changed
        it and the buttons should show where it actually is. */

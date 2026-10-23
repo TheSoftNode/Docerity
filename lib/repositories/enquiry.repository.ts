@@ -36,6 +36,8 @@ export type CreateEnquiryInput = {
   budget: string;
   timeline: string;
   message: string;
+  stage: string;
+  codeLink: string;
   attachments: EnquiryAttachment[];
   submittedFromIp: string;
   userAgent: string;
