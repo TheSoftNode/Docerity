@@ -642,6 +642,38 @@
   animation: ld-fill-b linear both;
 }
 
+/* An editor's stamp landing, and a margin note sliding in beside its mark. */
+@keyframes ld-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(1.8) rotate(-14deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.94) rotate(-4deg);
+  }
+  100% {
+    transform: rotate(-4deg);
+  }
+}
+.ld-stamp {
+  display: inline-block;
+  animation: ld-stamp 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes ld-note-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-note-in {
+  animation: ld-note-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
 /* A path drawing itself in: give it pathLength="100" and it draws once. */
 @keyframes ld-draw {
   to {
@@ -779,12 +811,18 @@
   .ld-fill-a,
   .ld-fill-b,
   .ld-draw,
+  .ld-note-in,
   .ld-tile[data-searching="true"]::before {
     animation: none !important;
   }
   /* Drawn, rather than waiting on an animation that will not run. */
   .ld-draw {
     stroke-dashoffset: 0;
+  }
+  /* Landed, at its resting angle. */
+  .ld-stamp {
+    animation: none !important;
+    transform: rotate(-4deg);
   }
   :root.ld-palette-changing,
   :root.ld-palette-changing * {

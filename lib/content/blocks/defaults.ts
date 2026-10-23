@@ -590,7 +590,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "contribute-hero": {
         "eyebrow": "Write for us · open to people we mentor",
         "title": "Getting your name on *an explainer.*",
-        "lede": "There is no submit button on this page, and that is deliberate. Explaining something clearly is hard, and the value of these pieces comes from somebody having been edited properly, not from there being more of them."
+        "lede": ""
       },
       "contribute-route": {
         "eyebrow": "The route",
@@ -603,32 +603,38 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "lede": ""
       }
     },
-    draft: { crossedOut: "a blog post" },
-    example: {
-      fileName: "caching.md",
-      kicker: "Explainer · 4 min",
-      draftTitle: "What is caching?",
-      finalTitle: "Caching is a sticky note.",
-      byline: "your name",
-      stamp: "Ready to publish",
+    draft: {
+      crossedOut: "a blog post",
+      note: "An explainer, not a post: one idea, one analogy.",
     },
     edits: [
       {
-        before: "Caching is a technique used in computer science to improve performance by storing data.",
-        after: "Caching is a sticky note on your monitor. Instead of walking to the filing cabinet every time someone asks for a number, you write the answer down where you can see it.",
-        note: "Say what it works like, not what it is.",
-      },
-      {
-        before: "There are many types of caching, including browser caching, CDN caching and database caching, each with their own trade-offs.",
+        before: "On this page we will explain how you can write for Docerity.",
         after: "",
-        note: "One idea. The list of types is three more explainers.",
+        note: "Start with the point, not the announcement.",
       },
       {
-        before: "",
-        after: "It is faster, right up until the number changes and the note is wrong.",
-        note: "Keep the catch. It is the part people remember.",
+        before: "Anyone can submit a blog post about any tech topic they like, and we will publish it.",
+        after: "There is no submit button here, and that is deliberate.",
+        note: "Not anyone, and not anything. Say what actually happens.",
+      },
+      {
+        before: "Explaining something clearly is hard,",
+        after: "Explaining something clearly is hard,",
+        note: "",
+      },
+      {
+        before: "so we try to publish as many posts as we can.",
+        after: "and these pieces are worth reading because somebody edited them properly.",
+        note: "The value is the editing, not the volume.",
       },
     ],
+    example: {
+      fileName: "write-for-us.md",
+      byline: "your name",
+      stamp: "Ready to publish",
+      button: "How you get here",
+    },
     route: [
       {
         status: "Mentee",
@@ -661,18 +667,18 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       secondaryLabel: "Read what is here",
     },
     craft: [
-      "The pieces that work here take a single concept somebody is stuck on and pair it with something they already understand. Caching is a sticky note on your monitor. Load balancing is a host at a restaurant. The analogy is not decoration on top of the explanation, it is the explanation.",
-      "The ones that do not work try to cover a whole area. An explainer about databases is a textbook chapter nobody finishes. One about why an index makes a query faster is four minutes somebody remembers a year later.",
+      "The pieces that work here take a single concept somebody is stuck on and pair it with something they already understand. The analogy is not decoration on top of the explanation, it is the explanation.",
+      "The ones that do not work try to cover a whole area. Size it so it fits in four minutes.",
     ],
     scope: {
       quote: "Write it for the person you were six months before you understood it.",
-      wideTopic: "Databases",
-      wideNote: "A textbook chapter nobody finishes.",
-      wideSize: "≈ 40 min · 12 ideas",
-      rightTopic: "Why an index makes a query faster",
-      rightNote: "Four minutes somebody remembers a year later.",
-      rightSize: "≈ 4 min · 1 idea",
     },
+    sizes: [
+      { upTo: "2", topic: "Why an index makes a query faster", why: "Four minutes somebody remembers a year later." },
+      { upTo: "4", topic: "How database indexes work", why: "Good, but it is three explainers wearing one title." },
+      { upTo: "8", topic: "Indexing strategies, compared", why: "A talk, not an explainer." },
+      { upTo: "12", topic: "Databases", why: "A textbook chapter nobody finishes." },
+    ],
   },
 
   reviews: {
