@@ -4,6 +4,7 @@ import { getSiteSettings } from "@/lib/content/blocks/site";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ReviewsPage } from "@/components/sections/reviews/reviews-page";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import { getPublicReviews } from "@/lib/reviews/display";
 
 /* Read per request rather than exported as a constant, so the title and
@@ -21,9 +22,13 @@ export const generateMetadata = pageMetadata("reviews", "/reviews");
 export const revalidate = 300;
 
 export default async function Reviews() {
-  const [reviews, site] = await Promise.all([
+  const [reviews, site, hero, form, empty, process] = await Promise.all([
     getPublicReviews(),
     getSiteSettings(),
+    getHeading("reviews", "reviews-hero"),
+    getHeading("reviews", "reviews-form"),
+    getGroup<{ lede: string; formTitle: string }>("reviews", "empty"),
+    getGroup<{ title: string; description: string }[]>("reviews", "process"),
   ]);
 
   const jsonLd =
@@ -68,7 +73,10 @@ export default async function Reviews() {
       ) : null}
       <Navbar />
       <main className="flex-1">
-        <ReviewsPage reviews={reviews} />
+        <ReviewsPage
+          reviews={reviews}
+          copy={{ hero, form, empty: empty ?? { lede: hero.lede, formTitle: form.title }, process: process ?? [] }}
+        />
       </main>
       <Footer />
     </>

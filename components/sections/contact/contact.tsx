@@ -4,15 +4,15 @@ import type { BlockRecord } from "@/lib/content/blocks/schema";
 import type { AudienceView, StageView } from "@/lib/content/blocks/views";
 import { projectTypes, type ProjectType } from "@/lib/contact/schema";
 import { ContactView, type ContactHeading, type ContactStep } from "@/components/sections/contact/contact-view";
-import { HEADING_KEYS } from "@/components/sections/contact/contact-content";
+import { HEADING_KEYS, formCopyFrom } from "@/components/sections/contact/contact-content";
 import { startStageIndex } from "@/components/sections/mentorship-page/mentorship-content";
 
 /**
  * The contact page: one screen, the heading and what happens next on the
  * left, the form on the right, both changing with what somebody came for.
  *
- * Everything editable is read here: a heading per kind of enquiry, the
- * steps, and the mentorship audiences, so the form offers the same starting
+ * Everything editable is read here: a heading and the form's wording per
+ * kind of enquiry, the steps, and the mentorship audiences, so the form offers the same starting
  * points the mentorship page describes. `initialType` comes from the
  * `?type=` the Apply and Start buttons link with.
  */
@@ -47,6 +47,7 @@ async function Contact({ initialType }: { initialType: string | undefined }) {
     <ContactView
       initialType={type}
       headings={headings}
+      forms={formCopyFrom(contact.forms as Record<string, BlockRecord> | undefined)}
       steps={(steps ?? []).map((step) => ({ title: step.title, description: step.description, when: step.when ?? "" }))}
       audiences={(audiences ?? []).map((audience) => ({
         title: audience.title,

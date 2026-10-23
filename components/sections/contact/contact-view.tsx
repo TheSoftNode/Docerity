@@ -18,7 +18,7 @@ import {
   type FieldErrors,
   type ProjectType,
 } from "@/lib/contact/schema";
-import { fieldsFor, FORM_COPY, progressOf } from "@/components/sections/contact/contact-content";
+import { fieldsFor, progressOf, type FormCopy } from "@/components/sections/contact/contact-content";
 import { TitlePieces } from "@/components/sections/mentorship-page/title-pieces";
 
 export type ContactHeading = { eyebrow: string; title: string; lede: string };
@@ -128,9 +128,12 @@ function ContactView({
   steps,
   audiences,
   email,
+  forms,
 }: {
   initialType: ProjectType;
   headings: Record<ProjectType, ContactHeading>;
+  /** The form's wording per kind, as edited in the admin. */
+  forms: Record<ProjectType, FormCopy>;
   steps: ContactStep[];
   audiences: Audience[];
   email: string;
@@ -144,8 +147,8 @@ function ContactView({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
 
-  const copy = FORM_COPY[type];
-  const fields = fieldsFor(type);
+  const copy = forms[type];
+  const fields = fieldsFor(type, copy);
   const heading = headings[type];
   const sent = reference !== undefined;
   const busy = status === "uploading" || status === "submitting";
@@ -399,7 +402,7 @@ function ContactView({
                 <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-4">
                   {projectTypes.map((option) => {
                     const on = option.value === type;
-                    const tile = FORM_COPY[option.value];
+                    const tile = forms[option.value];
                     return (
                       <button
                         key={option.value}

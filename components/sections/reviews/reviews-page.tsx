@@ -13,6 +13,8 @@ import { ReviewCard } from "@/components/sections/reviews/review-card";
 import { ReviewForm } from "@/components/sections/reviews/review-form";
 import { RatingSummary } from "@/components/sections/reviews/rating-summary";
 import type { PublicReview } from "@/lib/reviews/display";
+import type { SectionHeading } from "@/lib/content/blocks/source";
+import { splitEmphasis } from "@/components/sections/home/hero-content";
 
 /**
  * The reviews page, built as a record rather than a landing page.
@@ -35,27 +37,20 @@ function RailItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-/*
-  What happens to a submission, stated plainly.
-
-  It is here because the honest answer is a selling point: on a page where every
-  other site publishes whatever it is sent, saying "these are read first" is the
-  difference between a testimonial wall and a record.
-*/
-const PROCESS = [
-  {
-    title: "You write it",
-    detail: "Two minutes. Honest is more useful to the next person than flattering.",
-  },
-  {
-    title: "We read it",
-    detail: "Every one. If something needs checking we email you before it goes up.",
-  },
-  {
-    title: "It goes up",
-    detail: "With your name and role, and a link to your work if you gave one.",
-  },
-] as const;
+/** The page's words, edited in the admin (the reviews block). */
+export type ReviewsCopy = {
+  hero: SectionHeading;
+  form: SectionHeading;
+  /** Used instead of the hero lede and the form heading before the first review. */
+  empty: { lede: string; formTitle: string };
+  /*
+    What happens to a submission, stated plainly. It is here because the
+    honest answer is a selling point: on a page where every other site
+    publishes whatever it is sent, saying "these are read first" is the
+    difference between a testimonial wall and a record.
+  */
+  process: { title: string; description: string }[];
+};
 
 function distributionOf(reviews: PublicReview[]): Record<number, number> {
   const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -63,7 +58,7 @@ function distributionOf(reviews: PublicReview[]): Record<number, number> {
   return counts;
 }
 
-function ReviewsPage({ reviews }: { reviews: PublicReview[] }) {
+function ReviewsPage({ reviews, copy }: { reviews: PublicReview[]; copy: ReviewsCopy }) {
   const reduceMotion = useReducedMotion();
 
   const total = reviews.length;
@@ -97,7 +92,7 @@ function ReviewsPage({ reviews }: { reviews: PublicReview[] }) {
 
               <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1.5 border-b border-border/70 px-6 py-3 font-mono text-[0.625rem] tracking-[0.16em] uppercase sm:px-8">
                 <span className="text-primary">
-                  <ScrambleText text="Record · Reviews" />
+                  <ScrambleText text={copy.hero.eyebrow} />
                 </span>
                 <span className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
                   <RailItem label="Entries" value={String(total).padStart(2, "0")} />
@@ -109,17 +104,22 @@ function ReviewsPage({ reviews }: { reviews: PublicReview[] }) {
               <div className="grid grid-cols-1 gap-8 px-6 pt-8 pb-7 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-14 lg:pt-9 lg:pb-8">
                 <div className="min-w-0">
                   <h1 className="max-w-[24ch] text-balance font-heading text-[clamp(1.9rem,5vw,2.6rem)] leading-[1.14] font-semibold tracking-tight text-foreground md:text-[clamp(1.9rem,3vw,2.75rem)] lg:text-[clamp(2.1rem,2.9vw,3rem)]">
-                    The people who{" "}
-                    <span className="bg-[linear-gradient(120deg,var(--brand-primary),var(--brand-violet))] bg-clip-text text-transparent">
-                      paid for the work
-                    </span>
-                    , in their words.
+                    {splitEmphasis(copy.hero.title).map((piece, index) =>
+                      piece.emphasis ? (
+                        <span
+                          key={index}
+                          className="bg-[linear-gradient(120deg,var(--brand-primary),var(--brand-violet))] bg-clip-text text-transparent"
+                        >
+                          {piece.text}
+                        </span>
+                      ) : (
+                        piece.text
+                      )
+                    )}
                   </h1>
 
                   <p className="mt-5 max-w-[54ch] text-[0.9375rem] leading-[1.75] text-muted-foreground">
-                    {total > 0
-                      ? "Clients and the engineers we have mentored. Nothing here was written by us, and nothing appears until it has been read."
-                      : "Clients and the engineers we have mentored. There is nothing here yet, which is the honest state of a page that only publishes what people actually send."}
+                    {total > 0 ? copy.hero.lede : copy.empty.lede}
                   </p>
 
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -240,16 +240,14 @@ function ReviewsPage({ reviews }: { reviews: PublicReview[] }) {
             */}
             <div className="lg:sticky lg:top-24 lg:self-start">
               <p className="font-mono text-[0.625rem] tracking-[0.16em] uppercase text-primary">
-                <ScrambleText text="Leave a review" />
+                <ScrambleText text={copy.form.eyebrow} />
               </p>
               <h2 className="mt-3 text-balance font-heading text-[clamp(1.5rem,2.4vw,2rem)] leading-[1.15] font-semibold tracking-tight text-foreground">
-                {total > 0
-                  ? "Worked together? Add yours."
-                  : "Worked together? Be the first."}
+                {total > 0 ? copy.form.title : copy.empty.formTitle}
               </h2>
 
               <ol className="mt-7 space-y-5 border-t border-border/70 pt-6">
-                {PROCESS.map((step, index) => (
+                {copy.process.map((step, index) => (
                   <li key={step.title} className="flex gap-3">
                     <span className="mt-0.5 font-mono text-[0.625rem] tracking-[0.16em] text-primary">
                       {String(index + 1).padStart(2, "0")}
@@ -259,7 +257,7 @@ function ReviewsPage({ reviews }: { reviews: PublicReview[] }) {
                         {step.title}
                       </span>
                       <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
-                        {step.detail}
+                        {step.description}
                       </span>
                     </span>
                   </li>

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { database } from "@/lib/config/env";
 import { createLogger } from "@/lib/core/logger";
 import { unsubscribeByToken } from "@/lib/repositories/subscriber.repository";
+import { getGroup } from "@/lib/content/blocks/source";
 
 export const metadata: Metadata = {
   title: "Unsubscribe",
@@ -40,6 +41,15 @@ export default async function UnsubscribePage({
   searchParams: Promise<{ token?: string }>;
 }) {
   const { token } = await searchParams;
+  /* The words are edited in the admin (Small pages). */
+  const copy = await getGroup<{
+    doneTitle: string;
+    doneBody: string;
+    failedTitle: string;
+    failedBody: string;
+    blogLabel: string;
+    contactLabel: string;
+  }>("pages", "unsubscribe");
 
   let removed = false;
 
@@ -71,19 +81,17 @@ export default async function UnsubscribePage({
             </span>
 
             <h1 className="mt-5 font-heading text-2xl font-semibold tracking-tight text-foreground">
-              {removed ? "You are unsubscribed" : "That link did not work"}
+              {removed ? copy.doneTitle : copy.failedTitle}
             </h1>
 
             <p className="mx-auto mt-3 max-w-[42ch] text-sm leading-relaxed text-muted-foreground">
-              {removed
-                ? "No more explainers will reach you. No hard feelings, and you can subscribe again whenever you like."
-                : /*
-                     Deliberately vague about why. "That address is not on the
-                     list" would confirm whether a given address is subscribed
-                     to anyone who tried the URL, and an expired or mistyped
-                     token is indistinguishable to the person holding it anyway.
-                   */
-                  "The link may have been cut short by your mail client, or it may already have been used. Email me and I will take you off the list myself."}
+              {/*
+                The failure text is deliberately vague about why. "That address
+                is not on the list" would confirm whether a given address is
+                subscribed to anyone who tried the URL, and an expired or
+                mistyped token is indistinguishable to the person holding it.
+              */}
+              {removed ? copy.doneBody : copy.failedBody}
             </p>
 
             <div className="mt-7 flex flex-wrap justify-center gap-2">
@@ -93,7 +101,7 @@ export default async function UnsubscribePage({
                 nativeButton={false}
                 render={<Link href="/blog" />}
               >
-                Read the explainers
+                {copy.blogLabel}
               </Button>
               {!removed ? (
                 <Button
@@ -102,7 +110,7 @@ export default async function UnsubscribePage({
                   nativeButton={false}
                   render={<Link href="/contact" />}
                 >
-                  Get in touch
+                  {copy.contactLabel}
                 </Button>
               ) : null}
             </div>

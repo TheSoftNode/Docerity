@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 import { normaliseLink, projectTypes, validateEnquiry, type EnquiryInput } from "@/lib/contact/schema";
-import { fieldsFor, FORM_COPY, HEADING_KEYS, progressOf } from "@/components/sections/contact/contact-content";
+import { fieldsFor, formCopyFrom, FORM_COPY, HEADING_KEYS, progressOf } from "@/components/sections/contact/contact-content";
 import { DEFAULTS } from "@/lib/content/blocks/defaults";
 
 /*
@@ -32,6 +32,28 @@ test.describe("the form's words", () => {
     expect(fieldsFor("mentorship")).toMatchObject({ budget: false, company: false, role: false, stage: true, codeLink: true });
     expect(fieldsFor("software")).toMatchObject({ budget: true, company: true, role: true, stage: false, codeLink: false });
     expect(fieldsFor("other")).toMatchObject({ timeline: false, files: false });
+  });
+});
+
+test.describe("formCopyFrom", () => {
+  test("the defaults give back the built-in wording", () => {
+    const forms = DEFAULTS.contact.forms as Parameters<typeof formCopyFrom>[0];
+    expect(formCopyFrom(forms)).toEqual(FORM_COPY);
+    expect(formCopyFrom(undefined)).toEqual(FORM_COPY);
+  });
+
+  test("an edited word replaces the built-in one; the icon and link target stay", () => {
+    const copy = formCopyFrom({ software: { submit: "Send it", nextLabel: "Our work" } });
+    expect(copy.software.submit).toBe("Send it");
+    expect(copy.software.next).toEqual({ href: FORM_COPY.software.next.href, label: "Our work" });
+    expect(copy.software.icon).toBe(FORM_COPY.software.icon);
+    expect(copy.mentorship).toEqual(FORM_COPY.mentorship);
+  });
+
+  test("a required word left blank falls back, but blanking an optional label removes its field", () => {
+    const copy = formCopyFrom({ software: { submit: "  ", filesLabel: "", timelineLabel: "" } });
+    expect(copy.software.submit).toBe(FORM_COPY.software.submit);
+    expect(fieldsFor("software", copy.software)).toMatchObject({ files: false, timeline: false });
   });
 });
 

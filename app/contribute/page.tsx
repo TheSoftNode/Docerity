@@ -9,6 +9,8 @@ import { Bloom } from "@/components/shared/section-kit";
 import { ScrambleText } from "@/components/shared/scramble-text";
 import { CornerBrackets } from "@/components/sections/explainers/explainer-corner-brackets";
 import { Button } from "@/components/ui/button";
+import { getGroup, getHeading } from "@/lib/content/blocks/source";
+import { splitEmphasis } from "@/components/sections/home/hero-content";
 
 /* Read per request rather than exported as a constant, so the title and
    description a search result shows can be edited without a deploy. */
@@ -26,25 +28,18 @@ export const generateMetadata = pageMetadata("contribute", "/contribute");
   genuinely wants to write now knows what the route actually is.
 */
 
-const STEPS = [
-  {
-    title: "We are already working together",
-    detail:
-      "Every explainer here has been written by somebody I know well enough to review honestly. That is the filter, and it is the only one.",
-  },
-  {
-    title: "You get an account",
-    detail:
-      "An invitation link, a password you choose, and the same editor I use. Your drafts are private to you until you send them.",
-  },
-  {
-    title: "I read it before anybody else does",
-    detail:
-      "Nothing publishes itself. I edit for clarity, we go back and forth if it needs it, and then it goes up with your name on it.",
-  },
-] as const;
+type Stage = { status: string; title: string; description: string; cardNote: string };
 
-export default function ContributePage() {
+/* Every word on the page is edited in the admin (Write for us). */
+export default async function ContributePage() {
+  const [hero, craftHeading, route, invite, craft] = await Promise.all([
+    getHeading("contribute", "contribute-hero"),
+    getHeading("contribute", "contribute-craft"),
+    getGroup<Stage[]>("contribute", "route"),
+    getGroup<{ note: string; primaryLabel: string; secondaryLabel: string }>("contribute", "invite"),
+    getGroup<string[]>("contribute", "craft"),
+  ]);
+
   return (
     <>
       <Navbar />
@@ -60,12 +55,12 @@ export default function ContributePage() {
 
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1.5 border-b border-border/70 px-6 py-3 font-mono text-[0.625rem] tracking-[0.16em] uppercase sm:px-8">
                   <span className="text-primary">
-                    <ScrambleText text="Writing · Docerity" />
+                    <ScrambleText text={hero.eyebrow} />
                   </span>
                   <span className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
                     <span className="flex items-baseline gap-2">
                       <span className="text-muted-foreground">Open to</span>
-                      <span className="text-foreground">People I mentor</span>
+                      <span className="text-foreground">People we mentor</span>
                     </span>
                   </span>
                 </div>
@@ -73,24 +68,26 @@ export default function ContributePage() {
                 <div className="grid grid-cols-1 gap-8 px-6 pt-8 pb-7 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-14 lg:pt-9 lg:pb-8">
                   <div className="min-w-0">
                     <h1 className="max-w-[24ch] text-balance font-heading text-[clamp(1.9rem,5vw,2.6rem)] leading-[1.14] font-semibold tracking-tight text-foreground md:text-[clamp(1.9rem,3vw,2.75rem)] lg:text-[clamp(2.1rem,2.9vw,3rem)]">
-                      Getting your name on{" "}
-                      <span className="bg-[linear-gradient(120deg,var(--brand-primary),var(--brand-violet))] bg-clip-text text-transparent">
-                        an explainer
-                      </span>
-                      .
+                      {splitEmphasis(hero.title).map((piece, index) =>
+                        piece.emphasis ? (
+                          <span
+                            key={index}
+                            className="bg-[linear-gradient(120deg,var(--brand-primary),var(--brand-violet))] bg-clip-text text-transparent"
+                          >
+                            {piece.text}
+                          </span>
+                        ) : (
+                          piece.text
+                        )
+                      )}
                     </h1>
 
                     <p className="mt-5 max-w-[56ch] text-[0.9375rem] leading-[1.75] text-muted-foreground">
-                      There is no submit button on this page, and that is
-                      deliberate. Explaining something clearly is hard, and the
-                      value of these pieces comes from somebody having been
-                      edited properly rather than from there being more of them.
+                      {hero.lede}
                     </p>
 
                     <p className="mt-4 max-w-[56ch] text-[0.9375rem] leading-[1.75] text-muted-foreground">
-                      If you are being mentored here, writing one is part of it.
-                      If you are not and you want to be, that conversation starts
-                      the same way everything else does.
+                      {invite.note}
                     </p>
 
                     <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -100,7 +97,7 @@ export default function ContributePage() {
                         nativeButton={false}
                         render={<Link href="/contact?type=mentorship" />}
                       >
-                        Talk about mentorship
+                        {invite.primaryLabel}
                         <ArrowRightIcon />
                       </Button>
                       <Button
@@ -110,14 +107,14 @@ export default function ContributePage() {
                         nativeButton={false}
                         render={<Link href="/blog" />}
                       >
-                        Read what is here
+                        {invite.secondaryLabel}
                       </Button>
                     </div>
                   </div>
 
                   <div className="w-full lg:w-[20rem] lg:shrink-0 lg:border-l lg:border-border/70 lg:pl-10">
                     <ol className="space-y-5">
-                      {STEPS.map((step, index) => (
+                      {route.map((step, index) => (
                         <li key={step.title} className="flex gap-3">
                           <span className="mt-0.5 font-mono text-[0.625rem] tracking-[0.16em] text-primary">
                             {String(index + 1).padStart(2, "0")}
@@ -127,7 +124,7 @@ export default function ContributePage() {
                               {step.title}
                             </span>
                             <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
-                              {step.detail}
+                              {step.description}
                             </span>
                           </span>
                         </li>
@@ -144,32 +141,17 @@ export default function ContributePage() {
           <Container>
             <div className="mx-auto max-w-[48rem]">
               <p className="font-mono text-[0.625rem] tracking-[0.16em] uppercase text-primary">
-                <ScrambleText text="What makes a good one" />
+                <ScrambleText text={craftHeading.eyebrow} />
               </p>
 
               <h2 className="mt-3 text-balance font-heading text-[clamp(1.5rem,2.4vw,2rem)] leading-[1.15] font-semibold tracking-tight text-foreground">
-                One idea, one everyday thing it works like.
+                {craftHeading.title}
               </h2>
 
               <div className="mt-6 space-y-4 text-[0.9375rem] leading-[1.8] text-muted-foreground">
-                <p>
-                  The pieces that work here take a single concept somebody is
-                  stuck on and pair it with something they already understand.
-                  Caching is a sticky note on your monitor. Load balancing is a
-                  host at a restaurant. The analogy is not decoration on top of
-                  the explanation, it is the explanation.
-                </p>
-                <p>
-                  The ones that do not work try to cover a whole area. An
-                  explainer about &ldquo;databases&rdquo; is a textbook chapter
-                  nobody finishes. One about why an index makes a query faster is
-                  four minutes somebody remembers a year later.
-                </p>
-                <p>
-                  Write it for the person you were six months before you
-                  understood it. That person is the entire audience, and they are
-                  not stupid, they just have not seen it yet.
-                </p>
+                {craft.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
               </div>
             </div>
           </Container>

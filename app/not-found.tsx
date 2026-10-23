@@ -6,12 +6,18 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
+import { getGroup } from "@/lib/content/blocks/source";
 
 export const metadata: Metadata = {
   title: "Page not found",
 };
 
-export default function NotFound() {
+type NotFoundCopy = { eyebrow: string; title: string; lede: string; primaryLabel: string; secondaryLabel: string };
+
+/* The words are edited in the admin (Small pages). */
+export default async function NotFound() {
+  const copy = await getGroup<NotFoundCopy>("pages", "notFound");
+
   return (
     <>
       <Navbar />
@@ -27,14 +33,13 @@ export default function NotFound() {
           <Container className="relative">
             <div className="mx-auto max-w-lg text-center">
               <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">
-                Lost signal
+                {copy.eyebrow}
               </p>
               <h1 className="mt-3 font-heading text-3xl font-medium tracking-tight text-foreground sm:text-4xl">
-                This page doesn&apos;t exist.
+                {copy.title}
               </h1>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                The link might be broken, or the page may have moved. Let&apos;s
-                get you back on track.
+                {copy.lede}
               </p>
 
               <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
@@ -44,7 +49,7 @@ export default function NotFound() {
                   nativeButton={false}
                   render={<Link href="/" />}
                 >
-                  Back to home
+                  {copy.primaryLabel}
                   <ArrowRightIcon />
                 </Button>
                 <Button
@@ -54,7 +59,7 @@ export default function NotFound() {
                   nativeButton={false}
                   render={<Link href="/blog" />}
                 >
-                  Read the blog
+                  {copy.secondaryLabel}
                 </Button>
               </div>
             </div>

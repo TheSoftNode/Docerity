@@ -40,6 +40,7 @@ import {
 } from "@/components/sections/web3/web3-data";
 import { pairs } from "@/components/sections/explainers/explainers-data";
 import { steps as contactSteps } from "@/components/sections/contact/contact-data";
+import { FORM_COPY } from "@/components/sections/contact/contact-content";
 
 /**
  * What each section renders when the database has nothing to say.
@@ -561,5 +562,158 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       }
     },
     steps: contactSteps.map((step) => ({ ...step })),
+    /* The icon and where the receipt links stay with the code: they belong to
+       the kind of enquiry rather than to its wording. */
+    forms: Object.fromEntries(
+      Object.entries(FORM_COPY).map(([kind, copy]) => [
+        kind,
+        {
+          label: copy.label,
+          sub: copy.sub,
+          sheetLabel: copy.sheetLabel,
+          detailsTitle: copy.detailsTitle,
+          timelineLabel: copy.timelineLabel,
+          messageLabel: copy.messageLabel,
+          placeholder: copy.placeholder,
+          hint: copy.hint,
+          filesLabel: copy.filesLabel,
+          submit: copy.submit,
+          sentTitle: copy.sentTitle,
+          nextLabel: copy.next.label,
+        },
+      ])
+    ),
+  },
+
+  contribute: {
+    headings: {
+      "contribute-hero": {
+        "eyebrow": "Write for us · open to people we mentor",
+        "title": "Getting your name on *an explainer.*",
+        "lede": "There is no submit button on this page, and that is deliberate. Explaining something clearly is hard, and the value of these pieces comes from somebody having been edited properly, not from there being more of them."
+      },
+      "contribute-route": {
+        "eyebrow": "The route",
+        "title": "An account, not a form.",
+        "lede": "An open form collects AI filler and link-building, and every one has to be read and refused. The people who write here are already being mentored, so they get an account instead."
+      },
+      "contribute-craft": {
+        "eyebrow": "What makes a good one",
+        "title": "One idea, one everyday thing it works like.",
+        "lede": ""
+      }
+    },
+    draft: { crossedOut: "a blog post" },
+    example: {
+      fileName: "caching.md",
+      kicker: "Explainer · 4 min",
+      draftTitle: "What is caching?",
+      finalTitle: "Caching is a sticky note.",
+      byline: "your name",
+      stamp: "Ready to publish",
+    },
+    edits: [
+      {
+        before: "Caching is a technique used in computer science to improve performance by storing data.",
+        after: "Caching is a sticky note on your monitor. Instead of walking to the filing cabinet every time someone asks for a number, you write the answer down where you can see it.",
+        note: "Say what it works like, not what it is.",
+      },
+      {
+        before: "There are many types of caching, including browser caching, CDN caching and database caching, each with their own trade-offs.",
+        after: "",
+        note: "One idea. The list of types is three more explainers.",
+      },
+      {
+        before: "",
+        after: "It is faster, right up until the number changes and the note is wrong.",
+        note: "Keep the catch. It is the part people remember.",
+      },
+    ],
+    route: [
+      {
+        status: "Mentee",
+        title: "We are already working together",
+        description: "Every explainer here is written by somebody we know well enough to review honestly. That is the filter, and the only one.",
+        cardNote: "in a 1:1",
+      },
+      {
+        status: "Invited",
+        title: "You get an account",
+        description: "An invitation link, a password you choose, and the same editor we use. Your drafts stay private until you send them.",
+        cardNote: "drafting in the editor",
+      },
+      {
+        status: "In review",
+        title: "We read it before anybody else",
+        description: "Nothing publishes itself. We edit for clarity, and go back and forth if it needs it.",
+        cardNote: "notes to resolve",
+      },
+      {
+        status: "Published",
+        title: "It goes up with your name on it",
+        description: "Your byline, on a piece somebody will still remember a year later.",
+        cardNote: "live on the blog",
+      },
+    ],
+    invite: {
+      note: "If you are being mentored here, writing one is part of it. If you are not and want to be, that conversation starts the same way everything else does.",
+      primaryLabel: "Talk about mentorship",
+      secondaryLabel: "Read what is here",
+    },
+    craft: [
+      "The pieces that work here take a single concept somebody is stuck on and pair it with something they already understand. Caching is a sticky note on your monitor. Load balancing is a host at a restaurant. The analogy is not decoration on top of the explanation, it is the explanation.",
+      "The ones that do not work try to cover a whole area. An explainer about databases is a textbook chapter nobody finishes. One about why an index makes a query faster is four minutes somebody remembers a year later.",
+    ],
+    scope: {
+      quote: "Write it for the person you were six months before you understood it.",
+      wideTopic: "Databases",
+      wideNote: "A textbook chapter nobody finishes.",
+      wideSize: "≈ 40 min · 12 ideas",
+      rightTopic: "Why an index makes a query faster",
+      rightNote: "Four minutes somebody remembers a year later.",
+      rightSize: "≈ 4 min · 1 idea",
+    },
+  },
+
+  reviews: {
+    headings: {
+      "reviews-hero": {
+        "eyebrow": "Record · Reviews",
+        "title": "The people who *paid for the work*, in their words.",
+        "lede": "Clients and the engineers we have mentored. Nothing here was written by us, and nothing appears until it has been read."
+      },
+      "reviews-form": {
+        "eyebrow": "Leave a review",
+        "title": "Worked together? Add yours.",
+        "lede": ""
+      }
+    },
+    empty: {
+      lede: "Clients and the engineers we have mentored. There is nothing here yet, which is the honest state of a page that only publishes what people actually send.",
+      formTitle: "Worked together? Be the first.",
+    },
+    process: [
+      { title: "You write it", description: "Two minutes. Honest is more useful to the next person than flattering." },
+      { title: "We read it", description: "Every one. If something needs checking we email you before it goes up." },
+      { title: "It goes up", description: "With your name and role, and a link to your work if you gave one." },
+    ],
+  },
+
+  pages: {
+    notFound: {
+      eyebrow: "Lost signal",
+      title: "This page doesn't exist.",
+      lede: "The link might be broken, or the page may have moved. Let's get you back on track.",
+      primaryLabel: "Back to home",
+      secondaryLabel: "Read the blog",
+    },
+    unsubscribe: {
+      doneTitle: "You are unsubscribed",
+      doneBody: "No more explainers will reach you. No hard feelings, and you can subscribe again whenever you like.",
+      failedTitle: "That link did not work",
+      failedBody: "The link may have been cut short by your mail client, or it may already have been used. Email us and we will take you off the list ourselves.",
+      blogLabel: "Read the explainers",
+      contactLabel: "Get in touch",
+    },
   },
 };

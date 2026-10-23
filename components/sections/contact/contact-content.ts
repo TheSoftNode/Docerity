@@ -1,13 +1,16 @@
+import type { BlockRecord } from "@/lib/content/blocks/schema";
 import type { ProjectType } from "@/lib/contact/schema";
 
 /*
   The contact form's words for each kind of enquiry.
 
-  The heading above the form is editable per kind (the contact block in the
-  admin). What lives here is the form's own wording: its field labels, hints
-  and buttons, which change with what somebody picked because a mentorship
-  applicant should not be asked for a budget or a PRD. Pure, so it is tested
-  without a browser (see e2e/contact-content.spec.ts).
+  The heading above the form and these words are both editable per kind (the
+  contact block in the admin); FORM_COPY is the built-in wording and what a
+  blank field falls back to. The icon and where the receipt links stay here,
+  because they belong to the kind of enquiry rather than to its wording. The
+  words change with what somebody picked because a mentorship applicant
+  should not be asked for a budget or a PRD. Pure, so it is tested without a
+  browser (see e2e/contact-content.spec.ts).
 */
 
 export type FormCopy = {
@@ -94,6 +97,29 @@ export const FORM_COPY: Record<ProjectType, FormCopy> = {
   },
 };
 
+/** The words a stored entry can replace. Both optional labels may be blanked on purpose. */
+const WORDS = ["label", "sub", "sheetLabel", "detailsTitle", "messageLabel", "placeholder", "hint", "submit", "sentTitle"] as const;
+const OPTIONAL = ["timelineLabel", "filesLabel"] as const;
+
+/**
+ * The form's wording per kind: what the admin stored over the built-in copy.
+ * A required word left blank falls back to the built-in one; the two
+ * optional labels are taken as stored, since blanking one removes its field.
+ */
+export function formCopyFrom(stored: Record<string, BlockRecord> | undefined): Record<ProjectType, FormCopy> {
+  return Object.fromEntries(
+    (Object.keys(FORM_COPY) as ProjectType[]).map((kind) => {
+      const base = FORM_COPY[kind];
+      const entry = (stored?.[kind] ?? {}) as Record<string, string | undefined>;
+      const copy: FormCopy = { ...base, next: { ...base.next } };
+      for (const word of WORDS) if (entry[word]?.trim()) copy[word] = entry[word]!.trim();
+      for (const word of OPTIONAL) if (typeof entry[word] === "string") copy[word] = entry[word]!.trim();
+      if (entry.nextLabel?.trim()) copy.next.label = entry.nextLabel.trim();
+      return [kind, copy];
+    })
+  ) as Record<ProjectType, FormCopy>;
+}
+
 /** The heading entry in the contact block for each kind; software is the page's default. */
 export const HEADING_KEYS: Record<ProjectType, string> = {
   software: "contact",
@@ -107,15 +133,15 @@ export const HEADING_KEYS: Record<ProjectType, string> = {
  * client; budget is a client's question too (mentorship pricing is talked
  * through on the call); the starting point and code link are a mentee's.
  */
-export function fieldsFor(type: ProjectType) {
+export function fieldsFor(type: ProjectType, copy: FormCopy = FORM_COPY[type]) {
   return {
     company: type === "software",
     role: type === "software",
     budget: type === "software",
     stage: type === "mentorship",
     codeLink: type === "mentorship",
-    timeline: FORM_COPY[type].timelineLabel !== "",
-    files: FORM_COPY[type].filesLabel !== "",
+    timeline: copy.timelineLabel !== "",
+    files: copy.filesLabel !== "",
   };
 }
 
