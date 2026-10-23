@@ -41,7 +41,7 @@ export default defineConfig({
         Node. Running it under a second device would repeat the scrypt
         work, which is deliberately slow, to assert exactly the same thing.
       */
-      testIgnore: [/visual\.spec\.ts/, /auth-unit\.spec\.ts/, /home-content\.spec\.ts/, /projects-content\.spec\.ts/, /project-detail-content\.spec\.ts/, /mentorship-content\.spec\.ts/, /contact-content\.spec\.ts/, /blog-content\.spec\.ts/, /ai-router\.spec\.ts/, /explorer-content\.spec\.ts/],
+      testIgnore: [/visual\.spec\.ts/, /auth-unit\.spec\.ts/, /home-content\.spec\.ts/, /projects-content\.spec\.ts/, /project-detail-content\.spec\.ts/, /mentorship-content\.spec\.ts/, /contact-content\.spec\.ts/, /blog-content\.spec\.ts/, /ai-router\.spec\.ts/, /explorer-content\.spec\.ts/, /about-content\.spec\.ts/],
     },
   ],
   webServer: {

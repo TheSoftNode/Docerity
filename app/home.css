@@ -642,6 +642,18 @@
   animation: ld-fill-b linear both;
 }
 
+/* A path drawing itself in: give it pathLength="100" and it draws once. */
+@keyframes ld-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.ld-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: ld-draw 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
 /* A deploy log line arriving: each line is delayed in turn by its style. */
 @keyframes ld-log-line {
   from {
@@ -766,8 +778,13 @@
   .ld-flow,
   .ld-fill-a,
   .ld-fill-b,
+  .ld-draw,
   .ld-tile[data-searching="true"]::before {
     animation: none !important;
+  }
+  /* Drawn, rather than waiting on an animation that will not run. */
+  .ld-draw {
+    stroke-dashoffset: 0;
   }
   :root.ld-palette-changing,
   :root.ld-palette-changing * {

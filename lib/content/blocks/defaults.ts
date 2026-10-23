@@ -301,6 +301,33 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
   },
 
   about: {
+    headings: {
+      "about-hero": {
+        "eyebrow": "About",
+        "title": "Every branch merged into *one studio.*",
+        "lede": "Docerity is a software studio founded by Theophilus Uchechukwu. It builds software, explains it clearly, and trains the engineers who maintain it."
+      },
+      "about-story": {
+        "eyebrow": "The story",
+        "title": "Built first, explained second, taught third.",
+        "lede": "The studio is three things that turned out to be one skill. Read it in the founder's own words."
+      },
+      "about-experience": {
+        "eyebrow": "Experience",
+        "title": "What shipped, and where.",
+        "lede": "Every role, newest first. Open one for its release notes."
+      },
+      "about-toolkit": {
+        "eyebrow": "Toolkit",
+        "title": "The stack, by what it is for.",
+        "lede": "Pick a part of the system and see what we reach for. Every one of these has been in production, not just in a tutorial."
+      },
+      "about-credentials": {
+        "eyebrow": "Credentials",
+        "title": "Studied, certified, and checkable.",
+        "lede": "The certificates themselves, not a line claiming them. Pick one to look at it properly."
+      }
+    },
     founder: {
       ...founder,
       /* The portrait was a constant in `about-hero.tsx`. Its path is the

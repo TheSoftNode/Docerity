@@ -480,6 +480,13 @@ export const BLOCKS: Block[] = [
     description:
       "Everything on /about except the project count, which is counted from the work section rather than typed.",
     groups: [
+      headings([
+        { key: "about-hero", label: "Hero", hint: "Wrap words in *asterisks* to light them; the career graph is drawn from Experience." },
+        { key: "about-story", label: "The story" },
+        { key: "about-experience", label: "Experience" },
+        { key: "about-toolkit", label: "Toolkit" },
+        { key: "about-credentials", label: "Credentials" },
+      ]),
       {
         kind: "object",
         name: "founder",
@@ -508,7 +515,7 @@ export const BLOCKS: Block[] = [
             name: "portrait",
             label: "Photo",
             kind: "image",
-            hint: "The frame is circular, so a square image with the face centred works best. 800px or larger.",
+            hint: "Not shown on the current About page, which is about the studio rather than a headshot. Kept so it can come back without a re-upload.",
           },
         ],
       },
