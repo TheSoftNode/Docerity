@@ -143,7 +143,8 @@ components/
   layout/            site-header and site-footer: the redesigned pages' chrome
   sections/          page sections, one folder per section (home/ is the
                      homepage, projects/ is /projects, project-detail/ is
-                     /projects/[slug], contact-band/ closes all three)
+                     /projects/[slug], mentorship-page/ is /mentorship,
+                     contact-band/ closes the first three)
   shared/palette/    the palette switcher, its no-flash script and logo
   admin/             the admin area's own components
   ui/                shadcn base-nova on @base-ui/react

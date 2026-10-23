@@ -414,10 +414,13 @@ test.describe("The review pipeline", () => {
       page.getByRole("heading", { name: "What it's like to work together." })
     ).toHaveCount(0);
 
+    /* The mentorship page keeps the section and asks mentees for reviews
+       instead, quoting nobody. */
     await page.goto("/mentorship");
-    await expect(
-      page.getByRole("heading", { name: "Real progress, in their words." })
-    ).toHaveCount(0);
+    await expect(page.getByText("The first reviews are being collected.")).toBeVisible();
+    for (const review of menteeReviews) {
+      await expect(page.getByText(review.body)).toHaveCount(0);
+    }
   });
 
   test("a review in the wrong section can be moved to the right one", async ({

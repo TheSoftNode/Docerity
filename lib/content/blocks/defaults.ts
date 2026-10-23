@@ -13,10 +13,13 @@ import {
   tools,
 } from "@/components/sections/about/about-data";
 import {
+  applySteps,
   audiences,
   faqs,
   formatSteps,
+  specialties,
   stages,
+  teamPrinciples,
 } from "@/components/sections/mentorship-program/mentorship-program-data";
 import { checkpoints } from "@/components/sections/mentorship/mentorship-data";
 import {
@@ -339,6 +342,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "title": "Not just office hours.",
         "lede": "A standing session, feedback between sessions, a plan that moves with you, and a way to reach out when something can't wait."
       },
+      "mentorship-team": {
+        "eyebrow": "Who reviews your code",
+        "title": "A team that ships, not a lone tutor.",
+        "lede": "Your reviews come from engineers on the Docerity team, the same people building the systems on our projects page. You keep one lead for continuity, and get a specialist when the work calls for one."
+      },
       "mentorship-testimonials": {
         "eyebrow": "From mentees",
         "title": "Real progress, in their words.",
@@ -348,12 +356,20 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "eyebrow": "FAQ",
         "title": "Questions before you apply.",
         "lede": "The things people usually ask before a first call."
+      },
+      "mentorship-apply": {
+        "eyebrow": "Taking new mentees",
+        "title": "Your next level starts with a *short note.*",
+        "lede": ""
       }
     },
     audiences: audiences.map((entry) => ({ ...entry })),
     stages: stages.map((entry) => ({ ...entry })),
     checkpoints: checkpoints.map((entry) => ({ ...entry })),
     formatSteps: formatSteps.map((entry) => ({ ...entry })),
+    teamPrinciples: teamPrinciples.map((entry) => ({ ...entry })),
+    specialties: [...specialties],
+    applySteps: applySteps.map((entry) => ({ ...entry })),
     faqs: faqs.map((entry) => ({ ...entry })),
   },
 

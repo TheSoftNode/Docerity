@@ -1,33 +1,42 @@
 import { pageMetadata } from "@/lib/content/blocks/metadata";
 
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-import { Cta } from "@/components/sections/cta/cta";
-import { MentorshipProgramHero } from "@/components/sections/mentorship-program/mentorship-program-hero";
-import { MentorshipAudience } from "@/components/sections/mentorship-program/mentorship-audience";
-import { MentorshipPath } from "@/components/sections/mentorship-program/mentorship-path";
-import { MentorshipFormat } from "@/components/sections/mentorship-program/mentorship-format";
-import { MentorshipTestimonials } from "@/components/sections/mentorship-program/mentorship-testimonials";
-import { MentorshipFaq } from "@/components/sections/mentorship-program/mentorship-faq";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { MentorshipHero } from "@/components/sections/mentorship-page/mentorship-hero";
+import { AudiencePath } from "@/components/sections/mentorship-page/audience-path";
+import { MentorshipFormat } from "@/components/sections/mentorship-page/mentorship-format";
+import { MentorshipTeam } from "@/components/sections/mentorship-page/mentorship-team";
+import { MentorshipReviews } from "@/components/sections/mentorship-page/mentorship-reviews";
+import { MentorshipFaq } from "@/components/sections/mentorship-page/mentorship-faq";
+import { MentorshipApply } from "@/components/sections/mentorship-page/mentorship-apply";
 
 /* Read per request rather than exported as a constant, so the title and
    description a search result shows can be edited without a deploy. */
 export const generateMetadata = pageMetadata("mentorship");
 
+/*
+  Revalidated, because the copy comes from the admin and the reviews from the
+  database. Saving either revalidates the page; this is the ceiling on
+  staleness if that never lands.
+*/
+export const revalidate = 300;
+
 export default function MentorshipPage() {
   return (
-    <>
-      <Navbar />
+    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+      <SiteHeader />
       <main className="flex-1">
-        <MentorshipProgramHero />
-        <MentorshipAudience />
-        <MentorshipPath />
+        <MentorshipHero />
+        <AudiencePath />
         <MentorshipFormat />
-        <MentorshipTestimonials />
+        <MentorshipTeam />
+        <MentorshipReviews />
         <MentorshipFaq />
-        <Cta />
+        {/* The page's own ending rather than the shared contact band: it is
+            the call to apply, and it runs into the footer below. */}
+        <MentorshipApply />
       </main>
-      <Footer />
-    </>
+      <SiteFooter />
+    </div>
   );
 }

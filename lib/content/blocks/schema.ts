@@ -638,18 +638,38 @@ export const BLOCKS: Block[] = [
         { key: "mentorship-audience", label: "Who it is for" },
         { key: "mentorship-path", label: "The path" },
         { key: "mentorship-format", label: "What you get" },
+        { key: "mentorship-team", label: "Who reviews your code" },
         { key: "mentorship-testimonials", label: "From mentees" },
         { key: "mentorship-faq", label: "Questions" },
+        {
+          key: "mentorship-apply",
+          label: "Closing call to apply",
+          hint: "The page's last section. Mark the words to light up with *asterisks*.",
+        },
       ]),
       {
         kind: "list",
         name: "audiences",
         label: "Who it is for",
         itemNoun: "audience",
-        max: 6,
+        max: 4,
         fields: [
           { name: "title", label: "Title", kind: "text", required: true, maxLength: 120 },
           DESCRIPTION,
+          {
+            name: "startsAt",
+            label: "Usually starts at",
+            kind: "text",
+            maxLength: 60,
+            hint: "The name of a stage under The path, exactly as written there. Picking this audience on the page marks that stage. Left blank, or not matching a stage, it points at the first one.",
+          },
+          {
+            name: "short",
+            label: "Short name",
+            kind: "text",
+            maxLength: 20,
+            hint: "For the marker on the path: \"Juniors start here\". Left blank, the marker just says \"You start here\".",
+          },
         ],
       },
       {
@@ -687,6 +707,46 @@ export const BLOCKS: Block[] = [
         fields: [
           { name: "title", label: "Title", kind: "text", required: true, maxLength: 120 },
           DESCRIPTION,
+        ],
+      },
+      {
+        kind: "list",
+        name: "teamPrinciples",
+        label: "Who reviews your code",
+        description: "How the team reviews, beside the specialties. Three reads best.",
+        itemNoun: "principle",
+        max: 4,
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 80 },
+          { ...DESCRIPTION, maxLength: 240 },
+        ],
+      },
+      {
+        kind: "strings",
+        name: "specialties",
+        label: "Specialties",
+        description:
+          "Arranged around \"You\" in the team section, lit one at a time. Between three and six fit the circle.",
+        max: 6,
+        placeholder: "Backend & APIs",
+      },
+      {
+        kind: "list",
+        name: "applySteps",
+        label: "What happens after applying",
+        description: "The steps under the closing call to apply, in order.",
+        itemNoun: "step",
+        max: 5,
+        fields: [
+          { name: "title", label: "Step", kind: "text", required: true, maxLength: 40 },
+          {
+            name: "when",
+            label: "When",
+            kind: "text",
+            maxLength: 30,
+            hint: "A short time label, such as \"After the call\". Only promise what actually happens.",
+          },
+          { ...DESCRIPTION, maxLength: 240 },
         ],
       },
       {
