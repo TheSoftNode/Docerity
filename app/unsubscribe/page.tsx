@@ -80,7 +80,7 @@ export default async function UnsubscribePage({
       <SiteHeader />
       <main className="flex-1">
         <section className="relative -mt-[76px] bg-[var(--ld-paper)] pt-[128px] pb-[clamp(64px,8vw,112px)] text-[var(--ld-ink)]">
-          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+          <div className="doc-shell">
             <div className="grid items-center gap-[clamp(28px,4vw,64px)] rounded-[32px] bg-[var(--ld-ink)] p-[clamp(24px,4vw,56px)] text-[var(--ld-paper)] lg:grid-cols-2">
               <div>
                 <p className="mb-4 font-mono text-xs tracking-[0.1em] text-[var(--ld-tint)] uppercase">Unsubscribe</p>

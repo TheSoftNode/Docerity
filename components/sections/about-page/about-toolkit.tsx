@@ -20,10 +20,9 @@ function AboutToolkit({ heading, groups, tools }: { heading: SectionHeading; gro
 
   return (
     <section id="toolkit" aria-labelledby="toolkit-title" className="scroll-mt-24 bg-[#eef1f8] text-[var(--ld-ink)]">
-      <div className="mx-auto grid max-w-[1240px] items-center gap-[clamp(32px,5vw,80px)] px-4 py-[clamp(64px,8vw,112px)] sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:px-8">
+      <div className="doc-shell grid items-center gap-[clamp(32px,5vw,80px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
         <div>
           <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-            <span className="rounded-full bg-[#dfe6fb] px-2.5 py-1 text-[var(--ld-deep)]">Stack</span>
             {heading.eyebrow}
           </p>
           <h2 id="toolkit-title" className="ld-display max-w-[12ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">

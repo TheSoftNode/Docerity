@@ -46,7 +46,7 @@ function ExplorerTop({
   return (
     <section className="relative -mt-[76px] bg-[#eef1f8] pt-[104px] text-[var(--ld-ink)]">
       <div className="bg-[var(--ld-ink)] text-[var(--ld-paper)]">
-        <div className="mx-auto grid max-w-[1240px] items-center gap-[18px] px-4 py-4 sm:px-6 md:grid-cols-[auto_minmax(0,1fr)_auto] lg:px-8">
+        <div className="doc-shell grid items-center gap-[18px] py-4 md:grid-cols-[auto_minmax(0,1fr)_auto]">
           <span className="inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.04em]">
             <span aria-hidden="true" className="grid size-[30px] place-items-center rounded-[9px] bg-[var(--ld-deep)] text-sm">
               ⛓
@@ -82,9 +82,8 @@ function ExplorerTop({
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1240px] px-4 pt-[clamp(36px,5vw,64px)] pb-[clamp(40px,5vw,64px)] sm:px-6 lg:px-8">
+      <div className="doc-shell pt-[clamp(36px,5vw,64px)] pb-[clamp(40px,5vw,64px)]">
         <p className="ld-up mb-[18px] flex flex-wrap items-center gap-2.5 font-mono text-xs tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-          <span className="rounded-full bg-[#dfe6fb] px-2.5 py-1 text-[var(--ld-deep)]">Overview</span>
           {heading.eyebrow}
         </p>
         <div className="grid items-end gap-[clamp(28px,4vw,64px)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">

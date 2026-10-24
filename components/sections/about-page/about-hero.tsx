@@ -24,7 +24,7 @@ function AboutHero({
 
   return (
     <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(900px_520px_at_92%_30%,rgb(255_122_89/0.07),transparent_60%),radial-gradient(1200px_700px_at_50%_120%,rgb(28_58_140/0.55),transparent_60%),var(--ld-ink)] pt-[128px] text-[var(--ld-paper)]">
-      <div className="relative mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+      <div className="doc-shell relative">
         <BranchGraph lanes={lanes} initLabel={initLabel(education)}>
           <p className="ld-up ld-delay-2 mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
             {heading.eyebrow} · HEAD → main

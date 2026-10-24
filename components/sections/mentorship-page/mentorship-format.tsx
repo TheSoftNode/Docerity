@@ -144,8 +144,7 @@ async function MentorshipFormat() {
               >
                 {pictures[index] ? <div aria-hidden="true">{pictures[index]}</div> : null}
                 <div className="px-7 pt-6 pb-[30px]">
-                  <p className={cn("font-mono text-xs", look.num)}>{pad(index + 1)}</p>
-                  <h3 className="ld-display mt-2 text-[28px] font-bold tracking-[-0.02em]">{item.title}</h3>
+                  <h3 className="ld-display text-[28px] font-bold tracking-[-0.02em]">{item.title}</h3>
                   <p className={cn("mt-2 text-base leading-normal", look.desc)}>{item.description}</p>
                 </div>
               </li>

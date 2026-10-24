@@ -33,13 +33,12 @@ async function ProjectsCapabilities() {
         </div>
 
         <ol className="grid border-t border-[rgb(var(--ld-tint-rgb)/0.2)] sm:grid-cols-2 lg:grid-cols-4">
-          {(capabilities ?? []).map((capability, index) => (
+          {(capabilities ?? []).map((capability) => (
             <li
               key={capability.title}
               className="border-b border-[rgb(var(--ld-tint-rgb)/0.14)] py-7 sm:px-6 sm:odd:pl-0 lg:border-r lg:border-b-0 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0"
             >
               <span className="flex items-center justify-between">
-                <span className="font-mono text-xs text-[var(--ld-accent)]">{String(index + 1).padStart(2, "0")}</span>
                 <ContentIcon name={capability.iconName} className="size-5 text-[var(--ld-muted-3)]" strokeWidth={1.75} />
               </span>
               <h3 className="ld-display mt-10 text-2xl font-bold tracking-[-0.02em]">{capability.title}</h3>

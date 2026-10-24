@@ -88,9 +88,8 @@ function CaptionReel({
       onPointerLeave={() => setHeld(false)}
       className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(1000px_520px_at_15%_0%,rgb(28_58_140/0.75),transparent_62%),radial-gradient(800px_500px_at_100%_100%,rgb(28_58_140/0.35),transparent_60%),var(--ld-ink)] pt-[136px] text-[var(--ld-paper)]"
     >
-      <div className="relative mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+      <div className="doc-shell relative">
         <p className="ld-up inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-          <span aria-hidden="true" className={cn("ld-live size-2 rounded-full", has ? "bg-[#54D696]" : "bg-[var(--ld-muted-3)]")} />
           {heading.eyebrow}
         </p>
         <h1

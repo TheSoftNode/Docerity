@@ -1,4 +1,4 @@
-import { pad, resultFigure } from "@/components/sections/project-detail/project-detail-content";
+import { resultFigure } from "@/components/sections/project-detail/project-detail-content";
 
 /**
  * What changed: each result with the figure it leads with pulled out large.
@@ -29,14 +29,13 @@ function ProjectOutcomes({ results }: { results: readonly string[] }) {
         </div>
 
         <ol className="mt-11 grid border-t-2 border-[var(--ld-ink)] lg:grid-cols-3">
-          {results.map((result, index) => {
+          {results.map((result) => {
             const figure = resultFigure(result);
             return (
               <li
                 key={result}
                 className="border-b border-[var(--ld-line)] py-7 lg:mr-7 lg:border-r lg:border-b-0 lg:pr-7 lg:last:mr-0 lg:last:border-r-0"
               >
-                <span className="font-mono text-xs text-[var(--ld-text-muted)]">{pad(index + 1)}</span>
                 {figure ? (
                   <span
                     aria-hidden="true"

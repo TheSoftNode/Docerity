@@ -23,10 +23,9 @@ function ContributeCraft({
 }) {
   return (
     <section aria-labelledby="craft-title" className="bg-white text-[var(--ld-ink)]">
-      <div className="mx-auto grid max-w-[1240px] items-start gap-[clamp(32px,5vw,88px)] px-4 py-[clamp(64px,8vw,112px)] sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:px-8">
+      <div className="doc-shell grid items-start gap-[clamp(32px,5vw,88px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <div>
           <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-            <span className="rounded-full bg-[#dfe6fb] px-2.5 py-1 text-[var(--ld-deep)]">The craft</span>
             {heading.eyebrow}
           </p>
           <h2 id="craft-title" className="ld-display max-w-[13ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">

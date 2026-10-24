@@ -175,7 +175,7 @@ function AudiencePathView({
                         on ? tone.num : "text-[var(--ld-text-muted)]"
                       )}
                     >
-                      {pad(index + 1)}
+                      <span />
                       <ArrowUpRightIcon
                         aria-hidden="true"
                         className={cn("size-[18px] transition-transform duration-500", on && "rotate-45")}
@@ -223,14 +223,6 @@ function AudiencePathView({
                             on ? tone.pin : "bg-[rgb(var(--ld-ink-rgb)/0.06)]"
                           )}
                         >
-                          <span
-                            className={cn(
-                              "grid size-[26px] place-items-center rounded-full font-mono text-[11px]",
-                              on ? tone.pinDot : "bg-[var(--ld-ink)] text-[var(--ld-paper)]"
-                            )}
-                          >
-                            {pad(startStageIndex(item.startsAt, stages) + 1)}
-                          </span>
                           Usually starts at {starts.label}
                           <ArrowDownIcon aria-hidden="true" className="size-3.5" />
                         </span>

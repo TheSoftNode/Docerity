@@ -144,9 +144,9 @@ function ReviewSheet({
       aria-labelledby="contribute-title"
       onPointerEnter={() => setHeld(true)}
       onPointerLeave={() => setHeld(false)}
-      className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(1200px_600px_at_50%_0%,rgb(28_58_140/0.7),transparent_65%),var(--ld-ink)] px-3 pt-28 sm:px-6 lg:px-10"
+      className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(1200px_600px_at_50%_0%,rgb(28_58_140/0.7),transparent_65%),var(--ld-ink)] pt-28"
     >
-      <div className="mx-auto max-w-[1360px]">
+      <div className="doc-shell">
         {/* The editor's toolbar. */}
         <div className="ld-up flex flex-wrap items-center justify-between gap-x-[18px] gap-y-2.5 rounded-t-[18px] border border-b-0 border-[rgb(var(--ld-tint-rgb)/0.14)] bg-[#111d45] py-2.5 pr-3.5 pl-[18px] font-mono text-[12.5px] text-[var(--ld-muted-3)]">
           <span className="inline-flex items-center gap-3">
@@ -205,7 +205,6 @@ function ReviewSheet({
         <div className="ld-up ld-delay-1 grid rounded-b bg-white text-[var(--ld-ink)] shadow-[0_60px_120px_-60px_rgb(0_0_0/0.9)] lg:grid-cols-[minmax(0,1fr)_300px]">
           <div className="px-[clamp(22px,5vw,80px)] pt-[clamp(36px,5vw,72px)] pb-[clamp(32px,4vw,56px)] lg:border-r lg:border-[#eef1f8]">
             <p className="mb-5 inline-flex flex-wrap items-center gap-2.5 font-mono text-xs tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-              <span className="rounded-full bg-[var(--ld-ink)] px-2.5 py-[3px] text-[10.5px] text-[var(--ld-paper)]">By invitation</span>
               {eyebrow}
             </p>
             <h1 id="contribute-title" className="ld-display max-w-[16ch] text-[clamp(44px,6.6vw,104px)] leading-[0.94] font-extrabold tracking-[-0.055em]">

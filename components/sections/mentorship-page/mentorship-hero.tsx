@@ -38,8 +38,7 @@ async function MentorshipHero() {
       <div className="doc-shell relative">
         <div className="grid items-end gap-[clamp(28px,4vw,72px)] lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
           <div>
-            <p className="ld-up mb-6 inline-flex items-center gap-2.5 rounded-full border border-[rgb(var(--ld-tint-rgb)/0.25)] bg-[rgb(var(--ld-tint-rgb)/0.06)] py-1.5 pr-4 pl-3 text-sm text-[var(--ld-muted)]">
-              <span aria-hidden="true" className="ld-live size-2 rounded-full bg-[#54D696]" />
+            <p className="ld-up mb-6 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
               {heading.eyebrow}
             </p>
             <h1 className="ld-display ld-up ld-delay-1 text-[clamp(52px,8vw,128px)] leading-[0.88] font-extrabold tracking-[-0.055em] text-balance">

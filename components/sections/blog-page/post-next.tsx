@@ -33,7 +33,7 @@ function PostNext({ next, related, relatedLabel }: { next?: BlogElement; related
 
   return (
     <section aria-label="Keep reading" className="bg-[#eef1fa] text-[var(--ld-ink)]">
-      <div className="mx-auto max-w-[1160px] px-4 py-[clamp(56px,7vw,96px)] sm:px-6 lg:px-0">
+      <div className="doc-shell py-[clamp(56px,7vw,96px)]">
         {next ? (
           <Link
             href={`/blog/${next.slug}`}

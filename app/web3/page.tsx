@@ -51,10 +51,9 @@ export default async function Web3Page() {
           {contracts.length > 0 ? <ExplorerContracts heading={projectsHeading} contracts={contracts} networks={networks} /> : null}
 
           <section aria-labelledby="methods-title" className="bg-white text-[var(--ld-ink)]">
-            <div className="mx-auto grid max-w-[1240px] items-start gap-[clamp(32px,5vw,80px)] px-4 py-[clamp(64px,8vw,104px)] sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:px-8">
+            <div className="doc-shell grid items-start gap-[clamp(32px,5vw,80px)] py-[clamp(64px,8vw,104px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
               <div className="lg:sticky lg:top-28">
                 <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-                  <span className="rounded-full bg-[#dfe6fb] px-2.5 py-1 text-[var(--ld-deep)]">Write contract</span>
                   {capabilitiesHeading.eyebrow}
                 </p>
                 <h2 id="methods-title" className="ld-display max-w-[13ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
@@ -82,7 +81,7 @@ export default async function Web3Page() {
 
           {networks.length > 0 ? (
             <section aria-labelledby="networks-title" className="bg-[#eef1f8] text-[var(--ld-ink)]">
-              <div className="mx-auto max-w-[1240px] px-4 py-[clamp(64px,8vw,104px)] sm:px-6 lg:px-8">
+              <div className="doc-shell py-[clamp(64px,8vw,104px)]">
                 <div className="flex flex-wrap items-end justify-between gap-[22px]">
                   <div>
                     <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{ecosystemsHeading.eyebrow}</p>

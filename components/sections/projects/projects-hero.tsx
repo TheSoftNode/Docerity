@@ -3,7 +3,6 @@ import type { Project } from "@/components/sections/work/work-data";
 import { CommandBar } from "@/components/sections/projects/command-bar";
 import {
   groupCounts,
-  statusCounts,
   wallColumns,
 } from "@/components/sections/projects/projects-content";
 import { splitPhrase } from "@/components/sections/home/hero-content";
@@ -32,7 +31,6 @@ function statusDot(status: Project["status"]) {
  */
 function ProjectsHero({ projects, heading }: { projects: Project[]; heading: SectionHeading }) {
   const columns = wallColumns(projects);
-  const status = statusCounts(projects);
   /* The title's last word carries the accent, as on the homepage. */
   const title = splitPhrase(heading.title);
 
@@ -84,10 +82,6 @@ function ProjectsHero({ projects, heading }: { projects: Project[]; heading: Sec
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-[var(--ld-ink)] to-transparent" />
 
       <div className="doc-shell relative flex h-full flex-col items-center justify-center pt-28 pb-10 text-center">
-        <p className="ld-fade mb-6 inline-flex items-center gap-2.5 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.2)] bg-[rgb(var(--ld-ink-rgb)/0.6)] py-1.5 pr-4 pl-3 text-sm text-[var(--ld-muted)] backdrop-blur">
-          <span aria-hidden="true" className="ld-live size-2 rounded-full bg-[#54D696]" />
-          {projects.length} systems · {status.live} live right now
-        </p>
         <h1 className="ld-display ld-up ld-delay-1 max-w-[15ch] text-[clamp(44px,7vw,108px)] leading-[0.94] font-extrabold tracking-[-0.05em] text-balance">
           {title.lead} <span className="text-[var(--ld-accent)]">{title.accent}</span>
         </h1>

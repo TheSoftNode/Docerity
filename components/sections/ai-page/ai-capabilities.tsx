@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { CapabilityView } from "@/lib/content/blocks/views";
-import { pad } from "@/components/sections/blog-page/blog-content";
 
 /*
   Each capability's small working picture, by position: tiers taking their
@@ -113,7 +112,7 @@ async function AiCapabilities() {
 
   return (
     <section aria-labelledby="ai-capabilities-title" className="relative overflow-hidden bg-[linear-gradient(160deg,#0b1844,#13296b)] text-[var(--ld-paper)]">
-      <div className="mx-auto max-w-[1240px] px-4 py-[clamp(64px,8vw,112px)] sm:px-6 lg:px-8">
+      <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="mb-3.5 flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
@@ -135,8 +134,7 @@ async function AiCapabilities() {
             >
               {PICTURES[index] ? <div aria-hidden="true">{PICTURES[index]}</div> : null}
               <div className="px-6 pt-1 pb-[26px]">
-                <p className="font-mono text-xs text-[var(--ld-tint)]">{pad(index + 1)}</p>
-                <h3 className="ld-display mt-2 text-2xl font-bold tracking-[-0.02em]">{capability.title}</h3>
+                <h3 className="ld-display text-2xl font-bold tracking-[-0.02em]">{capability.title}</h3>
                 <p className="mt-2 text-[15.5px] leading-normal text-[var(--ld-muted)]">{capability.description}</p>
               </div>
             </li>
