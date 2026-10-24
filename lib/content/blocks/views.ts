@@ -106,6 +106,8 @@ export type PairView = {
  */
 export type AboutContent = {
   founder: FounderView;
+  /** The full story; when its body is empty the short version is shown instead. */
+  fullStory?: { title: string; body: string };
   story: string[];
   facts: FactView[];
   experience: ExperienceView[];

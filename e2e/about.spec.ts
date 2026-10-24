@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 
 import { heading } from "./copy";
 import { DEFAULTS } from "@/lib/content/blocks/defaults";
+import { STORY_OPENING, storyBlocks } from "@/components/sections/about-page/about-content";
 import type { AboutContent } from "@/lib/content/blocks/views";
 
 const about = DEFAULTS.about as unknown as AboutContent;
@@ -56,10 +57,23 @@ test.describe("About page", () => {
     await expect(shipped(page)).toHaveText(/^\d+$/);
   });
 
-  test("the story is the founder's own paragraphs", async ({ page }) => {
+  test("the story opens on its first paragraphs and reads on in full", async ({ page }) => {
     await page.goto("/about");
     const story = page.getByRole("article", { name: "The story, in the founder's words" });
-    await expect(story.getByRole("listitem")).toHaveCount(about.story.length);
+    const blocks = storyBlocks(about.fullStory?.body ?? "");
+    const paragraphs = blocks.filter((block) => block.kind === "paragraph");
+    await expect(story.getByRole("heading", { name: about.fullStory?.title })).toBeVisible();
+    await expect(story.getByText(about.founder.name)).toBeVisible();
+    await expect(story.locator("p")).toHaveCount(STORY_OPENING);
+
+    const more = story.getByRole("button", { name: "Read the full story" });
+    await expect(more).toHaveAttribute("aria-expanded", "false");
+    await more.click();
+    await expect(story.locator("p")).toHaveCount(paragraphs.length);
+    await expect(story.getByText(paragraphs[paragraphs.length - 1].text.slice(0, 40))).toBeVisible();
+
+    await story.getByRole("button", { name: "Back to the top" }).click();
+    await expect(story.locator("p")).toHaveCount(STORY_OPENING);
     await expect(page.getByText(`"${about.founder.based}"`)).toBeVisible();
   });
 

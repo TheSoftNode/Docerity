@@ -8,6 +8,7 @@ import {
   experience,
   facts,
   founder,
+  fullStory,
   skillGroups,
   story,
   tools,
@@ -341,6 +342,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       portrait: "/about/headshot.webp",
     },
     story: [...story],
+    fullStory: { ...fullStory },
     facts: facts
       /* The shipped-project count is counted from the work section rather than
          stored, so it is not offered for editing and not seeded here. */
