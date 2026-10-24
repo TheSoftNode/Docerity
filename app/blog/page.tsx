@@ -5,7 +5,7 @@ import { toArticleView, toExplainerView } from "@/lib/content/entry-view";
 
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { BlogTable } from "@/components/sections/blog-page/blog-table";
+import { BlogHero } from "@/components/sections/blog-page/blog-hero";
 import { BlogLatest } from "@/components/sections/blog-page/blog-latest";
 import { BlogGlossary } from "@/components/sections/blog-page/blog-glossary";
 import { BlogWrite } from "@/components/sections/blog-page/blog-write";
@@ -33,7 +33,7 @@ export default async function BlogPage() {
     <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
-        <BlogTable elements={elements} heading={heading} />
+        <BlogHero elements={elements} heading={heading} />
         <BlogLatest element={elements.at(-1)} />
         <BlogGlossary elements={elements} />
         <BlogWrite />

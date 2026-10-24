@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Blog index", () => {
-  test("renders the table of explainers with no console errors", async ({ page }) => {
+  test("renders the hero with no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (msg) => {
       if (msg.type() === "error") errors.push(msg.text());
@@ -13,25 +13,33 @@ test.describe("Blog index", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: "Complex ideas, explained through things you already know." })
     ).toBeVisible();
-    /* Every piece is an element in the table. */
-    await expect(page.getByRole("button", { name: /^Caching: A sticky note on your monitor/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Why I default to boring technology" })).toBeVisible();
+    /* Each explainer can be picked under the word; articles have no analogy to melt into. */
+    const explainers = page.getByRole("group", { name: "Explainers" });
+    await expect(explainers.getByRole("button", { name: "Caching" })).toHaveAttribute("aria-pressed", "true");
+    await expect(explainers.getByRole("button", { name: "Why I default to boring technology" })).toHaveCount(0);
 
     expect(errors).toEqual([]);
   });
 
-  test("picking an element fills the reading panel", async ({ page }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
+  test("picking an explainer shows its pair and links to it", async ({ page }) => {
     await page.goto("/blog");
 
-    const element = page.getByRole("button", { name: /^Concurrency:/ });
-    await element.click();
-    await expect(element).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByRole("heading", { level: 2, name: /Multiple chefs sharing one kitchen/ })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Read · .*Multiple chefs sharing one kitchen/ })).toHaveAttribute(
-      "href",
-      "/blog/concurrency"
-    );
+    const concurrency = page.getByRole("group", { name: "Explainers" }).getByRole("button", { name: "Concurrency" });
+    await concurrency.click();
+    await expect(concurrency).toHaveAttribute("aria-pressed", "true");
+    /* The plain line says what the melting word shows. */
+    await expect(page.getByText(/Concurrency works like multiple chefs sharing one kitchen/i)).toBeAttached();
+    await expect(page.getByRole("link", { name: /Read about concurrency/ })).toHaveAttribute("href", "/blog/concurrency");
+  });
+
+  test("under reduced motion the word holds still", async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await context.newPage();
+    await page.goto("/blog");
+    const caching = page.getByRole("group", { name: "Explainers" }).getByRole("button", { name: "Caching" });
+    await page.waitForTimeout(3500);
+    await expect(caching).toHaveAttribute("aria-pressed", "true");
+    await context.close();
   });
 
   test("the glossary narrows by kind and by topic", async ({ page }) => {
