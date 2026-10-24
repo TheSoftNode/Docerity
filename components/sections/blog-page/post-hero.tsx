@@ -23,7 +23,7 @@ function PostHero({ element, author }: { element: BlogElement; author?: PostByli
         aria-hidden="true"
         className="absolute top-[10%] -left-[10%] aspect-square w-[min(70vw,900px)] rounded-full bg-[radial-gradient(circle,rgb(var(--ld-tint-rgb)/0.45),transparent_65%)]"
       />
-      <div className="relative mx-auto max-w-[1160px] px-4 sm:px-6 lg:px-0">
+      <div className="doc-shell relative">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2.5 border-b-2 border-[var(--ld-ink)] pb-3.5 font-mono text-[11.5px] tracking-[0.1em] uppercase">
           <Link href="/blog" className="text-[var(--ld-ink)] transition-colors hover:text-[var(--ld-deep)]">
             ← The table of explainers

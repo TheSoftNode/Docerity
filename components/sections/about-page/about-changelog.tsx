@@ -32,7 +32,7 @@ function AboutChangelog({ heading, experience }: { heading: SectionHeading; expe
 
   return (
     <section id="changelog" aria-labelledby="changelog-title" className="scroll-mt-24 bg-white text-[var(--ld-ink)]">
-      <div className="mx-auto max-w-[1240px] px-4 py-[clamp(64px,8vw,112px)] sm:px-6 lg:px-8">
+      <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <div className="flex flex-wrap items-end justify-between gap-[22px]">
           <div>
             <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">

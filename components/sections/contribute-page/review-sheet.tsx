@@ -144,9 +144,9 @@ function ReviewSheet({
       aria-labelledby="contribute-title"
       onPointerEnter={() => setHeld(true)}
       onPointerLeave={() => setHeld(false)}
-      className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(1200px_600px_at_50%_0%,rgb(28_58_140/0.7),transparent_65%),var(--ld-ink)] px-3 pt-28 sm:px-6 lg:px-10"
+      className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(1200px_600px_at_50%_0%,rgb(28_58_140/0.7),transparent_65%),var(--ld-ink)] pt-28"
     >
-      <div className="mx-auto max-w-[1360px]">
+      <div className="doc-shell">
         {/* The editor's toolbar. */}
         <div className="ld-up flex flex-wrap items-center justify-between gap-x-[18px] gap-y-2.5 rounded-t-[18px] border border-b-0 border-[rgb(var(--ld-tint-rgb)/0.14)] bg-[#111d45] py-2.5 pr-3.5 pl-[18px] font-mono text-[12.5px] text-[var(--ld-muted-3)]">
           <span className="inline-flex items-center gap-3">

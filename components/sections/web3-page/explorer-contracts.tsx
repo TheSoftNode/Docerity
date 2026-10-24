@@ -62,7 +62,7 @@ function ExplorerContracts({
   return (
     <>
       <section id="contracts" aria-labelledby="contracts-title" className="scroll-mt-24 bg-[#eef1f8] text-[var(--ld-ink)]">
-        <div className="mx-auto max-w-[1240px] px-4 pb-[clamp(40px,5vw,56px)] sm:px-6 lg:px-8">
+        <div className="doc-shell pb-[clamp(40px,5vw,56px)]">
           <div className="mb-[22px] flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="mb-2.5 font-mono text-xs tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{heading.eyebrow}</p>
@@ -169,7 +169,7 @@ function ExplorerContracts({
       </section>
 
       <section aria-labelledby="contract-title" className="bg-[#eef1f8] text-[var(--ld-ink)]">
-        <div className="mx-auto max-w-[1240px] px-4 pb-[clamp(64px,8vw,104px)] sm:px-6 lg:px-8">
+        <div className="doc-shell pb-[clamp(64px,8vw,104px)]">
           <article className="overflow-hidden rounded-[26px] border border-[var(--ld-line)] bg-white">
             <header key={open.slug} className="ld-pop flex flex-wrap items-center justify-between gap-4 bg-[var(--ld-ink)] px-[26px] py-[22px] text-[var(--ld-paper)]">
               <span className="min-w-0">

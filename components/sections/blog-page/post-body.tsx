@@ -23,7 +23,7 @@ function PostBody({ entry, url, title }: { entry: BlogEntry; url: string; title:
 
   return (
     <article className="bg-white text-[var(--ld-ink)]">
-      <div className="mx-auto grid max-w-[1160px] gap-[clamp(28px,4vw,64px)] px-4 py-[clamp(56px,7vw,96px)] sm:px-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:px-0">
+      <div className="doc-shell grid gap-[clamp(28px,4vw,64px)] py-[clamp(56px,7vw,96px)] lg:grid-cols-[220px_minmax(0,1fr)]">
         <aside className="lg:sticky lg:top-24 lg:self-start">
           {sections.length > 1 ? (
             <>

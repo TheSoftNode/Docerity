@@ -44,7 +44,7 @@ export default async function NotFound() {
       <SiteHeader />
       <main className="flex-1">
         <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(1000px_560px_at_80%_10%,rgb(28_58_140/0.7),transparent_62%),var(--ld-ink)] pt-[132px] pb-[clamp(64px,7vw,100px)] text-[var(--ld-paper)]">
-          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+          <div className="doc-shell">
             <p className="ld-up inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
               <span className="rounded-full bg-[rgb(255_122_89/0.16)] px-2 py-0.5 text-[#ffb39c]">404</span>
               {copy.eyebrow}

@@ -16,7 +16,7 @@ async function AiSystems() {
 
   return (
     <section id="systems" aria-labelledby="systems-title" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-      <div className="mx-auto grid max-w-[1240px] gap-[clamp(32px,5vw,88px)] px-4 py-[clamp(64px,8vw,112px)] sm:px-6 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:px-8">
+      <div className="doc-shell grid gap-[clamp(32px,5vw,88px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{heading.eyebrow}</p>
           <h2 id="systems-title" className="ld-display max-w-[12ch] text-[clamp(38px,5vw,68px)] leading-[0.95] font-extrabold tracking-[-0.045em]">

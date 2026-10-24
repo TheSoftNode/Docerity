@@ -12,7 +12,7 @@ async function AiHero() {
 
   return (
     <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(ellipse_80%_55%_at_50%_100%,rgb(28_58_140/0.8),transparent_70%),var(--ld-ink)] pt-[124px] pb-[clamp(64px,8vw,104px)] text-[var(--ld-paper)]">
-      <div className="relative mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+      <div className="doc-shell relative">
         <div className="grid items-end gap-[clamp(24px,4vw,64px)] lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
           <div>
             <p className="ld-up mb-[22px] inline-flex items-center gap-2.5 rounded-full border border-[rgb(var(--ld-tint-rgb)/0.25)] bg-[rgb(var(--ld-tint-rgb)/0.06)] py-1.5 pr-4 pl-3 text-sm text-[var(--ld-muted)]">

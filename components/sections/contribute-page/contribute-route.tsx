@@ -43,7 +43,7 @@ function ContributeRoute({
 
   return (
     <section id="route" aria-labelledby="route-title" className="scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]">
-      <div className="mx-auto max-w-[1240px] px-4 py-[clamp(64px,8vw,112px)] sm:px-6 lg:px-8">
+      <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <div className="flex flex-wrap items-end justify-between gap-[22px]">
           <div>
             <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">{heading.eyebrow}</p>
