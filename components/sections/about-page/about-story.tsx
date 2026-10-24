@@ -3,6 +3,9 @@ import type { FounderView } from "@/lib/content/blocks/views";
 import { StoryReader } from "@/components/sections/about-page/story-reader";
 import { readingMinutes, storyBlocks } from "@/components/sections/about-page/about-content";
 
+/** The photo the page shipped with; an empty photo field falls back to it. */
+const HEADSHOT = "/about/headshot.webp";
+
 /** The files along the editor's tab bar. Only the README is this section; the
     other two are the sections below it, so the tabs go somewhere. */
 const TABS = [
@@ -93,7 +96,9 @@ function AboutStory({
             )}
           </nav>
           <div className="px-[clamp(20px,3vw,44px)] pt-[30px] pb-9">
-            <StoryReader title={written ? fullStory?.title ?? "" : "Where Docerity comes from"} blocks={blocks} minutes={readingMinutes(blocks.map((block) => block.text).join(" "))} />
+            <StoryReader
+              byline={written ? { name: founder.name, role: founder.role.split("·")[0].trim(), portrait: founder.portrait || HEADSHOT } : undefined}
+              title={written ? fullStory?.title ?? "" : "Where Docerity comes from"} blocks={blocks} minutes={readingMinutes(blocks.map((block) => block.text).join(" "))} />
           </div>
         </article>
       </div>

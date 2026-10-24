@@ -541,7 +541,7 @@ export const BLOCKS: Block[] = [
             name: "portrait",
             label: "Photo",
             kind: "image",
-            hint: "Not shown on the current About page, which is about the studio rather than a headshot. Kept so it can come back without a re-upload.",
+            hint: "Shown small beside your name at the top of the story. The page is about the studio, so this is the only place it appears.",
           },
         ],
       },

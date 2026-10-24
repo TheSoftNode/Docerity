@@ -63,6 +63,7 @@ test.describe("About page", () => {
     const blocks = storyBlocks(about.fullStory?.body ?? "");
     const paragraphs = blocks.filter((block) => block.kind === "paragraph");
     await expect(story.getByRole("heading", { name: about.fullStory?.title })).toBeVisible();
+    await expect(story.getByText(about.founder.name)).toBeVisible();
     await expect(story.locator("p")).toHaveCount(STORY_OPENING);
 
     const more = story.getByRole("button", { name: "Read the full story" });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
+import Image from "next/image";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -26,9 +27,35 @@ function Text({ text }: { text: string }) {
  * The story inside the README: its opening paragraphs, fading out, and a
  * button that opens the rest in place. Opened, the whole story reads on in
  * the same pane, ending on the cursor, with a way back to the top of it.
- * A story no longer than the opening is shown whole, with no button.
+ * A story no longer than the opening is shown whole, with no button. The
+ * byline is the one place the founder's photo appears.
  */
-function StoryReader({ title, blocks, minutes }: { title: string; blocks: StoryBlock[]; minutes: number }) {
+export type StoryByline = { name: string; role: string; portrait: string };
+
+/** Who wrote it, under the title: the photo, the name, the role and how long it takes to read. */
+function Byline({ byline, minutes }: { byline: StoryByline; minutes: number }) {
+  return (
+    <p className="mb-[26px] flex items-center gap-3 border-b border-[#eef1f8] pb-[22px]">
+      {byline.portrait ? (
+        <Image
+          src={byline.portrait}
+          alt=""
+          width={34}
+          height={34}
+          className="size-[34px] shrink-0 rounded-full object-cover shadow-[0_0_0_2px_#fff,0_0_0_3px_var(--ld-line)]"
+        />
+      ) : null}
+      <span className="flex min-w-0 flex-col leading-[1.3]">
+        <span className="text-[14.5px] font-semibold text-[var(--ld-ink)]">{byline.name}</span>
+        <span className="mt-0.5 font-mono text-[11.5px] tracking-[0.04em] text-[var(--ld-text-muted)] uppercase">
+          {[byline.role, `${minutes} min read`].filter(Boolean).join(" · ")}
+        </span>
+      </span>
+    </p>
+  );
+}
+
+function StoryReader({ title, blocks, minutes, byline }: { title: string; blocks: StoryBlock[]; minutes: number; byline?: StoryByline }) {
   const id = useId();
   const [open, setOpen] = useState(false);
   const top = useRef<HTMLDivElement>(null);
@@ -44,11 +71,12 @@ function StoryReader({ title, blocks, minutes }: { title: string; blocks: StoryB
   return (
     <div ref={top} className="scroll-mt-28">
       {title ? (
-        <h3 className="mb-[22px] font-mono text-sm font-normal text-[var(--ld-deep)]">
+        <h3 className="mb-[18px] font-mono text-sm font-normal text-[var(--ld-deep)]">
           <span aria-hidden="true"># </span>
           {title}
         </h3>
       ) : null}
+      {byline?.name ? <Byline byline={byline} minutes={minutes} /> : null}
       <div id={`${id}-story`} className="relative">
         {shown.map((block, index) => {
           const last = index === shown.length - 1 && (open || !more);
@@ -81,7 +109,7 @@ function StoryReader({ title, blocks, minutes }: { title: string; blocks: StoryB
               {open ? <ArrowUpIcon aria-hidden="true" className="size-3.5" /> : <ArrowDownIcon aria-hidden="true" className="size-3.5" />}
             </span>
           </button>
-          {open ? null : <span className="font-mono text-xs text-[var(--ld-text-muted)] uppercase">{minutes} min read</span>}
+          {open || byline?.name ? null : <span className="font-mono text-xs text-[var(--ld-text-muted)] uppercase">{minutes} min read</span>}
         </div>
       ) : null}
     </div>
