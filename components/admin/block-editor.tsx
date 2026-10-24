@@ -521,7 +521,7 @@ function FieldEditor({
           id={idPrefix}
           value={(value as string) ?? ""}
           onChange={(event) => onChange(event.target.value)}
-          rows={3}
+          rows={field.rows ?? 3}
           placeholder={field.placeholder}
           className="resize-y text-sm"
           aria-label={label ?? field.label}

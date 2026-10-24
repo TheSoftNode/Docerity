@@ -58,7 +58,7 @@ export default async function AboutPage() {
       <SiteHeader />
       <main className="flex-1">
         <AboutHero heading={hero} experience={about.experience} education={about.education} facts={facts} />
-        <AboutStory heading={story} story={about.story} founder={about.founder} />
+        <AboutStory heading={story} story={about.story} fullStory={about.fullStory} founder={about.founder} />
         <AboutChangelog heading={experience} experience={about.experience} />
         <AboutToolkit heading={toolkit} groups={about.skillGroups} tools={about.tools} />
         <AboutCredentials heading={credentials} certifications={about.certifications} education={about.education} />

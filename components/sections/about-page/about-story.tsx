@@ -1,5 +1,7 @@
 import type { SectionHeading } from "@/lib/content/blocks/source";
 import type { FounderView } from "@/lib/content/blocks/views";
+import { StoryReader } from "@/components/sections/about-page/story-reader";
+import { readingMinutes, storyBlocks } from "@/components/sections/about-page/about-content";
 
 /** The files along the editor's tab bar. Only the README is this section; the
     other two are the sections below it, so the tabs go somewhere. */
@@ -10,12 +12,26 @@ const TABS = [
 ] as const;
 
 /**
- * The story, as the studio's README: the founder's paragraphs in an editor
- * pane, beside a `docerity.json` that says who, where and when. The cursor
- * at the end is the one touch of accent.
+ * The story, as the studio's README: the founder's story in an editor pane,
+ * opening on its first paragraphs with the rest a click away, beside a
+ * `docerity.json` that says who, where and when. The cursor at the end is
+ * the one touch of accent. With no full story written, the short version
+ * is shown whole.
  */
-function AboutStory({ heading, story, founder }: { heading: SectionHeading; story: string[]; founder: FounderView }) {
-  if (story.length === 0) return null;
+function AboutStory({
+  heading,
+  story,
+  fullStory,
+  founder,
+}: {
+  heading: SectionHeading;
+  story: string[];
+  fullStory?: { title: string; body: string };
+  founder: FounderView;
+}) {
+  const written = fullStory?.body.trim() ?? "";
+  const blocks = written ? storyBlocks(written) : story.map((text) => ({ kind: "paragraph" as const, text }));
+  if (blocks.length === 0) return null;
   const manifest = [
     ["founder", founder.name],
     ["role", founder.role],
@@ -77,24 +93,7 @@ function AboutStory({ heading, story, founder }: { heading: SectionHeading; stor
             )}
           </nav>
           <div className="px-[clamp(20px,3vw,44px)] pt-[30px] pb-9">
-            <p aria-hidden="true" className="mb-[22px] font-mono text-sm text-[var(--ld-deep)]">
-              # Where Docerity comes from
-            </p>
-            <ol>
-              {story.map((paragraph, index) => {
-                const last = index === story.length - 1;
-                return (
-                  <li key={index} className="pb-[26px] last:pb-0">
-                    <p className="text-[clamp(16.5px,1.35vw,19px)] leading-[1.72] text-[var(--ld-text-2)]">
-                      {paragraph}
-                      {last ? (
-                        <span aria-hidden="true" className="ld-blink ml-1 inline-block h-[1.1em] w-[9px] translate-y-[3px] bg-[var(--ld-accent)]" />
-                      ) : null}
-                    </p>
-                  </li>
-                );
-              })}
-            </ol>
+            <StoryReader title={written ? fullStory?.title ?? "" : "Where Docerity comes from"} blocks={blocks} minutes={readingMinutes(blocks.map((block) => block.text).join(" "))} />
           </div>
         </article>
       </div>

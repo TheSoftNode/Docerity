@@ -183,3 +183,52 @@ export function initLabel(education: readonly { qualification: string; period: s
   const short = name.length > 28 ? name.split(/\s+/)[0] : name;
   return `init · ${short}, ${first.years[first.years.length - 1]}`;
 }
+
+/** How many paragraphs of the story show before "Read the full story". */
+export const STORY_OPENING = 3;
+
+export type StoryBlock = { kind: "heading" | "paragraph"; text: string };
+
+/**
+ * The story as blocks: a blank line starts a paragraph, and a line starting
+ * "## " is a subheading. Lines inside a paragraph are joined with a space,
+ * since the admin's text box wraps them anyway.
+ */
+export function storyBlocks(body: string): StoryBlock[] {
+  return body
+    .replace(/\r\n?/g, "\n")
+    .split(/\n\s*\n/)
+    .map((chunk) => chunk.trim())
+    .filter(Boolean)
+    .map((chunk) =>
+      chunk.startsWith("## ")
+        ? { kind: "heading" as const, text: chunk.slice(3).trim() }
+        : { kind: "paragraph" as const, text: chunk.replace(/\s*\n\s*/g, " ") }
+    );
+}
+
+/** A paragraph's text with `backticks` marking code, as runs. */
+export function codeRuns(text: string): { text: string; code: boolean }[] {
+  return text
+    .split(/`([^`]+)`/g)
+    .map((part, index) => ({ text: part, code: index % 2 === 1 }))
+    .filter((run) => run.text !== "");
+}
+
+/** Minutes to read, at about 230 words a minute, never less than one. */
+export function readingMinutes(body: string): number {
+  const words = body.trim() ? body.trim().split(/\s+/).length : 0;
+  return Math.max(1, Math.round(words / 230));
+}
+
+/** The blocks shown before the story is opened: up to the first few paragraphs. */
+export function storyOpening(blocks: readonly StoryBlock[], paragraphs = STORY_OPENING): StoryBlock[] {
+  const opening: StoryBlock[] = [];
+  let seen = 0;
+  for (const block of blocks) {
+    if (seen >= paragraphs) break;
+    opening.push(block);
+    if (block.kind === "paragraph") seen += 1;
+  }
+  return opening;
+}

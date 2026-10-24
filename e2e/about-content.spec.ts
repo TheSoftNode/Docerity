@@ -2,6 +2,8 @@ import { test, expect } from "@playwright/test";
 
 import {
   GRAPH,
+  STORY_OPENING,
+  codeRuns,
   commitId,
   filterCounts,
   initLabel,
@@ -9,7 +11,10 @@ import {
   lanesFor,
   matchesFilter,
   notesLabel,
+  readingMinutes,
   slugOf,
+  storyBlocks,
+  storyOpening,
   timeScale,
   yearsIn,
 } from "@/components/sections/about-page/about-content";
@@ -109,5 +114,45 @@ test.describe("filters", () => {
     expect(matchesFilter("2024 – present", "current")).toBe(true);
     expect(matchesFilter("2024 – present", "earlier")).toBe(false);
     expect(matchesFilter("2020 – 2023", "all")).toBe(true);
+  });
+});
+
+test.describe("the story", () => {
+  test("a blank line starts a paragraph, and ## a subheading", () => {
+    expect(storyBlocks("One.\nStill one.\n\n## A turn\n\nTwo.")).toEqual([
+      { kind: "paragraph", text: "One. Still one." },
+      { kind: "heading", text: "A turn" },
+      { kind: "paragraph", text: "Two." },
+    ]);
+    expect(storyBlocks("\r\n\r\nOne.\r\n\r\n\r\nTwo.\n  \n")).toHaveLength(2);
+    expect(storyBlocks("   ")).toEqual([]);
+  });
+
+  test("backticks mark code inside a paragraph", () => {
+    expect(codeRuns("Ran `pip install` twice")).toEqual([
+      { text: "Ran ", code: false },
+      { text: "pip install", code: true },
+      { text: " twice", code: false },
+    ]);
+    expect(codeRuns("no code")).toEqual([{ text: "no code", code: false }]);
+  });
+
+  test("reading time is about 230 words a minute, never under one", () => {
+    expect(readingMinutes("")).toBe(1);
+    expect(readingMinutes(Array(2300).fill("word").join(" "))).toBe(10);
+  });
+
+  test("the opening stops after the first paragraphs, keeping headings among them", () => {
+    const blocks = storyBlocks("A\n\n## H\n\nB\n\nC\n\nD");
+    expect(storyOpening(blocks).map((block) => block.text)).toEqual(["A", "H", "B", "C"]);
+    expect(storyOpening(blocks, 1)).toHaveLength(1);
+  });
+
+  test("the written story is long enough to open, and has a title", () => {
+    const story = about.fullStory;
+    expect(story?.title).toBeTruthy();
+    const blocks = storyBlocks(story?.body ?? "");
+    expect(blocks.filter((block) => block.kind === "paragraph").length).toBeGreaterThan(STORY_OPENING);
+    expect(readingMinutes(story?.body ?? "")).toBeGreaterThan(5);
   });
 });

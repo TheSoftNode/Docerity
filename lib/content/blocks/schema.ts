@@ -30,6 +30,8 @@ export type Field = {
   /** Rejected when empty. Only for the fields a section cannot render without. */
   required?: boolean;
   maxLength?: number;
+  /** For a textarea: how tall it opens. A long piece of writing wants room. */
+  rows?: number;
 };
 
 /* ── Groups ───────────────────────────────────────────────────────────── */
@@ -544,10 +546,21 @@ export const BLOCKS: Block[] = [
         ],
       },
       {
+        kind: "object",
+        name: "fullStory",
+        label: "The story",
+        description:
+          "Your story in your own words. The page shows its opening paragraphs, and \"Read the full story\" opens the rest. A blank line starts a new paragraph, a line starting \"## \" is a subheading, and `backticks` mark code.",
+        fields: [
+          { name: "title", label: "Title", kind: "text", maxLength: 120 },
+          { name: "body", label: "The story", kind: "textarea", maxLength: 40000, rows: 24 },
+        ],
+      },
+      {
         kind: "strings",
         name: "story",
-        label: "The story",
-        description: "Three paragraphs: where you came from, what you do, why Docerity.",
+        label: "The short version",
+        description: "Only used while the story above is empty: a few paragraphs, shown in full.",
         long: true,
         max: 6,
       },
