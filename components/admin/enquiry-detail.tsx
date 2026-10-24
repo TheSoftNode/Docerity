@@ -30,6 +30,9 @@ export type EnquiryView = {
   projectType: string;
   budget: string;
   timeline: string;
+  /** Mentorship applications only. */
+  stage: string;
+  codeLink: string;
   message: string;
   status: EnquiryStatus;
   receivedAt: string;
@@ -176,6 +179,8 @@ function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
     ["About", enquiry.projectType],
     ["Budget", enquiry.budget],
     ["Timeline", enquiry.timeline],
+    ["Starting point", enquiry.stage],
+    ["Code", enquiry.codeLink],
   ];
 
   return (

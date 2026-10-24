@@ -19,9 +19,14 @@ function parse(colour: string): number[] {
   return nums.slice(0, 3);
 }
 
+/*
+  The shared Button's shape and focus ring. The homepage draws its own
+  links in the palette's style, so these run against /about, whose closing
+  call to action is a shared Button leading to /contact.
+*/
 test.describe("Buttons", () => {
   test("carry the chamfered silhouette", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/about");
     const clip = await page
       .locator("section a[href='/contact']")
       .first()
@@ -42,7 +47,7 @@ test.describe("Buttons", () => {
       so it painted sapphire on sapphire. `clip-path` also erases any outer
       ring, so none of the usual defaults would have worked here.
     */
-    await page.goto("/");
+    await page.goto("/about");
     await page.waitForLoadState("networkidle");
 
     const target = page.locator("section a[href='/contact']").first();

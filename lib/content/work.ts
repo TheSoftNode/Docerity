@@ -123,10 +123,10 @@ function mediaOf(project: LeanProject): ProjectMedia | undefined {
     Width only, no height.
 
     Passing a height asks for `c_fill,g_face`, which crops to exactly 16:10 and
-    hunts for a face while doing it. `work-media.tsx` renders these with
-    `object-contain` precisely because it must not crop: the screenshots range
-    from 1.06 to 2.38 against that frame, and cropping the wide ones cut off the
-    part worth reading. Cloudinary was undoing that decision before the renderer
+    hunts for a face while doing it. `project-media-fill.tsx` decides the crop
+    itself, panning across a wide capture or down a tall one so the part
+    `cover` hides is still seen: the screenshots range from 1.06 to 2.38
+    against that frame, and a fixed crop cut off the part worth reading. Cloudinary was undoing that decision before the renderer
     ever saw the image, so a pasted screenshot arrived already sliced and scaled
     down to fit a box it was then letterboxed inside again.
 

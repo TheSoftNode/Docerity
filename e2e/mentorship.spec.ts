@@ -1,9 +1,13 @@
 import { test, expect } from "@playwright/test";
 
+import { checkpoints, heading } from "./copy";
+
+/*
+  The homepage's mentorship staircase. One step per editable checkpoint, so
+  the stages are read from the defaults rather than named here.
+*/
 test.describe("Mentorship", () => {
-  test("renders the growth path with all milestones and no console errors", async ({
-    page,
-  }) => {
+  test("draws a step for every stage, with no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (msg) => {
       if (msg.type() === "error") errors.push(msg.text());
@@ -11,26 +15,37 @@ test.describe("Mentorship", () => {
     page.on("pageerror", (err) => errors.push(String(err)));
 
     await page.goto("/");
-    await page.locator("#mentorship").scrollIntoViewIfNeeded();
+    const section = page.locator("#mentorship");
+    await section.scrollIntoViewIfNeeded();
 
     await expect(
-      page.getByRole("heading", { name: "A clear path to your next level." })
+      section.getByRole("heading", { name: heading("homepage", "home-mentorship") })
     ).toBeVisible();
-    await expect(page.getByRole("button", { name: "Apply for mentorship" })).toBeVisible();
 
-    // Below `sm`, the SVG growth path is swapped for a compact text list
-    // (its labels are illegible at that scale), so both representations
-    // exist in the DOM; `.and(locator(":visible"))` picks whichever one
-    // is actually shown at the current viewport.
-    for (const label of ["Foundations", "Code Reviews", "System Design", "Leadership"]) {
-      await expect(
-        page
-          .locator("#mentorship")
-          .getByText(label, { exact: true })
-          .and(page.locator(":visible"))
-      ).toBeVisible();
+    const stages = section.getByRole("list", { name: "Mentorship stages" });
+    for (const stage of checkpoints()) {
+      await expect(stages.getByRole("button", { name: new RegExp(stage.label) })).toBeVisible();
     }
 
     expect(errors).toEqual([]);
+  });
+
+  test("choosing a step describes it and marks it as the current one", async ({ page }) => {
+    await page.goto("/");
+    const section = page.locator("#mentorship");
+    await section.scrollIntoViewIfNeeded();
+
+    const [first, second] = checkpoints();
+    const stages = section.getByRole("list", { name: "Mentorship stages" });
+
+    await expect(stages.getByRole("button", { name: new RegExp(first.label) })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+
+    const next = stages.getByRole("button", { name: new RegExp(second.label) });
+    await next.click();
+    await expect(next).toHaveAttribute("aria-pressed", "true");
+    await expect(section.getByText(second.detail)).toBeVisible();
   });
 });

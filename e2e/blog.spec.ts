@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Blog index", () => {
-  test("renders the console with no console errors", async ({ page }) => {
+  test("renders the table of explainers with no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (msg) => {
       if (msg.type() === "error") errors.push(msg.text());
@@ -11,42 +11,57 @@ test.describe("Blog index", () => {
     await page.goto("/blog");
 
     await expect(
-      page
-        .getByText("A sticky note on your monitor", { exact: true })
-        .and(page.locator(":visible"))
-        .first()
+      page.getByRole("heading", { level: 1, name: "Complex ideas, explained through things you already know." })
     ).toBeVisible();
+    /* Every piece is an element in the table. */
+    await expect(page.getByRole("button", { name: /^Caching: A sticky note on your monitor/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Why I default to boring technology" })).toBeVisible();
 
     expect(errors).toEqual([]);
   });
 
-  test("clicking a concept updates the detail pane", async ({ page }) => {
-    await page.goto("/blog");
+  test("picking an element fills the reading panel", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/blog");
 
-    await page.getByRole("button", { name: /Concurrency/ }).click();
-    await expect(
-      page.getByRole("heading", { name: "Multiple chefs sharing one kitchen" })
-    ).toBeVisible();
+    const element = page.getByRole("button", { name: /^Concurrency:/ });
+    await element.click();
+    await expect(element).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("heading", { level: 2, name: /Multiple chefs sharing one kitchen/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Read · .*Multiple chefs sharing one kitchen/ })).toHaveAttribute(
+      "href",
+      "/blog/concurrency"
+    );
   });
 
-  test("switching to the Articles tab shows regular articles", async ({ page }) => {
+  test("the glossary narrows by kind and by topic", async ({ page }) => {
     await page.goto("/blog");
-    await page.setViewportSize({ width: 1440, height: 900 });
+    const glossary = page.locator("#glossary");
+    await glossary.scrollIntoViewIfNeeded();
+    const rows = glossary.locator("ol > li");
+    const all = await rows.count();
 
-    await page.getByRole("button", { name: "Articles", exact: true }).click();
-    await expect(
-      page.getByRole("heading", { name: "Why I default to boring technology" })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "Read the article" })
-    ).toBeVisible();
+    await glossary.getByRole("button", { name: /^Articles/ }).click();
+    await expect(glossary.getByRole("link", { name: /Why I default to boring technology/ })).toBeVisible();
+    await expect(glossary.getByRole("link", { name: /Caching/ })).toHaveCount(0);
+
+    await glossary.getByRole("button", { name: /^All/ }).click();
+    await glossary.getByRole("button", { name: "Databases", exact: true }).click();
+    const narrowed = await rows.count();
+    expect(narrowed).toBeLessThan(all);
+    await expect(glossary.getByRole("link", { name: /Caching/ })).toBeVisible();
+  });
+
+  test("the latest piece is featured", async ({ page }) => {
+    await page.goto("/blog");
+    await expect(page.getByText(/^Latest ·/)).toBeVisible();
   });
 
   test("homepage 'Read the blog' button navigates here", async ({ page }) => {
     await page.goto("/");
-    await page.locator("#blog").scrollIntoViewIfNeeded();
-    await page.getByRole("button", { name: "Read the blog" }).click();
+    const explainers = page.locator("#explainers");
+    await explainers.scrollIntoViewIfNeeded();
+    await explainers.getByRole("link", { name: "Read the blog" }).click();
     await expect(page).toHaveURL("/blog");
   });
 });
@@ -62,14 +77,14 @@ test.describe("Blog article", () => {
     await page.goto("/blog/caching");
 
     await expect(
-      page.getByRole("heading", { name: "A sticky note on your monitor" })
+      page.getByRole("heading", { level: 1, name: "A sticky note on your monitor." })
     ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "The problem: doing the same expensive work, over and over" })
     ).toBeVisible();
-    await expect(
-      page.getByText("Like this").and(page.locator(":visible")).first()
-    ).toBeVisible();
+    await expect(page.getByText("In the analogy").first()).toBeVisible();
+    /* The rail lists the sections and follows the reader. */
+    await expect(page.getByRole("navigation", { name: "Chapters" }).getByRole("link")).toHaveCount(4);
 
     expect(errors).toEqual([]);
   });
@@ -84,11 +99,19 @@ test.describe("Blog article", () => {
     await page.goto("/blog/boring-technology");
 
     await expect(
-      page.getByRole("heading", { name: "Why I default to boring technology" })
+      page.getByRole("heading", { level: 1, name: "Why I default to boring technology." })
     ).toBeVisible();
-    await expect(page.getByText("Like this")).toHaveCount(0);
+    await expect(page.getByText("In the analogy")).toHaveCount(0);
 
     expect(errors).toEqual([]);
+  });
+
+  test("the share row copies the link", async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/blog/caching");
+    await page.getByRole("button", { name: "Copy link" }).click();
+    await expect(page.getByRole("button", { name: "Copied" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Share on LinkedIn" })).toHaveAttribute("href", /linkedin\.com\/sharing/);
   });
 
   test("returns 404 for an unknown slug", async ({ page }) => {
@@ -106,7 +129,7 @@ test.describe("Blog article", () => {
     await page.goto("/blog/checkout-redesign-case-study");
 
     await expect(
-      page.getByRole("heading", { name: "Case study: rebuilding a client's checkout flow" })
+      page.getByRole("heading", { level: 1, name: "Case study: rebuilding a client's checkout flow." })
     ).toBeVisible();
     await expect(page.getByText("Image placeholder")).toHaveCount(2);
     await expect(page.getByText("Video placeholder")).toHaveCount(1);
@@ -117,12 +140,13 @@ test.describe("Blog article", () => {
   test("shows tags and links to the next post in sequence", async ({ page }) => {
     await page.goto("/blog/caching");
 
-    await expect(page.getByText("Performance", { exact: true })).toBeVisible();
-    await expect(page.getByText("Databases", { exact: true })).toBeVisible();
+    const topics = page.getByRole("list", { name: "Topics" });
+    await expect(topics.getByText("Performance", { exact: true })).toBeVisible();
+    await expect(topics.getByText("Databases", { exact: true })).toBeVisible();
 
     await page.getByRole("link", { name: /Next.*A host seating restaurant guests/ }).click();
     await expect(
-      page.getByRole("heading", { name: "A host seating restaurant guests" })
+      page.getByRole("heading", { level: 1, name: "A host seating restaurant guests." })
     ).toBeVisible();
   });
 

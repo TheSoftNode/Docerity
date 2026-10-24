@@ -1,40 +1,48 @@
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-import { Hero } from "@/components/sections/hero/hero";
-import { Clients } from "@/components/sections/clients/clients";
-import { Services } from "@/components/sections/services/services";
-import { Work } from "@/components/sections/work/work";
-import { Mentorship } from "@/components/sections/mentorship/mentorship";
-import { Explainers } from "@/components/sections/explainers/explainers";
-import { Testimonials } from "@/components/sections/testimonials/testimonials";
-import { Cta } from "@/components/sections/cta/cta";
+import { SiteHeader } from "@/components/layout/site-header";
+import { HomeHero } from "@/components/sections/home/home-hero";
+import { HomeBands } from "@/components/sections/home/home-bands";
+import { HomeTracks } from "@/components/sections/home/home-tracks";
+import { HomeWork } from "@/components/sections/home/home-work";
+import { HomeMentorship } from "@/components/sections/home/home-mentorship";
+import { HomeExplainers } from "@/components/sections/home/home-explainers";
+import { HomeReviews } from "@/components/sections/home/home-reviews";
+import { ContactBand } from "@/components/sections/contact-band/contact-band";
+import { SiteFooter } from "@/components/layout/site-footer";
 
 /*
-  Revalidated, because the testimonial section reads approved reviews.
+  Revalidated, because the reviews section reads approved reviews.
 
-  Without it the homepage is prerendered once at build and the rotation never
-  changes, so a review approved after a deploy would only appear on the next
-  one. Approving also calls `revalidatePath("/")`, which makes the change
-  immediate; this window is the fallback for an invalidation that never lands,
-  such as one issued while the build was still in flight.
+  Without it the homepage is prerendered once at build and a review approved
+  after a deploy would only appear on the next one. Approving also calls
+  `revalidatePath("/")`, which makes the change immediate; this window is the
+  fallback for an invalidation that never lands, such as one issued while the
+  build was still in flight.
 */
 export const revalidate = 300;
 
+/**
+ * The homepage.
+ *
+ * Every section reads the same editable content the previous homepage did;
+ * what changed is how it is drawn. The page sits on the palette's ink so the
+ * floating header has the hero's colour behind it from the first pixel, and
+ * each section paints its own band from there.
+ */
 export default function Home() {
   return (
-    <>
-      <Navbar />
+    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+      <SiteHeader />
       <main className="flex-1">
-        <Hero />
-        <Work />
-        <Clients />
-        <Services />
-        <Mentorship />
-        <Explainers />
-        <Testimonials />
-        <Cta />
+        <HomeHero />
+        <HomeBands />
+        <HomeTracks />
+        <HomeWork />
+        <HomeMentorship />
+        <HomeExplainers />
+        <HomeReviews />
+        <ContactBand />
       </main>
-      <Footer />
-    </>
+      <SiteFooter />
+    </div>
   );
 }

@@ -2,10 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { siteConfig } from "@/lib/config/site";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-import { BlogArticle } from "@/components/sections/blog/blog-article";
-import { getEntry, getEntrySlugs } from "@/lib/content/posts";
+import { getEntry, getEntrySlugs, getPublishedEntries } from "@/lib/content/posts";
+import { toArticleView, toExplainerView } from "@/lib/content/entry-view";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { PostHero } from "@/components/sections/blog-page/post-hero";
+import { PostBody } from "@/components/sections/blog-page/post-body";
+import { PostNext } from "@/components/sections/blog-page/post-next";
+import { ReadingBar } from "@/components/sections/blog-page/reading-bar";
+import { BlogSubscribe } from "@/components/sections/blog-page/blog-subscribe";
+import { readingOrder, toElements } from "@/components/sections/blog-page/blog-content";
 
 /*
   Revalidated, because posts come from the database now.
@@ -93,17 +99,39 @@ export default async function BlogPostPage({
     mainEntityOfPage: `${siteConfig.url}/blog/${entry.slug}`,
   };
 
+  /* The whole published list, for this piece's element number and what to
+     read next. One extra query on a route cached for five minutes. */
+  const all = await getPublishedEntries();
+  const elements = toElements(
+    (all.some((candidate) => candidate.slug === entry.slug) ? all : [...all, entry]).map((candidate) =>
+      candidate.type === "explainer" ? toExplainerView(candidate) : toArticleView(candidate)
+    )
+  );
+  const element = elements.find((candidate) => candidate.slug === entry.slug)!;
+  const { next, related } = readingOrder(elements, entry.slug);
+  const sharedTags = related.some((candidate) => candidate.tags.some((tag) => entry.tags.includes(tag)));
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar />
-      <main className="flex-1">
-        <BlogArticle entry={entry} />
-      </main>
-      <Footer />
+      <ReadingBar />
+      <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+        <SiteHeader />
+        <main className="flex-1">
+          <PostHero element={element} author={entry.author} />
+          <PostBody entry={entry} url={`${siteConfig.url}/blog/${entry.slug}`} title={title} />
+          <PostNext
+            next={next}
+            related={related}
+            relatedLabel={sharedTags ? `More on ${entry.tags.slice(0, 2).join(" & ")}` : "More to read"}
+          />
+          <BlogSubscribe />
+        </main>
+        <SiteFooter />
+      </div>
     </>
   );
 }

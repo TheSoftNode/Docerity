@@ -24,6 +24,9 @@ export type EnquiryEmailData = {
   budget: string;
   timeline: string;
   message: string;
+  /** Mentorship only; empty otherwise. */
+  stage: string;
+  codeLink: string;
   attachments: EnquiryAttachmentView[];
 };
 
@@ -42,6 +45,8 @@ function rowsFor(data: EnquiryEmailData): [string, string][] {
     ["About", labelFor(projectTypes, data.projectType)],
     ["Budget", labelFor(budgets, data.budget)],
     ["Timeline", labelFor(timelines, data.timeline)],
+    ["Starting point", data.stage],
+    ["Code", data.codeLink],
     ["Reference", data.reference],
   ];
 }

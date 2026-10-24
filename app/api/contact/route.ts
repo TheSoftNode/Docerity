@@ -77,6 +77,8 @@ export const POST = withRoute("api.contact", async (request, { logger, ip }) => 
       budget: text(body.budget),
       timeline: text(body.timeline),
       message: text(body.message),
+      stage: text(body.stage),
+      codeLink: text(body.codeLink),
       attachments: parseAttachments(body.attachments),
       submittedFromIp: ip,
       userAgent: request.headers.get("user-agent") ?? "",

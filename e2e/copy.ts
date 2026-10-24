@@ -48,3 +48,28 @@ export function footerLinks(): { label: string; href: string }[] {
     href: link.href as string,
   }));
 }
+
+/**
+ * Every partner name the homepage's bands should carry: the organisations
+ * first, then the ecosystems, as the clients block lists them.
+ */
+export function clientNames(): string[] {
+  const block = DEFAULTS.clients as Record<string, BlockRecord[]>;
+  return [...block.organisations, ...block.ecosystems].map((logo) => logo.name as string);
+}
+
+/** The mentorship stages, which the homepage draws as a staircase. */
+export function checkpoints(): { label: string; detail: string }[] {
+  return (DEFAULTS.mentorship.checkpoints as BlockRecord[]).map((entry) => ({
+    label: entry.label as string,
+    detail: entry.detail as string,
+  }));
+}
+
+/** The explainer pairs, in the order the homepage's card walks through them. */
+export function explainerPairs(): { concept: string; analogy: string }[] {
+  return (DEFAULTS.explainers.pairs as BlockRecord[]).map((pair) => ({
+    concept: pair.conceptLabel as string,
+    analogy: pair.analogyLabel as string,
+  }));
+}

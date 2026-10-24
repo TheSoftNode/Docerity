@@ -56,7 +56,7 @@ test.describe("Before anything is imported", () => {
     /* The fallback is the whole point: an empty database must not empty the
        work page. */
     await page.goto("/projects");
-    await expect(page.getByRole("heading", { name: /EEP, view project/ })).toBeVisible();
+    await expect(page.locator("#showcase").getByRole("heading", { name: "EEP", exact: true })).toBeVisible();
   });
 });
 
@@ -125,7 +125,7 @@ test.describe("Importing", () => {
 
   test("the public page now reads from the database", async ({ page }) => {
     await page.goto("/projects");
-    await expect(page.getByRole("heading", { name: /EEP, view project/ })).toBeVisible();
+    await expect(page.locator("#showcase").getByRole("heading", { name: "EEP", exact: true })).toBeVisible();
     /* The screenshots imported with their public/ paths rather than being lost. */
     await expect(page.locator('img[src*="eep"]').first()).toBeVisible();
   });
@@ -187,7 +187,7 @@ test.describe("Adding a project", () => {
 
     await page.goto("/");
     await expect(
-      page.getByRole("heading", { name: /Harbour, view project/ })
+      page.locator("#showcase").getByRole("heading", { name: "Harbour", exact: true })
     ).toHaveCount(0);
   });
 
@@ -209,7 +209,7 @@ test.describe("Adding a project", () => {
     ).toBeVisible();
 
     await page.goto("/");
-    await expect(page.getByRole("heading", { name: /Harbour, view project/ })).toBeVisible();
+    await expect(page.locator("#showcase").getByRole("heading", { name: "Harbour", exact: true })).toBeVisible();
   });
 
   test("the band's order is the homepage's order, and is its own", async ({ page }) => {

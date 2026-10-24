@@ -51,6 +51,11 @@ export type TitledView = { title: string; description: string };
 
 export type StageView = { label: string; summary: string; description: string };
 
+/** A mentorship audience. Both extras are optional: older records lack them. */
+export type AudienceView = TitledView & { startsAt?: string; short?: string };
+
+export type ApplyStepView = { title: string; when?: string; description: string };
+
 export type CheckpointView = { label: string; detail: string };
 
 export type FaqView = { question: string; answer: string };

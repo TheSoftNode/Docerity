@@ -113,6 +113,9 @@ export const BLOCK_KEYS = [
   "web3",
   "explainers",
   "contact",
+  "contribute",
+  "reviews",
+  "pages",
 ] as const;
 
 export type BlockKey = (typeof BLOCK_KEYS)[number];
@@ -376,6 +379,27 @@ export const BLOCKS: Block[] = [
         { key: "home-mentorship", label: "Mentorship teaser" },
         { key: "home-cta", label: "The closing call to action" },
       ]),
+      {
+        kind: "keyed",
+        name: "contactOptions",
+        label: "The closing call to action's options",
+        description: "The three ways in, under the closing heading on every page. Where each one goes is fixed.",
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 40 },
+          {
+            name: "detail",
+            label: "Under it",
+            kind: "text",
+            maxLength: 80,
+            hint: "For the question, leave blank to show the site's email address.",
+          },
+        ],
+        entries: [
+          { key: "project", label: "A new project", hint: "Goes to the contact form." },
+          { key: "mentorship", label: "Mentorship", hint: "Goes to the contact form with mentorship chosen." },
+          { key: "question", label: "A question", hint: "Opens an email to the site's address." },
+        ],
+      },
     ],
   },
 
@@ -480,6 +504,13 @@ export const BLOCKS: Block[] = [
     description:
       "Everything on /about except the project count, which is counted from the work section rather than typed.",
     groups: [
+      headings([
+        { key: "about-hero", label: "Hero", hint: "Wrap words in *asterisks* to light them; the career graph is drawn from Experience." },
+        { key: "about-story", label: "The story" },
+        { key: "about-experience", label: "Experience" },
+        { key: "about-toolkit", label: "Toolkit" },
+        { key: "about-credentials", label: "Credentials" },
+      ]),
       {
         kind: "object",
         name: "founder",
@@ -508,7 +539,7 @@ export const BLOCKS: Block[] = [
             name: "portrait",
             label: "Photo",
             kind: "image",
-            hint: "The frame is circular, so a square image with the face centred works best. 800px or larger.",
+            hint: "Not shown on the current About page, which is about the studio rather than a headshot. Kept so it can come back without a re-upload.",
           },
         ],
       },
@@ -638,18 +669,38 @@ export const BLOCKS: Block[] = [
         { key: "mentorship-audience", label: "Who it is for" },
         { key: "mentorship-path", label: "The path" },
         { key: "mentorship-format", label: "What you get" },
+        { key: "mentorship-team", label: "Who reviews your code" },
         { key: "mentorship-testimonials", label: "From mentees" },
         { key: "mentorship-faq", label: "Questions" },
+        {
+          key: "mentorship-apply",
+          label: "Closing call to apply",
+          hint: "The page's last section. Mark the words to light up with *asterisks*.",
+        },
       ]),
       {
         kind: "list",
         name: "audiences",
         label: "Who it is for",
         itemNoun: "audience",
-        max: 6,
+        max: 4,
         fields: [
           { name: "title", label: "Title", kind: "text", required: true, maxLength: 120 },
           DESCRIPTION,
+          {
+            name: "startsAt",
+            label: "Usually starts at",
+            kind: "text",
+            maxLength: 60,
+            hint: "The name of a stage under The path, exactly as written there. Picking this audience on the page marks that stage. Left blank, or not matching a stage, it points at the first one.",
+          },
+          {
+            name: "short",
+            label: "Short name",
+            kind: "text",
+            maxLength: 20,
+            hint: "For the marker on the path: \"Juniors start here\". Left blank, the marker just says \"You start here\".",
+          },
         ],
       },
       {
@@ -687,6 +738,46 @@ export const BLOCKS: Block[] = [
         fields: [
           { name: "title", label: "Title", kind: "text", required: true, maxLength: 120 },
           DESCRIPTION,
+        ],
+      },
+      {
+        kind: "list",
+        name: "teamPrinciples",
+        label: "Who reviews your code",
+        description: "How the team reviews, beside the specialties. Three reads best.",
+        itemNoun: "principle",
+        max: 4,
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 80 },
+          { ...DESCRIPTION, maxLength: 240 },
+        ],
+      },
+      {
+        kind: "strings",
+        name: "specialties",
+        label: "Specialties",
+        description:
+          "Arranged around \"You\" in the team section, lit one at a time. Between three and six fit the circle.",
+        max: 6,
+        placeholder: "Backend & APIs",
+      },
+      {
+        kind: "list",
+        name: "applySteps",
+        label: "What happens after applying",
+        description: "The steps under the closing call to apply, in order.",
+        itemNoun: "step",
+        max: 5,
+        fields: [
+          { name: "title", label: "Step", kind: "text", required: true, maxLength: 40 },
+          {
+            name: "when",
+            label: "When",
+            kind: "text",
+            maxLength: 30,
+            hint: "A short time label, such as \"After the call\". Only promise what actually happens.",
+          },
+          { ...DESCRIPTION, maxLength: 240 },
         ],
       },
       {
@@ -897,21 +988,288 @@ export const BLOCKS: Block[] = [
 
   {
     key: "contact",
-    title: "Contact steps",
+    title: "Contact",
     page: "Contact",
     path: "/contact",
-    description: "What happens after somebody sends the form.",
+    description:
+      "The contact page's heading for each kind of enquiry, and what happens after somebody sends the form.",
     groups: [
-      headings([{ key: "contact", label: "The page" }]),
+      headings(
+        [
+          { key: "contact", label: "Software project", hint: "Also the page's default." },
+          { key: "contact-mentorship", label: "Mentorship" },
+          { key: "contact-speaking", label: "Speaking" },
+          { key: "contact-other", label: "Something else" },
+        ],
+        "The page's heading changes with what somebody picks on the form. The last word, or the words in *asterisks*, is lit."
+      ),
       {
         kind: "list",
         name: "steps",
         label: "Steps",
         itemNoun: "step",
-        max: 6,
+        max: 4,
         fields: [
           { name: "title", label: "Title", kind: "text", required: true, maxLength: 120 },
           DESCRIPTION,
+          {
+            name: "when",
+            label: "When",
+            kind: "text",
+            maxLength: 30,
+            hint: "A short time label beside the step, such as \"Same day\". Only promise what actually happens.",
+          },
+        ],
+      },
+      {
+        kind: "keyed",
+        name: "forms",
+        label: "The form, per kind of enquiry",
+        description:
+          "The words on the form for each choice. Which fields a kind asks for is fixed, except that blanking the timeline or files label removes that field.",
+        fields: [
+          { name: "label", label: "Choice", kind: "text", required: true, maxLength: 40, hint: "The tile somebody picks." },
+          { name: "sub", label: "Under the choice", kind: "text", required: true, maxLength: 60 },
+          { name: "sheetLabel", label: "Form header", kind: "text", required: true, maxLength: 80 },
+          { name: "detailsTitle", label: "Details heading", kind: "text", required: true, maxLength: 60 },
+          {
+            name: "timelineLabel",
+            label: "Timeline question",
+            kind: "text",
+            maxLength: 80,
+            hint: "Blank removes the timeline field for this kind.",
+          },
+          { name: "messageLabel", label: "Message question", kind: "text", required: true, maxLength: 80 },
+          { name: "placeholder", label: "Message placeholder", kind: "text", maxLength: 160 },
+          { name: "hint", label: "Under the message", kind: "text", maxLength: 160 },
+          {
+            name: "filesLabel",
+            label: "Attachments label",
+            kind: "text",
+            maxLength: 80,
+            hint: "Blank removes the file upload for this kind.",
+          },
+          { name: "submit", label: "Send button", kind: "text", required: true, maxLength: 40 },
+          { name: "sentTitle", label: "After sending", kind: "text", required: true, maxLength: 60 },
+          { name: "nextLabel", label: "Link after sending", kind: "text", required: true, maxLength: 60 },
+        ],
+        entries: [
+          { key: "software", label: "Software project" },
+          { key: "mentorship", label: "Mentorship" },
+          { key: "speaking", label: "Speaking" },
+          { key: "other", label: "Something else" },
+        ],
+      },
+    ],
+  },
+
+  {
+    key: "contribute",
+    title: "Write for us",
+    page: "Write for us",
+    path: "/contribute",
+    description:
+      "The page for writing an explainer. Its hero is the page's own draft being edited: the heading and the pitch arrive in a weak first version and the editor rewrites them in front of the reader. The concept and analogy pairs come from the Explainer pairs section.",
+    groups: [
+      headings([
+        {
+          key: "contribute-hero",
+          label: "Hero",
+          hint: "The heading as it ends up. Its lit words are what the editor types over the crossed-out phrase. The lede is not shown: the pitch is the After text of the edits below.",
+        },
+        { key: "contribute-route", label: "How you get here" },
+        { key: "contribute-craft", label: "What makes a good one" },
+      ]),
+      {
+        kind: "object",
+        name: "draft",
+        label: "The heading's edit",
+        fields: [
+          {
+            name: "crossedOut",
+            label: "Crossed out",
+            kind: "text",
+            maxLength: 40,
+            hint: "What the first draft said in place of the heading's lit words. Blank for no edit.",
+          },
+          { name: "note", label: "Editor's note", kind: "text", maxLength: 120 },
+        ],
+      },
+      {
+        kind: "list",
+        name: "edits",
+        label: "The pitch, edited",
+        description:
+          "The pitch under the heading, a piece at a time. Before empty is an addition, After empty is a cut, the same in both is text left alone. The After text, read in order, is the pitch as it ends up, and what search engines and screen readers get.",
+        itemNoun: "piece",
+        max: 8,
+        min: 1,
+        fields: [
+          { name: "before", label: "Before", kind: "textarea", maxLength: 400 },
+          { name: "after", label: "After", kind: "textarea", maxLength: 400 },
+          { name: "note", label: "Editor's note", kind: "text", maxLength: 120, hint: "Numbered in the margin. Leave blank for text left alone." },
+        ],
+      },
+      {
+        kind: "object",
+        name: "example",
+        label: "Around the draft",
+        fields: [
+          { name: "fileName", label: "File name", kind: "text", required: true, maxLength: 40, placeholder: "write-for-us.md" },
+          { name: "byline", label: "Byline", kind: "text", required: true, maxLength: 40, hint: "Where the writer's name goes." },
+          { name: "stamp", label: "Stamp when approved", kind: "text", required: true, maxLength: 30 },
+          { name: "button", label: "Hero button", kind: "text", required: true, maxLength: 40, hint: "Goes down to how you get here." },
+        ],
+      },
+      {
+        kind: "list",
+        name: "route",
+        label: "How you get here",
+        description: "The stages a writer moves through, left to right.",
+        itemNoun: "stage",
+        max: 5,
+        min: 2,
+        fields: [
+          { name: "status", label: "Stage", kind: "text", required: true, maxLength: 24 },
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 80 },
+          DESCRIPTION,
+          { name: "cardNote", label: "On the card", kind: "text", maxLength: 40, hint: "What the moving card says at this stage." },
+        ],
+      },
+      {
+        kind: "object",
+        name: "invite",
+        label: "Under the stages",
+        fields: [
+          { name: "note", label: "Note", kind: "textarea", required: true, maxLength: 300 },
+          { name: "primaryLabel", label: "Main button", kind: "text", required: true, maxLength: 40, hint: "Goes to the mentorship form." },
+          { name: "secondaryLabel", label: "Second button", kind: "text", required: true, maxLength: 40, hint: "Goes to the blog." },
+        ],
+      },
+      {
+        kind: "strings",
+        name: "craft",
+        label: "What makes a good one",
+        description: "A paragraph each.",
+        long: true,
+        max: 4,
+      },
+      {
+        kind: "object",
+        name: "scope",
+        label: "Pull quote",
+        fields: [{ name: "quote", label: "Quote", kind: "text", required: true, maxLength: 160 }],
+      },
+      {
+        kind: "list",
+        name: "sizes",
+        label: "Sizing it",
+        description:
+          "The slider's steps, narrowest first. The first reads as the right size, the last as too wide, anything between as getting wide.",
+        itemNoun: "step",
+        max: 6,
+        min: 2,
+        fields: [
+          {
+            name: "upTo",
+            label: "Up to how many ideas",
+            kind: "text",
+            required: true,
+            maxLength: 2,
+            hint: "A number. The slider runs to the last step's.",
+          },
+          { name: "topic", label: "Topic", kind: "text", required: true, maxLength: 80 },
+          { name: "why", label: "Why", kind: "text", required: true, maxLength: 100 },
+        ],
+      },
+    ],
+  },
+
+  {
+    key: "reviews",
+    title: "Reviews page",
+    page: "Reviews",
+    path: "/reviews",
+    description: "The words around the reviews. The reviews themselves are moderated under Reviews.",
+    groups: [
+      headings([
+        { key: "reviews-hero", label: "Hero" },
+        { key: "reviews-record", label: "The record" },
+        { key: "reviews-form", label: "Leave a review" },
+      ]),
+      {
+        kind: "object",
+        name: "empty",
+        label: "Before the first review",
+        description: "Used instead of the hero's lede and the form's heading while there are no reviews yet.",
+        fields: [
+          { name: "lede", label: "Hero lede", kind: "textarea", required: true, maxLength: 400 },
+          { name: "formTitle", label: "Form heading", kind: "text", required: true, maxLength: 120 },
+        ],
+      },
+      {
+        kind: "list",
+        name: "process",
+        label: "What happens to a review",
+        itemNoun: "step",
+        max: 4,
+        min: 1,
+        fields: [{ name: "title", label: "Title", kind: "text", required: true, maxLength: 60 }, DESCRIPTION],
+      },
+    ],
+  },
+
+  {
+    key: "pages",
+    title: "Small pages",
+    page: "Not found, Unsubscribe",
+    path: "/unsubscribe",
+    description: "The page for a link that goes nowhere, and the page an unsubscribe link lands on.",
+    groups: [
+      {
+        kind: "object",
+        name: "notFound",
+        label: "Page not found",
+        fields: [
+          { name: "eyebrow", label: "Eyebrow", kind: "text", required: true, maxLength: 60 },
+          { name: "title", label: "Heading", kind: "text", required: true, maxLength: 120 },
+          { name: "lede", label: "Lede", kind: "textarea", required: true, maxLength: 300 },
+          { name: "primaryLabel", label: "Main button", kind: "text", required: true, maxLength: 40, hint: "Goes to the homepage." },
+          { name: "secondaryLabel", label: "Second button", kind: "text", required: true, maxLength: 40, hint: "Goes to the blog." },
+          { name: "concept", label: "The concept", kind: "text", required: true, maxLength: 40, hint: "The page explains itself as an explainer would." },
+          { name: "conceptCaption", label: "What it means", kind: "text", required: true, maxLength: 100 },
+          { name: "analogy", label: "Works like", kind: "text", required: true, maxLength: 60 },
+          { name: "analogyCaption", label: "Why", kind: "text", required: true, maxLength: 100 },
+          {
+            name: "shelfNote",
+            label: "Under the shelf",
+            kind: "text",
+            required: true,
+            maxLength: 80,
+            hint: "The shelf holds every page in the header and footer menus, each one a link.",
+          },
+        ],
+      },
+      {
+        kind: "object",
+        name: "unsubscribe",
+        label: "Unsubscribe",
+        fields: [
+          { name: "doneTitle", label: "Heading, unsubscribed", kind: "text", required: true, maxLength: 80 },
+          { name: "doneBody", label: "Text, unsubscribed", kind: "textarea", required: true, maxLength: 300 },
+          { name: "failedTitle", label: "Heading, link did not work", kind: "text", required: true, maxLength: 80 },
+          {
+            name: "failedBody",
+            label: "Text, link did not work",
+            kind: "textarea",
+            required: true,
+            maxLength: 300,
+            hint: "Keep it vague about why: saying an address is not on the list tells anyone who tries the link who is.",
+          },
+          { name: "blogLabel", label: "Blog button", kind: "text", required: true, maxLength: 40 },
+          { name: "contactLabel", label: "Contact button", kind: "text", required: true, maxLength: 40, hint: "Shown only when the link did not work." },
+          { name: "listName", label: "The list's name", kind: "text", required: true, maxLength: 60 },
+          { name: "listTagline", label: "Under its name", kind: "text", maxLength: 80 },
         ],
       },
     ],

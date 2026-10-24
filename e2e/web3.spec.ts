@@ -12,27 +12,64 @@ test.describe("Web3 page", () => {
 
     await page.goto("/web3");
 
-    await expect(
-      page.getByRole("heading", { name: "Hackathon-winning dApps, shipped on real chains." })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Built, shipped, and recognized." })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Cross-chain, not locked to one network." })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "On-chain systems that hold up under real use." })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })
-    ).toBeVisible();
+    for (const name of [
+      "Hackathon-winning dApps, shipped on real chains.",
+      "Built, shipped, and recognized.",
+      "Cross-chain, not locked to one network.",
+      "On-chain systems that hold up under real use.",
+      heading("homepage", "home-cta").replace(/\*/g, ""),
+    ]) {
+      await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
+    }
 
+    const contracts = page.locator("#contracts");
     for (const name of ["VeriAI", "MetaPilot", "RealPayTag Protocol"]) {
-      await expect(page.getByRole("heading", { name })).toBeVisible();
+      await expect(contracts.getByRole("button", { name: new RegExp(`^${name}`) })).toBeVisible();
     }
 
     expect(errors).toEqual([]);
+  });
+
+  test("searching filters the contracts", async ({ page }) => {
+    await page.goto("/web3");
+    await page.getByLabel("Search the contracts").fill("payroll");
+    const contracts = page.locator("#contracts");
+    await expect(contracts.getByRole("button", { name: /^RealPayTag Protocol/ })).toBeVisible();
+    await expect(contracts.getByRole("button", { name: /^VeriAI/ })).toHaveCount(0);
+
+    await page.getByLabel("Search the contracts").fill("nothing like this");
+    await expect(contracts.getByText(/Nothing matches that/)).toBeVisible();
+  });
+
+  test("picking a contract opens its page, with its facts and events", async ({ page }) => {
+    await page.goto("/web3");
+    await page.locator("#contracts").getByRole("button", { name: /^MetaPilot/ }).click();
+
+    await expect(page.getByRole("heading", { level: 3, name: "MetaPilot" })).toBeVisible();
+    /* The size is read out of the project's own description. */
+    await expect(page.getByText("2,000+ lines", { exact: true }).first()).toBeVisible();
+
+    await page.getByRole("tab", { name: "Events" }).click();
+    await expect(page.getByText("Live on Solana")).toBeVisible();
+  });
+
+  test("a network filters the contracts to that chain", async ({ page }) => {
+    await page.goto("/web3");
+    const network = page.getByRole("button", { name: /^Stacks/ });
+    await network.click();
+    await expect(network).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#contracts").getByText(/Nothing matches that/)).toBeVisible();
+
+    await network.click();
+    await expect(page.locator("#contracts").getByRole("button", { name: /^VeriAI/ })).toBeVisible();
+  });
+
+  test("what we build opens as contract methods", async ({ page }) => {
+    await page.goto("/web3");
+    const method = page.getByRole("button", { name: /defiAutomation/ });
+    await method.click();
+    await expect(method).toHaveAttribute("aria-expanded", "true");
+    await expect(page.getByText(/Autonomous protocols for voting/)).toBeVisible();
   });
 
   test("navbar 'Web3' link navigates to the dedicated page", async ({ page }) => {
@@ -40,18 +77,5 @@ test.describe("Web3 page", () => {
     await page.goto("/");
     await page.locator("header").getByRole("link", { name: "Web3", exact: true }).click();
     await expect(page).toHaveURL("/web3");
-  });
-
-  test("hero CTAs work: see projects scrolls, start a project goes to contact", async ({
-    page,
-  }) => {
-    await page.goto("/web3");
-
-    await page.getByRole("button", { name: "See the projects" }).click();
-    await expect(page.locator("#projects")).toBeInViewport();
-
-    await page.goto("/web3");
-    await page.locator("main").getByRole("button", { name: "Start a project" }).click();
-    await expect(page).toHaveURL("/contact");
   });
 });

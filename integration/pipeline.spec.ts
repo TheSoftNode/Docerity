@@ -407,19 +407,20 @@ test.describe("The review pipeline", () => {
     /* The other three sections go back to what they show with nothing to
        show: an invitation on the homepage, and absence elsewhere. */
     await page.goto("/");
-    await expect(
-      page.getByRole("heading", { name: /other people.s words go/ })
-    ).toBeVisible();
+    await expect(page.locator("#reviews").getByText("Your review goes here")).toBeVisible();
 
     await page.goto("/projects");
     await expect(
       page.getByRole("heading", { name: "What it's like to work together." })
     ).toHaveCount(0);
 
+    /* The mentorship page keeps the section and asks mentees for reviews
+       instead, quoting nobody. */
     await page.goto("/mentorship");
-    await expect(
-      page.getByRole("heading", { name: "Real progress, in their words." })
-    ).toHaveCount(0);
+    await expect(page.getByText("The first reviews are being collected.")).toBeVisible();
+    for (const review of menteeReviews) {
+      await expect(page.getByText(review.body)).toHaveCount(0);
+    }
   });
 
   test("a review in the wrong section can be moved to the right one", async ({
@@ -742,6 +743,58 @@ test.describe("The enquiry pipeline", () => {
       first sign is somebody asking why you never replied.
     */
     await expect(page.getByText("not delivered").first()).toBeVisible();
+  });
+
+  test("a mentorship application keeps its starting point and code link", async ({
+    page,
+    request,
+  }) => {
+    const response = await request.post("/api/contact", {
+      data: {
+        name: "Linus Mentee",
+        email: "linus@example.com",
+        projectType: "mentorship",
+        timeline: "asap",
+        stage: "Career switchers & self-taught",
+        codeLink: "github.com/linus-mentee",
+        message: "I came from accounting and want to get to a backend role within the year.",
+        attachments: [],
+      },
+    });
+    expect(response.status()).toBe(200);
+
+    await signIn(page);
+    await page.goto("/admin/enquiries");
+    await page.getByText("Linus Mentee").click();
+
+    await expect(page.getByText("Starting point")).toBeVisible();
+    await expect(page.getByText("Career switchers & self-taught")).toBeVisible();
+    /* Typed without a scheme, stored with one. */
+    await expect(page.getByText("https://github.com/linus-mentee")).toBeVisible();
+  });
+
+  test("the mentorship details are dropped from any other kind of enquiry", async ({
+    page,
+    request,
+  }) => {
+    const response = await request.post("/api/contact", {
+      data: {
+        name: "Ada Client",
+        email: "ada.client@example.com",
+        projectType: "software",
+        stage: "Career switchers & self-taught",
+        codeLink: "github.com/ada-client",
+        message: "We need a payments reconciliation service built against our ledger.",
+        attachments: [],
+      },
+    });
+    expect(response.status()).toBe(200);
+
+    await signIn(page);
+    await page.goto("/admin/enquiries");
+    await page.getByText("Ada Client").click();
+    await expect(page.getByText(/payments reconciliation/)).toBeVisible();
+    await expect(page.getByText("Starting point")).toHaveCount(0);
   });
 
   test("opening one moves it out of the new queue", async ({ page }) => {

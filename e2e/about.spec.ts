@@ -1,9 +1,19 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
-import { projects } from "@/components/sections/work/work-data";
+import { heading } from "./copy";
+import { DEFAULTS } from "@/lib/content/blocks/defaults";
+import type { AboutContent } from "@/lib/content/blocks/views";
+
+const about = DEFAULTS.about as unknown as AboutContent;
+
+/** A headline figure's value, found by its label in the hero's summary. */
+function figure(page: Page, label: string) {
+  return page.locator("dl div").filter({ has: page.locator("dt", { hasText: label }) }).locator("dd");
+}
+const shipped = (page: Page) => figure(page, "Shipped projects");
 
 test.describe("About page", () => {
-  test("renders the hero and the profile rail with no console errors", async ({ page }) => {
+  test("renders every section with no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (message) => {
       if (message.type() === "error") errors.push(message.text());
@@ -12,149 +22,105 @@ test.describe("About page", () => {
 
     await page.goto("/about");
 
-    await expect(
-      page.getByRole("heading", { level: 1, name: /One engineer, three habits/i })
-    ).toBeVisible();
-
-    const rail = page.getByRole("navigation", { name: "About sections" });
-    for (const label of ["Story", "Experience", "Toolkit", "Credentials"]) {
-      await expect(rail.getByRole("button", { name: new RegExp(label) })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: heading("about", "about-hero").replace(/\*/g, "") })).toBeVisible();
+    for (const entry of ["about-story", "about-experience", "about-toolkit", "about-credentials"]) {
+      await expect(page.getByRole("heading", { level: 2, name: heading("about", entry), exact: true })).toBeVisible();
     }
+    await expect(page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })).toBeVisible();
 
     expect(errors).toEqual([]);
   });
 
-  test("each rail tab swaps the panel", async ({ page }) => {
-    await page.goto("/about");
-    const rail = page.getByRole("navigation", { name: "About sections" });
-
-    /* Story is open by default, so the page is never in a state with no panel. */
-    await expect(page.getByRole("heading", { name: "How this started." })).toBeVisible();
-
-    await rail.getByRole("button", { name: /Experience/ }).click();
-    await expect(page.getByRole("heading", { name: "Where it comes from." })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "How this started." })).toBeHidden();
-
-    await rail.getByRole("button", { name: /Toolkit/ }).click();
-    await expect(page.getByRole("heading", { name: "What I build with." })).toBeVisible();
-
-    await rail.getByRole("button", { name: /Credentials/ }).click();
-    await expect(page.getByRole("heading", { name: "Studied and certified." })).toBeVisible();
-  });
-
-  test("the open tab is announced, not just styled", async ({ page }) => {
-    await page.goto("/about");
-    const rail = page.getByRole("navigation", { name: "About sections" });
-
-    const experience = rail.getByRole("button", { name: /Experience/ });
-    await expect(experience).not.toHaveAttribute("aria-current", "true");
-    await experience.click();
-    await expect(experience).toHaveAttribute("aria-current", "true");
-  });
-
-  test("the experience panel carries the migrated track record", async ({ page }) => {
-    await page.goto("/about");
-    await page
-      .getByRole("navigation", { name: "About sections" })
-      .getByRole("button", { name: /Experience/ })
-      .click();
-
-    await expect(
-      page.getByRole("heading", { name: "Senior Full-Stack Software Engineer" })
-    ).toBeVisible();
-    await expect(page.getByText("HitoAI", { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Lead Full-Stack Software Engineer" })
-    ).toBeVisible();
-  });
-
-  test("the credentials panel shows real certificate scans", async ({
-    page,
-    request,
-  }) => {
-    await page.goto("/about");
-    await page
-      .getByRole("navigation", { name: "About sections" })
-      .getByRole("button", { name: /Credentials/ })
-      .click();
-
-    await expect(
-      page.getByText("B.Eng Electrical & Electronic Engineering, 2nd class upper")
-    ).toBeVisible();
-
-    const scans = page.locator('img[alt$="certificate"]');
-    await expect(scans.first()).toBeVisible();
-    expect(await scans.count()).toBe(8);
-
-    /*
-      The sources are fetched directly rather than waiting on the browser to
-      decode them.
-
-      Asserting `naturalWidth > 0` is the more direct test and it passes
-      against a production build, but the dev image optimiser stalls when
-      eight optimised variants are requested at once: the requests are issued
-      and no response ever arrives. Since the suite runs against `next dev`,
-      that assertion would fail for a reason that has nothing to do with the
-      page. Fetching each file proves the same thing: it exists and is served.
-    */
-    const sources = await scans.evaluateAll((images) =>
-      images.map((img) => (img as HTMLImageElement).src)
-    );
-
-    for (const source of sources) {
-      const url = new URL(source);
-      const raw = url.searchParams.get("url") ?? url.pathname;
-      const response = await request.get(raw);
-      expect(response.status(), `certificate not served: ${raw}`).toBe(200);
-      expect(Number(response.headers()["content-length"] ?? 1)).toBeGreaterThan(0);
-    }
-  });
-
-  test("the hero carries a portrait, not an empty column", async ({ page, request }) => {
+  test("the graph has a branch for every role, and picking one shows its commit", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/about");
 
-    const portrait = page.locator('img[alt*="founder of Docerity"]');
-    await expect(portrait).toBeVisible();
+    const roles = page.getByRole("list", { name: "Roles, oldest first" }).getByRole("button");
+    await expect(roles).toHaveCount(about.experience.length);
 
-    /* Fetched rather than waiting on decode, for the same reason as the
-       certificates: the dev image optimiser is unreliable under load. */
-    const source = await portrait.getAttribute("src");
+    const uri = roles.filter({ hasText: "URI Creative" });
+    await uri.click();
+    await expect(uri).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByText("commit dcr:uri-creative")).toBeVisible();
+    await expect(page.getByText("ongoing → HEAD")).toBeVisible();
+
+    const alx = roles.filter({ hasText: "ALX Africa" });
+    await alx.click();
+    await expect(page.getByText("commit dcr:alx-africa")).toBeVisible();
+    await expect(page.getByText("merged into main")).toBeVisible();
+  });
+
+  test("every headline figure is on the page, the project count included", async ({ page }) => {
+    await page.goto("/about");
+    for (const fact of about.facts) await expect(figure(page, fact.label)).toHaveText(fact.value);
+    await expect(shipped(page)).toHaveText(/^\d+$/);
+  });
+
+  test("the story is the founder's own paragraphs", async ({ page }) => {
+    await page.goto("/about");
+    const story = page.getByRole("article", { name: "The story, in the founder's words" });
+    await expect(story.getByRole("listitem")).toHaveCount(about.story.length);
+    await expect(page.getByText(`"${about.founder.based}"`)).toBeVisible();
+  });
+
+  test("the changelog filters, and each role opens to its notes", async ({ page }) => {
+    await page.goto("/about");
+    const changelog = page.locator("#changelog");
+    const roles = changelog.getByRole("heading", { level: 3 });
+    await expect(roles).toHaveCount(about.experience.length);
+
+    const current = about.experience.filter((entry) => /present/i.test(entry.period)).length;
+    await changelog.getByRole("button", { name: /^Current/ }).click();
+    await expect(roles).toHaveCount(current);
+    await changelog.getByRole("button", { name: /^Earlier/ }).click();
+    await expect(roles).toHaveCount(about.experience.length - current);
+    await changelog.getByRole("button", { name: /^All/ }).click();
+
+    /* The newest is open from the start; the next opens on a click. */
+    const first = changelog.getByRole("button", { name: new RegExp(about.experience[0].role) });
+    await expect(first).toHaveAttribute("aria-expanded", "true");
+    const second = changelog.getByRole("button", { name: new RegExp(`^${about.experience[1].role}`) });
+    await second.click();
+    await expect(second).toHaveAttribute("aria-expanded", "true");
+    await expect(changelog.getByText(about.experience[1].points[0])).toBeVisible();
+  });
+
+  test("picking a part of the system prints its stack", async ({ page }) => {
+    await page.goto("/about");
+    const toolkit = page.locator("#toolkit");
+    const backend = about.skillGroups.find((group) => group.title === "Backend")!;
+
+    await toolkit.getByRole("button", { name: "Backend", exact: true }).click();
+    await expect(toolkit.getByText("docerity stack --for backend")).toBeVisible();
+    const stack = toolkit.getByRole("list", { name: "Backend stack" }).getByRole("listitem");
+    await expect(stack).toHaveCount(backend.items.length);
+    await expect(stack.first()).toContainText(backend.items[0]);
+  });
+
+  test("certificates show their real scans, and the viewer follows the pick", async ({ page, request }) => {
+    await page.goto("/about");
+    const credentials = page.locator("#credentials");
+    const scanned = about.certifications.filter((cert) => cert.image);
+
+    const wall = credentials.getByRole("list", { name: "Certifications" }).getByRole("button");
+    await expect(wall).toHaveCount(about.certifications.length);
+
+    const target = scanned[1];
+    await wall.filter({ hasText: target.name }).click();
+    const viewer = credentials.locator(`img[alt="${target.name} certificate"]`);
+    await expect(viewer).toBeVisible();
+
+    /*
+      The source is fetched rather than waiting on the browser to decode it:
+      the dev image optimiser stalls under several requests at once, which
+      would fail this for a reason that has nothing to do with the page.
+    */
+    const source = await viewer.getAttribute("src");
     const url = new URL(source!, "http://localhost");
     const response = await request.get(url.searchParams.get("url") ?? url.pathname);
     expect(response.status()).toBe(200);
-  });
 
-  test("every hero figure settles on its real value", async ({ page }) => {
-    /*
-      The figures count up on first view. An earlier version kept the result
-      of `String.match` in the effect's dependency list (a new array on every
-      render) so the effect re-ran, restarted the count, set state and
-      triggered the render that re-ran it, leaving all four flickering near
-      zero. This asserts they come to rest on the real numbers.
-    */
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/about");
-
-    for (const [label, expected] of [
-      ["Years building production software", "6+"],
-      ["Hackathon wins", "3"],
-      /* Counted from the file, not typed: the figure is derived from the
-         project list, so a new project must not fail this test. */
-      ["Shipped projects", String(projects.length)],
-      ["Blockchain ecosystems", "7"],
-    ] as const) {
-      await expect(
-        page.getByText(label, { exact: true }).locator("xpath=preceding-sibling::dd[1]")
-      ).toHaveText(expected);
-    }
-
-    /* Held for a beat and re-checked: a restarting animation passes a single
-       assertion on its way past the target. */
-    await page.waitForTimeout(1500);
-    await expect(
-      page.getByText("Shipped projects", { exact: true }).locator("xpath=preceding-sibling::dd[1]")
-    ).toHaveText(String(projects.length));
+    await expect(credentials.getByText(about.education[3].qualification)).toBeVisible();
   });
 
   test("the hero has no background grid", async ({ page }) => {
@@ -183,8 +149,11 @@ test.describe("About page", () => {
   });
 
   test("navbar 'About' link navigates to the page", async ({ page }) => {
+    /* Wide enough for the homepage header to show its links in the bar; below
+       1280px they live in the menu, which site-header.spec.ts covers. */
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
-    await page.getByRole("navigation").getByRole("link", { name: "About" }).first().click();
+    await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "About" }).click();
     await expect(page).toHaveURL("/about");
   });
 
@@ -214,9 +183,7 @@ test.describe("About page", () => {
     const actual = await page.locator("#showcase h3 a").count();
 
     await page.goto("/about");
-    await expect(
-      page.getByText("Shipped projects").locator("xpath=preceding-sibling::dd[1]")
-    ).toHaveText(String(actual));
+    await expect(shipped(page)).toHaveText(String(actual));
   });
 
   test("layout does not overflow horizontally at narrow widths", async ({ page }) => {

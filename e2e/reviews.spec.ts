@@ -23,9 +23,11 @@ test.describe("Reviews page", () => {
     ).toBeVisible();
     await expect(page.getByLabel("Your name")).toBeVisible();
 
-    /* The empty state says so rather than showing an empty panel where the
-       rating summary goes. */
-    await expect(page.getByText("No entries")).toBeVisible();
+    /* The empty state says so: the hero, the waveform and the summary each
+       admit there is nothing yet rather than showing an empty frame. */
+    await expect(page.getByText("Nothing on the record yet.")).toBeVisible();
+    await expect(page.getByText("No entries yet")).toBeVisible();
+    await expect(page.getByRole("link", { name: /Be the first/ })).toHaveAttribute("href", "#leave-a-review");
 
     expect(errors).toEqual([]);
   });
@@ -67,7 +69,7 @@ test.describe("Reviews page", () => {
     page,
   }) => {
     await page.goto("/reviews");
-    await page.getByRole("button", { name: "Submit review" }).click();
+    await page.getByRole("button", { name: /Send for reading/ }).click();
 
     await expect(page.getByText("Please tell me your name.")).toBeVisible();
     await expect(page.getByText("Pick a rating from 1 to 5.")).toBeVisible();
@@ -80,21 +82,22 @@ test.describe("Reviews page", () => {
     await expect(page.getByLabel("Your name")).toBeFocused();
   });
 
-  test("is reachable from the footer and the homepage testimonials", async ({ page }) => {
+  test("how we know each other is a real radio group too", async ({ page }) => {
+    await page.goto("/reviews");
+    const group = page.getByRole("radiogroup", { name: "How do we know each other" });
+    await expect(group.getByRole("radio")).toHaveCount(3);
+    await group.locator("label").filter({ hasText: "You mentored me" }).click();
+    await expect(group.getByRole("radio", { name: /You mentored me/ })).toBeChecked();
+  });
+
+  test("is reachable from the footer and the homepage reviews", async ({ page }) => {
     await page.goto("/");
 
-    /*
-      `getByRole("button")`, not "link". base-ui's Button sets `role="button"` on
-      the element it renders into, so an anchor rendered through it is announced
-      as a button. Every other test here queries these the same way.
-    */
+    /* With no reviews yet the homepage invites the first one, and does not
+       offer to "read all" of nothing; once there are reviews it names their
+       authors and links here (see integration/pipeline.spec.ts). */
     await expect(
-      page.getByRole("button", { name: "Read all of them" })
-    ).toHaveAttribute("href", "/reviews");
-    /* Filled rather than ghost. A borderless button beside a filled one read as
-       stray text, which is why nobody found the form from the homepage. */
-    await expect(
-      page.getByRole("button", { name: "Write a review" })
+      page.locator("#reviews").getByRole("link", { name: "Write the first one" })
     ).toHaveAttribute("href", "/reviews#leave-a-review");
     await expect(
       page.locator('footer a[href="/reviews"]')

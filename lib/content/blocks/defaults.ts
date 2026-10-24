@@ -13,10 +13,13 @@ import {
   tools,
 } from "@/components/sections/about/about-data";
 import {
+  applySteps,
   audiences,
   faqs,
   formatSteps,
+  specialties,
   stages,
+  teamPrinciples,
 } from "@/components/sections/mentorship-program/mentorship-program-data";
 import { checkpoints } from "@/components/sections/mentorship/mentorship-data";
 import {
@@ -37,6 +40,7 @@ import {
 } from "@/components/sections/web3/web3-data";
 import { pairs } from "@/components/sections/explainers/explainers-data";
 import { steps as contactSteps } from "@/components/sections/contact/contact-data";
+import { FORM_COPY } from "@/components/sections/contact/contact-content";
 
 /**
  * What each section renders when the database has nothing to say.
@@ -282,7 +286,12 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
           "title": "Got work *worth doing properly*?",
           "lede": "A build, a data set, an assistant, or just a question. A person reads every email, and replies."
         }
-      }
+      },
+      contactOptions: {
+        project: { title: "A new project", detail: "Scope, build and ship production software." },
+        mentorship: { title: "Mentorship", detail: "Weekly 1:1s and honest code review." },
+        question: { title: "Just a question", detail: "" },
+      },
     },
 
   clients: {
@@ -298,6 +307,33 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
   },
 
   about: {
+    headings: {
+      "about-hero": {
+        "eyebrow": "About",
+        "title": "Every branch merged into *one studio.*",
+        "lede": "Docerity is a software studio founded by Theophilus Uchechukwu. It builds software, explains it clearly, and trains the engineers who maintain it."
+      },
+      "about-story": {
+        "eyebrow": "The story",
+        "title": "Built first, explained second, taught third.",
+        "lede": "The studio is three things that turned out to be one skill. Read it in the founder's own words."
+      },
+      "about-experience": {
+        "eyebrow": "Experience",
+        "title": "What shipped, and where.",
+        "lede": "Every role, newest first. Open one for its release notes."
+      },
+      "about-toolkit": {
+        "eyebrow": "Toolkit",
+        "title": "The stack, by what it is for.",
+        "lede": "Pick a part of the system and see what we reach for. Every one of these has been in production, not just in a tutorial."
+      },
+      "about-credentials": {
+        "eyebrow": "Credentials",
+        "title": "Studied, certified, and checkable.",
+        "lede": "The certificates themselves, not a line claiming them. Pick one to look at it properly."
+      }
+    },
     founder: {
       ...founder,
       /* The portrait was a constant in `about-hero.tsx`. Its path is the
@@ -339,6 +375,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "title": "Not just office hours.",
         "lede": "A standing session, feedback between sessions, a plan that moves with you, and a way to reach out when something can't wait."
       },
+      "mentorship-team": {
+        "eyebrow": "Who reviews your code",
+        "title": "A team that ships, not a lone tutor.",
+        "lede": "Your reviews come from engineers on the Docerity team, the same people building the systems on our projects page. You keep one lead for continuity, and get a specialist when the work calls for one."
+      },
       "mentorship-testimonials": {
         "eyebrow": "From mentees",
         "title": "Real progress, in their words.",
@@ -348,12 +389,20 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "eyebrow": "FAQ",
         "title": "Questions before you apply.",
         "lede": "The things people usually ask before a first call."
+      },
+      "mentorship-apply": {
+        "eyebrow": "Taking new mentees",
+        "title": "Your next level starts with a *short note.*",
+        "lede": ""
       }
     },
     audiences: audiences.map((entry) => ({ ...entry })),
     stages: stages.map((entry) => ({ ...entry })),
     checkpoints: checkpoints.map((entry) => ({ ...entry })),
     formatSteps: formatSteps.map((entry) => ({ ...entry })),
+    teamPrinciples: teamPrinciples.map((entry) => ({ ...entry })),
+    specialties: [...specialties],
+    applySteps: applySteps.map((entry) => ({ ...entry })),
     faqs: faqs.map((entry) => ({ ...entry })),
   },
 
@@ -498,10 +547,196 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
     headings: {
       "contact": {
         "eyebrow": "New project",
-        "title": "Tell me what you're building.",
+        "title": "Tell us what you're building.",
         "lede": "A few details now save a lot of back-and-forth later. Every message is read by a person who could do the work."
+      },
+      "contact-mentorship": {
+        "eyebrow": "Mentorship · taking new mentees",
+        "title": "Tell us where you are.",
+        "lede": "Where you are now, where you want to get to, and a little of your code if you have it. The intro call takes it from there."
+      },
+      "contact-speaking": {
+        "eyebrow": "Speaking & workshops",
+        "title": "Tell us about your audience.",
+        "lede": "Who will be in the room, what they should leave knowing, and when. Talks, workshops and team sessions."
+      },
+      "contact-other": {
+        "eyebrow": "Say hello",
+        "title": "Ask us anything.",
+        "lede": "A question, an idea, a collaboration. It still goes to a person, not a queue."
       }
     },
     steps: contactSteps.map((step) => ({ ...step })),
+    /* The icon and where the receipt links stay with the code: they belong to
+       the kind of enquiry rather than to its wording. */
+    forms: Object.fromEntries(
+      Object.entries(FORM_COPY).map(([kind, copy]) => [
+        kind,
+        {
+          label: copy.label,
+          sub: copy.sub,
+          sheetLabel: copy.sheetLabel,
+          detailsTitle: copy.detailsTitle,
+          timelineLabel: copy.timelineLabel,
+          messageLabel: copy.messageLabel,
+          placeholder: copy.placeholder,
+          hint: copy.hint,
+          filesLabel: copy.filesLabel,
+          submit: copy.submit,
+          sentTitle: copy.sentTitle,
+          nextLabel: copy.next.label,
+        },
+      ])
+    ),
+  },
+
+  contribute: {
+    headings: {
+      "contribute-hero": {
+        "eyebrow": "Write for us · open to people we mentor",
+        "title": "Getting your name on *an explainer.*",
+        "lede": ""
+      },
+      "contribute-route": {
+        "eyebrow": "The route",
+        "title": "An account, not a form.",
+        "lede": "An open form collects AI filler and link-building, and every one has to be read and refused. The people who write here are already being mentored, so they get an account instead."
+      },
+      "contribute-craft": {
+        "eyebrow": "What makes a good one",
+        "title": "One idea, one everyday thing it works like.",
+        "lede": ""
+      }
+    },
+    draft: {
+      crossedOut: "a blog post",
+      note: "An explainer, not a post: one idea, one analogy.",
+    },
+    edits: [
+      {
+        before: "On this page we will explain how you can write for Docerity.",
+        after: "",
+        note: "Start with the point, not the announcement.",
+      },
+      {
+        before: "Anyone can submit a blog post about any tech topic they like, and we will publish it.",
+        after: "There is no submit button here, and that is deliberate.",
+        note: "Not anyone, and not anything. Say what actually happens.",
+      },
+      {
+        before: "Explaining something clearly is hard,",
+        after: "Explaining something clearly is hard,",
+        note: "",
+      },
+      {
+        before: "so we try to publish as many posts as we can.",
+        after: "and these pieces are worth reading because somebody edited them properly.",
+        note: "The value is the editing, not the volume.",
+      },
+    ],
+    example: {
+      fileName: "write-for-us.md",
+      byline: "your name",
+      stamp: "Ready to publish",
+      button: "How you get here",
+    },
+    route: [
+      {
+        status: "Mentee",
+        title: "We are already working together",
+        description: "Every explainer here is written by somebody we know well enough to review honestly. That is the filter, and the only one.",
+        cardNote: "in a 1:1",
+      },
+      {
+        status: "Invited",
+        title: "You get an account",
+        description: "An invitation link, a password you choose, and the same editor we use. Your drafts stay private until you send them.",
+        cardNote: "drafting in the editor",
+      },
+      {
+        status: "In review",
+        title: "We read it before anybody else",
+        description: "Nothing publishes itself. We edit for clarity, and go back and forth if it needs it.",
+        cardNote: "notes to resolve",
+      },
+      {
+        status: "Published",
+        title: "It goes up with your name on it",
+        description: "Your byline, on a piece somebody will still remember a year later.",
+        cardNote: "live on the blog",
+      },
+    ],
+    invite: {
+      note: "If you are being mentored here, writing one is part of it. If you are not and want to be, that conversation starts the same way everything else does.",
+      primaryLabel: "Talk about mentorship",
+      secondaryLabel: "Read what is here",
+    },
+    craft: [
+      "The pieces that work here take a single concept somebody is stuck on and pair it with something they already understand. The analogy is not decoration on top of the explanation, it is the explanation.",
+      "The ones that do not work try to cover a whole area. Size it so it fits in four minutes.",
+    ],
+    scope: {
+      quote: "Write it for the person you were six months before you understood it.",
+    },
+    sizes: [
+      { upTo: "2", topic: "Why an index makes a query faster", why: "Four minutes somebody remembers a year later." },
+      { upTo: "4", topic: "How database indexes work", why: "Good, but it is three explainers wearing one title." },
+      { upTo: "8", topic: "Indexing strategies, compared", why: "A talk, not an explainer." },
+      { upTo: "12", topic: "Databases", why: "A textbook chapter nobody finishes." },
+    ],
+  },
+
+  reviews: {
+    headings: {
+      "reviews-hero": {
+        "eyebrow": "Record · Reviews",
+        "title": "The people who *paid for the work*, in their words.",
+        "lede": "Clients and the engineers we have mentored. Nothing here was written by us, and nothing appears until it has been read."
+      },
+      "reviews-record": {
+        "eyebrow": "Every one read first",
+        "title": "Nothing here was written by us.",
+        "lede": ""
+      },
+      "reviews-form": {
+        "eyebrow": "Leave a review",
+        "title": "Worked together? Add yours.",
+        "lede": ""
+      }
+    },
+    empty: {
+      lede: "Clients and the engineers we have mentored. There is nothing here yet, which is the honest state of a page that only publishes what people actually send.",
+      formTitle: "Worked together? Be the first.",
+    },
+    process: [
+      { title: "You write it", description: "Two minutes. Honest is more useful to the next person than flattering." },
+      { title: "We read it", description: "Every one. If something needs checking we email you before it goes up." },
+      { title: "It goes up", description: "With your name and role, and a link to your work if you gave one." },
+    ],
+  },
+
+  pages: {
+    notFound: {
+      eyebrow: "Lost signal",
+      title: "This page doesn't exist.",
+      lede: "The link might be broken, or the page may have moved. Let's get you back on track.",
+      primaryLabel: "Back to home",
+      secondaryLabel: "Read the blog",
+      concept: "404 Not Found",
+      conceptCaption: "The server looked, and nothing lives at that address.",
+      analogy: "A gap on a bookshelf",
+      analogyCaption: "The shelf is real. That one book is not on it.",
+      shelfNote: "Every spine is a page that exists. Pick one.",
+    },
+    unsubscribe: {
+      doneTitle: "You are unsubscribed",
+      doneBody: "No more explainers will reach you. No hard feelings, and you can subscribe again whenever you like.",
+      failedTitle: "That link did not work",
+      failedBody: "The link may have been cut short by your mail client, or it may already have been used. Email us and we will take you off the list ourselves.",
+      blogLabel: "Read the explainers",
+      contactLabel: "Get in touch",
+      listName: "Docerity explainers",
+      listTagline: "One idea, one analogy, now and then",
+    },
   },
 };

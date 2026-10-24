@@ -1,18 +1,29 @@
+/*
+  `startsAt` names a stage below; the page marks it on the path when the
+  audience is picked. It is where someone like this usually begins, which the
+  first call confirms, not a placement.
+*/
 export const audiences = [
   {
     title: "Junior & early-career engineers",
     description:
       "You can write code, but you're not sure it's good code. You need real code review, not another tutorial.",
+    startsAt: "Code Reviews",
+    short: "Juniors",
   },
   {
     title: "Career switchers & self-taught",
     description:
       "You came from a bootcamp, another career, or taught yourself. You need structured fundamentals, and the confidence that comes from someone actually checking your work.",
+    startsAt: "Foundations",
+    short: "Switchers",
   },
   {
     title: "Mid-level engineers leveling up",
     description:
       "You ship features fine, but system design and leadership feel like a different job. You need someone who's done it to show you the way.",
+    startsAt: "System Design",
+    short: "Mid-levels",
   },
 ] as const;
 
@@ -91,5 +102,57 @@ export const faqs = [
     question: "Do I need to already have a job in tech?",
     answer:
       "No. Junior engineers, career switchers, and working engineers all go through the same honest process, just starting from different points on the path.",
+  },
+] as const;
+
+/*
+  How the team reviews. Mentorship runs through the Docerity team rather than
+  one person, so the page says how that works rather than showing a face.
+*/
+export const teamPrinciples = [
+  {
+    title: "One lead, start to finish",
+    description: "The same mentor runs your sessions and your plan, so nothing is explained twice.",
+  },
+  {
+    title: "A specialist when it matters",
+    description:
+      "Stuck on a contract, a model or a schema? The engineer who does that daily reviews it.",
+  },
+  {
+    title: "One standard of review",
+    description:
+      "Every reviewer works to the same written bar, the one our own production code is held to.",
+  },
+] as const;
+
+export const specialties = [
+  "Backend & APIs",
+  "Frontend",
+  "System design",
+  "Web3",
+  "AI products",
+] as const;
+
+export const applySteps = [
+  {
+    title: "Apply",
+    when: "Today",
+    description: "Tell us where you are and where you want to get to. It takes a couple of minutes.",
+  },
+  {
+    title: "Intro call",
+    when: "Within days",
+    description: "A short call to find your real starting point. No commitment either way.",
+  },
+  {
+    title: "Your plan",
+    when: "After the call",
+    description: "A written plan for your first stage, so you know what the weeks ahead look like.",
+  },
+  {
+    title: "First session",
+    when: "Week one",
+    description: "We start on real code: yours, from work or a side project.",
   },
 ] as const;

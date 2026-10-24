@@ -83,8 +83,14 @@ export function formatBytes(bytes: number) {
 }
 
 export type FieldErrors = Partial<
-  Record<"name" | "email" | "company" | "message" | "files" | "form", string>
+  Record<"name" | "email" | "company" | "codeLink" | "message" | "files" | "form", string>
 >;
+
+/* The two mentorship details: which starting point the applicant picked
+   (the audience's title, as the mentorship page words it) and a link to
+   their code. Both optional, and both empty for every other kind of
+   enquiry. */
+export const MENTORSHIP_LIMITS = { stage: 120, codeLink: 300 } as const;
 
 export type EnquiryInput = {
   name: string;
@@ -95,7 +101,25 @@ export type EnquiryInput = {
   budget: string;
   timeline: string;
   message: string;
+  /** Mentorship only: the starting point the applicant picked. */
+  stage?: string;
+  /** Mentorship only: a link to their code. */
+  codeLink?: string;
 };
+
+/*
+  A link written the way people write links: with or without the scheme, as
+  long as it has a host with a dot in it. "github.com/ada" is fine; "my repo"
+  is not.
+*/
+const LINK = /^(https?:\/\/)?[^\s/$.?#]+\.[^\s]{2,}$/i;
+
+/** The link as stored: given a scheme when it was typed without one. */
+export function normaliseLink(value: string): string {
+  const link = value.trim();
+  if (!link) return "";
+  return /^https?:\/\//i.test(link) ? link : `https://${link}`;
+}
 
 /* Deliberately permissive: the shape catches typos, delivery proves the rest. */
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -117,6 +141,13 @@ export function validateEnquiry(
   }
   if (!projectTypes.some((type) => type.value === input.projectType)) {
     errors.form = "Please choose what this is about.";
+  }
+  const codeLink = (input.codeLink ?? "").trim();
+  if (codeLink && (codeLink.length > MENTORSHIP_LIMITS.codeLink || !LINK.test(codeLink))) {
+    errors.codeLink = "That link doesn't look right. Something like github.com/you works.";
+  }
+  if ((input.stage ?? "").length > MENTORSHIP_LIMITS.stage) {
+    errors.form = "Please pick one of the starting points.";
   }
 
   if (files.length > FILE_LIMITS.maxFiles) {

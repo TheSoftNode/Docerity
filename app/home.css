@@ -1,0 +1,857 @@
+/* ---------------------------------------------------------------
+   The homepage's palettes and motion.
+
+   Separate from the site's light/dark tokens on purpose. Those describe one
+   brand in two lighting conditions; these are four moods a visitor can pick
+   for the homepage, and the page alternates dark and light bands within a
+   single palette rather than flipping wholesale. Mixing the two vocabularies
+   would make every `--background` mean two things.
+
+   Every value below is derived from five chosen colours per palette (ink,
+   deep, tint, paper, accent) with fixed ratios, so the four palettes keep the
+   same contrast relationships. The derivation lived in the design file; the
+   results are written out here because CSS cannot mix colours portably yet
+   for the browsers this site supports.
+
+   `:root` carries the brand palette, so a page rendered before the palette
+   script has run, or with JavaScript off, is still Sapphire Navy.
+   --------------------------------------------------------------- */
+
+:root,
+:root[data-palette="sapphire"] {
+  --ld-ink: #08102e;
+  --ld-deep: #1c3a8c;
+  --ld-tint: #afc4ff;
+  --ld-paper: #f4f5fa;
+  --ld-accent: #ff7a59;
+  --ld-ink-2: #060b20;
+  --ld-ink-3: #040817;
+  --ld-panel: #112358;
+  --ld-row: #2e4b9a;
+  --ld-muted: #d5dffc;
+  --ld-muted-2: #adb0bd;
+  --ld-muted-3: #7d8ec0;
+  --ld-dim: #53618c;
+  --ld-paper-2: #e8eaf0;
+  --ld-text-muted: #4f556b;
+  --ld-text-2: #323953;
+  --ld-line: #d8dae2;
+  --ld-line-2: #c0c3cd;
+  --ld-line-3: #e3e5ec;
+  --ld-tint-soft: #d2dcfc;
+  --ld-text-dim: #797e90;
+  --ld-card: #fbfbfd;
+  --ld-ink-rgb: 8 16 46;
+  --ld-tint-rgb: 175 196 255;
+  --ld-paper-rgb: 244 245 250;
+  --ld-accent-rgb: 255 122 89;
+}
+
+:root[data-palette="swiss"] {
+  --ld-ink: #0b0b0b;
+  --ld-deep: #1e1e1e;
+  --ld-tint: #d9d9d9;
+  --ld-paper: #f4f4f2;
+  --ld-accent: #ff3b30;
+  --ld-ink-2: #080808;
+  --ld-ink-3: #060606;
+  --ld-panel: #141414;
+  --ld-row: #343434;
+  --ld-muted: #e8e8e7;
+  --ld-muted-2: #aeaead;
+  --ld-muted-3: #9b9b9b;
+  --ld-dim: #686868;
+  --ld-paper-2: #e8e8e6;
+  --ld-text-muted: #515150;
+  --ld-text-2: #353535;
+  --ld-line: #d8d8d6;
+  --ld-line-2: #c1c1bf;
+  --ld-line-3: #e4e4e2;
+  --ld-tint-soft: #e6e6e6;
+  --ld-text-dim: #7b7b7a;
+  --ld-card: #fbfbfa;
+  --ld-ink-rgb: 11 11 11;
+  --ld-tint-rgb: 217 217 217;
+  --ld-paper-rgb: 244 244 242;
+  --ld-accent-rgb: 255 59 48;
+}
+
+:root[data-palette="brass"] {
+  --ld-ink: #170a0d;
+  --ld-deep: #4a1622;
+  --ld-tint: #f2cdb0;
+  --ld-paper: #f7f1ea;
+  --ld-accent: #f5b83d;
+  --ld-ink-2: #100709;
+  --ld-ink-3: #0c0506;
+  --ld-panel: #2e0f16;
+  --ld-row: #5e2c33;
+  --ld-muted: #f5e1d0;
+  --ld-muted-2: #b4aca8;
+  --ld-muted-3: #b0927f;
+  --ld-dim: #7a6256;
+  --ld-paper-2: #ece5df;
+  --ld-text-muted: #5a4f4f;
+  --ld-text-2: #3f3435;
+  --ld-line: #dcd5cf;
+  --ld-line-2: #c6beb9;
+  --ld-line-3: #e7e1db;
+  --ld-tint-soft: #f4dfcd;
+  --ld-text-dim: #837977;
+  --ld-card: #fcf9f7;
+  --ld-ink-rgb: 23 10 13;
+  --ld-tint-rgb: 242 205 176;
+  --ld-paper-rgb: 247 241 234;
+  --ld-accent-rgb: 245 184 61;
+}
+
+:root[data-palette="volt"] {
+  --ld-ink: #0c0b1d;
+  --ld-deep: #231e57;
+  --ld-tint: #bdb6ff;
+  --ld-paper: #f3f2f7;
+  --ld-accent: #d6ff3b;
+  --ld-ink-2: #080814;
+  --ld-ink-3: #06060e;
+  --ld-panel: #161437;
+  --ld-row: #35306b;
+  --ld-muted: #dbd7fb;
+  --ld-muted-2: #aeadb6;
+  --ld-muted-3: #8883bb;
+  --ld-dim: #5c5883;
+  --ld-paper-2: #e7e6ec;
+  --ld-text-muted: #51505e;
+  --ld-text-2: #363544;
+  --ld-line: #d7d6dd;
+  --ld-line-2: #c0bfc7;
+  --ld-line-3: #e3e2e8;
+  --ld-tint-soft: #d8d4fb;
+  --ld-text-dim: #7b7a86;
+  --ld-card: #fafafc;
+  --ld-ink-rgb: 12 11 29;
+  --ld-tint-rgb: 189 182 255;
+  --ld-paper-rgb: 243 242 247;
+  --ld-accent-rgb: 214 255 59;
+}
+
+/* ---------------------------------------------------------------
+   Switching palettes.
+
+   The switcher adds this class for the length of one transition, so a change
+   cross-fades instead of snapping. It is not left on, because a permanent
+   colour transition on every element makes hover states lag and fights the
+   animations below.
+   --------------------------------------------------------------- */
+:root.ld-palette-changing,
+:root.ld-palette-changing * {
+  transition:
+    background-color 450ms ease,
+    border-color 450ms ease,
+    color 450ms ease,
+    fill 450ms ease !important;
+}
+
+/* The display face. Bricolage is loaded in the root layout as a variable. */
+.ld-display {
+  font-family: var(--font-bricolage), var(--font-display), system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------
+   The palette-matched logo.
+
+   Every palette's mark is rendered and CSS shows the one that matches. Doing it
+   here rather than in React means the right logo is on screen in the very
+   first paint, before hydration, with no flash of the brand mark on a page
+   somebody set to brass.
+   --------------------------------------------------------------- */
+.ld-logo > [data-logo] {
+  display: none;
+}
+:root:not([data-palette]) .ld-logo > [data-logo="sapphire"],
+:root[data-palette="sapphire"] .ld-logo > [data-logo="sapphire"],
+:root[data-palette="swiss"] .ld-logo > [data-logo="swiss"],
+:root[data-palette="brass"] .ld-logo > [data-logo="brass"],
+:root[data-palette="volt"] .ld-logo > [data-logo="volt"] {
+  display: block;
+}
+
+/* ---------------------------------------------------------------
+   Motion. Every animation is a named utility so the components stay readable,
+   and all of them stop under prefers-reduced-motion at the bottom.
+   --------------------------------------------------------------- */
+@keyframes ld-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ld-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ld-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ld-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes ld-marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes ld-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(var(--ld-accent-rgb) / 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgb(var(--ld-accent-rgb) / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(var(--ld-accent-rgb) / 0);
+  }
+}
+@keyframes ld-live {
+  0% {
+    box-shadow: 0 0 0 0 rgb(84 214 150 / 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgb(84 214 150 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(84 214 150 / 0);
+  }
+}
+@keyframes ld-float {
+  50% {
+    transform: translateY(-12px);
+  }
+}
+@keyframes ld-rise {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes ld-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes ld-drift {
+  50% {
+    transform: translate(20px, -14px) rotate(8deg);
+  }
+}
+@keyframes ld-sway {
+  0%,
+  100% {
+    transform: rotateY(-18deg) rotateX(9deg) translateY(0);
+  }
+  50% {
+    transform: rotateY(-4deg) rotateX(3deg) translateY(-14px);
+  }
+}
+@keyframes ld-flap {
+  from {
+    transform: rotateX(0);
+  }
+  to {
+    transform: rotateX(-180deg);
+  }
+}
+
+.ld-up {
+  animation: ld-up 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+/* Opacity only, for anything whose position is measured or anchors the
+   layout around it: a slide would move its box while it settles. */
+.ld-fade {
+  animation: ld-fade 0.9s ease both;
+}
+.ld-zoom {
+  animation: ld-zoom 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.ld-marquee {
+  animation: ld-marquee 34s linear infinite;
+}
+.ld-marquee-reverse {
+  animation: ld-marquee-reverse 40s linear infinite;
+}
+.ld-pulse {
+  animation: ld-pulse 2.2s infinite;
+}
+.ld-live {
+  animation: ld-live 1.8s infinite;
+}
+.ld-float {
+  animation: ld-float 4.5s ease-in-out infinite;
+}
+.ld-rise {
+  animation: ld-rise 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transform-origin: bottom;
+}
+.ld-blink {
+  animation: ld-blink 1s steps(1) infinite;
+}
+.ld-drift {
+  animation: ld-drift 9s ease-in-out infinite;
+}
+.ld-sway {
+  animation: ld-sway 9s ease-in-out infinite;
+}
+.ld-delay-1 {
+  animation-delay: 0.12s;
+}
+.ld-delay-2 {
+  animation-delay: 0.24s;
+}
+.ld-delay-3 {
+  animation-delay: 0.36s;
+}
+.ld-delay-4 {
+  animation-delay: 0.48s;
+}
+.ld-delay-5 {
+  animation-delay: 0.6s;
+}
+.ld-delay-6 {
+  animation-delay: 0.72s;
+}
+
+/* ---------------------------------------------------------------
+   The project stage.
+
+   A screenshot fills the frame and slowly tours itself, down a tall capture
+   or across a wide one, out and back, so what `cover` crops is still seen.
+   The progress line times the move to the next project; its play state is
+   set inline so hovering the section pauses it in step with the timer.
+   --------------------------------------------------------------- */
+@keyframes ld-pan-y {
+  0%,
+  12% {
+    object-position: 50% 0%;
+  }
+  88%,
+  100% {
+    object-position: 50% 100%;
+  }
+}
+@keyframes ld-pan-x {
+  0%,
+  12% {
+    object-position: 0% 0%;
+  }
+  88%,
+  100% {
+    object-position: 100% 0%;
+  }
+}
+@keyframes ld-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes ld-stage-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-pan-y {
+  animation: ld-pan-y 14s ease-in-out infinite alternate;
+}
+.ld-pan-x {
+  animation: ld-pan-x 14s ease-in-out infinite alternate;
+}
+/* In a grid the tour waits for its card to be hovered or focused. */
+.ld-pan-on-hover {
+  animation-play-state: paused;
+}
+.group:hover .ld-pan-on-hover,
+.group:has(:focus-visible) .ld-pan-on-hover {
+  animation-play-state: running;
+}
+
+/* The Projects hero's wall: columns drift past each other, each holding its
+   projects twice so the loop at -50% is seamless. */
+@keyframes ld-wall {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+.ld-wall-up {
+  animation: ld-wall 52s linear infinite;
+}
+.ld-wall-down {
+  animation: ld-wall 58s linear infinite reverse;
+}
+.ld-wall-up-slow {
+  animation: ld-wall 66s linear infinite;
+}
+.ld-wall-down-slow {
+  animation: ld-wall 72s linear infinite reverse;
+}
+
+/* The project page's product frame lifting into place, and a rule drawing
+   itself in. */
+@keyframes ld-lift {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotateX(14deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-lift {
+  animation: ld-lift 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s both;
+}
+@keyframes ld-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.ld-grow {
+  animation: ld-grow 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------------
+   The mentorship page.
+
+   A light sheen across lit words, slow beams in the hero, the review window
+   rising out of the floor, and the small loops that show each format item
+   at work. All of them stop under reduced motion.
+   --------------------------------------------------------------- */
+@keyframes ld-sheen {
+  to {
+    background-position: -200% 0;
+  }
+}
+.ld-sheen {
+  background-image: linear-gradient(90deg, var(--ld-tint), var(--ld-paper) 40%, var(--ld-tint) 80%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ld-sheen 6s linear infinite;
+}
+@keyframes ld-beam {
+  50% {
+    opacity: 0.4;
+  }
+}
+.ld-beam {
+  animation: ld-beam 7s ease-in-out infinite;
+}
+@keyframes ld-floor-rise {
+  from {
+    opacity: 0;
+    transform: rotateX(28deg) translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(14deg);
+  }
+}
+.ld-floor-rise {
+  transform: rotateX(14deg);
+  transform-origin: 50% 100%;
+  animation: ld-floor-rise 1.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s both;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.group:hover .ld-floor-rise {
+  transform: rotateX(4deg);
+}
+@keyframes ld-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-pop {
+  animation: ld-pop 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes ld-wave {
+  0%,
+  100% {
+    height: 5px;
+  }
+  50% {
+    height: 18px;
+  }
+}
+.ld-wave {
+  animation: ld-wave 1s ease-in-out infinite;
+}
+@keyframes ld-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+    transform: none;
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+.ld-typing {
+  animation: ld-typing 1.2s infinite;
+}
+/* Three beats on one seven-second loop: a message, its answer, more coming. */
+@keyframes ld-beat-1 {
+  0%,
+  8% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  14%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ld-beat-2 {
+  0%,
+  40% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  48%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ld-beat-3 {
+  0%,
+  70% {
+    opacity: 0;
+  }
+  76%,
+  100% {
+    opacity: 1;
+  }
+}
+.ld-beat-1 {
+  animation: ld-beat-1 7s infinite;
+}
+.ld-beat-2 {
+  animation: ld-beat-2 7s infinite;
+}
+.ld-beat-3 {
+  animation: ld-beat-3 7s infinite;
+}
+/* A plan item ticking itself off; each is delayed in turn by its style. */
+@keyframes ld-tick {
+  0%,
+  10% {
+    background-color: transparent;
+    border-color: var(--ld-line-2);
+    color: transparent;
+  }
+  16%,
+  100% {
+    background-color: var(--ld-ink);
+    border-color: var(--ld-ink);
+    color: var(--ld-paper);
+  }
+}
+.ld-tick {
+  animation: ld-tick 8s infinite;
+}
+@keyframes ld-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.ld-spin {
+  animation: ld-spin 60s linear infinite;
+}
+@keyframes ld-flow {
+  to {
+    stroke-dashoffset: -140;
+  }
+}
+.ld-flow {
+  animation: ld-flow 6s linear infinite;
+}
+/* A timer bar filling over one stage; two names so a new stage restarts it. */
+@keyframes ld-fill-a {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+@keyframes ld-fill-b {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+.ld-fill-a {
+  animation: ld-fill-a linear both;
+}
+.ld-fill-b {
+  animation: ld-fill-b linear both;
+}
+
+/* A caption arriving a word at a time: each word is delayed in turn by its style. */
+@keyframes ld-word {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+.ld-word {
+  display: inline-block;
+  white-space: pre;
+  animation: ld-word 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* An editor's stamp landing, and a margin note sliding in beside its mark. */
+@keyframes ld-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(1.8) rotate(-14deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.94) rotate(-4deg);
+  }
+  100% {
+    transform: rotate(-4deg);
+  }
+}
+.ld-stamp {
+  display: inline-block;
+  animation: ld-stamp 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes ld-note-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-note-in {
+  animation: ld-note-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* A path drawing itself in: give it pathLength="100" and it draws once. */
+@keyframes ld-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.ld-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: ld-draw 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+/* A deploy log line arriving: each line is delayed in turn by its style. */
+@keyframes ld-log-line {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.ld-log-line {
+  animation: ld-log-line 0.35s ease-out both;
+}
+.ld-progress {
+  animation-name: ld-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+.ld-stage-in {
+  animation: ld-stage-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* ---------------------------------------------------------------
+   The Now Board's split-flap tiles.
+
+   The tile size is one custom property so the whole board scales from one
+   number: smaller on a phone, where the row has to fit thirteen of them.
+   While a tile is still searching for its letter, its top half flips down on
+   a loop, which is what makes it read as a mechanical board rather than text
+   being swapped.
+   --------------------------------------------------------------- */
+/*
+  Sized from the board's own width rather than the viewport's, through a
+  container query on the hero's board column: thirteen tiles must fit whatever
+  space the layout gives them. Below 640px the track label sits above the
+  tiles, so they get nearly the whole row.
+*/
+.ld-board {
+  --ld-tile: clamp(10px, calc((100cqi - 95px) / 14), 25px);
+}
+@media (min-width: 640px) {
+  .ld-board {
+    --ld-tile: clamp(12px, calc((100cqi - 270px) / 14), 25px);
+  }
+}
+.ld-tile {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 var(--ld-tile);
+  align-items: center;
+  justify-content: center;
+  width: var(--ld-tile);
+  height: calc(var(--ld-tile) * 1.42);
+  border-radius: 4px;
+  background: var(--ld-ink-2);
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.35);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: calc(var(--ld-tile) * 0.74);
+  font-weight: 500;
+  transition: color 150ms;
+}
+.ld-tile::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 1px;
+  background: rgb(0 0 0 / 0.55);
+}
+.ld-tile[data-searching="true"]::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 1;
+  height: 50%;
+  border-radius: 4px 4px 0 0;
+  background: var(--ld-panel);
+  transform-origin: bottom;
+  animation: ld-flap 0.12s linear infinite;
+}
+
+/* ---------------------------------------------------------------
+   Reduced motion: everything stops, and anything that animates in is simply
+   present. The board still updates its words; it just does not rattle.
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ld-up,
+  .ld-fade,
+  .ld-pan-x,
+  .ld-pan-y,
+  .ld-stage-in,
+  .ld-zoom,
+  .ld-marquee,
+  .ld-marquee-reverse,
+  .ld-pulse,
+  .ld-live,
+  .ld-float,
+  .ld-rise,
+  .ld-blink,
+  .ld-drift,
+  .ld-sway,
+  .ld-wall-up,
+  .ld-wall-down,
+  .ld-wall-up-slow,
+  .ld-wall-down-slow,
+  .ld-log-line,
+  .ld-lift,
+  .ld-grow,
+  .ld-sheen,
+  .ld-beam,
+  .ld-floor-rise,
+  .ld-pop,
+  .ld-wave,
+  .ld-typing,
+  .ld-beat-1,
+  .ld-beat-2,
+  .ld-beat-3,
+  .ld-tick,
+  .ld-spin,
+  .ld-flow,
+  .ld-fill-a,
+  .ld-fill-b,
+  .ld-draw,
+  .ld-note-in,
+  .ld-word,
+  .ld-tile[data-searching="true"]::before {
+    animation: none !important;
+  }
+  /* Drawn, rather than waiting on an animation that will not run. */
+  .ld-draw {
+    stroke-dashoffset: 0;
+  }
+  /* Landed, at its resting angle. */
+  .ld-stamp {
+    animation: none !important;
+    transform: rotate(-4deg);
+  }
+  :root.ld-palette-changing,
+  :root.ld-palette-changing * {
+    transition: none !important;
+  }
+}
+
+/* The bands hold still under the pointer, so a name can actually be read. */
+.ld-marquee:hover,
+.ld-marquee-reverse:hover {
+  animation-play-state: paused;
+}

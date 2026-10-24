@@ -70,12 +70,13 @@ test.describe("Before anything is edited", () => {
     /* A database is connected and has nothing to say about these sections, so
        this is the fallback doing its job rather than the absence of one. */
     await page.goto("/");
-    /* Scoped to the logo wall. "HitoAI" is also a project on the homepage, so
-       an unscoped match finds two elements and fails on strict mode. */
-    await expect(
-      page.locator("#clients").getByText("HitoAI", { exact: true })
-    ).toBeVisible();
-    await expect(page.locator("#clients").getByText("Stacks", { exact: true })).toBeVisible();
+    /* Scoped to the partner band, and to its announced copy: the band draws
+       each name twice so the loop is seamless, and the second pass is hidden
+       from assistive technology. "HitoAI" is also a project on the homepage,
+       so an unscoped match would find more than one element. */
+    const band = page.locator("#clients li:not([aria-hidden='true'])");
+    await expect(band.getByText("HitoAI", { exact: true })).toBeVisible();
+    await expect(band.getByText("Stacks", { exact: true })).toBeVisible();
 
     await page.goto("/contact");
     await expect(page.getByText("You tell us what you need")).toBeVisible();
@@ -87,7 +88,7 @@ test.describe("Before anything is edited", () => {
 
     await expect(page.getByRole("heading", { name: "Client logos" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "About page" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Contact steps" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Contact", exact: true })).toBeVisible();
 
     /* Every card, because none has been saved. Counted from the schema rather
        than typed: adding a section should not fail this test. */
