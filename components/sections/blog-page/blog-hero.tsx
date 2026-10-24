@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
+import { PauseIcon, PlayIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { SectionHeading } from "@/lib/content/blocks/source";
@@ -21,8 +22,9 @@ const FONT_MAX = 230;
  * crossfading through a blur, sharpened by an alpha threshold. The filter is
  * on only while it melts, so the type is crisp at rest.
  *
- * It holds under the pointer and while off screen, and the explainers below
- * it can be picked directly. Under reduced motion it does not melt or move
+ * It moves on by itself, pauses while off screen, and has a pause button
+ * (anything that moves on its own for long needs one); the explainers
+ * below it can be picked directly. Under reduced motion it does not melt or move
  * on by itself; picking an explainer swaps the word. The heading is the
  * page's h1; the word is decoration over a plain line that says the same.
  */
@@ -37,7 +39,8 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
   const reduceMotion = useReducedMotion() ?? false;
   const [step, setStep] = useState(0);
   const [melting, setMelting] = useState(false);
-  const [held, setHeld] = useState(false);
+  /* Paused by the visitor, with the button beside the explainers. */
+  const [paused, setPaused] = useState(false);
   const [inView, setInView] = useState(true);
   const section = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -63,9 +66,23 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
     }
   }, []);
 
+  /* At rest: the current word shown and sharp, the next one hidden. Set
+     outright rather than cleared, since a cleared opacity is a visible word. */
+  const rest = useCallback(() => {
+    if (from.current) {
+      from.current.style.filter = "none";
+      from.current.style.opacity = "1";
+    }
+    if (to.current) {
+      to.current.style.filter = "none";
+      to.current.style.opacity = "0";
+    }
+  }, []);
+
   useLayoutEffect(() => {
+    rest();
     fit();
-  }, [fit, step]);
+  }, [fit, rest, step]);
 
   useEffect(() => {
     window.addEventListener("resize", fit);
@@ -83,7 +100,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
 
   /* Hold, then melt into the next word, then hold again. */
   useEffect(() => {
-    if (reduceMotion || held || !inView || words.length < 2) return;
+    if (reduceMotion || paused || !inView || words.length < 2) return;
     let frame = 0;
     let started = performance.now();
     let phase: "hold" | "melt" = "hold";
@@ -104,10 +121,11 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
         a.style.filter = `blur(${Math.min(8 / Math.max(rest, 0.001) - 8, 100)}px)`;
         a.style.opacity = `${Math.pow(rest, 0.4)}`;
         if (f >= 1) {
-          a.style.filter = "";
-          a.style.opacity = "";
-          b.style.filter = "";
-          b.style.opacity = "";
+          /* The next word is now the one showing; the render after this
+             swaps the texts and rest() puts both back as they should be. */
+          a.style.opacity = "0";
+          b.style.filter = "none";
+          b.style.opacity = "1";
           setMelting(false);
           setStep((value) => (value + 1) % words.length);
           return;
@@ -119,22 +137,15 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
     frame = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(frame);
-      for (const node of [from.current, to.current]) {
-        if (node) {
-          node.style.filter = "";
-          node.style.opacity = "";
-        }
-      }
+      if (phase === "melt") rest();
       setMelting(false);
     };
-  }, [reduceMotion, held, inView, words.length, step]);
+  }, [reduceMotion, paused, inView, words.length, step, rest]);
 
   return (
     <section
       ref={section}
       aria-labelledby="blog-title"
-      onPointerEnter={() => setHeld(true)}
-      onPointerLeave={() => setHeld(false)}
       className="relative -mt-[76px] bg-white pt-[118px] pb-12 text-[var(--ld-ink)]"
     >
       <div className="doc-shell grid min-h-[min(720px,calc(100svh-40px))] grid-rows-[auto_minmax(300px,1fr)_auto]">
@@ -161,7 +172,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
               <span
                 key={index}
                 ref={ref}
-                style={shown ? undefined : { opacity: 0 }}
+                style={{ opacity: shown ? 1 : 0 }}
                 className={cn(
                   "ld-display absolute w-full px-1 text-center text-[clamp(40px,12vw,56px)] leading-[0.98] md:text-[clamp(72px,11vw,200px)] font-extrabold tracking-[-0.06em] select-none md:w-auto md:px-0 md:leading-none md:whitespace-nowrap",
                   word.analogy ? "text-[var(--ld-deep)]" : "text-[var(--ld-ink)]"
@@ -189,6 +200,18 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
                 {pair.concept} works like {pair.analogy.toLowerCase()}.
               </span>
             </p>
+            <div className="flex flex-wrap items-center gap-x-[22px] gap-y-2">
+            {!reduceMotion && words.length > 1 ? (
+              <button
+                type="button"
+                aria-pressed={paused}
+                onClick={() => setPaused((value) => !value)}
+                className="grid size-8 place-items-center rounded-full border border-[var(--ld-line-2)] text-[var(--ld-ink)] outline-none transition-colors hover:border-[var(--ld-ink)] focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]"
+              >
+                {paused ? <PlayIcon aria-hidden="true" className="size-3.5" /> : <PauseIcon aria-hidden="true" className="size-3.5" />}
+                <span className="sr-only">{paused ? "Play" : "Pause"} the explainers</span>
+              </button>
+            ) : null}
             <div role="group" aria-label="Explainers" className="flex flex-wrap gap-x-[22px] gap-y-2">
               {pairs.map((item, index) => {
                 const on = item.slug === pair.slug;
@@ -207,6 +230,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
                   </button>
                 );
               })}
+            </div>
             </div>
             <Link
               href={`/blog/${pair.slug}`}
