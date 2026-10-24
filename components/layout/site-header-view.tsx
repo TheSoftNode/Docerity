@@ -81,15 +81,16 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
         <nav
           aria-label="Main"
           className={cn(
-            "flex items-center justify-between gap-3 rounded-full border py-1.5 pr-1.5 pl-3.5 backdrop-blur-[14px] transition-colors duration-300 sm:pl-4",
-            "border-[rgb(var(--ld-paper-rgb)/0.14)] text-[var(--ld-paper)]",
-            /* Glass over the dark heroes at the top. Once scrolled the pill can
-               be over a light section, where a see-through navy mixes with the
-               white beneath into slate grey, so it goes near-solid and stays
-               the same navy over any band. */
+            "flex items-center justify-between gap-3 rounded-full border py-1.5 pr-1.5 pl-3.5 backdrop-blur-[14px] transition-[border-color,box-shadow] duration-300 sm:pl-4",
+            /* Near-solid navy everywhere, so it is the same navy over a dark
+               hero and a white one: see-through, it mixes with white into
+               slate grey. At the top it has no border, so over the dark heroes
+               it simply sits on the page; scrolled, the border and shadow lift
+               it off whatever band is beneath. */
+            "bg-[rgb(var(--ld-ink-rgb)/0.95)] text-[var(--ld-paper)]",
             scrolled
-              ? "bg-[rgb(var(--ld-ink-rgb)/0.95)] shadow-[0_18px_40px_-24px_rgb(var(--ld-ink-rgb)/0.6)]"
-              : "bg-[rgb(var(--ld-ink-rgb)/0.6)]"
+              ? "border-[rgb(var(--ld-paper-rgb)/0.14)] shadow-[0_18px_40px_-24px_rgb(var(--ld-ink-rgb)/0.6)]"
+              : "border-transparent"
           )}
         >
           <Link
