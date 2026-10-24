@@ -6,7 +6,7 @@ import {
   readingOrder,
   shortReadTime,
   symbolFor,
-  tableSlots,
+  heroPairs,
   tagCounts,
   titleParts,
   toElements,
@@ -50,23 +50,14 @@ test.describe("element order", () => {
   });
 });
 
-test.describe("tableSlots", () => {
-  test("fills the shaped rows and leaves the rest as being written", () => {
-    const { filled, empty } = tableSlots(8);
-    expect(filled).toHaveLength(8);
-    expect(empty).toHaveLength(8);
-    /* The first two pieces sit at either end of the top row, around the heading. */
-    expect(filled.slice(0, 2)).toEqual([
-      { column: 1, row: 1 },
-      { column: 10, row: 1 },
-    ]);
-  });
-
-  test("starts a new row of ten once the shape is full", () => {
-    const { filled, empty } = tableSlots(17);
-    expect(filled.at(-1)).toEqual({ column: 1, row: 4 });
-    expect(empty).toHaveLength(9);
-    expect(new Set(filled.map((slot) => `${slot.column}:${slot.row}`)).size).toBe(17);
+test.describe("heroPairs", () => {
+  test("the explainers, concept and analogy, in publishing order; articles have no analogy", () => {
+    const pairs = heroPairs(elements);
+    expect(pairs.length).toBeGreaterThan(0);
+    expect(pairs.every((pair) => pair.concept && pair.analogy)).toBe(true);
+    const explainers = elements.filter((element) => element.type === "explainer").map((element) => element.slug);
+    expect(pairs.map((pair) => pair.slug)).toEqual(explainers.filter((slug) => pairs.some((pair) => pair.slug === slug)));
+    expect(pairs.some((pair) => pair.analogy.endsWith("."))).toBe(false);
   });
 });
 

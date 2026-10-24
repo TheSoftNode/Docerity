@@ -44,42 +44,26 @@ export function inElementOrder<T extends Dated>(entries: readonly T[]): T[] {
     .map(({ entry }) => entry);
 }
 
-/** Columns in the table. */
-export const TABLE_COLUMNS = 10;
+/** The hero's melt: how long a word holds, and how long it takes to melt into the next. */
+export const MELT = { holdMs: 1700, meltMs: 1100 } as const;
 
-/*
-  The first three rows' slots, as [column, row], in periodic order: the outer
-  columns of rows one and two (around the gaps the heading and the reading
-  panel sit in), then the full third row. Pieces past these fill further full
-  rows.
-*/
-const SHAPED_SLOTS: readonly (readonly [number, number])[] = [
-  [1, 1],
-  [10, 1],
-  [1, 2],
-  [2, 2],
-  [9, 2],
-  [10, 2],
-  ...Array.from({ length: TABLE_COLUMNS }, (_, column) => [column + 1, 3] as const),
-];
-
-export type Slot = { column: number; row: number };
+export type HeroPair = { slug: string; concept: string; analogy: string; caption: string; read: string };
 
 /**
- * Where each of `count` pieces sits, plus the empty slots that complete the
- * table, so it always reads as a whole shape: the first three rows are always
- * drawn, and a piece past them starts a further row of ten.
+ * The explainers the hero melts through, in publishing order: each one's
+ * concept and the everyday thing it works like. Articles have no analogy,
+ * so they are not in it.
  */
-export function tableSlots(count: number): { filled: Slot[]; empty: Slot[] } {
-  const extraRows = Math.max(0, Math.ceil((count - SHAPED_SLOTS.length) / TABLE_COLUMNS));
-  const slots: Slot[] = [
-    ...SHAPED_SLOTS.map(([column, row]) => ({ column, row })),
-    ...Array.from({ length: extraRows * TABLE_COLUMNS }, (_, index) => ({
-      column: (index % TABLE_COLUMNS) + 1,
-      row: 4 + Math.floor(index / TABLE_COLUMNS),
-    })),
-  ];
-  return { filled: slots.slice(0, count), empty: slots.slice(count) };
+export function heroPairs(elements: readonly BlogElement[]): HeroPair[] {
+  return elements
+    .filter((element) => element.type === "explainer" && element.line.trim() !== "")
+    .map((element) => ({
+      slug: element.slug,
+      concept: element.name,
+      analogy: element.line.replace(/\.\s*$/, ""),
+      caption: element.caption,
+      read: element.read,
+    }));
 }
 
 /** "4 min read" → "4 min", for the tiles and the meta lines. */
