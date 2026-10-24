@@ -83,7 +83,13 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
           className={cn(
             "flex items-center justify-between gap-3 rounded-full border py-1.5 pr-1.5 pl-3.5 backdrop-blur-[14px] transition-colors duration-300 sm:pl-4",
             "border-[rgb(var(--ld-paper-rgb)/0.14)] text-[var(--ld-paper)]",
-            scrolled ? "bg-[rgb(var(--ld-ink-rgb)/0.86)]" : "bg-[rgb(var(--ld-ink-rgb)/0.6)]"
+            /* Glass over the dark heroes at the top. Once scrolled the pill can
+               be over a light section, where a see-through navy mixes with the
+               white beneath into slate grey, so it goes near-solid and stays
+               the same navy over any band. */
+            scrolled
+              ? "bg-[rgb(var(--ld-ink-rgb)/0.95)] shadow-[0_18px_40px_-24px_rgb(var(--ld-ink-rgb)/0.6)]"
+              : "bg-[rgb(var(--ld-ink-rgb)/0.6)]"
           )}
         >
           <Link
