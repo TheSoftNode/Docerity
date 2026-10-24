@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
-import { pad, symbolFor, titleParts, type BlogElement } from "@/components/sections/blog-page/blog-content";
+import { symbolFor, titleParts, type BlogElement } from "@/components/sections/blog-page/blog-content";
 
 /**
- * The latest piece, set large: its element beside the everyday thing it is
- * compared to (for an explainer), bridged by two moving dotted lines, then
- * the title, the hook and a way in. The whole card is one link.
+ * The latest piece, set large: what it is called beside what it is like
+ * (for an explainer), bridged by two moving dotted lines, each word in full
+ * under its tile, then the title, the hook and a way in. The whole card is
+ * one link.
  */
 function BlogLatest({ element }: { element: BlogElement | undefined }) {
   if (!element) return null;
@@ -26,28 +27,28 @@ function BlogLatest({ element }: { element: BlogElement | undefined }) {
           className="group grid items-center gap-[clamp(28px,4vw,64px)] rounded-[32px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-[clamp(20px,2.6vw,32px)] outline-none transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(.2,.7,.2,1)] hover:-translate-y-1 hover:shadow-[0_40px_80px_-48px_rgb(var(--ld-ink-rgb)/0.45)] focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
         >
           <div aria-hidden="true" className="relative aspect-[5/4] overflow-hidden rounded-3xl bg-[linear-gradient(160deg,#0b1844,var(--ld-deep))]">
+            {/* An article has one tile, so it sits in the middle. */}
             <ElementTile
-              className="left-[12%] border border-[rgb(var(--ld-tint-rgb)/0.3)] bg-[var(--ld-ink)] text-[var(--ld-paper)]"
-              corner={pad(element.number)}
+              className={`${explainer ? "left-[12%]" : "left-[35%]"} border border-[rgb(var(--ld-tint-rgb)/0.3)] bg-[var(--ld-ink)] text-[var(--ld-paper)]`}
               symbol={element.symbol}
-              label={explainer ? "Concept" : element.kind}
+              label={explainer ? "What it's called" : element.kind}
             />
             {explainer ? (
               <>
                 <ElementTile
                   className="right-[12%] bg-[var(--ld-paper)] text-[var(--ld-deep)]"
-                  corner="≈"
                   symbol={symbolFor(element.line)}
-                  label="Everyday"
+                  label="What it's like"
                 />
                 <svg viewBox="0 0 100 80" preserveAspectRatio="none" className="absolute inset-0 size-full">
                   <path className="ld-flow" d="M42 40 C 50 26, 50 26, 58 40" fill="none" stroke="rgb(175 196 255 / 0.7)" strokeWidth="0.5" strokeDasharray="1.2 1.6" />
                   <path className="ld-flow" d="M42 40 C 50 54, 50 54, 58 40" fill="none" stroke="rgb(255 122 89 / 0.8)" strokeWidth="0.5" strokeDasharray="1.2 1.6" />
                 </svg>
-                <span className="absolute bottom-[10%] left-[12%] max-w-[34%] truncate font-mono text-[11px] tracking-[0.08em] text-[var(--ld-muted)] uppercase">
+                {/* The words themselves, in full, centred under their tiles. */}
+                <span className="ld-display absolute top-[calc(65%+22px)] left-[12%] w-[30%] text-center text-[clamp(13px,1.2vw,17px)] leading-tight font-bold tracking-[-0.01em] text-[var(--ld-paper)]">
                   {element.name}
                 </span>
-                <span className="absolute right-[12%] bottom-[10%] max-w-[34%] truncate text-right font-mono text-[11px] tracking-[0.08em] text-[var(--ld-muted)] uppercase">
+                <span className="ld-display absolute top-[calc(65%+22px)] right-[12%] w-[30%] text-center text-[clamp(13px,1.2vw,17px)] leading-tight font-bold tracking-[-0.01em] text-[var(--ld-paper)]">
                   {element.line}
                 </span>
               </>
@@ -81,14 +82,13 @@ function BlogLatest({ element }: { element: BlogElement | undefined }) {
   );
 }
 
-function ElementTile({ className, corner, symbol, label }: { className: string; corner: string; symbol: string; label: string }) {
+function ElementTile({ className, symbol, label }: { className: string; symbol: string; label: string }) {
   return (
     <div className={`absolute top-1/2 aspect-square w-[30%] -translate-y-1/2 rounded-[22px] ${className}`}>
-      <span className="absolute top-[10%] left-[12%] font-mono text-[clamp(9px,0.9vw,12px)] opacity-60">{corner}</span>
       <span className="ld-display absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[54%] text-[clamp(34px,4.6vw,64px)] font-extrabold tracking-[-0.04em]">
         {symbol}
       </span>
-      <span className="absolute inset-x-0 bottom-[11%] truncate px-2 text-center font-mono text-[clamp(8px,0.8vw,10.5px)] tracking-[0.06em] uppercase opacity-70">
+      <span className="absolute inset-x-0 bottom-[11%] truncate px-2 text-center font-mono text-[clamp(7.5px,0.7vw,9.5px)] tracking-[0.06em] uppercase opacity-70">
         {label}
       </span>
     </div>
