@@ -51,19 +51,26 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
   const next = words.length ? words[(step + 1) % words.length] : null;
   const pair = pairs[Math.floor((step % Math.max(words.length, 1)) / 2)];
 
-  /* Each word is fitted to the stage on wide screens; on narrow ones it wraps instead. */
+  /*
+    Each word is fitted to the stage: on a wide screen to its width and its
+    height, so the hero fits the window; on a narrow one it wraps instead.
+    The word's height is handed to the label, which sits just above it.
+  */
   const fit = useCallback(() => {
     const box = stage.current;
     if (!box) return;
+    const ceiling = Math.max(56, Math.min(FONT_MAX, box.clientHeight * 0.6));
     for (const node of [from.current, to.current]) {
       if (!node) continue;
       node.style.fontSize = "";
       if (window.innerWidth < 768) continue;
-      node.style.fontSize = `${FONT_MAX}px`;
+      node.style.fontSize = `${ceiling}px`;
       const max = box.clientWidth * 0.94;
       const width = node.getBoundingClientRect().width;
-      if (width > max) node.style.fontSize = `${Math.floor((FONT_MAX * max) / width)}px`;
+      if (width > max) node.style.fontSize = `${Math.floor((ceiling * max) / width)}px`;
     }
+    const shown = from.current?.getBoundingClientRect().height ?? 0;
+    box.style.setProperty("--word-h", `${Math.round(shown)}px`);
   }, []);
 
   /* At rest: the current word shown and sharp, the next one hidden. Set
@@ -85,9 +92,12 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
   }, [fit, rest, step]);
 
   useEffect(() => {
-    window.addEventListener("resize", fit);
+    /* The stage's size follows the window, so it is watched rather than the window. */
+    const box = stage.current;
+    const observer = typeof ResizeObserver === "undefined" || !box ? null : new ResizeObserver(fit);
+    if (box) observer?.observe(box);
     void document.fonts?.ready.then(fit);
-    return () => window.removeEventListener("resize", fit);
+    return () => observer?.disconnect();
   }, [fit]);
 
   useEffect(() => {
@@ -146,10 +156,11 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
     <section
       ref={section}
       aria-labelledby="blog-title"
-      className="relative -mt-[76px] bg-white pt-[118px] pb-12 text-[var(--ld-ink)]"
+      className="relative -mt-[76px] flex h-[100svh] min-h-[600px] flex-col bg-white pt-[104px] pb-7 text-[var(--ld-ink)]"
     >
-      <div className="doc-shell grid min-h-[min(720px,calc(100svh-40px))] grid-rows-[auto_minmax(300px,1fr)_auto]">
-        <div className="flex flex-col gap-2.5 border-b border-[var(--ld-line)] pb-[22px] md:flex-row md:items-baseline md:justify-between md:gap-10">
+      {/* Exactly the window's height: the word takes whatever the heading and the row under it leave. */}
+      <div className="doc-shell grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto]">
+        <div className="flex flex-col gap-2.5 border-b border-[var(--ld-line)] pb-[18px] md:flex-row md:items-baseline md:justify-between md:gap-10">
           <h1 id="blog-title" className="ld-display ld-up order-2 max-w-[24ch] text-[clamp(26px,2.2vw,32px)] leading-[1.12] font-bold tracking-[-0.025em] md:order-1">
             <TitlePieces title={heading.title} />
           </h1>
@@ -158,7 +169,9 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
 
         {current && next ? (
           <div ref={stage} aria-hidden="true" className={cn("relative grid min-w-0 place-items-center overflow-hidden", melting && "[filter:url(#ld-melt)_blur(0.3px)]")}>
-            <div className="absolute inset-x-0 top-[calc(50%-150px)] flex justify-center gap-2.5 font-mono text-[10.5px] tracking-[0.12em] text-[#9aa0b1] uppercase md:top-[calc(50%-168px)] md:gap-3.5 md:text-[12.5px]">
+            <div
+              style={{ top: "calc(50% - var(--word-h, 160px) / 2 - 34px)" }}
+              className="absolute inset-x-0 flex justify-center gap-2.5 font-mono text-[10.5px] tracking-[0.12em] text-[#9aa0b1] uppercase md:gap-3.5 md:text-[12.5px]">
               <span className={cn("transition-colors duration-500", !current.analogy && "text-[var(--ld-ink)]")}>What it&apos;s called</span>
               <span className="relative h-px w-8 self-center overflow-hidden bg-[var(--ld-line)] md:w-14">
                 <span className={cn("absolute inset-y-0 left-0 bg-[var(--ld-ink)] transition-[width] duration-[1100ms] ease-linear", current.analogy !== melting ? "w-full" : "w-0")} />
@@ -192,7 +205,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
         )}
 
         {pair ? (
-          <div className="grid items-end gap-3.5 border-t border-[var(--ld-line)] pt-[22px] md:grid-cols-[1fr_auto_1fr] md:gap-6">
+          <div className="grid items-end gap-3.5 border-t border-[var(--ld-line)] pt-[18px] md:grid-cols-[1fr_auto_1fr] md:gap-6">
             <p className="max-w-[26rem] text-base leading-normal text-[var(--ld-text-muted)]">
               <span className="font-semibold text-[var(--ld-ink)]">{pair.concept}.</span> {pair.caption || `Works like ${pair.analogy.toLowerCase()}.`}
               <span className="sr-only">
