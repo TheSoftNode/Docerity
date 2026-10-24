@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { ArrowRightIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { pad, tagCounts, type BlogElement } from "@/components/sections/blog-page/blog-content";
+import { tagCounts, type BlogElement } from "@/components/sections/blog-page/blog-content";
 
 type Kind = "all" | "explainer" | "article";
 
@@ -18,7 +18,7 @@ const KINDS: { value: Kind; label: string }[] = [
 /**
  * Every piece as an index row, newest first, narrowed by kind and by topic.
  *
- * The table above is for looking; this is for finding. A row is its element,
+ * The hero is for looking; this is for finding. A row is its element,
  * the term, "≈" and the everyday comparison (or the article's title), and its
  * read time and date; hovering one reveals its hook. Both filters are toggle
  * buttons, and the count of what is shown is announced.
@@ -113,22 +113,25 @@ function BlogGlossary({ elements }: { elements: BlogElement[] }) {
                     )}
                   >
                     {element.symbol}
-                    <span className="absolute top-[3px] left-[5px] font-mono text-[8px] font-normal opacity-60">{pad(element.number)}</span>
                   </span>
-                  <span className="min-w-0">
+                  {/* An article has no analogy, so its title takes that column too. */}
+                  <span className={cn("min-w-0", !explainer && "md:col-span-2")}>
                     <span className={cn("block font-mono text-[11px] tracking-[0.08em] uppercase", explainer ? "text-[var(--ld-deep)]" : "text-[var(--ld-text-muted)]")}>
                       {element.kind}
                     </span>
                     <span className="ld-display mt-1.5 block text-[clamp(22px,2.2vw,30px)] leading-[1.05] font-extrabold tracking-[-0.03em]">
                       {element.name}
                     </span>
-                  </span>
-                  <span className="hidden min-w-0 md:block">
-                    {explainer ? (
-                      <span className="ld-display block text-[clamp(18px,1.7vw,22px)] leading-tight font-semibold tracking-[-0.015em] text-[var(--ld-text-2)]">
-                        ≈ {element.line}
+                    {explainer ? null : (
+                      <span className="hidden max-h-0 overflow-hidden text-[15px] leading-normal text-[var(--ld-text-muted)] opacity-0 transition-[max-height,opacity,margin] duration-500 group-hover:mt-1.5 group-hover:max-h-20 group-hover:opacity-100 group-focus-visible:mt-1.5 group-focus-visible:max-h-20 group-focus-visible:opacity-100 md:block">
+                        {element.hook}
                       </span>
-                    ) : null}
+                    )}
+                  </span>
+                  <span className={cn("hidden min-w-0", explainer && "md:block")}>
+                    <span className="ld-display block text-[clamp(18px,1.7vw,22px)] leading-tight font-semibold tracking-[-0.015em] text-[var(--ld-text-2)]">
+                      ≈ {element.line}
+                    </span>
                     <span className="block max-h-0 overflow-hidden text-[15px] leading-normal text-[var(--ld-text-muted)] opacity-0 transition-[max-height,opacity,margin] duration-500 group-hover:mt-1.5 group-hover:max-h-20 group-hover:opacity-100 group-focus-visible:mt-1.5 group-focus-visible:max-h-20 group-focus-visible:opacity-100">
                       {element.hook}
                     </span>
