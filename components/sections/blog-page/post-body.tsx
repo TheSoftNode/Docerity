@@ -6,7 +6,6 @@ import { ChapterRail } from "@/components/sections/project-detail/chapter-rail";
 import { chapterId } from "@/components/sections/project-detail/project-detail-content";
 import { ShareRow } from "@/components/sections/blog-page/share-row";
 import { Byline } from "@/components/sections/blog-page/byline";
-import { pad } from "@/components/sections/blog-page/blog-content";
 
 /**
  * The piece itself, on white so it reads apart from the hero's paper.
@@ -37,7 +36,7 @@ function PostBody({ entry, url, title }: { entry: BlogEntry; url: string; title:
         </aside>
 
         <div className="min-w-0">
-          {sections.map((section, index) => (
+          {sections.map((section) => (
             <section
               key={section.id}
               id={section.id}
@@ -47,10 +46,9 @@ function PostBody({ entry, url, title }: { entry: BlogEntry; url: string; title:
               }`}
             >
               <div className="max-w-[40rem]">
-                <p className="font-mono text-xs tracking-[0.1em] text-[var(--ld-deep)]">{pad(index + 1)}</p>
                 <h2
                   id={`${section.id}-title`}
-                  className="ld-display mt-2.5 text-[clamp(26px,2.8vw,38px)] leading-[1.05] font-extrabold tracking-[-0.035em] text-balance"
+                  className="ld-display text-[clamp(26px,2.8vw,38px)] leading-[1.05] font-extrabold tracking-[-0.035em] text-balance"
                 >
                   {section.heading}
                 </h2>

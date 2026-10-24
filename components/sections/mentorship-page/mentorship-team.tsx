@@ -1,7 +1,6 @@
 import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { TitledView } from "@/lib/content/blocks/views";
 import { TeamBench } from "@/components/sections/mentorship-page/team-bench";
-import { pad } from "@/components/sections/mentorship-page/mentorship-content";
 
 /**
  * Who reviews your code: the team, not one face.
@@ -40,9 +39,8 @@ async function MentorshipTeam() {
           ) : null}
           {principles && principles.length > 0 ? (
             <ol className="mt-8 border-t border-[rgb(var(--ld-ink-rgb)/0.18)]">
-              {principles.map((principle, index) => (
+              {principles.map((principle) => (
                 <li key={principle.title} className="flex gap-[18px] border-b border-[rgb(var(--ld-ink-rgb)/0.18)] py-[18px]">
-                  <span className="pt-1 font-mono text-xs text-[#2a3a72]">{pad(index + 1)}</span>
                   <span>
                     <span className="block text-lg font-bold">{principle.title}</span>
                     <span className="mt-1 block text-[15.5px] leading-normal text-[#1d2a55]">{principle.description}</span>

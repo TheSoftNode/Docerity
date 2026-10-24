@@ -90,7 +90,6 @@ function CaptionReel({
     >
       <div className="doc-shell relative">
         <p className="ld-up inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-          <span aria-hidden="true" className={cn("ld-live size-2 rounded-full", has ? "bg-[#54D696]" : "bg-[var(--ld-muted-3)]")} />
           {heading.eyebrow}
         </p>
         <h1

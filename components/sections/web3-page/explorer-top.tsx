@@ -84,7 +84,6 @@ function ExplorerTop({
 
       <div className="doc-shell pt-[clamp(36px,5vw,64px)] pb-[clamp(40px,5vw,64px)]">
         <p className="ld-up mb-[18px] flex flex-wrap items-center gap-2.5 font-mono text-xs tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-          <span className="rounded-full bg-[#dfe6fb] px-2.5 py-1 text-[var(--ld-deep)]">Overview</span>
           {heading.eyebrow}
         </p>
         <div className="grid items-end gap-[clamp(28px,4vw,64px)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">

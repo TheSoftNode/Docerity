@@ -1,6 +1,5 @@
 import type { SectionHeading } from "@/lib/content/blocks/source";
 import type { FounderView } from "@/lib/content/blocks/views";
-import { pad } from "@/components/sections/blog-page/blog-content";
 
 /** The files along the editor's tab bar. Only the README is this section; the
     other two are the sections below it, so the tabs go somewhere. */
@@ -29,7 +28,6 @@ function AboutStory({ heading, story, founder }: { heading: SectionHeading; stor
       <div className="doc-shell grid items-start gap-[clamp(32px,5vw,88px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
         <div className="lg:sticky lg:top-28">
           <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-            <span className="rounded-full bg-[#dfe6fb] px-2.5 py-1 text-[var(--ld-deep)]">README</span>
             {heading.eyebrow}
           </p>
           <h2 id="story-title" className="ld-display max-w-[12ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
@@ -86,10 +84,7 @@ function AboutStory({ heading, story, founder }: { heading: SectionHeading; stor
               {story.map((paragraph, index) => {
                 const last = index === story.length - 1;
                 return (
-                  <li key={index} className="grid grid-cols-[40px_minmax(0,1fr)] gap-2 pb-[26px] last:pb-0 sm:grid-cols-[48px_minmax(0,1fr)]">
-                    <span aria-hidden="true" className={`ld-display text-[22px] font-extrabold ${last ? "text-[var(--ld-accent)]" : "text-[var(--ld-deep)]"}`}>
-                      {pad(index + 1)}
-                    </span>
+                  <li key={index} className="pb-[26px] last:pb-0">
                     <p className="text-[clamp(16.5px,1.35vw,19px)] leading-[1.72] text-[var(--ld-text-2)]">
                       {paragraph}
                       {last ? (

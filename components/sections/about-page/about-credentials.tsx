@@ -31,7 +31,6 @@ function AboutCredentials({
     <section id="credentials" aria-labelledby="credentials-title" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-          <span className="rounded-full bg-[#dfe6fb] px-2.5 py-1 text-[var(--ld-deep)]">Signed</span>
           {heading.eyebrow}
         </p>
         <div className="flex flex-wrap items-end justify-between gap-[22px]">

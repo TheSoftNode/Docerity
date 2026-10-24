@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { CapabilityView } from "@/lib/content/blocks/views";
-import { pad } from "@/components/sections/blog-page/blog-content";
 
 /*
   Each capability's small working picture, by position: tiers taking their
@@ -135,8 +134,7 @@ async function AiCapabilities() {
             >
               {PICTURES[index] ? <div aria-hidden="true">{PICTURES[index]}</div> : null}
               <div className="px-6 pt-1 pb-[26px]">
-                <p className="font-mono text-xs text-[var(--ld-tint)]">{pad(index + 1)}</p>
-                <h3 className="ld-display mt-2 text-2xl font-bold tracking-[-0.02em]">{capability.title}</h3>
+                <h3 className="ld-display text-2xl font-bold tracking-[-0.02em]">{capability.title}</h3>
                 <p className="mt-2 text-[15.5px] leading-normal text-[var(--ld-muted)]">{capability.description}</p>
               </div>
             </li>

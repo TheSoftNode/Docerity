@@ -61,7 +61,6 @@ async function ContactBand() {
     >
       <div className="doc-shell pt-[clamp(72px,10vw,140px)]">
         <p className="mb-6 inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-          <span aria-hidden="true" className="ld-live size-2 rounded-full bg-[#54D696]" />
           {heading.eyebrow}
         </p>
         <h2
@@ -94,7 +93,6 @@ async function ContactBand() {
                   className="group flex items-center justify-between gap-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]"
                 >
                   <span className="flex min-w-0 items-baseline gap-4.5 transition-transform duration-300 group-hover:translate-x-2.5">
-                    <span className="font-mono text-[13px] text-[var(--ld-tint)]">{option.number}</span>
                     <span className="min-w-0">
                       <span className="ld-display block text-[clamp(24px,3vw,38px)] font-bold tracking-[-0.02em]">
                         {option.title}

@@ -4,7 +4,6 @@ import { useId, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import type { FaqView } from "@/lib/content/blocks/views";
-import { pad } from "@/components/sections/mentorship-page/mentorship-content";
 
 /**
  * The questions as a disclosure list, one open at a time: each question is a
@@ -31,12 +30,6 @@ function FaqList({ faqs }: { faqs: FaqView[] }) {
                 onClick={() => setOpen(expanded ? -1 : index)}
                 className="flex w-full items-center gap-[18px] py-6 text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]"
               >
-                <span
-                  aria-hidden="true"
-                  className={cn("font-mono text-xs", expanded ? "text-[#c9502f]" : "text-[var(--ld-text-muted)]")}
-                >
-                  {pad(index + 1)}
-                </span>
                 <span className="ld-display flex-1 text-[clamp(20px,1.9vw,26px)] font-bold tracking-[-0.02em]">{faq.question}</span>
                 <span
                   aria-hidden="true"

@@ -46,9 +46,8 @@ async function HomeHero() {
           rows={rows}
           eyebrow={
             <p
-              className="ld-fade mb-7 inline-flex items-center gap-2.5 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.18)] py-1.5 pr-4 pl-3 text-sm text-[var(--ld-muted)]"
+              className="ld-fade mb-7 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase"
             >
-              <span className="ld-live size-2 rounded-full bg-[#54D696]" aria-hidden="true" />
               {hero.eyebrow}
             </p>
           }

@@ -1,5 +1,4 @@
 import type { SectionHeading } from "@/lib/content/blocks/source";
-import { pad } from "@/components/sections/blog-page/blog-content";
 import { ReviewForm } from "@/components/sections/reviews-page/review-form";
 
 /** Where the homepage and the mentorship page link somebody to leave one. */
@@ -25,7 +24,6 @@ function LeaveReview({
       <div className="doc-shell grid items-start gap-[clamp(32px,5vw,80px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
         <div className="lg:sticky lg:top-28">
           <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-            <span className="rounded-full bg-[#dfe6fb] px-2.5 py-1 text-[var(--ld-deep)]">Add yours</span>
             {heading.eyebrow}
           </p>
           <h2 id="leave-title" className="ld-display max-w-[12ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
@@ -36,13 +34,11 @@ function LeaveReview({
             {process.map((step, index) => {
               const reading = index === 1;
               return (
-                <li key={step.title} className="grid grid-cols-[40px_minmax(0,1fr)] gap-3.5 pb-[22px] last:pb-0">
+                <li key={step.title} className="grid grid-cols-[14px_minmax(0,1fr)] gap-3.5 pb-[22px] last:pb-0">
                   <span
                     aria-hidden="true"
-                    className={`grid size-10 place-items-center rounded-xl font-mono text-xs ${reading ? "bg-[var(--ld-ink)] text-[var(--ld-paper)]" : "bg-[#eef1f8]"}`}
-                  >
-                    {pad(index + 1)}
-                  </span>
+                    className={`mt-2.5 size-2.5 rounded-full ${reading ? "bg-[var(--ld-ink)]" : "bg-[#c9cdd9]"}`}
+                  />
                   <span>
                     <span className="ld-display block text-xl font-bold">{step.title}</span>
                     <span className="mt-1 block text-[15px] leading-normal text-[var(--ld-text-2)]">{step.description}</span>

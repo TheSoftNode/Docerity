@@ -37,7 +37,6 @@ async function MentorshipApply() {
       />
       <div className="doc-shell relative pt-[clamp(88px,11vw,150px)]">
         <p className="mb-[22px] inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-          <span aria-hidden="true" className="ld-live size-2 rounded-full bg-[#54D696]" />
           {heading.eyebrow}
         </p>
         <div className="grid items-end gap-10 md:grid-cols-[minmax(0,1fr)_auto]">
@@ -93,8 +92,7 @@ async function MentorshipApply() {
                       index === 0 ? "text-[var(--ld-paper)]" : "text-[var(--ld-muted-3)]"
                     )}
                   >
-                    {pad(index + 1)}
-                    {step.when ? ` · ${step.when}` : ""}
+                    {step.when}
                   </span>
                   <span className="ld-display mt-3 block text-[clamp(22px,2.1vw,28px)] font-bold tracking-[-0.02em]">{step.title}</span>
                   <span className="mt-2 block max-w-[18rem] text-[15.5px] leading-normal text-[var(--ld-muted)]">{step.description}</span>

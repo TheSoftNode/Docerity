@@ -101,10 +101,9 @@ function ChipGroup({
   );
 }
 
-function SectionTitle({ number, children, lit }: { number: string; children: ReactNode; lit?: boolean }) {
+function SectionTitle({ children }: { children: ReactNode }) {
   return (
     <legend className="ld-display mb-3.5 flex items-center gap-3 text-[22px] font-bold tracking-[-0.02em]">
-      <span className={cn("font-mono text-xs font-normal", lit ? "text-[#c9502f]" : "text-[var(--ld-text-muted)]")}>{number}</span>
       {children}
     </legend>
   );
@@ -264,8 +263,7 @@ function ContactView({
       <div className="doc-shell relative grid items-start gap-[clamp(36px,5vw,88px)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
         {/* Left: what this is, and what happens next. */}
         <div className="lg:sticky lg:top-[100px]">
-          <p className="ld-up mb-6 inline-flex items-center gap-2.5 rounded-full border border-[rgb(var(--ld-tint-rgb)/0.25)] bg-[rgb(var(--ld-tint-rgb)/0.06)] py-1.5 pr-4 pl-3 text-sm text-[var(--ld-muted)]">
-            <span aria-hidden="true" className="ld-live size-2 rounded-full bg-[#54D696]" />
+          <p className="ld-up mb-6 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
             {heading.eyebrow}
           </p>
           {/* Keyed by kind, so a change replays the entrance. */}
@@ -303,8 +301,7 @@ function ContactView({
                         index === 0 ? "text-[var(--ld-paper)]" : "text-[var(--ld-muted-3)]"
                       )}
                     >
-                      {String(index + 1).padStart(2, "0")}
-                      {step.when ? ` · ${step.when}` : ""}
+                      {step.when}
                     </span>
                     <span className="mt-1.5 block text-[17px] font-semibold">{step.title}</span>
                     <span className="mt-1 block max-w-[26rem] text-[15px] leading-normal text-[var(--ld-muted)]">{step.description}</span>
@@ -396,7 +393,7 @@ function ContactView({
 
               {/* 01: what brings you here */}
               <fieldset>
-                <SectionTitle number="01" lit>
+                <SectionTitle>
                   What brings you here?
                 </SectionTitle>
                 <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-4">
@@ -439,7 +436,7 @@ function ContactView({
 
               {/* 02: about you */}
               <fieldset className="mt-[34px]">
-                <SectionTitle number="02">About you</SectionTitle>
+                <SectionTitle>About you</SectionTitle>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Field id="name" label="Name" error={errors.name}>
                     <input
@@ -519,7 +516,7 @@ function ContactView({
 
               {/* 03: the details */}
               <fieldset className="mt-[34px]">
-                <SectionTitle number="03">{copy.detailsTitle}</SectionTitle>
+                <SectionTitle>{copy.detailsTitle}</SectionTitle>
                 <div className="flex flex-col gap-3.5">
                   {fields.budget ? <ChipGroup name="budget" legend="Budget" options={budgets.filter((budget) => budget.value)} /> : null}
                   {fields.timeline ? <ChipGroup name="timeline" legend={copy.timelineLabel} options={timelines.filter((timeline) => timeline.value)} /> : null}

@@ -6,7 +6,6 @@ import { useReducedMotion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import type { SectionHeading } from "@/lib/content/blocks/source";
-import { pad } from "@/components/sections/blog-page/blog-content";
 
 export type Stage = { status: string; title: string; description: string; cardNote: string };
 
@@ -79,7 +78,6 @@ function ContributeRoute({
                     />
                     {stage.status}
                   </span>
-                  <span aria-hidden="true">{pad(index + 1)}</span>
                 </div>
                 <div aria-hidden="true" className="grid min-h-[110px] flex-1 content-start pt-4">
                   {here ? (

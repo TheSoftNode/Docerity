@@ -205,7 +205,6 @@ function ReviewSheet({
         <div className="ld-up ld-delay-1 grid rounded-b bg-white text-[var(--ld-ink)] shadow-[0_60px_120px_-60px_rgb(0_0_0/0.9)] lg:grid-cols-[minmax(0,1fr)_300px]">
           <div className="px-[clamp(22px,5vw,80px)] pt-[clamp(36px,5vw,72px)] pb-[clamp(32px,4vw,56px)] lg:border-r lg:border-[#eef1f8]">
             <p className="mb-5 inline-flex flex-wrap items-center gap-2.5 font-mono text-xs tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-              <span className="rounded-full bg-[var(--ld-ink)] px-2.5 py-[3px] text-[10.5px] text-[var(--ld-paper)]">By invitation</span>
               {eyebrow}
             </p>
             <h1 id="contribute-title" className="ld-display max-w-[16ch] text-[clamp(44px,6.6vw,104px)] leading-[0.94] font-extrabold tracking-[-0.055em]">
