@@ -529,7 +529,7 @@ export const BLOCKS: Block[] = [
       headings([
         { key: "about-hero", label: "Hero", hint: "Wrap words in *asterisks* to light them; the career graph is drawn from Experience." },
         { key: "about-story", label: "The story" },
-        { key: "about-team", label: "The team", hint: "Above the team members, or the specialties while there are none." },
+        { key: "about-team", label: "The team", hint: "Above the team members. Hidden, with the section, until someone is added." },
         { key: "about-experience", label: "Experience" },
         { key: "about-toolkit", label: "Toolkit" },
         { key: "about-credentials", label: "Credentials" },
@@ -582,7 +582,7 @@ export const BLOCKS: Block[] = [
         name: "team",
         label: "The team",
         description:
-          "The people the work goes out through, after the story. While this is empty, the section shows the specialties from the mentorship page instead, so nobody is ever made up.",
+          "The people on the team, shown after the story. The section stays hidden until at least one person is added here.",
         itemNoun: "person",
         max: 12,
         fields: [

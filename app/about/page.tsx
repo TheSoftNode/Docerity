@@ -1,5 +1,5 @@
 import { pageMetadata } from "@/lib/content/blocks/metadata";
-import { getBlock, getGroup, getHeading } from "@/lib/content/blocks/source";
+import { getBlock, getHeading } from "@/lib/content/blocks/source";
 import { getWork } from "@/lib/content/work";
 import type { AboutContent, FactView } from "@/lib/content/blocks/views";
 
@@ -29,7 +29,7 @@ export const revalidate = 300;
 export default async function AboutPage() {
   /* Read once and handed down in slices: most of the sections are Client
      Components and cannot read the content themselves. */
-  const [block, work, hero, story, team, experience, toolkit, credentials, specialties] = await Promise.all([
+  const [block, work, hero, story, team, experience, toolkit, credentials] = await Promise.all([
     getBlock("about"),
     getWork(),
     getHeading("about", "about-hero"),
@@ -38,8 +38,6 @@ export default async function AboutPage() {
     getHeading("about", "about-experience"),
     getHeading("about", "about-toolkit"),
     getHeading("about", "about-credentials"),
-    /* The team section falls back to these until people are added. */
-    getGroup<string[]>("mentorship", "specialties"),
   ]);
   const about = block as unknown as AboutContent;
 
@@ -63,7 +61,7 @@ export default async function AboutPage() {
       <main className="flex-1">
         <AboutHero heading={hero} experience={about.experience} education={about.education} facts={facts} />
         <AboutStory heading={story} story={about.story} fullStory={about.fullStory} founder={about.founder} />
-        <AboutTeam heading={team} members={about.team ?? []} specialties={specialties ?? []} />
+        <AboutTeam heading={team} members={about.team ?? []} />
         <AboutChangelog heading={experience} experience={about.experience} />
         <AboutToolkit heading={toolkit} groups={about.skillGroups} tools={about.tools} />
         <AboutCredentials heading={credentials} certifications={about.certifications} education={about.education} />

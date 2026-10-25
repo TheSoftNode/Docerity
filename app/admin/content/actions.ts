@@ -61,8 +61,6 @@ function revalidateFor(key: BlockKey): void {
   /* The homepage carries the client logos, the explainer band and the
      mentorship teaser alongside their own pages. */
   if (key === "clients" || key === "explainers" || key === "mentorship") paths.add("/");
-  /* The About page's team section falls back to the mentorship specialties. */
-  if (key === "mentorship") paths.add("/about");
   /* Its link labels are shown on the Projects and contact pages. */
   if (key === "legal") paths.add("/terms");
   if (key === "how-we-work") {
