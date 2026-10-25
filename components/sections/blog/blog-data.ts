@@ -6,7 +6,6 @@ import {
   DatabaseIcon,
   GitForkIcon,
   LandmarkIcon,
-  LayoutDashboardIcon,
   MessageSquareIcon,
   PenLineIcon,
   Share2Icon,
@@ -403,60 +402,6 @@ export const articlePosts: ArticlePost[] = [
         heading: "Disagree in a way that invites a reply",
         paragraphs: [
           "Phrase pushback as a question you'd genuinely want answered, such as \"what happens if this runs twice?\", rather than a verdict. It gets you the same outcome when you're right, and it gets you corrected quickly when you're not, instead of the author quietly resenting a comment they disagreed with but didn't feel safe contesting.",
-        ],
-      },
-    ],
-  },
-  // TEMPLATE ENTRY: demonstrates image/video embeds in an article body.
-  // Replace the client, numbers, and media placeholders with a real case
-  // study (and real screenshots/recordings) before launch.
-  {
-    type: "article",
-    slug: "checkout-redesign-case-study",
-    title: "Case study: rebuilding a client's checkout flow",
-    topic: "Case study",
-    Icon: LayoutDashboardIcon,
-    hook: "A five-step checkout was quietly losing customers at step three. Here's what it looked like to fix it.",
-    readTime: "6 min read",
-    publishedAt: "2026-07-14",
-    tags: ["Case Study", "Product Design"],
-    body: [
-      {
-        heading: "The problem: a checkout people abandoned",
-        paragraphs: [
-          "The client's analytics showed the same pattern every week: plenty of people adding items to their cart, far fewer finishing the purchase. The checkout itself was a five-step form spread across five separate pages (contact info, shipping address, shipping method, payment, and a final review) and the drop-off numbers made it obvious that most people never made it past step three.",
-        ],
-        media: {
-          type: "image",
-          alt: "Screenshot of the original five-step checkout, showing the shipping method page",
-          caption: "The original checkout: five separate pages before you could pay.",
-        },
-      },
-      {
-        heading: "Watching real users get stuck",
-        paragraphs: [
-          "Before redesigning anything, we sat in on a handful of recorded sessions of real customers checking out. The pattern was consistent: people would fill in their address, hit next, and then hesitate on the shipping method page. Not because the options were confusing, but because they'd lost track of how many steps were left and whether the price they'd been quoted was still accurate.",
-        ],
-        media: {
-          type: "video",
-          caption: "A session recording of a customer pausing at the shipping step before leaving.",
-        },
-      },
-      {
-        heading: "What changed",
-        paragraphs: [
-          "The fix wasn't cleverer copy on the shipping page. It was removing the uncertainty entirely. We collapsed all five steps into a single scrollable page with a running order summary pinned to the side, so the total price and item list were visible no matter which section someone was filling in. Nothing about the underlying data collection changed; only how much of it was hidden behind a click at any given moment.",
-        ],
-        media: {
-          type: "image",
-          alt: "Screenshot of the redesigned single-page checkout with an order summary sidebar",
-          caption: "The redesign: one page, with the running total always visible.",
-        },
-      },
-      {
-        heading: "The result",
-        paragraphs: [
-          "Checkout completion improved within the first week of launch, and stayed improved. This wasn't a novelty bump that faded once people got used to a new layout. The lesson that generalized well beyond this one project: a lot of what looks like a copywriting or design problem is actually an uncertainty problem, and showing people where they stand fixes more of it than better wording ever does.",
         ],
       },
     ],

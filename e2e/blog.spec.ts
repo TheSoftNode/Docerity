@@ -127,24 +127,6 @@ test.describe("Blog article", () => {
     expect(response?.status()).toBe(404);
   });
 
-  test("article with media renders image and video placeholders", async ({ page }) => {
-    const errors: string[] = [];
-    page.on("console", (msg) => {
-      if (msg.type() === "error") errors.push(msg.text());
-    });
-    page.on("pageerror", (err) => errors.push(String(err)));
-
-    await page.goto("/blog/checkout-redesign-case-study");
-
-    await expect(
-      page.getByRole("heading", { level: 1, name: "Case study: rebuilding a client's checkout flow." })
-    ).toBeVisible();
-    await expect(page.getByText("Image placeholder")).toHaveCount(2);
-    await expect(page.getByText("Video placeholder")).toHaveCount(1);
-
-    expect(errors).toEqual([]);
-  });
-
   test("shows tags and links to the next post in sequence", async ({ page }) => {
     await page.goto("/blog/caching");
 
@@ -213,7 +195,6 @@ test.describe("Blog SEO plumbing", () => {
     expect(res.status()).toBe(200);
     const body = await res.text();
     expect(body).toContain("/blog/caching");
-    expect(body).toContain("/blog/checkout-redesign-case-study");
     expect(body).toContain("/mentorship");
     expect(body).toContain("/projects/eep");
     expect(body).toContain("/web3");
