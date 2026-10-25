@@ -43,8 +43,16 @@ async function SiteFooter() {
         </div>
 
         <div className="mt-6 flex flex-col gap-2 border-t border-[rgb(var(--ld-paper-rgb)/0.12)] pt-5 text-xs sm:flex-row sm:justify-between">
-          <p>
-            &copy; {year} {site.name}. All rights reserved.
+          <p className="flex flex-wrap gap-x-5 gap-y-1">
+            <span>
+              &copy; {year} {site.name}. All rights reserved.
+            </span>
+            <Link href="/privacy" className="transition-opacity hover:opacity-65">
+              Privacy
+            </Link>
+            <Link href="/terms" className="transition-opacity hover:opacity-65">
+              Terms
+            </Link>
           </p>
           <a href={`mailto:${site.email}`} className="transition-opacity hover:opacity-65">
             {site.email}

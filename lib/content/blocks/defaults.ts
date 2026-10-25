@@ -3,6 +3,7 @@ import type { BlockData, BlockKey } from "@/lib/content/blocks/schema";
 
 import { organisations, ecosystems } from "@/components/sections/clients/clients-data";
 import * as howWeWork from "@/components/sections/how-we-work-page/how-we-work-data";
+import { privacy, terms } from "@/components/sections/legal-page/legal-data";
 import {
   certifications,
   education,
@@ -197,6 +198,14 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "how-we-work": {
           "title": "How we work",
           "description": "Four ways to work with Docerity: a project build, monthly support, engineers for your team, or a review and plan first. What you can expect on every project."
+        },
+        "privacy": {
+          "title": "Privacy policy",
+          "description": "What Docerity collects through this site, why, who stores it, and how to see, correct or delete your data."
+        },
+        "terms": {
+          "title": "Terms of use",
+          "description": "The terms for using the Docerity website: our content, what you send us, and how client work is agreed."
         }
       }
     },
@@ -725,6 +734,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
     faqs: howWeWork.faqs.map((faq) => ({ ...faq })),
     words: { ...howWeWork.words },
     links: { ...howWeWork.links },
+  },
+
+  legal: {
+    privacy: { ...privacy },
+    terms: { ...terms },
   },
 
   reviews: {

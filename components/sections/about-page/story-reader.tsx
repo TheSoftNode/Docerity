@@ -23,13 +23,6 @@ function Text({ text }: { text: string }) {
   );
 }
 
-/**
- * The story inside the README: its opening paragraphs, fading out, and a
- * button that opens the rest in place. Opened, the whole story reads on in
- * the same pane, ending on the cursor, with a way back to the top of it.
- * A story no longer than the opening is shown whole, with no button. The
- * byline is the one place the founder's photo appears.
- */
 export type StoryByline = { name: string; role: string; portrait: string };
 
 /** Who wrote it, under the title: the photo, the name, the role and how long it takes to read. */
@@ -55,6 +48,13 @@ function Byline({ byline, minutes }: { byline: StoryByline; minutes: number }) {
   );
 }
 
+/**
+ * The story inside the README: its opening paragraphs, fading out, and a
+ * button that opens the rest in place. Opened, the whole story reads on in
+ * the same pane, ending on the cursor, with a way back to the top of it.
+ * A story no longer than the opening is shown whole, with no button. The
+ * byline is the one place the founder's photo appears.
+ */
 function StoryReader({ title, blocks, minutes, byline }: { title: string; blocks: StoryBlock[]; minutes: number; byline?: StoryByline }) {
   const id = useId();
   const [open, setOpen] = useState(false);

@@ -117,6 +117,7 @@ export const BLOCK_KEYS = [
   "contact",
   "contribute",
   "how-we-work",
+  "legal",
   "reviews",
   "pages",
 ] as const;
@@ -333,6 +334,8 @@ export const BLOCKS: Block[] = [
           { key: "reviews", label: "Reviews" },
           { key: "contribute", label: "Write for us" },
           { key: "how-we-work", label: "How we work" },
+          { key: "privacy", label: "Privacy policy" },
+          { key: "terms", label: "Terms of use" },
         ],
       },
     ],
@@ -1275,6 +1278,57 @@ export const BLOCKS: Block[] = [
         fields: [
           { name: "projects", label: "On the Projects page", kind: "text", required: true, maxLength: 60 },
           { name: "contact", label: "On the contact page", kind: "text", required: true, maxLength: 60 },
+        ],
+      },
+    ],
+  },
+
+  {
+    key: "legal",
+    title: "Privacy & terms",
+    page: "Privacy policy and terms",
+    path: "/privacy",
+    description:
+      "The privacy policy and the terms of use. The privacy policy describes what the site's forms collect and the services that store it; if either changes, the policy has to change with it. Worth having a lawyer read both.",
+    groups: [
+      {
+        kind: "object",
+        name: "privacy",
+        label: "Privacy policy",
+        description: "Shown at /privacy.",
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 80 },
+          { name: "updated", label: "Last updated", kind: "text", required: true, maxLength: 40, hint: "Shown under the title. Change it whenever the text changes." },
+          { name: "summary", label: "The short version", kind: "textarea", maxLength: 1200, rows: 6, hint: "One point per line." },
+          {
+            name: "body",
+            label: "Full text",
+            kind: "textarea",
+            required: true,
+            maxLength: 40000,
+            rows: 30,
+            hint: "A blank line starts a paragraph, \"## \" a heading, and lines starting \"- \" make a list. {email} becomes the site's email address.",
+          },
+        ],
+      },
+      {
+        kind: "object",
+        name: "terms",
+        label: "Terms of use",
+        description: "Shown at /terms.",
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 80 },
+          { name: "updated", label: "Last updated", kind: "text", required: true, maxLength: 40, hint: "Shown under the title. Change it whenever the text changes." },
+          { name: "summary", label: "The short version", kind: "textarea", maxLength: 1200, rows: 6, hint: "One point per line." },
+          {
+            name: "body",
+            label: "Full text",
+            kind: "textarea",
+            required: true,
+            maxLength: 40000,
+            rows: 30,
+            hint: "A blank line starts a paragraph, \"## \" a heading, and lines starting \"- \" make a list. {email} becomes the site's email address.",
+          },
         ],
       },
     ],

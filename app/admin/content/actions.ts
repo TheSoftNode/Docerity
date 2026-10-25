@@ -62,6 +62,7 @@ function revalidateFor(key: BlockKey): void {
      mentorship teaser alongside their own pages. */
   if (key === "clients" || key === "explainers" || key === "mentorship") paths.add("/");
   /* Its link labels are shown on the Projects and contact pages. */
+  if (key === "legal") paths.add("/terms");
   if (key === "how-we-work") {
     paths.add("/projects");
     paths.add("/contact");
