@@ -2,6 +2,7 @@ import { nameForIcon } from "@/lib/content/icons";
 import type { BlockData, BlockKey } from "@/lib/content/blocks/schema";
 
 import { organisations, ecosystems } from "@/components/sections/clients/clients-data";
+import * as howWeWork from "@/components/sections/how-we-work-page/how-we-work-data";
 import {
   certifications,
   education,
@@ -129,6 +130,10 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "href": "/blog"
     },
     {
+      "label": "How we work",
+      "href": "/how-we-work"
+    },
+    {
       "label": "About",
       "href": "/about"
     },
@@ -188,6 +193,10 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "contribute": {
           "title": "Writing for Docerity",
           "description": "How the engineers we mentor end up with their name on an explainer."
+        },
+        "how-we-work": {
+          "title": "How we work",
+          "description": "Four ways to work with Docerity: a fixed-scope project, a monthly retainer, engineers on your team, or a paid discovery first. What every engagement looks like week to week."
         }
       }
     },
@@ -686,6 +695,36 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       { upTo: "8", topic: "Indexing strategies, compared", why: "A talk, not an explainer." },
       { upTo: "12", topic: "Databases", why: "A textbook chapter nobody finishes." },
     ],
+  },
+
+  "how-we-work": {
+    headings: {
+      "hww-hero": {
+        eyebrow: "How we work",
+        title: "How working with us actually works.",
+        lede: "",
+      },
+      "hww-engagements": {
+        eyebrow: "Four ways in",
+        title: "Start where you actually are.",
+        lede: "Most clients start with one and move to another: a discovery that turns into a build, a build that turns into a retainer. Moving between them is normal, not a renegotiation.",
+      },
+      "hww-habits": {
+        eyebrow: "Every engagement",
+        title: "The parts that never change.",
+        lede: "Whichever way in you pick, this is what working with us looks like week to week.",
+      },
+      "hww-faq": {
+        eyebrow: "Before you ask",
+        title: "What clients ask first.",
+        lede: "",
+      },
+    },
+    sentence: { ...howWeWork.sentence },
+    engagements: howWeWork.engagements.map((engagement) => ({ ...engagement, steps: [...engagement.steps] })),
+    habits: howWeWork.habits.map((habit) => ({ ...habit })),
+    faqs: howWeWork.faqs.map((faq) => ({ ...faq })),
+    links: { ...howWeWork.links },
   },
 
   reviews: {

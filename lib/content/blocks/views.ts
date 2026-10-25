@@ -134,3 +134,17 @@ export type ServiceLineView = {
   href: string;
   iconName: string;
 };
+
+/** One way of working with the team, on the How we work page. */
+export type EngagementView = {
+  title: string;
+  /** What follows "I need" in the hero. */
+  need: string;
+  /** The same need, cut short, for the choices under the hero. */
+  choice: string;
+  summary: string;
+  bestWhen: string;
+  steps: string[];
+};
+
+export type HabitView = { title: string; description: string };

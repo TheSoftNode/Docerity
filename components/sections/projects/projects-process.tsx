@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { getGroup, getHeading } from "@/lib/content/blocks/source";
 import type { ProcessStepView } from "@/lib/content/blocks/views";
 import { ProcessConsole, type ConsoleStage } from "@/components/sections/projects/process-console";
@@ -9,10 +11,12 @@ import { processLog, stageSlug } from "@/components/sections/projects/projects-c
  * heading are read here; the console that plays them runs in the browser.
  */
 async function ProjectsProcess() {
-  const [heading, steps] = await Promise.all([
+  const [heading, steps, links] = await Promise.all([
     getHeading("services", "work-process"),
     getGroup<ProcessStepView[]>("services", "process"),
+    getGroup<{ projects?: string }>("how-we-work", "links"),
   ]);
+  const workLink = links?.projects ?? "";
 
   const stages: ConsoleStage[] = (steps ?? []).map((step, position) => ({
     title: step.title,
@@ -44,8 +48,19 @@ async function ProjectsProcess() {
               {heading.title}
             </h2>
           </div>
-          {heading.lede ? (
-            <p className="max-w-[24rem] text-[17px] leading-relaxed text-[var(--ld-muted)]">{heading.lede}</p>
+          {heading.lede || workLink ? (
+            <div className="max-w-[24rem]">
+              {heading.lede ? <p className="text-[17px] leading-relaxed text-[var(--ld-muted)]">{heading.lede}</p> : null}
+              {/* The engagements and what every one of them has are on their own page. */}
+              {workLink ? (
+                <Link
+                  href="/how-we-work"
+                  className="mt-4 inline-block border-b border-[rgb(var(--ld-tint-rgb)/0.5)] pb-0.5 text-[15px] font-semibold text-[var(--ld-paper)] transition-colors hover:border-[var(--ld-paper)]"
+                >
+                  {workLink} <span aria-hidden="true">→</span>
+                </Link>
+              ) : null}
+            </div>
           ) : null}
         </div>
 
