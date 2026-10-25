@@ -134,3 +134,14 @@ export type ServiceLineView = {
   href: string;
   iconName: string;
 };
+
+/** One way of working with the team, on the How we work page. */
+export type EngagementView = {
+  title: string;
+  /** One line: on the card at the top and under the name below. */
+  forWho: string;
+  goodFor: string;
+  steps: string[];
+};
+
+export type HabitView = { title: string; description: string };

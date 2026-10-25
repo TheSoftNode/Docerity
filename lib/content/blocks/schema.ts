@@ -116,6 +116,7 @@ export const BLOCK_KEYS = [
   "explainers",
   "contact",
   "contribute",
+  "how-we-work",
   "reviews",
   "pages",
 ] as const;
@@ -331,6 +332,7 @@ export const BLOCKS: Block[] = [
           { key: "contact", label: "Contact" },
           { key: "reviews", label: "Reviews" },
           { key: "contribute", label: "Write for us" },
+          { key: "how-we-work", label: "How we work" },
         ],
       },
     ],
@@ -1193,6 +1195,86 @@ export const BLOCKS: Block[] = [
           },
           { name: "topic", label: "Topic", kind: "text", required: true, maxLength: 80 },
           { name: "why", label: "Why", kind: "text", required: true, maxLength: 100 },
+        ],
+      },
+    ],
+  },
+
+  {
+    key: "how-we-work",
+    title: "How we work",
+    page: "How we work",
+    path: "/how-we-work",
+    description:
+      "What hiring the team is like, written for a client deciding whether to. Plain words over clever ones: a client should understand the page at a glance. No prices anywhere on it.",
+    groups: [
+      headings(
+        [
+          { key: "hww-hero", label: "Top of the page", hint: "The eyebrow is not shown; the title and the lede are." },
+          { key: "hww-engagements", label: "How each one works", hint: "The eyebrow is not shown." },
+          { key: "hww-habits", label: "On every project", hint: "The eyebrow and the lede are not shown." },
+          { key: "hww-faq", label: "Questions", hint: "The eyebrow is not shown. The email address is added after the lede." },
+        ],
+        "The heading and the line under it for each part of the page."
+      ),
+      {
+        kind: "list",
+        name: "engagements",
+        label: "Ways to work with us",
+        description: "Each one is a card at the top of the page and a fuller description below it, in this order.",
+        itemNoun: "option",
+        max: 6,
+        min: 1,
+        fields: [
+          { name: "title", label: "Name", kind: "text", required: true, maxLength: 40, hint: "Plain words a client would use." },
+          { name: "forWho", label: "Who it's for", kind: "text", required: true, maxLength: 90, hint: "One line, on the card and under the name." },
+          { name: "goodFor", label: "Good for", kind: "textarea", maxLength: 300 },
+          { name: "steps", label: "How it works", kind: "strings", hint: "Numbered in order. Three short steps read best." },
+        ],
+      },
+      {
+        kind: "list",
+        name: "habits",
+        label: "On every project",
+        description: "What a client gets whichever option they pick.",
+        itemNoun: "item",
+        max: 9,
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 40 },
+          DESCRIPTION,
+        ],
+      },
+      {
+        kind: "list",
+        name: "faqs",
+        label: "Questions",
+        itemNoun: "question",
+        max: 20,
+        fields: [
+          { name: "question", label: "Question", kind: "text", required: true, maxLength: 200 },
+          { name: "answer", label: "Answer", kind: "textarea", required: true, maxLength: 900 },
+        ],
+      },
+      {
+        kind: "object",
+        name: "words",
+        label: "Small wording",
+        fields: [
+          { name: "cardLink", label: "Link on each card", kind: "text", required: true, maxLength: 40 },
+          { name: "unsure", label: "Under the cards", kind: "text", maxLength: 60, hint: "Blank removes the line." },
+          { name: "ask", label: "Its link to the contact page", kind: "text", required: true, maxLength: 30 },
+          { name: "goodFor", label: "\"Good for\" label", kind: "text", required: true, maxLength: 30 },
+          { name: "steps", label: "\"How it works\" label", kind: "text", required: true, maxLength: 30 },
+        ],
+      },
+      {
+        kind: "object",
+        name: "links",
+        label: "Links to this page",
+        description: "The links to this page from the Projects page and the contact page.",
+        fields: [
+          { name: "projects", label: "On the Projects page", kind: "text", required: true, maxLength: 60 },
+          { name: "contact", label: "On the contact page", kind: "text", required: true, maxLength: 60 },
         ],
       },
     ],

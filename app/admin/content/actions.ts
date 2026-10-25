@@ -61,6 +61,11 @@ function revalidateFor(key: BlockKey): void {
   /* The homepage carries the client logos, the explainer band and the
      mentorship teaser alongside their own pages. */
   if (key === "clients" || key === "explainers" || key === "mentorship") paths.add("/");
+  /* Its link labels are shown on the Projects and contact pages. */
+  if (key === "how-we-work") {
+    paths.add("/projects");
+    paths.add("/contact");
+  }
 
   for (const path of paths) revalidatePath(path);
 }

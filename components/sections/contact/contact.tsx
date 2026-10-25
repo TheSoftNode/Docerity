@@ -17,12 +17,13 @@ import { startStageIndex } from "@/components/sections/mentorship-page/mentorshi
  * `?type=` the Apply and Start buttons link with.
  */
 async function Contact({ initialType }: { initialType: string | undefined }) {
-  const [site, contact, steps, audiences, stages] = await Promise.all([
+  const [site, contact, steps, audiences, stages, howWeWork] = await Promise.all([
     getSiteSettings(),
     getBlock("contact"),
     getGroup<(ContactStep & { when?: string })[]>("contact", "steps"),
     getGroup<AudienceView[]>("mentorship", "audiences"),
     getGroup<StageView[]>("mentorship", "stages"),
+    getGroup<{ contact?: string }>("how-we-work", "links"),
   ]);
 
   const stored = (contact.headings ?? {}) as Record<string, BlockRecord>;
@@ -54,6 +55,7 @@ async function Contact({ initialType }: { initialType: string | undefined }) {
         startsAt: stages?.[startStageIndex(audience.startsAt, stages ?? [])]?.label ?? "",
       }))}
       email={site.email}
+      workLink={howWeWork?.contact ?? ""}
     />
   );
 }

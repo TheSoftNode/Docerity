@@ -2,6 +2,7 @@ import { nameForIcon } from "@/lib/content/icons";
 import type { BlockData, BlockKey } from "@/lib/content/blocks/schema";
 
 import { organisations, ecosystems } from "@/components/sections/clients/clients-data";
+import * as howWeWork from "@/components/sections/how-we-work-page/how-we-work-data";
 import {
   certifications,
   education,
@@ -129,6 +130,10 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "href": "/blog"
     },
     {
+      "label": "How we work",
+      "href": "/how-we-work"
+    },
+    {
       "label": "About",
       "href": "/about"
     },
@@ -188,6 +193,10 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "contribute": {
           "title": "Writing for Docerity",
           "description": "How the engineers we mentor end up with their name on an explainer."
+        },
+        "how-we-work": {
+          "title": "How we work",
+          "description": "Four ways to work with Docerity: a project build, monthly support, engineers for your team, or a review and plan first. What you can expect on every project."
         }
       }
     },
@@ -686,6 +695,36 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       { upTo: "8", topic: "Indexing strategies, compared", why: "A talk, not an explainer." },
       { upTo: "12", topic: "Databases", why: "A textbook chapter nobody finishes." },
     ],
+  },
+
+  "how-we-work": {
+    headings: {
+      "hww-hero": {
+        eyebrow: "How we work",
+        title: "Four ways to work with us.",
+        lede: "Pick the one that matches where you are. If you're not sure, tell us what you need and we'll recommend one on the first call.",
+      },
+      "hww-engagements": {
+        eyebrow: "The options",
+        title: "How each one works",
+        lede: "You can start with one and switch later. A review often turns into a build, and a build often turns into monthly support.",
+      },
+      "hww-habits": {
+        eyebrow: "Every project",
+        title: "What you can expect on every project",
+        lede: "",
+      },
+      "hww-faq": {
+        eyebrow: "Questions",
+        title: "Common questions",
+        lede: "Anything else? Email",
+      },
+    },
+    engagements: howWeWork.engagements.map((engagement) => ({ ...engagement, steps: [...engagement.steps] })),
+    habits: howWeWork.habits.map((habit) => ({ ...habit })),
+    faqs: howWeWork.faqs.map((faq) => ({ ...faq })),
+    words: { ...howWeWork.words },
+    links: { ...howWeWork.links },
   },
 
   reviews: {

@@ -128,6 +128,7 @@ function ContactView({
   audiences,
   email,
   forms,
+  workLink = "",
 }: {
   initialType: ProjectType;
   headings: Record<ProjectType, ContactHeading>;
@@ -136,6 +137,8 @@ function ContactView({
   steps: ContactStep[];
   audiences: Audience[];
   email: string;
+  /** The link to How we work, shown to someone starting a software project. */
+  workLink?: string;
 }) {
   const [type, setType] = useState<ProjectType>(initialType);
   const [status, setStatus] = useState<Status>("idle");
@@ -309,6 +312,15 @@ function ContactView({
                 ))}
               </ol>
             </div>
+          ) : null}
+
+          {type === "software" && workLink ? (
+            <Link
+              href="/how-we-work"
+              className="mb-[22px] inline-block border-b border-[rgb(var(--ld-tint-rgb)/0.5)] pb-0.5 text-[15px] font-semibold text-[var(--ld-paper)] transition-colors hover:border-[var(--ld-paper)]"
+            >
+              {workLink} <span aria-hidden="true">→</span>
+            </Link>
           ) : null}
 
           <p className="mt-2.5 flex flex-wrap items-center gap-x-[18px] gap-y-2.5 border-t border-[rgb(var(--ld-tint-rgb)/0.14)] pt-[22px] text-[14.5px] text-[var(--ld-muted-3)]">
