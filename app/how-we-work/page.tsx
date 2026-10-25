@@ -6,7 +6,8 @@ import type { EngagementView, FaqView, HabitView } from "@/lib/content/blocks/vi
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ContactBand } from "@/components/sections/contact-band/contact-band";
-import { EngagementPicker } from "@/components/sections/how-we-work-page/engagement-picker";
+import { HowWeWorkHero } from "@/components/sections/how-we-work-page/how-we-work-hero";
+import { HowWeWorkOptions } from "@/components/sections/how-we-work-page/how-we-work-options";
 import { HowWeWorkHabits } from "@/components/sections/how-we-work-page/how-we-work-habits";
 import { HowWeWorkFaq } from "@/components/sections/how-we-work-page/how-we-work-faq";
 import { usableEngagements } from "@/components/sections/how-we-work-page/how-we-work-content";
@@ -19,16 +20,16 @@ export const generateMetadata = pageMetadata("how-we-work", "/how-we-work");
    ceiling on staleness if that never lands. */
 export const revalidate = 300;
 
-type Sentence = { lead?: string; answer?: string; more?: string; or?: string };
+type Words = { cardLink?: string; unsure?: string; ask?: string; goodFor?: string; steps?: string };
 
 /**
- * How we work: what hiring the team is like, for a client deciding whether
- * to. The sentence they finish in the hero, the engagements in detail, what
- * every engagement has, and what clients ask first. There are no prices on
- * this page, by the founder's choice.
+ * How we work: what hiring the team is like, written for a client deciding
+ * whether to, in words they understand at a glance. The options as cards,
+ * each one in full, what every project has, and common questions. There are
+ * no prices on this page, by the founder's choice.
  */
 export default async function HowWeWorkPage() {
-  const [block, hero, engagementsHeading, habitsHeading, faqHeading, site] = await Promise.all([
+  const [block, hero, optionsHeading, habitsHeading, faqHeading, site] = await Promise.all([
     getBlock("how-we-work"),
     getHeading("how-we-work", "hww-hero"),
     getHeading("how-we-work", "hww-engagements"),
@@ -37,23 +38,22 @@ export default async function HowWeWorkPage() {
     getSiteSettings(),
   ]);
 
-  const sentence = (block.sentence ?? {}) as Sentence;
-  const engagements = usableEngagements((block.engagements ?? []) as Partial<EngagementView>[]);
+  const words = (block.words ?? {}) as Words;
+  const options = usableEngagements((block.engagements ?? []) as Partial<EngagementView>[]);
 
   return (
     <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
-        <EngagementPicker
-          hero={hero}
-          heading={engagementsHeading}
-          sentence={{
-            lead: sentence.lead || "I need",
-            answer: sentence.answer || "That's a",
-            more: sentence.more || "How it runs",
-            or: sentence.or ?? "Or",
-          }}
-          engagements={engagements}
+        <HowWeWorkHero
+          heading={hero}
+          options={options}
+          words={{ cardLink: words.cardLink || "See how it works", unsure: words.unsure ?? "", ask: words.ask || "Ask us" }}
+        />
+        <HowWeWorkOptions
+          heading={optionsHeading}
+          options={options}
+          words={{ goodFor: words.goodFor || "Good for", steps: words.steps || "How it works" }}
         />
         <HowWeWorkHabits heading={habitsHeading} habits={(block.habits ?? []) as HabitView[]} />
         <HowWeWorkFaq heading={faqHeading} faqs={(block.faqs ?? []) as FaqView[]} email={site.email} />

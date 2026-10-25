@@ -138,12 +138,9 @@ export type ServiceLineView = {
 /** One way of working with the team, on the How we work page. */
 export type EngagementView = {
   title: string;
-  /** What follows "I need" in the hero. */
-  need: string;
-  /** The same need, cut short, for the choices under the hero. */
-  choice: string;
-  summary: string;
-  bestWhen: string;
+  /** One line: on the card at the top and under the name below. */
+  forWho: string;
+  goodFor: string;
   steps: string[];
 };
 

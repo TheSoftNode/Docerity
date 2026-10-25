@@ -1206,57 +1206,39 @@ export const BLOCKS: Block[] = [
     page: "How we work",
     path: "/how-we-work",
     description:
-      "What it is like to hire the team, for a client deciding whether to. The hero is a sentence the visitor finishes (\"I need…\") by picking what they need, which names the engagement that fits; the engagements below are the same list, in more detail. No prices anywhere on the page.",
+      "What hiring the team is like, written for a client deciding whether to. Plain words over clever ones: a client should understand the page at a glance. No prices anywhere on it.",
     groups: [
-      headings([
-        { key: "hww-hero", label: "Hero", hint: "The title is the line above the sentence. The lede is not shown." },
-        { key: "hww-engagements", label: "The engagements" },
-        { key: "hww-habits", label: "What never changes" },
-        { key: "hww-faq", label: "Questions" },
-      ]),
-      {
-        kind: "object",
-        name: "sentence",
-        label: "The hero's sentence",
-        description: "The words around the engagement the visitor picks.",
-        fields: [
-          { name: "lead", label: "Start of the sentence", kind: "text", required: true, maxLength: 30, placeholder: "I need" },
-          { name: "answer", label: "Before the engagement's name", kind: "text", required: true, maxLength: 30, placeholder: "That's a" },
-          { name: "more", label: "Link to its details", kind: "text", required: true, maxLength: 40, placeholder: "How it runs" },
-          { name: "or", label: "Before the choices", kind: "text", maxLength: 20, placeholder: "Or" },
+      headings(
+        [
+          { key: "hww-hero", label: "Top of the page", hint: "The eyebrow is not shown; the title and the lede are." },
+          { key: "hww-engagements", label: "How each one works", hint: "The eyebrow is not shown." },
+          { key: "hww-habits", label: "On every project", hint: "The eyebrow and the lede are not shown." },
+          { key: "hww-faq", label: "Questions", hint: "The eyebrow is not shown. The email address is added after the lede." },
         ],
-      },
+        "The heading and the line under it for each part of the page."
+      ),
       {
         kind: "list",
         name: "engagements",
-        label: "Engagements",
-        description: "The ways a client can work with the team, in the order they are offered. The first is the one the hero opens on.",
-        itemNoun: "engagement",
+        label: "Ways to work with us",
+        description: "Each one is a card at the top of the page and a fuller description below it, in this order.",
+        itemNoun: "option",
         max: 6,
         min: 1,
         fields: [
-          { name: "title", label: "Name", kind: "text", required: true, maxLength: 40 },
-          {
-            name: "need",
-            label: "Finishes the sentence",
-            kind: "text",
-            required: true,
-            maxLength: 60,
-            hint: "What follows \"I need\" in the hero, as the client would say it.",
-          },
-          { name: "choice", label: "Choice under the hero", kind: "text", required: true, maxLength: 40, hint: "The same need, cut short." },
-          { name: "summary", label: "In one line", kind: "textarea", required: true, maxLength: 200 },
-          { name: "bestWhen", label: "Best when", kind: "textarea", required: true, maxLength: 300 },
-          { name: "steps", label: "How it runs", kind: "strings", hint: "Three short steps read best." },
+          { name: "title", label: "Name", kind: "text", required: true, maxLength: 40, hint: "Plain words a client would use." },
+          { name: "forWho", label: "Who it's for", kind: "text", required: true, maxLength: 90, hint: "One line, on the card and under the name." },
+          { name: "goodFor", label: "Good for", kind: "textarea", maxLength: 300 },
+          { name: "steps", label: "How it works", kind: "strings", hint: "Numbered in order. Three short steps read best." },
         ],
       },
       {
         kind: "list",
         name: "habits",
-        label: "What never changes",
-        description: "What every engagement has, whichever one the client picks.",
-        itemNoun: "habit",
-        max: 8,
+        label: "On every project",
+        description: "What a client gets whichever option they pick.",
+        itemNoun: "item",
+        max: 9,
         fields: [
           { name: "title", label: "Title", kind: "text", required: true, maxLength: 40 },
           DESCRIPTION,
@@ -1271,6 +1253,18 @@ export const BLOCKS: Block[] = [
         fields: [
           { name: "question", label: "Question", kind: "text", required: true, maxLength: 200 },
           { name: "answer", label: "Answer", kind: "textarea", required: true, maxLength: 900 },
+        ],
+      },
+      {
+        kind: "object",
+        name: "words",
+        label: "Small wording",
+        fields: [
+          { name: "cardLink", label: "Link on each card", kind: "text", required: true, maxLength: 40 },
+          { name: "unsure", label: "Under the cards", kind: "text", maxLength: 60, hint: "Blank removes the line." },
+          { name: "ask", label: "Its link to the contact page", kind: "text", required: true, maxLength: 30 },
+          { name: "goodFor", label: "\"Good for\" label", kind: "text", required: true, maxLength: 30 },
+          { name: "steps", label: "\"How it works\" label", kind: "text", required: true, maxLength: 30 },
         ],
       },
       {

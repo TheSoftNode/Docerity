@@ -196,7 +196,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         },
         "how-we-work": {
           "title": "How we work",
-          "description": "Four ways to work with Docerity: a fixed-scope project, a monthly retainer, engineers on your team, or a paid discovery first. What every engagement looks like week to week."
+          "description": "Four ways to work with Docerity: a project build, monthly support, engineers for your team, or a review and plan first. What you can expect on every project."
         }
       }
     },
@@ -701,29 +701,29 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
     headings: {
       "hww-hero": {
         eyebrow: "How we work",
-        title: "How working with us actually works.",
-        lede: "",
+        title: "Four ways to work with us.",
+        lede: "Pick the one that matches where you are. If you're not sure, tell us what you need and we'll recommend one on the first call.",
       },
       "hww-engagements": {
-        eyebrow: "Four ways in",
-        title: "Start where you actually are.",
-        lede: "Most clients start with one and move to another: a discovery that turns into a build, a build that turns into a retainer. Moving between them is normal, not a renegotiation.",
+        eyebrow: "The options",
+        title: "How each one works",
+        lede: "You can start with one and switch later. A review often turns into a build, and a build often turns into monthly support.",
       },
       "hww-habits": {
-        eyebrow: "Every engagement",
-        title: "The parts that never change.",
-        lede: "Whichever way in you pick, this is what working with us looks like week to week.",
-      },
-      "hww-faq": {
-        eyebrow: "Before you ask",
-        title: "What clients ask first.",
+        eyebrow: "Every project",
+        title: "What you can expect on every project",
         lede: "",
       },
+      "hww-faq": {
+        eyebrow: "Questions",
+        title: "Common questions",
+        lede: "Anything else? Email",
+      },
     },
-    sentence: { ...howWeWork.sentence },
     engagements: howWeWork.engagements.map((engagement) => ({ ...engagement, steps: [...engagement.steps] })),
     habits: howWeWork.habits.map((habit) => ({ ...habit })),
     faqs: howWeWork.faqs.map((faq) => ({ ...faq })),
+    words: { ...howWeWork.words },
     links: { ...howWeWork.links },
   },
 

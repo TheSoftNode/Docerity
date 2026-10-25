@@ -28,22 +28,22 @@ test.describe("How we work page", () => {
     expect(errors).toEqual([]);
   });
 
-  test("picking a need finishes the sentence and lights its engagement", async ({ page }) => {
+  test("each card goes down to that option in full", async ({ page }) => {
     await page.goto("/how-we-work");
-    const [first, , third] = engagements;
-    await expect(page.getByText(first.need)).toBeVisible();
+    const third = engagements[2];
+    const card = page.getByRole("link", { name: new RegExp(third.title) }).first();
+    await expect(card).toContainText(third.forWho);
+    await card.click();
+    await expect(page).toHaveURL(/#engineers-for-your-team$/);
 
-    const choice = page.getByRole("button", { name: third.choice });
-    await choice.click();
-    await expect(choice).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByText(third.need)).toBeVisible();
+    const option = page.getByRole("article", { name: third.title });
+    await expect(option).toBeInViewport();
+    await expect(option.getByRole("listitem")).toHaveCount(third.steps.length);
+  });
 
-    const row = page.locator("li[aria-current='true']");
-    await expect(row).toHaveCount(1);
-    await expect(row.getByRole("heading", { level: 3 })).toHaveText(third.title);
-
-    await page.getByRole("link", { name: /How it runs/ }).click();
-    await expect(page).toHaveURL(/#team-extension$/);
+  test("anyone unsure is pointed to the contact page", async ({ page }) => {
+    await page.goto("/how-we-work");
+    await expect(page.getByRole("link", { name: "Ask us", exact: true })).toHaveAttribute("href", "/contact");
   });
 
   test("there are no prices on the page", async ({ page }) => {
