@@ -67,7 +67,9 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "name": "Docerity",
         "tagline": "Software · Data · Operations · Mentorship",
         "description": "Docerity builds production software, prepares the data behind AI systems, and puts trained assistants on the operational work around both. We also mentor the engineers who do it.",
-        "email": "thesoftnode@gmail.com"
+        "email": "thesoftnode@gmail.com",
+        "bookingUrl": "",
+        "bookingLabel": "Book a 20-minute call"
       },
       "socials": [
         {
@@ -337,6 +339,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "title": "Built first, explained second, taught third.",
         "lede": "The studio is three things that turned out to be one skill. Read it in the founder's own words."
       },
+      "about-team": {
+        "eyebrow": "The team",
+        "title": "The people behind the work.",
+        "lede": "The work goes out through a team of engineers the founder trains and leads."
+      },
       "about-experience": {
         "eyebrow": "Experience",
         "title": "What shipped, and where.",
@@ -359,6 +366,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
          default; replacing it is now an upload rather than a commit. */
       portrait: "/about/headshot.webp",
     },
+    team: [],
     story: [...story],
     fullStory: { ...fullStory },
     facts: facts

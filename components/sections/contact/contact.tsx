@@ -56,6 +56,7 @@ async function Contact({ initialType }: { initialType: string | undefined }) {
       }))}
       email={site.email}
       workLink={howWeWork?.contact ?? ""}
+      booking={site.booking}
     />
   );
 }

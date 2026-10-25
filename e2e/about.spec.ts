@@ -24,7 +24,7 @@ test.describe("About page", () => {
     await page.goto("/about");
 
     await expect(page.getByRole("heading", { level: 1, name: heading("about", "about-hero").replace(/\*/g, "") })).toBeVisible();
-    for (const entry of ["about-story", "about-experience", "about-toolkit", "about-credentials"]) {
+    for (const entry of ["about-story", "about-team", "about-experience", "about-toolkit", "about-credentials"]) {
       await expect(page.getByRole("heading", { level: 2, name: heading("about", entry), exact: true })).toBeVisible();
     }
     await expect(page.getByRole("heading", { name: heading("homepage", "home-cta").replace(/\*/g, "") })).toBeVisible();
@@ -75,6 +75,13 @@ test.describe("About page", () => {
     await story.getByRole("button", { name: "Back to the top" }).click();
     await expect(story.locator("p")).toHaveCount(STORY_OPENING);
     await expect(page.getByText(`"${about.founder.based}"`)).toBeVisible();
+  });
+
+  test("with no team added, the team section shows what the team covers", async ({ page }) => {
+    await page.goto("/about");
+    const team = page.locator("#team");
+    const specialties = DEFAULTS.mentorship.specialties as string[];
+    for (const area of specialties) await expect(team.getByText(area, { exact: true })).toBeVisible();
   });
 
   test("the changelog filters, and each role opens to its notes", async ({ page }) => {

@@ -241,6 +241,21 @@ export const BLOCKS: Block[] = [
             maxLength: 200,
             hint: "Shown publicly and used as the reply-to on notifications.",
           },
+          {
+            name: "bookingUrl",
+            label: "Booking link",
+            kind: "text",
+            maxLength: 300,
+            placeholder: "https://cal.com/your-name/intro",
+            hint: "Your Cal.com or Calendly link. When set, the contact page offers it beside the form. Blank hides it.",
+          },
+          {
+            name: "bookingLabel",
+            label: "Booking button",
+            kind: "text",
+            required: true,
+            maxLength: 40,
+          },
         ],
       },
       {
@@ -514,6 +529,7 @@ export const BLOCKS: Block[] = [
       headings([
         { key: "about-hero", label: "Hero", hint: "Wrap words in *asterisks* to light them; the career graph is drawn from Experience." },
         { key: "about-story", label: "The story" },
+        { key: "about-team", label: "The team", hint: "Above the team members, or the specialties while there are none." },
         { key: "about-experience", label: "Experience" },
         { key: "about-toolkit", label: "Toolkit" },
         { key: "about-credentials", label: "Credentials" },
@@ -559,6 +575,22 @@ export const BLOCKS: Block[] = [
         fields: [
           { name: "title", label: "Title", kind: "text", maxLength: 120 },
           { name: "body", label: "The story", kind: "textarea", maxLength: 40000, rows: 24 },
+        ],
+      },
+      {
+        kind: "list",
+        name: "team",
+        label: "The team",
+        description:
+          "The people the work goes out through, after the story. While this is empty, the section shows the specialties from the mentorship page instead, so nobody is ever made up.",
+        itemNoun: "person",
+        max: 12,
+        fields: [
+          { name: "name", label: "Name", kind: "text", required: true, maxLength: 80 },
+          { name: "role", label: "Role", kind: "text", required: true, maxLength: 80 },
+          { name: "focus", label: "Focus", kind: "text", maxLength: 80, hint: "One line, such as \"Backend & APIs\"." },
+          { name: "photo", label: "Photo", kind: "image", hint: "Square works best. Without one, their initials are shown." },
+          { name: "link", label: "Link", kind: "text", maxLength: 300, hint: "LinkedIn or GitHub, if they want one. Must start with https://." },
         ],
       },
       {
