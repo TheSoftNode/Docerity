@@ -342,7 +342,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "about-team": {
         "eyebrow": "The team",
         "title": "The people behind the work.",
-        "lede": "The work goes out through a team of engineers the founder trains and leads."
+        "lede": "Docerity is a team of engineers who build, review and ship the work together."
       },
       "about-experience": {
         "eyebrow": "Experience",
