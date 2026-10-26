@@ -79,6 +79,16 @@ const userSchema = new Schema(
     invitedBy: { type: String, default: "" },
 
     /*
+      A pending password reset, kept the same way as an invitation: only the
+      SHA-256 digest of the emailed token, so a database backup holds no
+      working reset links. `resetRequestedAt` throttles requests, so the
+      "forgot password" form cannot be used to flood somebody's inbox.
+    */
+    resetTokenHash: { type: String, default: "", select: false },
+    resetExpiresAt: { type: Date, default: null },
+    resetRequestedAt: { type: Date, default: null },
+
+    /*
       Bumped when the password changes or every session is revoked. It is part
       of the session token, and `verifySession` rejects a token whose value
       disagrees with the stored one, which is how "sign out everywhere" works

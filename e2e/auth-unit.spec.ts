@@ -13,6 +13,8 @@ import {
 } from "@/lib/content/post-schema";
 import { sectionMediaOf } from "@/lib/content/section-media";
 import { normaliseUrl, validateReview } from "@/lib/reviews/schema";
+import { RESET_THROTTLE_MS, RESET_TTL_MS, looksLikeEmail, resetExpiry, resetUrl } from "@/lib/auth/reset";
+import { renderPasswordReset } from "@/lib/email/templates/password-reset";
 
 /*
   Unit tests, run by Playwright because that is the runner this project has.
@@ -437,5 +439,33 @@ test.describe("Rendering a stored media frame", () => {
     /* An empty string would render an empty <figcaption> under the image. */
     const media = sectionMediaOf({ type: "image", alt: "A", caption: "" });
     expect(media && "caption" in media).toBe(false);
+  });
+});
+
+test.describe("Password reset", () => {
+  test("a link lasts an hour, and requests are spaced out", () => {
+    const from = new Date("2026-10-26T10:00:00Z");
+    expect(resetExpiry(from).toISOString()).toBe("2026-10-26T11:00:00.000Z");
+    expect(RESET_TTL_MS).toBe(60 * 60 * 1000);
+    expect(RESET_THROTTLE_MS).toBeGreaterThan(0);
+  });
+
+  test("the link is absolute, whatever the site address ends with", () => {
+    expect(resetUrl("https://www.docerity.com/", "abc")).toBe("https://www.docerity.com/admin/reset/abc");
+    expect(resetUrl("https://preview.vercel.app", "abc")).toBe("https://preview.vercel.app/admin/reset/abc");
+  });
+
+  test("obvious typos are refused before any lookup", () => {
+    expect(looksLikeEmail("thesoftnode@gmail.com")).toBe(true);
+    expect(looksLikeEmail("  me@docerity.com ")).toBe(true);
+    for (const value of ["", "thesoftnode", "me@", "@gmail.com", "me@gmail", "a b@c.com"]) expect(looksLikeEmail(value)).toBe(false);
+  });
+
+  test("the email carries the link twice and escapes the name", () => {
+    const mail = renderPasswordReset({ name: "<b>Theo</b> Uche", url: "https://www.docerity.com/admin/reset/t0k3n", minutes: 60 });
+    expect(mail.html.match(/admin\/reset\/t0k3n/g)?.length).toBeGreaterThanOrEqual(2);
+    expect(mail.html).not.toContain("<b>Theo</b>");
+    expect(mail.text).toContain("https://www.docerity.com/admin/reset/t0k3n");
+    expect(mail.text).toContain("60 minutes");
   });
 });

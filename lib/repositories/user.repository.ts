@@ -260,3 +260,74 @@ export async function cancelInvite(id: string) {
   );
   return result.matchedCount > 0;
 }
+
+/* ── Password resets ──────────────────────────────────────────────────────── */
+
+/**
+ * Starts a password reset for an active account, if there is one.
+ *
+ * Returns the account's name and address when a reset was issued, or null when
+ * there is no such account, it is disabled, it has never set a password (that
+ * is an invitation, not a reset), or a reset was asked for in the last
+ * `throttleMs`. The caller tells the visitor the same thing in every case, so
+ * the form cannot be used to learn which addresses have accounts.
+ *
+ * One update does the check and the write, so two requests at once cannot
+ * both send.
+ */
+export async function startPasswordReset(
+  email: string,
+  resetTokenHash: string,
+  resetExpiresAt: Date,
+  throttleMs: number
+) {
+  await connectDB();
+  const now = new Date();
+  return UserModel.findOneAndUpdate(
+    {
+      email: email.trim().toLowerCase(),
+      disabledAt: null,
+      passwordHash: { $ne: "" },
+      $or: [{ resetRequestedAt: null }, { resetRequestedAt: { $lte: new Date(now.getTime() - throttleMs) } }],
+    },
+    { $set: { resetTokenHash, resetExpiresAt, resetRequestedAt: now } },
+    { new: true, projection: "email name" }
+  ).lean();
+}
+
+/** An unexpired reset, looked up by the digest of its token. */
+export async function findPendingReset(resetTokenHash: string) {
+  await connectDB();
+  return UserModel.findOne({
+    resetTokenHash,
+    resetExpiresAt: { $gt: new Date() },
+    disabledAt: null,
+  })
+    .select("email name")
+    .lean();
+}
+
+/**
+ * Sets the new password and closes the reset, in one guarded update.
+ *
+ * The link works once: the token is cleared in the same write. Any lockout is
+ * lifted, and `sessionVersion` goes up, so every device still signed in with
+ * the old password is signed out.
+ */
+export async function completePasswordReset(resetTokenHash: string, passwordHash: string) {
+  await connectDB();
+  return UserModel.findOneAndUpdate(
+    { resetTokenHash, resetExpiresAt: { $gt: new Date() }, disabledAt: null },
+    {
+      $set: {
+        passwordHash,
+        resetTokenHash: "",
+        resetExpiresAt: null,
+        failedAttempts: 0,
+        lockedUntil: null,
+      },
+      $inc: { sessionVersion: 1 },
+    },
+    { new: true, projection: "email name role sessionVersion" }
+  ).lean();
+}

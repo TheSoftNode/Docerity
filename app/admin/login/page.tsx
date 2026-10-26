@@ -59,7 +59,14 @@ export default async function AdminLoginPage({
             </p>
 
             {database.isConfigured ? (
-              <LoginForm next={typeof next === "string" ? next : "/admin"} />
+              <>
+                <LoginForm next={typeof next === "string" ? next : "/admin"} />
+                <p className="mt-5 text-center text-sm">
+                  <Link href="/admin/forgot" className="text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline">
+                    Forgot your password?
+                  </Link>
+                </p>
+              </>
             ) : (
               /*
                 Said plainly rather than letting the form fail on submit. With

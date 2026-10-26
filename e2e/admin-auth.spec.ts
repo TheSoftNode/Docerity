@@ -32,6 +32,21 @@ test.describe("Admin access", () => {
     });
   }
 
+  test("the login page links to a password reset, which a signed-out visitor can reach", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.getByRole("link", { name: "Forgot your password?" }).click();
+    await expect(page).toHaveURL(/\/admin\/forgot$/);
+    await expect(page.getByRole("heading", { name: "Forgot your password?" })).toBeVisible();
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  });
+
+  test("a made-up reset link says it has expired, and offers a new one", async ({ page }) => {
+    await page.goto("/admin/reset/not-a-real-token");
+    await expect(page).toHaveURL(/\/admin\/reset\/not-a-real-token$/);
+    await expect(page.getByRole("heading", { name: "This link has expired" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Ask for a new one" })).toHaveAttribute("href", "/admin/forgot");
+  });
+
   test("the login page is not indexable", async ({ page }) => {
     await page.goto("/admin/login");
 
