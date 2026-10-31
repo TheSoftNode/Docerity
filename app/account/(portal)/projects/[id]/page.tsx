@@ -10,6 +10,7 @@ import { findProjectForEmail } from "@/lib/repositories/client-project.repositor
 import { timeAgo } from "@/components/admin/admin-content";
 import { PortalCard, ProgressBar, StatusPill, formatDate } from "@/components/account/portal-ui";
 import { LiveRefresh } from "@/components/account/live-refresh";
+import { UpdateThread } from "@/components/account/update-thread";
 
 export const metadata: Metadata = { title: "Project" };
 export const dynamic = "force-dynamic";
@@ -201,6 +202,19 @@ export default async function AccountProjectPage({ params }: { params: Promise<{
                           <ArrowUpRightIcon className="size-4" />
                         </a>
                       ) : null}
+                      <UpdateThread
+                        projectId={id}
+                        updateId={String(update._id)}
+                        updateTitle={update.title}
+                        askingYou={kind === "question"}
+                        replies={(update.replies ?? []).map((reply) => ({
+                          id: String(reply._id),
+                          from: reply.from === "team" ? "team" : "client",
+                          name: reply.name ?? "",
+                          body: reply.body,
+                          createdAt: new Date(reply.createdAt).toISOString(),
+                        }))}
+                      />
                     </article>
                   </li>
                 );

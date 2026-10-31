@@ -6,6 +6,7 @@ import { requireStaffOrThrow } from "@/lib/auth/dal";
 import { MILESTONE_STATUS_LABELS, PROJECT_STATUS_LABELS, UPDATE_KIND_LABELS, safeHttps, type MilestoneStatus, type ProjectStatus, type UpdateKind } from "@/lib/account/rules";
 import {
   addProjectUpdate,
+  addTeamReply,
   createClientProject,
   deleteClientProject,
   removeProjectUpdate,
@@ -15,7 +16,7 @@ import {
   type ProjectInput,
 } from "@/lib/repositories/client-project.repository";
 import { sendMail } from "@/lib/email/mailer";
-import { renderProjectUpdate } from "@/lib/email/templates/account";
+import { renderProjectUpdate, renderTeamReply } from "@/lib/email/templates/account";
 import { runtime } from "@/lib/config/env";
 import { isAppError } from "@/lib/core/errors";
 import { createLogger } from "@/lib/core/logger";
@@ -206,5 +207,38 @@ export async function deleteProjectAction(id: string): Promise<Result> {
     return { ok: true };
   } catch (error) {
     return fail(error, "deleting a project");
+  }
+}
+
+/** The team's answer under an update, emailed to the client unless unticked. */
+export async function replyAsTeamAction(id: string, updateId: string, body: string, notify: boolean): Promise<Result & { emailed?: boolean }> {
+  try {
+    const user = await requireStaffOrThrow();
+    const text = body.trim();
+    if (!text) return { ok: false, message: "Write a reply first." };
+    if (text.length > 4000) return { ok: false, message: "Keep it under 4,000 characters." };
+
+    const project = await addTeamReply(id, updateId, { name: user.name.split(" ")[0], body: text });
+    if (!project) return { ok: false, message: "That update is no longer there." };
+
+    let emailed = false;
+    if (notify) {
+      const update = (project.updates ?? []).find((item) => String(item._id) === updateId);
+      const mail = renderTeamReply({
+        name: project.clientName || "there",
+        project: project.title,
+        update: update?.title ?? "your project",
+        body: text,
+        url: `${runtime.siteUrl.replace(/\/$/, "")}/account/projects/${id}`,
+      });
+      const delivery = await sendMail({ to: project.clientEmail, subject: mail.subject, html: mail.html, text: mail.text });
+      emailed = delivery.ok;
+      if (!delivery.ok) logger.error("team reply email failed", new Error(delivery.error), { projectId: id });
+    }
+
+    refresh(id);
+    return { ok: true, emailed };
+  } catch (error) {
+    return fail(error, "replying on an update");
   }
 }

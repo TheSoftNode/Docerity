@@ -68,13 +68,21 @@ function AdminNav({
   counts,
 }: {
   role: Role;
-  counts: { enquiries: number; reviews: number; posts: number };
+  counts: { enquiries: number; reviews: number; posts: number; replies: number };
 }) {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
 
   const badgeFor = (href: string) =>
-    href === "/admin/enquiries" ? counts.enquiries : href === "/admin/reviews" ? counts.reviews : href === "/admin/posts" ? counts.posts : 0;
+    href === "/admin/enquiries"
+      ? counts.enquiries
+      : href === "/admin/reviews"
+        ? counts.reviews
+        : href === "/admin/posts"
+          ? counts.posts
+          : href === "/admin/client-projects"
+            ? counts.replies
+            : 0;
 
   return (
     <nav aria-label="Admin sections" className="flex flex-col gap-5">

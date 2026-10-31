@@ -53,3 +53,26 @@ export function renderProjectUpdate(data: { name: string; project: string; kind:
   const text = `Hi ${first(data.name)},\n\nThere's news on ${data.project}.\n\n${data.kind}: ${data.title}\n\n${excerpt}\n\nSee the project: ${data.url}`;
   return { subject, html: renderLayout({ title: data.title, preheader: `${data.kind} on ${data.project}`, body }), text };
 }
+
+/** To the team: a client replied under an update. */
+export function renderClientReplyNotice(data: { client: string; project: string; update: string; body: string; url: string }) {
+  const subject = `${data.client} replied on ${data.project}`;
+  const body =
+    para(`<strong>${escapeHtml(data.client)}</strong> replied to “${escapeHtml(data.update)}” on <strong>${escapeHtml(data.project)}</strong>:`) +
+    `<p style="margin:0 0 24px 0;padding:14px 16px;border-left:3px solid ${COLORS.sapphire};font-size:15px;line-height:1.6;color:${COLORS.pearl};white-space:pre-line;">${escapeHtml(data.body)}</p>` +
+    button(data.url, "Answer in the admin");
+  const text = `${data.client} replied to "${data.update}" on ${data.project}:\n\n${data.body}\n\nAnswer in the admin: ${data.url}`;
+  return { subject, html: renderLayout({ title: subject, preheader: data.body.slice(0, 90), body }), text };
+}
+
+/** To the client: the team answered their reply. */
+export function renderTeamReply(data: { name: string; project: string; update: string; body: string; url: string }) {
+  const subject = `Re: ${data.update}`;
+  const body =
+    para(`Hi ${escapeHtml(first(data.name))},`) +
+    para(`We answered you on “${escapeHtml(data.update)}” in <strong>${escapeHtml(data.project)}</strong>:`) +
+    `<p style="margin:0 0 24px 0;padding:14px 16px;border-left:3px solid ${COLORS.sapphire};font-size:15px;line-height:1.6;color:${COLORS.pearl};white-space:pre-line;">${escapeHtml(data.body)}</p>` +
+    button(data.url, "See the conversation");
+  const text = `Hi ${first(data.name)},\n\nWe answered you on "${data.update}" in ${data.project}:\n\n${data.body}\n\nSee the conversation: ${data.url}`;
+  return { subject, html: renderLayout({ title: subject, preheader: data.body.slice(0, 90), body }), text };
+}

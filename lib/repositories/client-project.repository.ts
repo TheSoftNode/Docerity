@@ -115,3 +115,82 @@ export async function findProjectForEmail(id: string, email: string) {
   if (!/^[a-f0-9]{24}$/i.test(id)) return null;
   return ClientProjectModel.findOne({ _id: id, clientEmail: normalise(email), archivedAt: null }).lean();
 }
+
+/* ── Replies ──────────────────────────────────────────────────────────── */
+
+const OBJECT_ID = /^[a-f0-9]{24}$/i;
+
+/**
+ * A client's reply under one of their project's updates. The project's
+ * address is part of the match, so a client can only ever reply on their own
+ * work; it returns the project's title for the team's email, or null.
+ */
+export async function addClientReply(projectId: string, updateId: string, email: string, reply: { name: string; body: string }) {
+  await connectDB();
+  if (!OBJECT_ID.test(projectId) || !OBJECT_ID.test(updateId)) return null;
+  return ClientProjectModel.findOneAndUpdate(
+    { _id: projectId, clientEmail: normalise(email), archivedAt: null, "updates._id": updateId },
+    { $push: { "updates.$.replies": { from: "client", name: reply.name, body: reply.body, seenByTeam: false, createdAt: new Date() } } },
+    { new: true, projection: "title clientName clientEmail" }
+  ).lean();
+}
+
+/** The team's answer under an update; it counts as seen, being theirs. */
+export async function addTeamReply(projectId: string, updateId: string, reply: { name: string; body: string }) {
+  await connectDB();
+  if (!OBJECT_ID.test(projectId) || !OBJECT_ID.test(updateId)) return null;
+  return ClientProjectModel.findOneAndUpdate(
+    { _id: projectId, "updates._id": updateId },
+    { $push: { "updates.$.replies": { from: "team", name: reply.name, body: reply.body, seenByTeam: true, createdAt: new Date() } } },
+    { new: true, projection: "title clientName clientEmail updates" }
+  ).lean();
+}
+
+/** Opening a project in the admin marks every client reply on it as seen. */
+export async function markRepliesSeen(projectId: string) {
+  await connectDB();
+  if (!OBJECT_ID.test(projectId)) return;
+  await ClientProjectModel.updateOne(
+    { _id: projectId },
+    { $set: { "updates.$[].replies.$[reply].seenByTeam": true } },
+    { arrayFilters: [{ "reply.from": "client", "reply.seenByTeam": false }] }
+  );
+}
+
+export type UnseenReply = { projectId: string; projectTitle: string; updateTitle: string; name: string; body: string; createdAt: Date };
+
+/** Client replies the team has not opened yet, newest first: for the overview and the sidebar count. */
+export async function listUnseenReplies(limit = 20): Promise<UnseenReply[]> {
+  await connectDB();
+  return ClientProjectModel.aggregate<UnseenReply>([
+    { $match: { archivedAt: null, "updates.replies": { $elemMatch: { from: "client", seenByTeam: false } } } },
+    { $unwind: "$updates" },
+    { $unwind: "$updates.replies" },
+    { $match: { "updates.replies.from": "client", "updates.replies.seenByTeam": false } },
+    { $sort: { "updates.replies.createdAt": -1 } },
+    { $limit: limit },
+    {
+      $project: {
+        _id: 0,
+        projectId: { $toString: "$_id" },
+        projectTitle: "$title",
+        updateTitle: "$updates.title",
+        name: "$updates.replies.name",
+        body: "$updates.replies.body",
+        createdAt: "$updates.replies.createdAt",
+      },
+    },
+  ]);
+}
+
+export async function countUnseenReplies(): Promise<number> {
+  await connectDB();
+  const [row] = await ClientProjectModel.aggregate<{ count: number }>([
+    { $match: { archivedAt: null } },
+    { $unwind: "$updates" },
+    { $unwind: "$updates.replies" },
+    { $match: { "updates.replies.from": "client", "updates.replies.seenByTeam": false } },
+    { $count: "count" },
+  ]);
+  return row?.count ?? 0;
+}

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { requireStaff } from "@/lib/auth/dal";
 import { database } from "@/lib/config/env";
-import { findClientProject } from "@/lib/repositories/client-project.repository";
+import { findClientProject, markRepliesSeen } from "@/lib/repositories/client-project.repository";
 import { accountStatusFor } from "@/lib/repositories/client-account.repository";
 import { ClientProjectEditor, type EditorProject } from "@/components/admin/client-project-editor";
 
@@ -48,9 +48,21 @@ export default async function ClientProjectPage({ params }: { params: Promise<{ 
       link: update.link ?? "",
       by: update.by ?? "",
       createdAt: new Date(update.createdAt).toISOString(),
+      replies: (update.replies ?? []).map((reply) => ({
+        id: String(reply._id),
+        from: reply.from === "team" ? ("team" as const) : ("client" as const),
+        name: reply.name ?? "",
+        body: reply.body,
+        createdAt: new Date(reply.createdAt).toISOString(),
+        /* Read before they are marked below, so what is new this visit still shows as new. */
+        isNew: reply.from === "client" && !reply.seenByTeam,
+      })),
     })),
     account: await accountStatusFor(project.clientEmail),
   };
+
+  /* Opening the project is reading its replies: the sidebar count and the overview drop them. */
+  await markRepliesSeen(id);
 
   return <ClientProjectEditor key={project.updatedAt ? new Date(project.updatedAt).getTime() : id} project={view} />;
 }

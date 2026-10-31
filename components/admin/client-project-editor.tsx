@@ -13,6 +13,7 @@ import {
   deleteProjectAction,
   postUpdateAction,
   removeUpdateAction,
+  replyAsTeamAction,
   saveMilestonesAction,
   saveProjectAction,
   type MilestoneFields,
@@ -25,7 +26,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-export type EditorUpdate = { id: string; kind: string; title: string; body: string; link: string; by: string; createdAt: string };
+export type EditorReply = { id: string; from: "client" | "team"; name: string; body: string; createdAt: string; isNew: boolean };
+export type EditorUpdate = { id: string; kind: string; title: string; body: string; link: string; by: string; createdAt: string; replies: EditorReply[] };
 export type EditorProject = ProjectFields & {
   id: string;
   archived: boolean;
@@ -381,6 +383,7 @@ function ClientProjectEditor({ project }: { project?: EditorProject }) {
                         </p>
                         <p className="mt-0.5 text-[15px] font-semibold text-foreground">{item.title}</p>
                         {item.body ? <p className="mt-1 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{item.body}</p> : null}
+                        <TeamThread projectId={project.id} update={item} clientName={fields.clientName} />
                       </div>
                       <Button
                         variant="subtle-danger"
@@ -447,6 +450,70 @@ function ClientProjectEditor({ project }: { project?: EditorProject }) {
         ) : null}
       </div>
     </>
+  );
+}
+
+/** The conversation under one update, with the team's answer box. New client replies are marked. */
+function TeamThread({ projectId, update, clientName }: { projectId: string; update: EditorUpdate; clientName: string }) {
+  const router = useRouter();
+  const [open, setOpen] = useState(update.replies.some((reply) => reply.isNew));
+  const [body, setBody] = useState("");
+  const [notify, setNotify] = useState(true);
+  const [note, setNote] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
+  const [sending, start] = useTransition();
+
+  const send = () =>
+    start(async () => {
+      const result = await replyAsTeamAction(projectId, update.id, body, notify);
+      if (!result.ok) return setNote({ tone: "error", text: result.message });
+      setBody("");
+      setNote({ tone: "ok", text: notify ? (result.emailed ? "Sent, and emailed" : "Sent. The email could not go out.") : "Sent" });
+      router.refresh();
+    });
+
+  return (
+    <div className="mt-3">
+      {update.replies.length > 0 ? (
+        <ol className="grid gap-2.5 border-l-2 border-border pl-3.5">
+          {update.replies.map((reply) => (
+            <li key={reply.id}>
+              <p className="text-xs text-muted-foreground">
+                <span className={cn("font-semibold", reply.from === "client" ? "text-foreground" : "text-primary")}>
+                  {reply.from === "client" ? reply.name || clientName || "Client" : `${reply.name || "You"} (team)`}
+                </span>{" "}
+                · {timeAgo(reply.createdAt)}
+                {reply.isNew ? <span className="ml-2 rounded-full bg-[#ff7a59]/15 px-2 py-0.5 font-semibold text-[#b4401f] dark:text-[#ff9a80]">New</span> : null}
+              </p>
+              <p className="mt-0.5 text-sm leading-relaxed whitespace-pre-line text-foreground/90">{reply.body}</p>
+            </li>
+          ))}
+        </ol>
+      ) : null}
+
+      {open ? (
+        <div className="mt-3 grid gap-2">
+          <label htmlFor={`team-reply-${update.id}`} className="sr-only">
+            Reply to {update.title}
+          </label>
+          <Textarea id={`team-reply-${update.id}`} value={body} onChange={(event) => setBody(event.target.value)} rows={3} maxLength={4000} placeholder="Your answer" />
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="sm" onClick={send} disabled={sending || !body.trim()}>
+              {sending ? <Loader2Icon className="animate-spin" /> : <SendIcon />}
+              Reply
+            </Button>
+            <label className="flex items-center gap-2 text-sm text-muted-foreground">
+              <input type="checkbox" checked={notify} onChange={(event) => setNotify(event.target.checked)} className="size-4 accent-[#1c3a8c]" />
+              Email the client
+            </label>
+            {note ? <Note tone={note.tone}>{note.text}</Note> : null}
+          </div>
+        </div>
+      ) : (
+        <Button variant="ghost" size="sm" className="mt-1 -ml-3" onClick={() => setOpen(true)}>
+          Reply
+        </Button>
+      )}
+    </div>
   );
 }
 
