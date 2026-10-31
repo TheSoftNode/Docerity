@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { requireStaffOrThrow } from "@/lib/auth/dal";
-import { MILESTONE_STATUS_LABELS, PROJECT_STATUS_LABELS, UPDATE_KIND_LABELS, safeHttps } from "@/lib/account/rules";
+import { MILESTONE_STATUS_LABELS, PROJECT_STATUS_LABELS, UPDATE_KIND_LABELS, safeHttps, type MilestoneStatus, type ProjectStatus, type UpdateKind } from "@/lib/account/rules";
 import {
   addProjectUpdate,
   createClientProject,
@@ -68,7 +68,7 @@ function clean(fields: ProjectFields): ProjectInput | string {
     clientEmail,
     clientName: fields.clientName.trim().slice(0, 120),
     summary: fields.summary.trim().slice(0, 1200),
-    status: fields.status,
+    status: fields.status as ProjectStatus,
     startDate: toDate(fields.startDate),
     targetDate: toDate(fields.targetDate),
     nextStep: fields.nextStep.trim().slice(0, 300),
@@ -123,7 +123,7 @@ export async function saveMilestonesAction(id: string, milestones: MilestoneFiel
       const title = milestone.title.trim();
       if (!title) return { ok: false, message: "Every milestone needs a name." };
       if (!(milestone.status in MILESTONE_STATUS_LABELS)) return { ok: false, message: "Pick a status for every milestone." };
-      clean.push({ id: milestone.id, title: title.slice(0, 120), detail: milestone.detail.trim().slice(0, 600), status: milestone.status, due: toDate(milestone.due) });
+      clean.push({ id: milestone.id, title: title.slice(0, 120), detail: milestone.detail.trim().slice(0, 600), status: milestone.status as MilestoneStatus, due: toDate(milestone.due) });
     }
     if (!(await saveMilestones(id, clean))) return { ok: false, message: "That project no longer exists." };
     refresh(id);
@@ -145,7 +145,7 @@ export async function postUpdateAction(
     if (update.link.trim() && !safeHttps(update.link)) return { ok: false, message: "Links must start with https://." };
 
     const project = await addProjectUpdate(id, {
-      kind: update.kind,
+      kind: update.kind as UpdateKind,
       title: title.slice(0, 160),
       body: update.body.trim().slice(0, 6000),
       link: safeHttps(update.link),

@@ -1,15 +1,16 @@
 import { connectDB } from "@/lib/db/connect";
 import { ClientProjectModel } from "@/lib/db/models/client-project.model";
+import type { MilestoneStatus, ProjectStatus, UpdateKind } from "@/lib/account/rules";
 
 const normalise = (email: string) => email.trim().toLowerCase();
 
-export type MilestoneInput = { id?: string; title: string; detail: string; status: string; due: Date | null };
+export type MilestoneInput = { id?: string; title: string; detail: string; status: MilestoneStatus; due: Date | null };
 export type ProjectInput = {
   title: string;
   clientEmail: string;
   clientName: string;
   summary: string;
-  status: string;
+  status: ProjectStatus;
   startDate: Date | null;
   targetDate: Date | null;
   nextStep: string;
@@ -69,7 +70,7 @@ export async function saveMilestones(id: string, milestones: MilestoneInput[]) {
   return true;
 }
 
-export async function addProjectUpdate(id: string, update: { kind: string; title: string; body: string; link: string; by: string }) {
+export async function addProjectUpdate(id: string, update: { kind: UpdateKind; title: string; body: string; link: string; by: string }) {
   await connectDB();
   const result = await ClientProjectModel.findOneAndUpdate(
     { _id: id },
