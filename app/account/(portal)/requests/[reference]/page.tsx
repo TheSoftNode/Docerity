@@ -1,36 +1,32 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon, CheckIcon, PaperclipIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowUpRightIcon, PaperclipIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { requireAccount } from "@/lib/account/session";
+import { requestStep } from "@/lib/account/rules";
 import { findEnquiryForEmail } from "@/lib/repositories/enquiry.repository";
 import { budgets, projectTypes, timelines } from "@/lib/contact/schema";
-import { PortalCard, formatDate } from "@/components/account/portal-ui";
+import { formatDate } from "@/components/account/portal-ui";
 
 export const metadata: Metadata = { title: "Request" };
 export const dynamic = "force-dynamic";
 
-/* The path a request takes, as the person who sent it sees it. */
+/* The road a request travels, as the person who sent it sees it. */
 const STEPS = [
-  { key: "new", label: "Received", detail: "It's in, and in the queue to be read." },
-  { key: "read", label: "Being looked at", detail: "Someone on the team is reading it." },
-  { key: "replied", label: "We've replied", detail: "Check your email for our answer." },
+  { label: "Received", detail: "It's in, and in line to be read." },
+  { label: "Being looked at", detail: "Someone on the team is reading it now." },
+  { label: "We've replied", detail: "Our answer is in your inbox." },
 ] as const;
-
-/** How far along the path a status is; a closed request has been through all of it. */
-function reached(status: string): number {
-  if (status === "archived") return STEPS.length;
-  const index = STEPS.findIndex((step) => step.key === status);
-  return index < 0 ? 0 : index;
-}
 
 const label = (options: readonly { value: string; label: string }[], value: string) => options.find((option) => option.value === value)?.label ?? "";
 
 /**
- * One request the person sent: where it stands on its way through the team,
- * and what they sent. Found by its reference and their address together.
+ * One request the person sent. A navy column with what it is and its
+ * details; beside it, the road it travels (received, looked at, replied)
+ * with where it is now, and what they wrote. Found by reference and address
+ * together, so a guessed reference shows nothing.
  */
 export default async function RequestPage({ params }: { params: Promise<{ reference: string }> }) {
   const { reference } = await params;
@@ -40,13 +36,13 @@ export default async function RequestPage({ params }: { params: Promise<{ refere
   const request = await findEnquiryForEmail(reference, account.email);
   if (!request) notFound();
 
-  const at = reached(request.status);
   const closed = request.status === "archived";
+  const at = requestStep(request.status);
+  const codeLink = request.codeLink ? (/^https?:\/\//i.test(request.codeLink) ? request.codeLink : `https://${request.codeLink}`) : "";
   const details = [
     ["Budget", label(budgets, request.budget ?? "")],
     ["When", label(timelines, request.timeline ?? "")],
     ["Where you'd start", request.stage ?? ""],
-    ["Your code", request.codeLink ?? ""],
   ].filter(([, value]) => value);
 
   return (
@@ -55,68 +51,97 @@ export default async function RequestPage({ params }: { params: Promise<{ refere
         <ArrowLeftIcon className="size-4" />
         Your account
       </Link>
-      <p className="mt-5 text-sm text-muted-foreground">
-        Reference <span className="font-mono font-semibold tracking-[0.06em] text-foreground">{request.reference}</span> · sent {formatDate(request.createdAt)}
-      </p>
-      <h1 className="mt-2 pb-8 font-heading text-[clamp(34px,4vw,52px)] leading-none font-extrabold tracking-[-0.04em] text-foreground">
-        {label(projectTypes, request.projectType) || "Request"}
-      </h1>
 
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
-        <PortalCard title={closed ? "Closed" : "Where it stands"}>
-          <ol>
-            {STEPS.map((step, index) => {
-              const done = index < at || closed;
-              const now = index === at && !closed;
-              return (
-                <li key={step.key} className="relative flex gap-4 pb-6 last:pb-0">
-                  {index < STEPS.length - 1 ? (
-                    <span aria-hidden className={cn("absolute top-8 bottom-0 left-[13px] w-0.5", done ? "bg-primary" : "bg-border")} />
-                  ) : null}
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "relative z-10 grid size-7 shrink-0 place-items-center rounded-full border-2",
-                      done && "border-primary bg-primary text-primary-foreground",
-                      now && "border-[#ff7a59] bg-card",
-                      !done && !now && "border-border bg-card"
-                    )}
-                  >
-                    {done ? <CheckIcon className="size-3.5" strokeWidth={3} /> : now ? <span className="size-2.5 rounded-full bg-[#ff7a59]" /> : null}
-                  </span>
-                  <div className="pt-0.5">
-                    <p className={cn("text-[15px] font-semibold", done || now ? "text-foreground" : "text-muted-foreground")}>
-                      {step.label}
-                      {now ? <span className="sr-only"> (now)</span> : null}
-                    </p>
-                    {now ? <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{step.detail}</p> : null}
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-          {closed ? <p className="mt-6 text-sm leading-relaxed text-muted-foreground">This request is closed. If there&apos;s more to say, send a new one.</p> : null}
-        </PortalCard>
+      <div className="mt-5 grid items-start gap-5 lg:grid-cols-[380px_minmax(0,1fr)]">
+        <aside aria-label="About this request" className="rounded-[26px] bg-[#08102e] p-7 text-[#f4f5fa] lg:sticky lg:top-24">
+          <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-semibold", closed ? "bg-[rgb(244_245_250/0.1)] text-[#c4cbe3]" : "bg-[rgb(175_196_255/0.14)] text-[#afc4ff]")}>
+            {closed ? "Closed" : STEPS[at].label}
+          </span>
+          <h1 className="mt-4 font-heading text-[clamp(34px,3.2vw,42px)] leading-none font-extrabold tracking-[-0.04em]">
+            {label(projectTypes, request.projectType) || "Request"}
+          </h1>
+          <p className="mt-4 font-mono text-lg font-medium tracking-[0.06em] text-[#afc4ff]">{request.reference}</p>
+          <p className="mt-1 text-sm text-[#9aa7cf]">Sent {formatDate(request.createdAt)}</p>
 
-        <PortalCard title="What you sent">
-          <p className="text-[15px] leading-relaxed whitespace-pre-line text-foreground/90">{request.message}</p>
-          {details.length > 0 ? (
-            <dl className="mt-6 grid gap-4 border-t border-border pt-5 sm:grid-cols-2">
+          {details.length > 0 || codeLink ? (
+            <dl className="mt-6 border-t border-[rgb(175_196_255/0.14)]">
               {details.map(([name, value]) => (
-                <div key={name}>
-                  <dt className="text-sm text-muted-foreground">{name}</dt>
-                  <dd className="mt-0.5 text-[15px] font-medium break-all text-foreground">{value}</dd>
+                <div key={name} className="flex items-baseline justify-between gap-4 border-b border-[rgb(175_196_255/0.14)] py-3">
+                  <dt className="text-[13px] text-[#9aa7cf]">{name}</dt>
+                  <dd className="text-right text-[15px] font-medium">{value}</dd>
                 </div>
               ))}
+              {codeLink ? (
+                <div className="flex items-baseline justify-between gap-4 border-b border-[rgb(175_196_255/0.14)] py-3">
+                  <dt className="text-[13px] text-[#9aa7cf]">Your code</dt>
+                  <dd className="min-w-0 text-right text-[15px] font-medium">
+                    <a href={codeLink} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full items-center gap-1 truncate text-[#afc4ff] hover:underline">
+                      <span className="truncate">{request.codeLink}</span>
+                      <ArrowUpRightIcon className="size-3.5 shrink-0" />
+                    </a>
+                  </dd>
+                </div>
+              ) : null}
             </dl>
           ) : null}
-          {request.attachments?.length ? (
-            <p className="mt-5 inline-flex items-center gap-2 text-sm text-muted-foreground">
-              <PaperclipIcon className="size-4" />
-              {request.attachments.length} {request.attachments.length === 1 ? "file" : "files"} attached
-            </p>
-          ) : null}
-        </PortalCard>
+
+          <p className="mt-6 text-sm leading-relaxed text-[#c4cbe3]">
+            Questions about it? Reply to any email from us, or quote <span className="font-mono text-[#f4f5fa]">{request.reference}</span>.
+          </p>
+        </aside>
+
+        <div className="grid min-w-0 gap-5">
+          <section aria-labelledby="journey-title" className="rounded-[26px] border border-border bg-card p-7">
+            <h2 id="journey-title" className="font-heading text-[26px] font-bold tracking-[-0.025em] text-foreground">
+              {closed ? "This request is closed" : "Where it stands"}
+            </h2>
+            <ol className="mt-6 grid gap-x-4 gap-y-6 sm:grid-cols-3">
+              {STEPS.map((step, index) => {
+                const state = closed || index < at ? "done" : index === at ? "now" : "todo";
+                return (
+                  <li key={step.label}>
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "mb-4 block h-1 rounded-full",
+                        state === "done" && "bg-primary",
+                        state === "now" && "bg-[#ff7a59]",
+                        state === "todo" && "bg-muted"
+                      )}
+                    />
+                    <span className={cn("text-xs font-semibold", state === "done" ? "text-primary" : state === "now" ? "text-[#b4401f] dark:text-[#ff9a80]" : "text-muted-foreground")}>
+                      {state === "done" ? "Done" : state === "now" ? "Now" : "Next"}
+                    </span>
+                    <p className={cn("mt-1 text-base font-semibold", state === "todo" ? "text-muted-foreground" : "text-foreground")}>{step.label}</p>
+                    {state === "now" ? <p className="mt-1.5 text-[13px] leading-normal text-muted-foreground">{step.detail}</p> : null}
+                  </li>
+                );
+              })}
+            </ol>
+            {closed ? (
+              <p className="mt-6 text-[15px] leading-relaxed text-muted-foreground">
+                If there&apos;s more to say,{" "}
+                <Link href="/account/requests/new" className="font-semibold text-primary hover:underline">
+                  send a new request
+                </Link>
+                .
+              </p>
+            ) : null}
+          </section>
+
+          <section aria-labelledby="sent-title" className="rounded-[26px] border border-border bg-card p-7">
+            <h2 id="sent-title" className="font-heading text-[26px] font-bold tracking-[-0.025em] text-foreground">
+              What you sent
+            </h2>
+            <blockquote className="mt-5 border-l-[3px] border-primary pl-5 text-[16px] leading-[1.75] whitespace-pre-line text-foreground/90">{request.message}</blockquote>
+            {request.attachments?.length ? (
+              <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-muted px-3.5 py-1.5 text-sm text-muted-foreground">
+                <PaperclipIcon className="size-4" />
+                {request.attachments.length} {request.attachments.length === 1 ? "file" : "files"} attached
+              </p>
+            ) : null}
+          </section>
+        </div>
       </div>
     </>
   );

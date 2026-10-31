@@ -1,0 +1,24 @@
+name: ci-check
+on:
+  push:
+    branches: [ci-check-portal]
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: typecheck and build
+        run: |
+          set +e
+          { echo "## tsc"; npx tsc --noEmit -p . 2>&1 | head -60; echo "## build"; npx next build 2>&1 | tail -70; } > out.txt
+          gh api repos/${{ github.repository }}/commits/${{ github.sha }}/comments -F body=@out.txt > /dev/null
+        env:
+          SESSION_SECRET: "ci-only-secret-ci-only-secret-ci-only-1234"
+          GH_TOKEN: ${{ github.token }}
