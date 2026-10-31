@@ -31,16 +31,16 @@ export default async function ClientProjectPage({ params }: { params: Promise<{ 
     startDate: day(project.startDate),
     targetDate: day(project.targetDate),
     nextStep: project.nextStep ?? "",
-    links: (project.links ?? []).map((link: { label: string; url: string }) => ({ label: link.label, url: link.url })),
+    links: (project.links ?? []).map((link) => ({ label: link.label, url: link.url })),
     archived: Boolean(project.archivedAt),
-    milestones: (project.milestones ?? []).map((milestone: { _id: unknown; title: string; detail?: string; status: string; due?: Date | null }) => ({
+    milestones: (project.milestones ?? []).map((milestone) => ({
       id: String(milestone._id),
       title: milestone.title,
       detail: milestone.detail ?? "",
       status: milestone.status,
       due: day(milestone.due),
     })),
-    updates: (project.updates ?? []).map((update: { _id: unknown; kind: string; title: string; body?: string; link?: string; by?: string; createdAt: Date }) => ({
+    updates: (project.updates ?? []).map((update) => ({
       id: String(update._id),
       kind: update.kind,
       title: update.title,

@@ -52,7 +52,7 @@ export async function saveMilestones(id: string, milestones: MilestoneInput[]) {
   await connectDB();
   const project = await ClientProjectModel.findById(id).select("milestones").lean();
   if (!project) return false;
-  const before = new Map(project.milestones.map((milestone) => [String(milestone._id), milestone]));
+  const before = new Map(project.milestones.map((milestone) => [String(milestone._id), milestone] as const));
   const now = new Date();
   const next = milestones.map((milestone) => {
     const previous = milestone.id ? before.get(milestone.id) : undefined;
