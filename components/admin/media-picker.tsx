@@ -84,7 +84,7 @@ function MediaPicker({
   return (
     <div className="mt-2 rounded-lg border border-border bg-background/60 p-3">
       <div className="flex items-center justify-between gap-2">
-        <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="text-[13px] font-semibold text-muted-foreground">
           Already uploaded
         </p>
         <Button

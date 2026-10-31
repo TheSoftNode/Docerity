@@ -1,171 +1,116 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  AlertTriangleIcon,
-  CheckCircle2Icon,
-  FileTextIcon,
-  InboxIcon,
-  MailIcon,
-  StarIcon,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRightIcon, FileTextIcon, InboxIcon, MailIcon, StarIcon, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { requireStaff } from "@/lib/auth/dal";
 import { database, email as emailConfig, storage } from "@/lib/config/env";
-import { countEnquiriesByStatus } from "@/lib/repositories/enquiry.repository";
-import { countReviewsByStatus } from "@/lib/repositories/review.repository";
+import { projectTypes } from "@/lib/contact/schema";
+import { countEnquiriesByStatus, listEnquiries } from "@/lib/repositories/enquiry.repository";
+import { countReviewsByStatus, listForModeration } from "@/lib/repositories/review.repository";
 import { countPostsByStatus } from "@/lib/repositories/post.repository";
 import { countSubscribersByStatus } from "@/lib/repositories/subscriber.repository";
 import { AdminNoDatabase, AdminPageHeader } from "@/components/admin/admin-page-header";
+import { newestWaiting, timeAgo, type WaitingItem } from "@/components/admin/admin-content";
 
 export const metadata: Metadata = { title: "Overview" };
 
-/** A number worth clicking on, with what is waiting called out. */
-/**
- * The four accents the overview counts are drawn in.
- *
- * Colour here is a label, not decoration: four identical grey cards mean
- * finding the reviews count is reading four headings, and the eye is much
- * faster at "the violet one". The same four hues the public site already uses,
- * so the tool and the site look like one product.
- */
-const ACCENTS = {
-  primary: {
-    icon: "text-primary",
-    edge: "before:bg-[linear-gradient(to_right,var(--brand-primary),transparent)]",
-    hover: "hover:border-primary/40",
-  },
-  violet: {
-    icon: "text-brand-violet",
-    edge: "before:bg-[linear-gradient(to_right,var(--brand-violet),transparent)]",
-    hover: "hover:border-brand-violet/40",
-  },
-  iris: {
-    icon: "text-brand-iris",
-    edge: "before:bg-[linear-gradient(to_right,var(--brand-iris),transparent)]",
-    hover: "hover:border-brand-iris/40",
-  },
-  teal: {
-    icon: "text-brand-teal",
-    edge: "before:bg-[linear-gradient(to_right,var(--brand-teal),transparent)]",
-    hover: "hover:border-brand-teal/40",
-  },
-} as const;
-
-type Accent = keyof typeof ACCENTS;
-
+/** One of the four counts across the top: the total large, and what is waiting under it. */
 function StatCard({
   href,
   label,
   value,
-  waiting,
-  waitingLabel,
+  note,
+  hot,
   Icon,
-  accent,
 }: {
   href: string;
   label: string;
   value: number;
-  waiting?: number;
-  waitingLabel?: string;
+  note: string;
+  /** Something is waiting, so the note is the one coloured line on the card. */
+  hot: boolean;
   Icon: LucideIcon;
-  accent: Accent;
 }) {
-  const tone = ACCENTS[accent];
-
   return (
     <Link
       href={href}
-      className={cn(
-        /* The accent runs along the top edge as a hairline, which colours the
-           card without tinting the number sitting under it. */
-        "group/stat relative overflow-hidden rounded-xl border border-border bg-card px-4 py-4 transition-colors before:absolute before:inset-x-0 before:top-0 before:h-px before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground",
-        tone.edge,
-        tone.hover
-      )}
+      className="group/stat rounded-[20px] border border-border bg-card p-[22px] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-[0_18px_40px_-28px_rgb(8_16_46/0.45)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
     >
-      <div className="flex items-start justify-between gap-3">
-        <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
-          {label}
-        </p>
-        <Icon aria-hidden className={cn("size-4", tone.icon)} />
-      </div>
-
-      <p className="mt-2 font-heading text-2xl font-semibold tabular-nums text-foreground">
+      <span className="flex items-center justify-between text-sm font-semibold text-muted-foreground">
+        {label}
+        <Icon aria-hidden className="size-[18px] text-primary" />
+      </span>
+      <span className="mt-3.5 block font-heading text-[46px] leading-none font-extrabold tracking-[-0.04em] tabular-nums text-foreground">
         {value}
-      </p>
-
-      {waiting && waiting > 0 ? (
-        <p className="mt-1 text-xs font-medium text-amber-600 dark:text-amber-400">
-          {waiting} {waitingLabel}
-        </p>
-      ) : (
-        <p className="mt-1 text-xs text-muted-foreground">nothing waiting</p>
-      )}
+      </span>
+      <span className={cn("mt-2 block text-sm", hot ? "font-semibold text-[#b4401f] dark:text-[#ff9a80]" : "text-muted-foreground")}>{note}</span>
     </Link>
   );
 }
 
-/**
- * Whether each service is actually wired up.
- *
- * On the overview because the failure modes are quiet: with no SMTP credentials
- * the contact form still accepts an enquiry and stores it, and the notification
- * simply never arrives. Without this panel the first sign of that is somebody
- * asking why you never replied.
- */
+/** One service the site depends on, said in plain words: working, or what is missing. */
 function ServiceRow({ ready, name, detail }: { ready: boolean; name: string; detail: string }) {
   return (
-    <li className="flex items-start gap-2.5">
-      {ready ? (
-        <CheckCircle2Icon aria-hidden className="mt-0.5 size-4 shrink-0 text-brand-teal" />
-      ) : (
-        <AlertTriangleIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-amber-500" />
-      )}
+    <li className="flex gap-3 border-t border-border py-3.5 first:border-t-0 first:pt-0 last:pb-0">
+      <span aria-hidden className={cn("mt-1.5 size-2.5 shrink-0 rounded-full", ready ? "bg-brand-teal" : "bg-amber-500")} />
       <div className="min-w-0">
-        <p className="text-sm text-foreground">
+        <p className="text-[15px] font-semibold text-foreground">
           {name}
-          <span className="sr-only">{ready ? ": configured" : ": not configured"}</span>
+          <span className="sr-only">{ready ? ": working" : ": not set up"}</span>
         </p>
-        <p className="text-xs text-muted-foreground">{detail}</p>
+        <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">{detail}</p>
       </div>
     </li>
   );
 }
 
+function Panel({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
+  return (
+    <section aria-label={title} className={cn("rounded-[20px] border border-border bg-card p-6", className)}>
+      <h2 className="font-heading text-[22px] font-bold tracking-[-0.02em] text-foreground">{title}</h2>
+      <div className="mt-4">{children}</div>
+    </section>
+  );
+}
+
+/**
+ * The admin's front page: what is waiting, the four counts that matter, the
+ * newest things to deal with, each a click away, and whether the services the
+ * site depends on are working.
+ */
 export default async function AdminOverviewPage() {
-  const user = /* Staff only: a contributor has no business in here, and typing the URL
-     sends them to the one page they can use rather than showing an error. */
-  await requireStaff("/admin");
+  /* Staff only: typing the URL sends a contributor to the one page they can use. */
+  const user = await requireStaff("/admin");
+  const first = user.name.split(" ")[0];
 
   const services = (
-    <ul className="mt-4 space-y-3">
+    <ul>
       <ServiceRow
         ready={database.isConfigured}
-        name="MongoDB"
+        name="Database"
         detail={
           database.isConfigured
             ? "Enquiries, reviews, posts and subscribers are being stored."
-            : "MONGODB_URI is unset. The contact form returns 503 and nothing is saved."
+            : "MONGODB_URI is not set. The contact form answers 503 and nothing is saved."
         }
       />
       <ServiceRow
         ready={emailConfig.isConfigured}
-        name="Gmail SMTP"
+        name="Email"
         detail={
           emailConfig.isConfigured
             ? `Notifications go to ${emailConfig.owner}.`
-            : "SMTP_USER and SMTP_PASSWORD are unset. Enquiries are stored but no email is sent."
+            : "SMTP_USER and SMTP_PASSWORD are not set. Enquiries are stored but no email is sent."
         }
       />
       <ServiceRow
         ready={storage.isConfigured}
-        name="Cloudinary"
+        name="File storage"
         detail={
           storage.isConfigured
-            ? "Attachments and review photos upload directly to the cloud."
-            : "CLOUDINARY_* is unset. Forms still submit, without files."
+            ? "Attachments and review photos upload to the cloud."
+            : "CLOUDINARY_* is not set. Forms still send, without files."
         }
       />
     </ul>
@@ -174,28 +119,47 @@ export default async function AdminOverviewPage() {
   if (!database.isConfigured) {
     return (
       <>
-        <AdminPageHeader title={`Hello, ${user.name.split(" ")[0]}`} />
-        <div className="mt-6 space-y-6">
+        <AdminPageHeader title={`Hello, ${first}`} />
+        <div className="space-y-4">
           <AdminNoDatabase what="Enquiries, reviews, posts and subscribers" />
-          <div className="rounded-xl border border-border bg-card px-4 py-4">
-            <h2 className="font-heading text-sm font-semibold text-foreground">Services</h2>
-            {services}
-          </div>
+          <Panel title="Services">{services}</Panel>
         </div>
       </>
     );
   }
 
-  /*
-    Four independent counts in parallel. `Promise.all` rather than sequential
-    awaits: they do not depend on each other, and four serial round trips to
-    Atlas is four times the latency for the same page.
-  */
-  const [enquiries, reviews, posts, subscribers] = await Promise.all([
+  /* Independent reads, in parallel: serial round trips to Atlas would be several times the wait. */
+  const [enquiries, reviews, posts, subscribers, unread, pending] = await Promise.all([
     countEnquiriesByStatus(),
     countReviewsByStatus(),
     countPostsByStatus(),
     countSubscribersByStatus(),
+    listEnquiries({ status: "new", limit: 6 }),
+    listForModeration("pending"),
+  ]);
+
+  const typeLabel = (value: string) => projectTypes.find((type) => type.value === value)?.label ?? "Enquiry";
+  const waiting = newestWaiting([
+    ...unread.items.map(
+      (enquiry): WaitingItem => ({
+        kind: "enquiry",
+        id: String(enquiry._id),
+        title: `New enquiry from ${enquiry.name}`,
+        detail: typeLabel(enquiry.projectType),
+        href: `/admin/enquiries/${String(enquiry._id)}`,
+        at: new Date(enquiry.createdAt),
+      })
+    ),
+    ...pending.slice(0, 6).map(
+      (review): WaitingItem => ({
+        kind: "review",
+        id: String(review._id),
+        title: `Review from ${review.fullName}`,
+        detail: `${"★".repeat(review.rating)}${"☆".repeat(Math.max(0, 5 - review.rating))}`,
+        href: "/admin/reviews?status=pending",
+        at: new Date(review.createdAt),
+      })
+    ),
   ]);
 
   const needsAttention = enquiries.new + reviews.pending;
@@ -203,9 +167,8 @@ export default async function AdminOverviewPage() {
   return (
     <>
       <AdminPageHeader
-        /* No time-of-day greeting: this renders on the server, so "Morning"
-           would be the server's morning and read as wrong half the time. */
-        title={`Hello, ${user.name.split(" ")[0]}`}
+        /* No "good morning": the server's clock is not the reader's, so a greeting by time reads wrong half the time. */
+        title={`Hello, ${first}`}
         description={
           needsAttention > 0
             ? `${needsAttention} ${needsAttention === 1 ? "thing" : "things"} waiting on you.`
@@ -213,80 +176,78 @@ export default async function AdminOverviewPage() {
         }
       />
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           href="/admin/enquiries?status=new"
           label="Enquiries"
           value={enquiries.total}
-          waiting={enquiries.new}
-          waitingLabel="unread"
+          note={enquiries.new > 0 ? `${enquiries.new} unread` : "All read"}
+          hot={enquiries.new > 0}
           Icon={InboxIcon}
-          accent="primary"
         />
         <StatCard
           href="/admin/reviews?status=pending"
           label="Reviews"
           value={reviews.approved}
-          waiting={reviews.pending}
-          waitingLabel="awaiting approval"
+          note={reviews.pending > 0 ? `${reviews.pending} awaiting approval` : "None waiting"}
+          hot={reviews.pending > 0}
           Icon={StarIcon}
-          accent="violet"
         />
         <StatCard
           href="/admin/posts?status=draft"
           label="Published posts"
           value={posts.published}
-          waiting={posts.draft}
-          waitingLabel="in draft"
+          note={posts.draft > 0 ? `${posts.draft} in draft` : "Nothing in draft"}
+          hot={false}
           Icon={FileTextIcon}
-          accent="iris"
         />
-        <StatCard
-          href="/admin/subscribers"
-          label="Subscribers"
-          value={subscribers.subscribed}
-          Icon={MailIcon}
-          accent="teal"
-        />
+        <StatCard href="/admin/subscribers" label="Subscribers" value={subscribers.subscribed} note="On the newsletter" hot={false} Icon={MailIcon} />
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
-          <h2 className="font-heading text-sm font-semibold text-foreground">Services</h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            What is connected in this environment.
-          </p>
-          {services}
-        </div>
+      <div className="mt-4 grid items-start gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <Panel title="Waiting on you">
+          {waiting.length > 0 ? (
+            <ul>
+              {waiting.map((item) => (
+                <li key={`${item.kind}-${item.id}`} className="border-t border-border first:border-t-0">
+                  <Link
+                    href={item.href}
+                    className="group/row -mx-2 flex items-center justify-between gap-4 rounded-xl px-2 py-3.5 transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-foreground"
+                  >
+                    <span className="min-w-0">
+                      <span className="block truncate text-[15px] font-medium text-foreground">{item.title}</span>
+                      <span className="mt-0.5 block text-[13px] text-muted-foreground">
+                        {item.detail} · {timeAgo(item.at)}
+                      </span>
+                    </span>
+                    <span className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary">
+                      {item.kind === "enquiry" ? "Open" : "Review"}
+                      <ArrowRightIcon aria-hidden className="size-4 transition-transform group-hover/row:translate-x-0.5" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-[15px] leading-relaxed text-muted-foreground">
+              Nothing new. Unread enquiries and reviews waiting for approval will show here.
+            </p>
+          )}
+        </Panel>
 
-        <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
-          <h2 className="font-heading text-sm font-semibold text-foreground">
-            Where the blog is reading from
-          </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Posts come from the database, and fall back to the eight built into
-            the code when there are none.
-          </p>
+        <div className="grid gap-4">
+          <Panel title="Services">{services}</Panel>
 
-          <p
-            className={cn(
-              "mt-4 rounded-lg px-3 py-2.5 text-sm",
-              posts.published > 0
-                ? "bg-brand-teal/10 text-brand-teal"
-                : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-            )}
-          >
-            {posts.published > 0
-              ? `Serving ${posts.published} ${posts.published === 1 ? "post" : "posts"} from the database.`
-              : "Serving the built-in posts. Import them from Writing to edit them here."}
-          </p>
-
-          <Link
-            href="/admin/posts"
-            className="mt-3 inline-block text-xs text-primary transition-colors hover:underline"
-          >
-            Go to Writing
-          </Link>
+          <Panel title="The blog">
+            <p className="text-[15px] leading-relaxed text-muted-foreground">
+              {posts.published > 0
+                ? `Serving ${posts.published} ${posts.published === 1 ? "post" : "posts"} from the database.`
+                : "Serving the posts built into the code. Import them from Writing to edit them here."}
+            </p>
+            <Link href="/admin/posts" className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline">
+              Go to Writing <ArrowRightIcon aria-hidden className="size-4" />
+            </Link>
+          </Panel>
         </div>
       </div>
     </>

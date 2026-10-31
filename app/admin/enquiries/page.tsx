@@ -107,17 +107,15 @@ export default async function AdminEnquiriesPage({
               href={`/admin/enquiries?status=${option.value}`}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors",
-                /* Brand-tinted and outlined, like the rail's current item.
-                   A grey pill on a grey bar is the weakest "you are here"
-                   signal available, and these tabs are also a count. */
+                "inline-flex h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors",
+                /* Solid ink for where you are, like the site's buttons: these tabs are also counts. */
                 active
-                  ? "border border-primary/30 bg-primary/[0.12] text-foreground"
-                  : "border border-transparent text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
+                  ? "border-foreground bg-foreground text-background"
+                  : "border-border bg-card text-muted-foreground hover:border-foreground/30 hover:text-foreground"
               )}
             >
               {option.label}
-              <span className="font-mono text-[0.6875rem] tabular-nums text-muted-foreground">
+              <span className="text-xs tabular-nums opacity-60">
                 {counts[option.value]}
               </span>
             </Link>
@@ -125,7 +123,7 @@ export default async function AdminEnquiriesPage({
         })}
       </nav>
 
-      <div className="mt-5 space-y-2">
+      <div className="mt-5 space-y-3">
         {items.length === 0 ? (
           <AdminEmptyState
             title={tab === "new" ? "Nothing new" : `Nothing ${tab}`}
@@ -142,15 +140,15 @@ export default async function AdminEnquiriesPage({
               <Link
                 key={String(enquiry._id)}
                 href={`/admin/enquiries/${String(enquiry._id)}`}
-                className="block rounded-xl border border-border bg-card px-4 py-3.5 transition-colors hover:border-primary/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground sm:px-5"
+                className="block rounded-[20px] border border-border bg-card px-5 py-4 transition-[border-color,box-shadow] hover:border-foreground/20 hover:shadow-[0_14px_32px_-26px_rgb(8_16_46/0.5)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground sm:px-5"
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <div className="flex min-w-0 items-baseline gap-2">
-                    <p className="truncate text-sm font-semibold text-foreground">
+                    <p className="truncate text-base font-semibold text-foreground">
                       {enquiry.name}
                     </p>
                     {enquiry.company ? (
-                      <p className="truncate text-xs text-muted-foreground">
+                      <p className="truncate text-sm text-muted-foreground">
                         {enquiry.company}
                       </p>
                     ) : null}
@@ -178,11 +176,11 @@ export default async function AdminEnquiriesPage({
                   </div>
                 </div>
 
-                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
                   {enquiry.message}
                 </p>
 
-                <div className="mt-2 flex flex-wrap gap-x-3 font-mono text-[0.625rem] uppercase tracking-wide text-muted-foreground">
+                <div className="mt-3 flex flex-wrap gap-1.5 text-xs font-medium text-muted-foreground [&>span]:rounded-full [&>span]:bg-muted [&>span]:px-2.5 [&>span]:py-1">
                   <span>{labelFor(projectTypes, enquiry.projectType)}</span>
                   {enquiry.budget ? <span>{labelFor(budgets, enquiry.budget)}</span> : null}
                   {enquiry.timeline ? (

@@ -57,7 +57,7 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
   return (
     <article
       className={cn(
-        "rounded-xl border bg-card px-4 py-4 transition-opacity sm:px-5",
+        "rounded-[20px] border bg-card px-5 py-5 transition-opacity sm:px-6",
         review.status === "pending" ? "border-amber-500/30" : "border-border",
         pending && "opacity-60"
       )}
@@ -73,22 +73,22 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
               alt=""
               width={36}
               height={36}
-              className="size-9 shrink-0 rounded-full object-cover"
+              className="size-10 shrink-0 rounded-full object-cover"
             />
           ) : (
             <span
               aria-hidden
-              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-[0.6875rem] font-semibold text-primary"
+              className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary"
             >
               {initialsOf(review.fullName)}
             </span>
           )}
 
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-foreground">
+            <p className="truncate text-base font-semibold text-foreground">
               {review.fullName}
             </p>
-            <p className="truncate text-xs text-muted-foreground">{review.title}</p>
+            <p className="truncate text-sm text-muted-foreground">{review.title}</p>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
           <StarDisplay rating={review.rating} />
           <span
             className={cn(
-              "rounded-full px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-wide",
+              "rounded-full px-2 py-0.5 text-xs font-semibold capitalize",
               review.status === "pending" && "bg-amber-500/15 text-amber-600 dark:text-amber-400",
               review.status === "approved" && "bg-brand-teal/15 text-brand-teal",
               review.status === "rejected" && "bg-muted text-muted-foreground"
@@ -107,11 +107,11 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
         </div>
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
+      <p className="mt-4 text-[15px] leading-relaxed whitespace-pre-wrap text-foreground/90">
         {review.body}
       </p>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
         <a
           href={`mailto:${review.contactEmail}`}
           className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
@@ -157,7 +157,7 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
         editable, so the text stays exactly as they wrote it.
       */}
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/70 pt-3">
-        <label className="flex items-center gap-2 text-xs text-muted-foreground">
+        <label className="flex items-center gap-2 text-sm text-muted-foreground">
           Appears in
           <select
             value={review.kind}
@@ -166,7 +166,7 @@ function ReviewRow({ review }: { review: ModeratedReview }) {
               run(() => changeReviewKind(review.id, event.target.value))
             }
             aria-label={`Which section the review from ${review.fullName} appears in`}
-            className="h-8 rounded-lg border border-input bg-transparent px-2 text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="h-9 rounded-full border border-input bg-card px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/15"
           >
             {REVIEW_KINDS.map((kind) => (
               <option key={kind.value} value={kind.value}>

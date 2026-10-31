@@ -136,21 +136,21 @@ function MediaGrid({ images, videos }: { images: Asset[]; videos: Asset[] }) {
             onClick={() => setTab(id)}
             aria-current={tab === id ? "true" : undefined}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors",
+              "inline-flex h-9 items-center gap-1.5 rounded-full border px-4 text-sm font-medium transition-colors",
               tab === id
-                ? "bg-card text-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                ? "border-foreground bg-foreground text-background"
+                : "border-border bg-card text-muted-foreground hover:border-foreground/30 hover:text-foreground"
             )}
           >
             <Icon className="size-3.5" />
             {label}
-            <span className="font-mono text-xs text-muted-foreground">{count}</span>
+            <span className="text-xs tabular-nums opacity-60">{count}</span>
           </button>
         ))}
       </div>
 
       {assets.length === 0 ? (
-        <p className="mt-6 rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground">
+        <p className="mt-6 rounded-[20px] border border-border bg-card p-5 text-sm text-muted-foreground">
           Nothing here yet. Files uploaded from a project, a post or a page
           section appear in this list.
         </p>
@@ -168,7 +168,7 @@ function MediaGrid({ images, videos }: { images: Asset[]; videos: Asset[] }) {
             return (
               <li
               key={asset.publicId}
-              className="flex flex-col overflow-hidden rounded-xl border border-border bg-card"
+              className="flex flex-col overflow-hidden rounded-[20px] border border-border bg-card"
             >
               <span className="flex h-28 items-center justify-center bg-white">
                 {tab === "images" ? (

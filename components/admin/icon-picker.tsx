@@ -60,7 +60,7 @@ function IconPicker({
       </div>
 
       {open ? (
-        <div className="rounded-xl border border-border bg-card/50 p-3">
+        <div className="rounded-[20px] border border-border bg-card p-3">
           <div className="relative">
             <SearchIcon
               aria-hidden

@@ -185,7 +185,7 @@ function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
+      <div className="rounded-[20px] border border-border bg-card px-4 py-4 sm:px-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <h2 className="font-heading text-lg font-semibold text-foreground">
@@ -229,8 +229,8 @@ function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
         </dl>
       </div>
 
-      <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
-        <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+      <div className="rounded-[20px] border border-border bg-card px-4 py-4 sm:px-5">
+        <p className="text-[13px] font-semibold text-muted-foreground">
           Message
         </p>
         {/* `whitespace-pre-wrap` keeps the paragraph breaks they typed. React
@@ -241,8 +241,8 @@ function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
       </div>
 
       {enquiry.attachments.length > 0 ? (
-        <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
-          <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+        <div className="rounded-[20px] border border-border bg-card px-4 py-4 sm:px-5">
+          <p className="text-[13px] font-semibold text-muted-foreground">
             Attachments
           </p>
           <ul className="mt-3 space-y-2">
@@ -260,8 +260,8 @@ function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
         </div>
       ) : null}
 
-      <div className="rounded-xl border border-border bg-card px-4 py-4 sm:px-5">
-        <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+      <div className="rounded-[20px] border border-border bg-card px-4 py-4 sm:px-5">
+        <p className="text-[13px] font-semibold text-muted-foreground">
           Status
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -325,7 +325,7 @@ function EnquiryDetail({ enquiry }: { enquiry: EnquiryView }) {
         submission whose attachment should not stay on the account.
       */}
       <div className="rounded-xl border border-destructive/30 bg-destructive/[0.03] px-4 py-4 sm:px-5">
-        <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="text-[13px] font-semibold text-muted-foreground">
           Delete
         </p>
 

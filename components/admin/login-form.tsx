@@ -33,7 +33,7 @@ function LoginForm({ next }: { next: string }) {
           /* Focused on load: this page has one job and nobody arrives here to
              read it. */
           autoFocus
-          className="h-10"
+          className="h-11"
         />
       </div>
 
@@ -45,7 +45,7 @@ function LoginForm({ next }: { next: string }) {
           type="password"
           autoComplete="current-password"
           required
-          className="h-10"
+          className="h-11"
         />
       </div>
 
@@ -57,13 +57,13 @@ function LoginForm({ next }: { next: string }) {
         */
         <p
           role="alert"
-          className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive"
+          className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive"
         >
           {state.message}
         </p>
       ) : null}
 
-      <Button type="submit" size="lg" disabled={pending} className="h-11 w-full text-sm">
+      <Button type="submit" size="lg" disabled={pending} className="mt-1 w-full">
         {pending ? (
           <>
             <LoaderCircleIcon className="animate-spin" />

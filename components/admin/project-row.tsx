@@ -55,13 +55,13 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
   return (
     <article
       className={cn(
-        "rounded-xl border bg-card px-3 py-3 transition-opacity sm:px-4",
+        "rounded-[20px] border bg-card px-4 py-3.5 transition-opacity sm:px-5",
         project.published ? "border-border" : "border-amber-500/30",
         pending && "opacity-60"
       )}
     >
       <div className="flex items-center gap-3">
-        <span className="w-6 shrink-0 text-center font-mono text-[0.6875rem] text-muted-foreground">
+        <span className="w-6 shrink-0 text-center text-xs tabular-nums text-muted-foreground">
           {String(project.position).padStart(2, "0")}
         </span>
 
@@ -72,10 +72,10 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
           <img
             src={project.thumbnailUrl}
             alt=""
-            className="h-11 w-16 shrink-0 rounded border border-border object-cover"
+            className="h-12 w-[76px] shrink-0 rounded-lg border border-border object-cover"
           />
         ) : (
-          <span className="flex h-11 w-16 shrink-0 items-center justify-center rounded border border-dashed border-border">
+          <span className="flex h-12 w-[76px] shrink-0 items-center justify-center rounded-lg bg-muted">
             <ImageIcon aria-hidden className="size-4 text-muted-foreground" />
           </span>
         )}
@@ -84,7 +84,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/admin/projects/${project.id}`}
-              className="truncate font-heading text-sm font-semibold text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              className="truncate font-heading text-lg font-bold tracking-[-0.02em] text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
             >
               {project.name || "Untitled"}
             </Link>
@@ -95,7 +95,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
 
             <span
               className={cn(
-                "rounded-full px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-wide",
+                "rounded-full px-2 py-0.5 text-xs font-semibold capitalize",
                 project.published
                   ? "bg-brand-teal/15 text-brand-teal"
                   : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
@@ -105,7 +105,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
             </span>
           </div>
 
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+          <p className="mt-0.5 truncate text-sm text-muted-foreground">
             {project.category || project.slug}
           </p>
 
@@ -113,7 +113,7 @@ function ProjectRow({ project }: { project: ProjectSummary }) {
             {project.groups.map((group) => (
               <span
                 key={group}
-                className="rounded-full bg-foreground/[0.06] px-1.5 py-0.5 text-[0.625rem] text-muted-foreground"
+                className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
               >
                 {group}
               </span>

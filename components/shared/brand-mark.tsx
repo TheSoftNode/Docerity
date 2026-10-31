@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 function BrandMark({ className }: { className?: string }) {
   return (
     <Image
-      src="/docerity-logo.webp"
+      src="/brand/logo-sapphire.png"
       alt=""
       width={256}
       height={256}

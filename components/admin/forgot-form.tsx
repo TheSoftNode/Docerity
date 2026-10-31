@@ -19,7 +19,7 @@ function ForgotForm() {
   if (state?.sent) {
     return (
       <div className="mt-8 space-y-4">
-        <p role="status" className="rounded-lg border border-border bg-muted/40 px-3 py-3 text-sm leading-relaxed text-foreground">
+        <p role="status" className="rounded-xl border border-border bg-muted/50 px-3 py-3 text-sm leading-relaxed text-foreground">
           If <span className="font-medium">{state.email}</span> belongs to an admin account, a reset link is on its way. It works
           once, for one hour. Check your spam folder if it hasn&apos;t arrived in a few minutes.
         </p>
@@ -46,17 +46,17 @@ function ForgotForm() {
           defaultValue={state?.email ?? ""}
           required
           autoFocus
-          className="h-10"
+          className="h-11"
         />
       </div>
 
       {state?.message ? (
-        <p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
+        <p role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
           {state.message}
         </p>
       ) : null}
 
-      <Button type="submit" size="lg" disabled={pending} className="h-11 w-full text-sm">
+      <Button type="submit" size="lg" disabled={pending} className="mt-1 w-full">
         {pending ? (
           <>
             <LoaderCircleIcon className="animate-spin" />

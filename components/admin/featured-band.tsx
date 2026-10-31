@@ -56,13 +56,13 @@ function FeaturedBand({
   return (
     <section
       aria-labelledby="homepage-band"
-      className="mt-5 overflow-hidden rounded-xl border border-border bg-card"
+      className="mt-5 overflow-hidden rounded-[20px] border border-border bg-card"
     >
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 px-4 py-3">
         <div>
           <h2
             id="homepage-band"
-            className="font-heading text-sm font-semibold text-foreground"
+            className="font-heading text-lg font-bold tracking-[-0.02em] text-foreground"
           >
             On the homepage
           </h2>
@@ -73,7 +73,7 @@ function FeaturedBand({
         </div>
         <span
           className={cn(
-            "rounded-full px-2.5 py-1 font-mono text-[0.625rem] uppercase tracking-[0.14em]",
+            "rounded-full px-2.5 py-1 text-xs font-semibold capitalize",
             free === 0
               ? "bg-amber-500/15 text-amber-500"
               : "bg-primary/10 text-primary"
@@ -116,7 +116,7 @@ function FeaturedBand({
                 <span className="block truncate text-sm font-medium text-foreground">
                   {project.name}
                 </span>
-                <span className="block truncate font-mono text-[0.625rem] uppercase tracking-[0.1em] text-muted-foreground">
+                <span className="block truncate text-[13px] font-semibold text-muted-foreground">
                   {project.category}
                 </span>
               </span>
@@ -124,7 +124,7 @@ function FeaturedBand({
               {/* A featured draft is on nobody's homepage. Said here rather
                   than left to be discovered by looking at the live site. */}
               {!project.published ? (
-                <span className="shrink-0 rounded-full bg-amber-500/15 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-amber-500">
+                <span className="shrink-0 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-semibold capitalize text-amber-500">
                   Draft
                 </span>
               ) : null}

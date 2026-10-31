@@ -19,16 +19,6 @@ import { SubscriberActions } from "@/components/admin/subscriber-actions";
 
 export const metadata: Metadata = { title: "Subscribers" };
 
-/*
-  The accent hairline the overview counts carry, so a number reads as a number
-  everywhere in the tool rather than only on one page. Indexed by position,
-  which is enough: these strips are two or three cards that never reorder.
-*/
-const STRIP_EDGES = [
-  "before:bg-[linear-gradient(to_right,var(--brand-primary),transparent)]",
-  "before:bg-[linear-gradient(to_right,var(--brand-violet),transparent)]",
-  "before:bg-[linear-gradient(to_right,var(--brand-teal),transparent)]",
-] as const;
 
 export default async function AdminSubscribersPage() {
   /* Staff only: a contributor has no business in here, and typing the URL
@@ -82,15 +72,12 @@ export default async function AdminSubscribersPage() {
         ].map(([label, value], index) => (
           <div
             key={String(label)}
-            className={cn(
-              "relative overflow-hidden rounded-xl border border-border bg-card px-4 py-3 before:absolute before:inset-x-0 before:top-0 before:h-px before:content-['']",
-              STRIP_EDGES[index % STRIP_EDGES.length]
-            )}
+            className="rounded-[20px] border border-border bg-card px-5 py-4"
           >
-            <dt className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+            <dt className="text-[13px] font-semibold text-muted-foreground">
               {label}
             </dt>
-            <dd className="mt-1 font-heading text-xl font-semibold tabular-nums text-foreground">
+            <dd className="mt-1.5 font-heading text-[32px] leading-none font-extrabold tracking-[-0.04em] tabular-nums text-foreground">
               {value}
             </dd>
           </div>
@@ -112,7 +99,7 @@ export default async function AdminSubscribersPage() {
                 Mailing list subscribers, newest first
               </caption>
               <thead>
-                <tr className="border-b border-border bg-card/60 text-left">
+                <tr className="border-b border-border bg-muted text-left">
                   <th scope="col" className="px-4 py-2.5 font-medium text-muted-foreground">
                     Email
                   </th>
@@ -140,7 +127,7 @@ export default async function AdminSubscribersPage() {
                     <td className="px-4 py-2.5">
                       <span
                         className={cn(
-                          "rounded-full px-2 py-0.5 font-mono text-[0.625rem] uppercase",
+                          "rounded-full px-2 py-0.5 text-xs font-semibold capitalize",
                           subscriber.status === "subscribed"
                             ? "bg-brand-teal/15 text-brand-teal"
                             : "bg-muted text-muted-foreground"
