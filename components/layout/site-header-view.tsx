@@ -123,6 +123,18 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
 
           <div className="flex items-center gap-2">
             <PaletteSwitcher className="hidden size-10 sm:grid" />
+            {/* The client portal: projects, progress and requests, for people the studio works with. */}
+            <Link
+              href="/account"
+              aria-label="Your account"
+              title="Your account"
+              className="hidden size-10 place-items-center rounded-full border border-[rgb(var(--ld-paper-rgb)/0.18)] bg-[rgb(var(--ld-paper-rgb)/0.06)] text-[var(--ld-paper)] outline-none transition-colors hover:bg-[rgb(var(--ld-paper-rgb)/0.12)] focus-visible:ring-1 focus-visible:ring-[rgb(var(--ld-accent-rgb)/0.7)] sm:grid"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21a8 8 0 0 1 16 0" />
+              </svg>
+            </Link>
             <Link
               href="/contact"
               className="group hidden min-h-10 items-center gap-1.5 rounded-full bg-[var(--ld-accent)] px-4.5 text-sm font-semibold text-[var(--ld-ink)] transition-transform hover:-translate-y-0.5 sm:inline-flex"
@@ -203,6 +215,13 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
             </div>
 
             <div className="px-1.5 pt-2.5 pb-1.5">
+              <Link
+                href="/account"
+                onClick={() => setOpen(false)}
+                className="mb-2 flex min-h-11 items-center justify-center gap-2 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.18)] text-[15px] font-semibold text-[var(--ld-paper)]"
+              >
+                Your account
+              </Link>
               <Link
                 href="/contact"
                 onClick={() => setOpen(false)}

@@ -197,3 +197,16 @@ export async function deleteEnquiry(id: string) {
   await connectDB();
   return EnquiryModel.findByIdAndDelete(id).lean();
 }
+
+/**
+ * The enquiries one address has sent, for that person's account. Spam is left
+ * out: it is a judgement about them they never need to see.
+ */
+export async function listEnquiriesForEmail(email: string) {
+  await connectDB();
+  return EnquiryModel.find({ email: email.trim().toLowerCase(), status: { $ne: "spam" } })
+    .select("reference projectType status message createdAt")
+    .sort({ createdAt: -1 })
+    .limit(50)
+    .lean();
+}
