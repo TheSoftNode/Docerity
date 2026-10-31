@@ -9,6 +9,7 @@ import { projectTypes } from "@/lib/contact/schema";
 import { countEnquiriesByStatus, listEnquiries } from "@/lib/repositories/enquiry.repository";
 import { countReviewsByStatus, listForModeration } from "@/lib/repositories/review.repository";
 import { countPostsByStatus } from "@/lib/repositories/post.repository";
+import { listUnseenReplies } from "@/lib/repositories/client-project.repository";
 import { countSubscribersByStatus } from "@/lib/repositories/subscriber.repository";
 import { AdminNoDatabase, AdminPageHeader } from "@/components/admin/admin-page-header";
 import { newestWaiting, timeAgo, type WaitingItem } from "@/components/admin/admin-content";
@@ -129,13 +130,14 @@ export default async function AdminOverviewPage() {
   }
 
   /* Independent reads, in parallel: serial round trips to Atlas would be several times the wait. */
-  const [enquiries, reviews, posts, subscribers, unread, pending] = await Promise.all([
+  const [enquiries, reviews, posts, subscribers, unread, pending, replies] = await Promise.all([
     countEnquiriesByStatus(),
     countReviewsByStatus(),
     countPostsByStatus(),
     countSubscribersByStatus(),
     listEnquiries({ status: "new", limit: 6 }),
     listForModeration("pending"),
+    listUnseenReplies(6),
   ]);
 
   const typeLabel = (value: string) => projectTypes.find((type) => type.value === value)?.label ?? "Enquiry";
@@ -160,9 +162,19 @@ export default async function AdminOverviewPage() {
         at: new Date(review.createdAt),
       })
     ),
+    ...replies.map(
+      (reply, index): WaitingItem => ({
+        kind: "reply",
+        id: `${reply.projectId}-${index}`,
+        title: `${reply.name || "A client"} replied on ${reply.projectTitle}`,
+        detail: `“${reply.body.length > 70 ? `${reply.body.slice(0, 70)}…` : reply.body}”`,
+        href: `/admin/client-projects/${reply.projectId}`,
+        at: new Date(reply.createdAt),
+      })
+    ),
   ]);
 
-  const needsAttention = enquiries.new + reviews.pending;
+  const needsAttention = enquiries.new + reviews.pending + replies.length;
 
   return (
     <>
@@ -221,7 +233,7 @@ export default async function AdminOverviewPage() {
                       </span>
                     </span>
                     <span className="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary">
-                      {item.kind === "enquiry" ? "Open" : "Review"}
+                      {item.kind === "enquiry" ? "Open" : item.kind === "reply" ? "Answer" : "Review"}
                       <ArrowRightIcon aria-hidden className="size-4 transition-transform group-hover/row:translate-x-0.5" />
                     </span>
                   </Link>
@@ -230,7 +242,7 @@ export default async function AdminOverviewPage() {
             </ul>
           ) : (
             <p className="text-[15px] leading-relaxed text-muted-foreground">
-              Nothing new. Unread enquiries and reviews waiting for approval will show here.
+              Nothing new. Unread enquiries, reviews waiting for approval and client replies will show here.
             </p>
           )}
         </Panel>

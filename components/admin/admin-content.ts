@@ -23,7 +23,7 @@ export function timeAgo(date: Date | string, now: Date = new Date()): string {
   return then.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: then.getFullYear() === now.getFullYear() ? undefined : "numeric" });
 }
 
-export type WaitingItem = { kind: "enquiry" | "review"; id: string; title: string; detail: string; href: string; at: Date };
+export type WaitingItem = { kind: "enquiry" | "review" | "reply"; id: string; title: string; detail: string; href: string; at: Date };
 
 /** The newest things waiting, of both kinds, newest first and at most `limit`. */
 export function newestWaiting(items: WaitingItem[], limit = 6): WaitingItem[] {

@@ -19,9 +19,10 @@ import {
   updateAccountProfile,
   verifyAccountEmail,
 } from "@/lib/repositories/client-account.repository";
+import { addClientReply } from "@/lib/repositories/client-project.repository";
 import { sendMail } from "@/lib/email/mailer";
-import { renderAccountReset, renderVerifyEmail } from "@/lib/email/templates/account";
-import { database, runtime } from "@/lib/config/env";
+import { renderAccountReset, renderClientReplyNotice, renderVerifyEmail } from "@/lib/email/templates/account";
+import { database, email as emailConfig, runtime } from "@/lib/config/env";
 import { createLogger } from "@/lib/core/logger";
 
 /**
@@ -234,4 +235,48 @@ export async function saveProfile(_state: ProfileState, formData: FormData): Pro
   await updateAccountProfile(account.id, { name, company });
   revalidatePath("/account");
   return { saved: true };
+}
+
+/* ── Replying on a project ───────────────────────────────────────────── */
+
+export type ReplyState = { sent?: number; message?: string } | undefined;
+
+/**
+ * A client's reply under an update on their project. Only a confirmed
+ * account, only on a project matched to its own address (the repository
+ * checks that in the same query that writes), and the team hears by email.
+ */
+export async function replyToUpdate(state: ReplyState, formData: FormData): Promise<ReplyState> {
+  const account = await getCurrentAccount();
+  if (!account || !account.verified) return { message: "Please sign in again." };
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const updateId = String(formData.get("updateId") ?? "");
+  const body = String(formData.get("body") ?? "").trim();
+  if (!body) return { message: "Write a reply first." };
+  if (body.length > 4000) return { message: "Keep it under 4,000 characters." };
+
+  try {
+    const project = await addClientReply(projectId, updateId, account.email, { name: account.name, body });
+    if (!project) return { message: "That update is no longer there." };
+
+    if (emailConfig.isConfigured && emailConfig.owner) {
+      const mail = renderClientReplyNotice({
+        client: account.name,
+        project: project.title,
+        update: String(formData.get("updateTitle") ?? "an update").slice(0, 160),
+        body,
+        url: `${runtime.siteUrl.replace(/\/$/, "")}/admin/client-projects/${projectId}`,
+      });
+      const delivery = await sendMail({ to: emailConfig.owner, replyTo: account.email, subject: mail.subject, html: mail.html, text: mail.text });
+      if (!delivery.ok) logger.error("reply notice failed", new Error(delivery.error), { projectId });
+    }
+  } catch (error) {
+    logger.error("client reply failed", error);
+    return { message: "That didn't send. Please try again." };
+  }
+
+  revalidatePath(`/account/projects/${projectId}`);
+  revalidatePath("/admin", "layout");
+  return { sent: (state?.sent ?? 0) + 1 };
 }

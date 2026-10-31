@@ -24,6 +24,19 @@ const milestoneSchema = new Schema(
   { _id: true }
 );
 
+/* A reply under an update: from the client in their portal, or from the team in the admin. */
+const replySchema = new Schema(
+  {
+    from: { type: String, enum: ["client", "team"], required: true },
+    name: { type: String, default: "", trim: true, maxlength: 120 },
+    body: { type: String, required: true, trim: true, maxlength: 4000 },
+    /* Whether the team has opened the project since a client's reply came in. */
+    seenByTeam: { type: Boolean, default: false },
+    createdAt: { type: Date, default: () => new Date() },
+  },
+  { _id: true }
+);
+
 const updateSchema = new Schema(
   {
     kind: { type: String, enum: UPDATE_KINDS, default: "update" },
@@ -32,6 +45,7 @@ const updateSchema = new Schema(
     link: { type: String, default: "", trim: true, maxlength: 500 },
     by: { type: String, default: "", trim: true, maxlength: 120 },
     createdAt: { type: Date, default: () => new Date() },
+    replies: { type: [replySchema], default: [] },
   },
   { _id: true }
 );

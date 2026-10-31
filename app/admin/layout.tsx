@@ -8,6 +8,7 @@ import { database } from "@/lib/config/env";
 import { countEnquiriesByStatus } from "@/lib/repositories/enquiry.repository";
 import { countReviewsByStatus } from "@/lib/repositories/review.repository";
 import { countPostsByStatus } from "@/lib/repositories/post.repository";
+import { countUnseenReplies } from "@/lib/repositories/client-project.repository";
 import { isStaff } from "@/lib/auth/permissions";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { AdminRail } from "@/components/admin/admin-rail";
@@ -42,20 +43,22 @@ export default async function AdminLayout({
     the database goes away mid-session, otherwise an Atlas blip turns every
     admin page into an error screen instead of one with empty lists.
   */
-  let counts = { enquiries: 0, reviews: 0, posts: 0 };
+  let counts = { enquiries: 0, reviews: 0, posts: 0, replies: 0 };
   if (database.isConfigured) {
     try {
       if (isStaff(user.role)) {
         /* Staff see what is waiting on them across the whole site. */
-        const [enquiries, reviews, posts] = await Promise.all([
+        const [enquiries, reviews, posts, replies] = await Promise.all([
           countEnquiriesByStatus(),
           countReviewsByStatus(),
           countPostsByStatus(),
+          countUnseenReplies(),
         ]);
         counts = {
           enquiries: enquiries.new,
           reviews: reviews.pending,
           posts: posts.submitted,
+          replies,
         };
       } else {
         /*
@@ -64,7 +67,7 @@ export default async function AdminLayout({
           from a number on a nav item.
         */
         const posts = await countPostsByStatus(user.id);
-        counts = { enquiries: 0, reviews: 0, posts: posts.draft };
+        counts = { enquiries: 0, reviews: 0, posts: posts.draft, replies: 0 };
       }
     } catch {
       /* Badges are an affordance, not information the page depends on. */
