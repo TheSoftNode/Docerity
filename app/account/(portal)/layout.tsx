@@ -38,7 +38,9 @@ export default async function PortalLayout({ children }: { children: React.React
           </Link>
           <span className="hidden border-l border-sidebar-border pl-4 text-sm text-[#8b98c4] sm:inline">Client portal</span>
 
-          <PortalNav />
+          <div className="ml-2 hidden md:block">
+            <PortalNav />
+          </div>
 
           <div className="ml-auto flex items-center gap-2">
             <Link
@@ -65,6 +67,10 @@ export default async function PortalLayout({ children }: { children: React.React
               </button>
             </form>
           </div>
+        </div>
+        {/* On a phone the bar has no room for the places, so they sit in a row beneath it. */}
+        <div className="overflow-x-auto border-t border-sidebar-border px-4 py-2 md:hidden">
+          <PortalNav />
         </div>
       </header>
 

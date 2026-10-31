@@ -210,3 +210,18 @@ export async function listEnquiriesForEmail(email: string) {
     .limit(50)
     .lean();
 }
+
+/**
+ * One enquiry, only if it was sent from this address: the reference and the
+ * address are matched together, so a guessed reference shows nothing.
+ */
+export async function findEnquiryForEmail(reference: string, email: string) {
+  await connectDB();
+  return EnquiryModel.findOne({
+    reference: reference.toUpperCase(),
+    email: email.trim().toLowerCase(),
+    status: { $ne: "spam" },
+  })
+    .select("reference projectType status message budget timeline stage codeLink company attachments createdAt updatedAt")
+    .lean();
+}

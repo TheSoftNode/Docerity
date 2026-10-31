@@ -50,7 +50,15 @@ export default async function AccountOverviewPage({ searchParams }: { searchPara
               : `${active} ${active === 1 ? "project" : "projects"} in progress.`
           }
         />
-        {projects.length > 0 ? <LiveRefresh /> : null}
+        <div className="flex flex-wrap items-center gap-4">
+          {projects.length > 0 ? <LiveRefresh /> : null}
+          <Link
+            href="/account/requests/new"
+            className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 text-[15px] font-semibold text-background transition-transform hover:-translate-y-0.5"
+          >
+            New request <ArrowRightIcon className="size-4" />
+          </Link>
+        </div>
       </div>
 
       <section aria-labelledby="projects-title">
@@ -64,7 +72,7 @@ export default async function AccountOverviewPage({ searchParams }: { searchPara
               Once we agree to work together, your project shows up here with its milestones, updates and previews as they happen.
             </p>
             <Link
-              href="/contact"
+              href="/account/requests/new?type=software"
               className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 text-[15px] font-semibold text-background transition-transform hover:-translate-y-0.5"
             >
               Start a project <ArrowRightIcon className="size-4" />
@@ -149,14 +157,14 @@ export default async function AccountOverviewPage({ searchParams }: { searchPara
         <PortalCard
           title="Your requests"
           action={
-            <Link href="/contact" className="text-sm font-semibold text-primary hover:underline">
-              Send a new one
+            <Link href="/account/requests/new" className="text-sm font-semibold text-primary hover:underline">
+              New request
             </Link>
           }
         >
           {requests.length === 0 ? (
             <p className="text-[15px] leading-relaxed text-muted-foreground">
-              Anything you send through the contact form, a project brief or a mentorship application, shows here with where it stands.
+              A project brief, a mentorship application or a question: anything you send, here or through the contact form, shows here with where it stands.
             </p>
           ) : (
             <ul>
@@ -164,24 +172,29 @@ export default async function AccountOverviewPage({ searchParams }: { searchPara
                 const status = requestStatusLabel(request.status);
                 if (!status) return null;
                 return (
-                  <li key={String(request._id)} className="border-t border-border py-4 first:border-t-0 first:pt-0 last:pb-0">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-[15px] font-semibold text-foreground">{typeLabel(request.projectType)}</p>
-                      <span
-                        className={
-                          request.status === "replied"
-                            ? "rounded-full bg-brand-teal/15 px-2.5 py-1 text-xs font-semibold text-brand-teal"
-                            : "rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground"
-                        }
-                      >
-                        {status}
-                      </span>
-                    </div>
-                    <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{request.message}</p>
-                    <p className="mt-1.5 text-xs text-muted-foreground">
-                      Sent {formatDate(request.createdAt)}
-                      {request.reference ? ` · Ref ${request.reference}` : ""}
-                    </p>
+                  <li key={String(request._id)} className="border-t border-border first:border-t-0">
+                    <Link
+                      href={`/account/requests/${request.reference}`}
+                      className="-mx-2 block rounded-xl px-2 py-4 transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-foreground"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-[15px] font-semibold text-foreground">{typeLabel(request.projectType)}</p>
+                        <span
+                          className={
+                            request.status === "replied"
+                              ? "rounded-full bg-brand-teal/15 px-2.5 py-1 text-xs font-semibold text-brand-teal"
+                              : "rounded-full bg-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground"
+                          }
+                        >
+                          {status}
+                        </span>
+                      </div>
+                      <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{request.message}</p>
+                      <p className="mt-1.5 text-xs text-muted-foreground">
+                        Sent {formatDate(request.createdAt)}
+                        {request.reference ? ` · Ref ${request.reference}` : ""}
+                      </p>
+                    </Link>
                   </li>
                 );
               })}

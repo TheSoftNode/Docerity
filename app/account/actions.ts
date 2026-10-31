@@ -1,6 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { after } from "next/server";
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 import { createInviteToken, hashInviteToken } from "@/lib/auth/invite";
@@ -24,6 +26,8 @@ import { sendMail } from "@/lib/email/mailer";
 import { renderAccountReset, renderClientReplyNotice, renderVerifyEmail } from "@/lib/email/templates/account";
 import { database, email as emailConfig, runtime } from "@/lib/config/env";
 import { createLogger } from "@/lib/core/logger";
+import { isAppError, ValidationError } from "@/lib/core/errors";
+import { submitEnquiry } from "@/lib/services/enquiry.service";
 
 /**
  * The client portal's actions: signing up, confirming an address, signing in
@@ -279,4 +283,62 @@ export async function replyToUpdate(state: ReplyState, formData: FormData): Prom
   revalidatePath(`/account/projects/${projectId}`);
   revalidatePath("/admin", "layout");
   return { sent: (state?.sent ?? 0) + 1 };
+}
+
+/* ── Sending a request from the account ──────────────────────────────── */
+
+export type RequestState = { reference?: string; errors?: Record<string, string>; message?: string } | undefined;
+
+/**
+ * A project brief, mentorship application or other request, sent from inside
+ * the account. It goes through the contact form's own service, so the same
+ * validation, rate limit and emails apply; the name, email and company come
+ * from the account, which is what makes it appear in "Your requests".
+ */
+export async function sendRequest(_state: RequestState, formData: FormData): Promise<RequestState> {
+  const account = await getCurrentAccount();
+  if (!account || !account.verified) return { message: "Please confirm your email first." };
+
+  const field = (name: string) => String(formData.get(name) ?? "");
+  const projectType = field("projectType");
+  const forwarded = (await headers()).get("x-forwarded-for") ?? "";
+  const ip = forwarded.split(",")[0]?.trim() || "unknown";
+
+  try {
+    const result = await submitEnquiry(
+      {
+        name: account.name,
+        email: account.email,
+        company: account.company,
+        role: field("role"),
+        projectType,
+        budget: projectType === "software" ? field("budget") : "",
+        timeline: projectType === "software" ? field("timeline") : "",
+        message: field("message"),
+        stage: field("stage"),
+        codeLink: field("codeLink"),
+        attachments: [],
+        submittedFromIp: ip,
+        userAgent: (await headers()).get("user-agent") ?? "",
+      },
+      { logger }
+    );
+    after(async () => {
+      try {
+        await result.deliver();
+      } catch (error) {
+        logger.error("request delivery failed", error, { reference: result.reference });
+      }
+    });
+    revalidatePath("/account");
+    return { reference: result.reference };
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      const fields: Record<string, string> = { ...(error.fields ?? {}) };
+      return { errors: fields, message: Object.keys(fields).length ? undefined : error.publicMessage };
+    }
+    if (isAppError(error)) return { message: error.publicMessage };
+    logger.error("request from account failed", error);
+    return { message: "That didn't send. Please try again in a moment." };
+  }
 }

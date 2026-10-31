@@ -7,16 +7,20 @@ import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "/account", label: "Overview" },
+  { href: "/account/requests/new", label: "New request" },
   { href: "/account/profile", label: "Profile" },
 ];
 
-/** The portal's two places. A project page counts as Overview, where it is reached from. */
+/** The portal's places. A project or request page counts as Overview, where it is reached from. */
 function PortalNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Your account" className="ml-2 flex items-center gap-1">
+    <nav aria-label="Your account" className="flex items-center gap-1">
       {LINKS.map((link) => {
-        const active = link.href === "/account" ? pathname === "/account" || pathname.startsWith("/account/projects") : pathname.startsWith(link.href);
+        const active =
+          link.href === "/account"
+            ? pathname === "/account" || pathname.startsWith("/account/projects") || (pathname.startsWith("/account/requests/") && !pathname.startsWith("/account/requests/new"))
+            : pathname.startsWith(link.href);
         return (
           <Link
             key={link.href}

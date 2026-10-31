@@ -7,7 +7,7 @@ import { test, expect } from "@playwright/test";
 */
 
 test.describe("Client portal", () => {
-  for (const path of ["/account", "/account/profile", "/account/projects/0123456789abcdef01234567"]) {
+  for (const path of ["/account", "/account/profile", "/account/projects/0123456789abcdef01234567", "/account/requests/new", "/account/requests/DOC-ABC-DEF"]) {
     test(`${path} sends a signed-out visitor to sign in`, async ({ page }) => {
       await page.goto(path);
       await expect(page).toHaveURL(/\/account\/login/);
