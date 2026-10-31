@@ -23,12 +23,39 @@ export default async function NewRequestPage({ searchParams }: { searchParams: P
         <ArrowLeftIcon className="size-4" />
         Your account
       </Link>
-      <h1 className="mt-5 font-heading text-[clamp(34px,4vw,52px)] leading-none font-extrabold tracking-[-0.04em] text-foreground">New request</h1>
-      <p className="mt-3 max-w-[60ch] pb-8 text-[17px] text-muted-foreground">
-        A project, a mentorship application, a talk, or a question. It&apos;s sent as {account.name} ({account.email}).
-      </p>
-      <div className="max-w-3xl">
-        {account.verified ? <RequestForm initialType={type ?? "software"} stages={stages} /> : <VerifyBanner email={account.email} />}
+      <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="min-w-0">
+          <h1 className="font-heading text-[clamp(40px,4.6vw,60px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-foreground">
+            What can we
+            <br />
+            <span className="text-primary">do for you?</span>
+          </h1>
+          <p className="mt-4 mb-8 max-w-[56ch] text-[17px] text-muted-foreground">
+            Sent as {account.name} ({account.email}), so it shows in your account the moment it&apos;s in.
+          </p>
+          {account.verified ? <RequestForm initialType={type ?? "software"} stages={stages} /> : <VerifyBanner email={account.email} />}
+        </div>
+
+        <aside aria-label="What happens next" className="rounded-[26px] bg-[#08102e] p-7 text-[#f4f5fa] lg:sticky lg:top-24 lg:mt-[150px]">
+          <h2 className="font-heading text-2xl font-bold tracking-[-0.025em]">What happens next</h2>
+          <ol className="mt-5">
+            {[
+              ["A person reads it", "No sales team or inbox triage. Usually within one or two working days."],
+              ["We reply by email", "With an answer, or a time to talk it through if that's quicker."],
+              ["You follow it here", "Every request has its own page showing where it stands."],
+            ].map(([title, line], index) => (
+              <li key={title} className="flex gap-3.5 border-t border-[rgb(175_196_255/0.14)] py-4 first:border-t-0 first:pt-0 last:pb-0">
+                <span aria-hidden className="grid size-7 shrink-0 place-items-center rounded-full bg-[#afc4ff] text-sm font-bold text-[#08102e]">
+                  {index + 1}
+                </span>
+                <span>
+                  <span className="block text-[15px] font-semibold">{title}</span>
+                  <span className="mt-0.5 block text-sm leading-relaxed text-[#c4cbe3]">{line}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </aside>
       </div>
     </>
   );
