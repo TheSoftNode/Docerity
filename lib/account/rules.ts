@@ -89,3 +89,23 @@ export function safeHttps(value: string | undefined | null): string {
     return "";
   }
 }
+
+/** A request's place on its way, 0 to 2 (received, looked at, replied); closed counts as the end. */
+export function requestStep(status: string): number {
+  if (status === "read") return 1;
+  if (status === "replied" || status === "archived") return 2;
+  return 0;
+}
+
+/**
+ * How many things on a client's projects are waiting on them: a project sent
+ * to them for review, and every "needs your input" update they have not
+ * answered yet.
+ */
+export function waitingOnClient(projects: readonly { status: string; updates: readonly { kind: string; replies?: readonly { from: string }[] }[] }[]): number {
+  return projects.reduce((count, project) => {
+    const review = project.status === "review" ? 1 : 0;
+    const questions = project.updates.filter((update) => update.kind === "question" && !(update.replies ?? []).some((reply) => reply.from === "client")).length;
+    return count + review + questions;
+  }, 0);
+}
