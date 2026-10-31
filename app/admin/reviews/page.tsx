@@ -116,13 +116,11 @@ export default async function AdminReviewsPage({
               href={`/admin/reviews?status=${option.value}`}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors",
-                /* Brand-tinted and outlined, like the rail's current item.
-                   A grey pill on a grey bar is the weakest "you are here"
-                   signal available, and these tabs are also a count. */
+                "inline-flex h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors",
+                /* Solid ink for where you are, like the site's buttons: these tabs are also counts. */
                 active
-                  ? "border border-primary/30 bg-primary/[0.12] text-foreground"
-                  : "border border-transparent text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground"
+                  ? "border-foreground bg-foreground text-background"
+                  : "border-border bg-card text-muted-foreground hover:border-foreground/30 hover:text-foreground"
               )}
             >
               {option.label}

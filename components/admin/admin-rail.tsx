@@ -7,28 +7,14 @@ import { MenuIcon, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * The rail, and the one thing it has to do differently on a phone.
- *
- * On a wide screen it is a column beside the content and everything is visible
- * at once. Stacked on a phone that same column became a full screen of
- * navigation before any content: the mark, nine sections, the account block and
- * the sign-out row, so "Hello" sat below the fold on every page of the tool.
- *
- * So the sections and the account block collapse behind a button on small
- * screens, and the bar that stays is the mark and the toggle. From `lg` the
- * button is gone and nothing is hidden, which is why the state is only ever
- * read through a class rather than used to decide what to render: a menu that
- * unmounted its own contents would take the desktop rail with it.
- *
- * A Client Component for the open flag alone. The layout around it stays a
- * Server Component, and the nav and the account block are passed through as
- * children rather than rebuilt here.
+ * The admin's sidebar: navy in both themes, like the site's own nav, so the
+ * frame stays put while the pages change. A fixed column on a wide screen; on
+ * a narrow one a bar across the top whose menu opens over the page.
  */
 function AdminRail({
   brand,
   children,
 }: {
-  /** The mark and wordmark, which stay visible at every width. */
   brand: React.ReactNode;
   children: React.ReactNode;
 }) {
@@ -37,14 +23,8 @@ function AdminRail({
   const [openedOn, setOpenedOn] = useState(pathname);
 
   /*
-    Closed on navigation. Without this, tapping a section leaves the menu
-    covering the page it just opened, and the first thing you do on arriving
-    anywhere is dismiss it.
-
-    Adjusted during render rather than in an effect. React re-runs this
-    component immediately and before anything is painted, so the menu is never
-    briefly drawn open over the new page, which is exactly what an effect would
-    have produced: a render with the old state, then a second one to correct it.
+    Closed on navigation, adjusted during render rather than in an effect, so
+    the menu is never drawn open over the page it just opened.
   */
   if (open && openedOn !== pathname) {
     setOpen(false);
@@ -54,16 +34,13 @@ function AdminRail({
   return (
     <aside
       className={cn(
-        "relative z-40 shrink-0 border-b border-border/80 bg-card/40 backdrop-blur-sm",
-        /* Sticky on a phone so the toggle is reachable from anywhere down a
-           long list, and so the bar does not scroll away with the content. */
+        "relative z-40 shrink-0 bg-sidebar text-sidebar-foreground",
         "sticky top-0 lg:static",
-        "after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[linear-gradient(to_right,var(--brand-primary),var(--brand-violet))] after:opacity-40 after:content-['']",
-        "lg:w-60 lg:border-r-0 lg:border-b-0 lg:after:inset-y-0 lg:after:left-auto lg:after:h-auto lg:after:w-px lg:after:bg-[linear-gradient(to_bottom,transparent,var(--brand-primary)_20%,var(--brand-violet)_80%,transparent)]"
+        "lg:w-[264px]"
       )}
     >
-      <div className="flex h-full flex-col gap-4 px-4 py-3 lg:sticky lg:top-0 lg:max-h-svh lg:gap-6 lg:py-6">
-        <div className="flex items-center justify-between gap-3">
+      <div className="flex h-full flex-col gap-4 px-4 py-3 lg:sticky lg:top-0 lg:max-h-svh lg:gap-7 lg:px-4 lg:py-6">
+        <div className="flex items-center justify-between gap-3 lg:px-2">
           {brand}
 
           <button
@@ -75,45 +52,30 @@ function AdminRail({
             aria-expanded={open}
             aria-controls="admin-sections"
             aria-label={open ? "Close the menu" : "Open the menu"}
-            className="inline-flex size-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground lg:hidden"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-sidebar-border text-sidebar-accent-foreground transition-colors hover:bg-sidebar-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-ring lg:hidden"
           >
             {open ? <XIcon className="size-4" /> : <MenuIcon className="size-4" />}
           </button>
         </div>
 
-        {/*
-          Tapping the page behind the menu closes it, which is what anybody
-          expects of something covering what they were reading. `aria-hidden`
-          and no tab stop: the close button in the bar is the accessible way
-          out, and this is the same action for a pointer.
-        */}
+        {/* Tapping the page behind the open menu closes it; the button above is the accessible way out. */}
         {open ? (
           <button
             type="button"
             tabIndex={-1}
             aria-hidden
             onClick={() => setOpen(false)}
-            className="fixed inset-0 top-[3.75rem] z-0 cursor-default bg-background/60 backdrop-blur-[1px] lg:hidden"
+            className="fixed inset-0 top-16 z-0 cursor-default bg-[rgb(8_16_46/0.45)] backdrop-blur-[2px] lg:hidden"
           />
         ) : null}
 
         <div
           id="admin-sections"
           className={cn(
-            /*
-              Over the page, not above it.
-
-              Collapsing the rail was only half the problem: in the flow, an
-              open menu pushed the content down by its own height, so opening
-              it moved the page you were looking at. It is positioned against
-              the bar instead, scrolls on its own when the list is longer than
-              the screen, and leaves the content where it was.
-            */
-            "absolute inset-x-0 top-full z-10 max-h-[calc(100svh-3.75rem)] flex-col gap-6 overflow-y-auto border-b border-border/80 bg-card px-4 pt-4 pb-5 shadow-[0_24px_48px_-24px_rgba(0,0,0,0.5)]",
+            /* Over the page, not above it, so opening the menu never moves what you were reading. */
+            "absolute inset-x-0 top-full z-10 max-h-[calc(100svh-4rem)] flex-col gap-6 overflow-y-auto bg-sidebar px-4 pt-3 pb-5 shadow-[0_30px_60px_-30px_rgb(0_0_0/0.6)]",
             open ? "flex" : "hidden",
-            /* From `lg` it is a column in the rail again: no positioning, no
-               panel, nothing hidden. */
-            "lg:static lg:z-auto lg:flex lg:max-h-none lg:flex-1 lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
+            "lg:static lg:z-auto lg:flex lg:max-h-none lg:flex-1 lg:overflow-y-auto lg:bg-transparent lg:p-0 lg:shadow-none"
           )}
         >
           {children}

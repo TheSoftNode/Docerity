@@ -37,7 +37,7 @@ import {
 } from "@/lib/content/project-schema";
 
 const selectClass =
-  "h-10 w-full rounded-lg border border-input bg-transparent px-3 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+  "h-11 w-full rounded-xl border border-input bg-card px-3.5 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/15";
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -280,7 +280,7 @@ function ProjectEditor({
       {errors.form ? (
         <p
           role="alert"
-          className="mt-4 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive"
+          className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive"
         >
           {errors.form}
         </p>
@@ -341,7 +341,7 @@ function ProjectEditor({
             <Label>Screenshot</Label>
 
             <ImageDrop
-              className="rounded-xl border border-border bg-card/40 p-4"
+              className="rounded-[20px] border border-border bg-card p-4"
               disabled={uploading}
               onFile={(file) => void uploadHero(file)}
               hint="Drop a file here, or paste a screenshot"
@@ -459,7 +459,7 @@ function ProjectEditor({
             </div>
 
             <ImageDrop
-              className="rounded-xl border border-border bg-card/40 p-4"
+              className="rounded-[20px] border border-border bg-card p-4"
               disabled={uploadingGallery || project.gallery.length >= PROJECT_LIMITS.maxGallery}
               /* Appended, not swapped: a gallery is a set, so a pasted
                  screenshot joins it rather than replacing what is there. */
@@ -753,8 +753,8 @@ function ProjectEditor({
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
-          <div className="rounded-xl border border-border bg-card/40 px-4 py-4">
-            <p className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+          <div className="rounded-[20px] border border-border bg-card px-4 py-4">
+            <p className="text-[13px] font-semibold text-muted-foreground">
               Visibility
             </p>
             <p

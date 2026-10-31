@@ -59,12 +59,12 @@ export default async function AdminMediaPage() {
       />
 
       {!storage.isConfigured ? (
-        <p className="mt-4 rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
+        <p className="mt-4 rounded-[20px] border border-border bg-card p-4 text-sm text-muted-foreground">
           Storage is not configured, so nothing can be uploaded yet. The images
           already on the site are files in the repository and are unaffected.
         </p>
       ) : failed ? (
-        <p className="mt-4 rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
+        <p className="mt-4 rounded-[20px] border border-border bg-card p-4 text-sm text-muted-foreground">
           The list could not be loaded. The files themselves are fine: this page
           asks Cloudinary what exists, and only that request failed.
         </p>

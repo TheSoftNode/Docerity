@@ -10,7 +10,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-display);
+  --font-heading: var(--font-bricolage);
   --color-brand-navy: var(--brand-navy);
   --color-brand-primary: var(--brand-primary);
   --color-brand-violet: var(--brand-violet);
@@ -61,9 +61,11 @@
 /* ---------------------------------------------------------------
    Two themes, one vocabulary.
 
-   `:root` is light, `.dark` is dark, and the dark values are the ones the
-   brand was designed around: obsidian ink, royal sapphire, muted violet and
-   soft pearl, with steel gray for secondary text.
+   `:root` is light, `.dark` is dark, both in the Sapphire Navy system the
+   public pages use: ink #08102E, deep #1C3A8C, tint #AFC4FF, paper #F4F5FA,
+   with coral (#FF7A59) kept for the few things that must catch the eye. The
+   public pages paint their own colours, so in practice these tokens are the
+   admin's; the sidebar tokens are navy in both themes, like the site's nav.
 
    The three accents are a vocabulary, not a palette to sprinkle:
      sapphire  : the brand. Buttons, links, section labels, engineering.
@@ -81,103 +83,103 @@
 :root {
   color-scheme: light;
 
-  --brand-navy: #0a1120;
-  --brand-primary: #4453d6;
-  --brand-violet: #6a4fd0;
+  --brand-navy: #08102e;
+  --brand-primary: #1c3a8c;
+  --brand-violet: #3d5fd1;
   /* Iris sits between sapphire and violet, for small uppercase labels only. */
-  --brand-iris: #4f57d8;
-  --brand-teal: #0f8375;
+  --brand-iris: #2b4bb0;
+  --brand-teal: #13805f;
 
-  --background: #f7f9fc;
-  --foreground: #0a1120;
+  --background: #f4f5fa;
+  --foreground: #08102e;
   --card: #ffffff;
-  --card-foreground: #0a1120;
+  --card-foreground: #08102e;
   --popover: #ffffff;
-  --popover-foreground: #0a1120;
-  --primary: #4453d6;
+  --popover-foreground: #08102e;
+  --primary: #1c3a8c;
   --primary-foreground: #ffffff;
-  --secondary: #eef2f8;
-  --secondary-foreground: #0a1120;
-  --muted: #eef2f8;
-  --muted-foreground: #55617a;
-  --accent: #e4ebf6;
-  --accent-foreground: #0a1120;
+  --secondary: #ebeef7;
+  --secondary-foreground: #08102e;
+  --muted: #eef0f7;
+  --muted-foreground: #4f556b;
+  --accent: #e6ebf8;
+  --accent-foreground: #08102e;
   --destructive: #c8324a;
-  --border: #dbe3ee;
-  --input: #cfd9e8;
-  --ring: #4453d6;
+  --border: #e1e4ee;
+  --input: #d6dbe8;
+  --ring: #1c3a8c;
 
-  --surface-raised: #eef2f8;
-  --surface-step-a: #f1f5fa;
-  --surface-step-b: #e7eef7;
-  --surface-deep: #e8edf6;
+  --surface-raised: #eef0f7;
+  --surface-step-a: #f1f3f9;
+  --surface-step-b: #e8ecf6;
+  --surface-deep: #e6eaf5;
 
-  --chart-1: #4453d6;
-  --chart-2: #0f8375;
-  --chart-3: #6a4fd0;
-  --chart-4: #55617a;
-  --chart-5: #0a1120;
+  --chart-1: #1c3a8c;
+  --chart-2: #13805f;
+  --chart-3: #3d5fd1;
+  --chart-4: #4f556b;
+  --chart-5: #08102e;
 
-  --sidebar: #ffffff;
-  --sidebar-foreground: #0a1120;
-  --sidebar-primary: #4453d6;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #eef2f8;
-  --sidebar-accent-foreground: #0a1120;
-  --sidebar-border: #dbe3ee;
-  --sidebar-ring: #4453d6;
+  --sidebar: #08102e;
+  --sidebar-foreground: #c4cbe3;
+  --sidebar-primary: #afc4ff;
+  --sidebar-primary-foreground: #08102e;
+  --sidebar-accent: rgb(175 196 255 / 0.12);
+  --sidebar-accent-foreground: #f4f5fa;
+  --sidebar-border: rgb(244 245 250 / 0.12);
+  --sidebar-ring: #afc4ff;
 
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   --nav-h: 5rem;
 }
 
 .dark {
   color-scheme: dark;
 
-  --brand-navy: #070b16;
-  --brand-primary: #5b6ef5;
-  --brand-violet: #8b72e8;
-  --brand-iris: #7c83ff;
-  --brand-teal: #45b8a5;
+  --brand-navy: #050a1f;
+  --brand-primary: #afc4ff;
+  --brand-violet: #8fa6f5;
+  --brand-iris: #9db2ff;
+  --brand-teal: #4cc59a;
 
-  --background: #070b16;
-  --foreground: #f5f7fb;
-  --card: #121b2e;
-  --card-foreground: #f5f7fb;
-  --popover: #151f34;
-  --popover-foreground: #f5f7fb;
-  --primary: #5b6ef5;
-  --primary-foreground: #ffffff;
-  --secondary: #18233a;
-  --secondary-foreground: #f5f7fb;
-  --muted: #0f1829;
-  --muted-foreground: #98a4b8;
-  --accent: #202d48;
-  --accent-foreground: #f5f7fb;
-  --destructive: #e05263;
-  --border: #243149;
-  --input: #2a3750;
-  --ring: #6b7cff;
+  --background: #08102e;
+  --foreground: #f4f5fa;
+  --card: #0f1a42;
+  --card-foreground: #f4f5fa;
+  --popover: #111d48;
+  --popover-foreground: #f4f5fa;
+  --primary: #afc4ff;
+  --primary-foreground: #08102e;
+  --secondary: #16224f;
+  --secondary-foreground: #f4f5fa;
+  --muted: #0c1538;
+  --muted-foreground: #9aa7cf;
+  --accent: #1a2758;
+  --accent-foreground: #f4f5fa;
+  --destructive: #ff7a6b;
+  --border: #1f2b5c;
+  --input: #263468;
+  --ring: #afc4ff;
 
-  --surface-raised: #0b1220;
-  --surface-step-a: #0d1424;
-  --surface-step-b: #111a2e;
-  --surface-deep: #0a1020;
+  --surface-raised: #0c1538;
+  --surface-step-a: #0d1740;
+  --surface-step-b: #111d48;
+  --surface-deep: #0a1335;
 
-  --chart-1: #5b6ef5;
-  --chart-2: #45b8a5;
-  --chart-3: #8b72e8;
-  --chart-4: #98a4b8;
-  --chart-5: #f5f7fb;
+  --chart-1: #afc4ff;
+  --chart-2: #4cc59a;
+  --chart-3: #8fa6f5;
+  --chart-4: #9aa7cf;
+  --chart-5: #f4f5fa;
 
-  --sidebar: #0a1020;
-  --sidebar-foreground: #f5f7fb;
-  --sidebar-primary: #5b6ef5;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #18233a;
-  --sidebar-accent-foreground: #f5f7fb;
-  --sidebar-border: #243149;
-  --sidebar-ring: #6b7cff;
+  --sidebar: #050a1f;
+  --sidebar-foreground: #c4cbe3;
+  --sidebar-primary: #afc4ff;
+  --sidebar-primary-foreground: #08102e;
+  --sidebar-accent: rgb(175 196 255 / 0.12);
+  --sidebar-accent-foreground: #f4f5fa;
+  --sidebar-border: rgb(244 245 250 / 0.1);
+  --sidebar-ring: #afc4ff;
 }
 
 

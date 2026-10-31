@@ -27,7 +27,7 @@ test.describe("Admin access", () => {
       /* The requested path is carried, so signing in returns to it. */
       expect(new URL(page.url()).searchParams.get("next")).toBe(path);
       await expect(
-        page.getByRole("heading", { name: "Docerity admin" })
+        page.getByRole("heading", { level: 1, name: "Sign in" })
       ).toBeVisible();
     });
   }

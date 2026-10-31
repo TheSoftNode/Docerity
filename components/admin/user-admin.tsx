@@ -45,7 +45,7 @@ export type AccountRow = {
 };
 
 const selectClass =
-  "h-9 rounded-lg border border-input bg-transparent px-2 text-xs text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+  "h-9 rounded-full border border-input bg-card px-3 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/15";
 
 /**
  * The invitation link, with a copy button.
@@ -58,7 +58,7 @@ function InviteLink({ url }: { url: string }) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="rounded-lg border border-brand-teal/30 bg-brand-teal/[0.07] px-3 py-2.5">
+    <div className="rounded-xl border border-brand-teal/30 bg-brand-teal/[0.07] px-3 py-2.5">
       <p className="flex items-center gap-1.5 font-mono text-[0.625rem] tracking-[0.14em] uppercase text-brand-teal">
         <LinkIcon className="size-3" />
         One-time link
@@ -137,7 +137,7 @@ function AccountRowItem({
   return (
     <li
       className={cn(
-        "rounded-xl border bg-card px-4 py-3.5 transition-opacity",
+        "rounded-[20px] border bg-card px-5 py-4 transition-opacity",
         account.disabled ? "border-border/60 opacity-70" : "border-border",
         pending && "opacity-60"
       )}
@@ -147,17 +147,17 @@ function AccountRowItem({
           <div className="flex flex-wrap items-center gap-2">
             <p className="truncate text-sm font-semibold text-foreground">{account.name}</p>
             {isSelf ? (
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[0.625rem] uppercase text-primary">
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold capitalize text-primary">
                 You
               </span>
             ) : null}
             {account.disabled ? (
-              <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[0.625rem] uppercase text-muted-foreground">
+              <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold capitalize text-muted-foreground">
                 Disabled
               </span>
             ) : null}
             {account.pending ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 font-mono text-[0.625rem] uppercase text-amber-600 dark:text-amber-400">
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-semibold capitalize text-amber-600 dark:text-amber-400">
                 <ClockIcon className="size-2.5" />
                 Invited
               </span>
@@ -300,7 +300,7 @@ function UserAdmin({
   return (
     <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-10">
       <div className="min-w-0">
-        <h2 className="font-heading text-sm font-semibold text-foreground">
+        <h2 className="font-heading text-lg font-bold tracking-[-0.02em] text-foreground">
           {accounts.length} {accounts.length === 1 ? "account" : "accounts"}
         </h2>
         <ul className="mt-3 space-y-2">
@@ -318,9 +318,9 @@ function UserAdmin({
         {isOwner ? (
           <form
             action={inviteAction}
-            className="space-y-3 rounded-xl border border-border bg-card/40 px-4 py-4"
+            className="space-y-3 rounded-[20px] border border-border bg-card px-4 py-4"
           >
-            <h2 className="font-heading text-sm font-semibold text-foreground">
+            <h2 className="font-heading text-lg font-bold tracking-[-0.02em] text-foreground">
               Invite somebody
             </h2>
             <p className="text-xs text-muted-foreground">
@@ -370,9 +370,9 @@ function UserAdmin({
 
         <form
           action={passwordAction}
-          className="space-y-3 rounded-xl border border-border bg-card/40 px-4 py-4"
+          className="space-y-3 rounded-[20px] border border-border bg-card px-4 py-4"
         >
-          <h2 className="font-heading text-sm font-semibold text-foreground">
+          <h2 className="font-heading text-lg font-bold tracking-[-0.02em] text-foreground">
             Change your password
           </h2>
           <p className="text-xs text-muted-foreground">

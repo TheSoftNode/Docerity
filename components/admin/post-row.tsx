@@ -55,13 +55,13 @@ function PostRow({ post, role }: { post: PostSummary; role: Role }) {
   return (
     <article
       className={cn(
-        "rounded-xl border bg-card px-4 py-3.5 transition-opacity sm:px-5",
+        "rounded-[20px] border bg-card px-5 py-4 transition-opacity sm:px-6",
         live ? "border-border" : submitted ? "border-primary/40" : "border-amber-500/30",
         pending && "opacity-60"
       )}
     >
       <div className="flex items-start gap-3">
-        <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-background">
+        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
           <ContentIcon name={post.iconName} className="size-4 text-primary" />
         </span>
 
@@ -70,13 +70,13 @@ function PostRow({ post, role }: { post: PostSummary; role: Role }) {
             {/* The title is the edit link: it is the thing you want to click. */}
             <Link
               href={`/admin/posts/${post.id}`}
-              className="truncate font-heading text-sm font-semibold text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+              className="truncate font-heading text-lg font-bold tracking-[-0.02em] text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
             >
               {post.title || "Untitled"}
             </Link>
             <span
               className={cn(
-                "rounded-full px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-wide",
+                "rounded-full px-2 py-0.5 text-xs font-semibold capitalize",
                 live
                   ? "bg-brand-teal/15 text-brand-teal"
                   : submitted
@@ -86,7 +86,7 @@ function PostRow({ post, role }: { post: PostSummary; role: Role }) {
             >
               {live ? "Live" : submitted ? "Submitted" : "Draft"}
             </span>
-            <span className="font-mono text-[0.625rem] uppercase tracking-wide text-muted-foreground">
+            <span className="text-[13px] font-semibold text-muted-foreground">
               {post.type}
             </span>
             {post.authorName ? (
@@ -96,9 +96,9 @@ function PostRow({ post, role }: { post: PostSummary; role: Role }) {
             ) : null}
           </div>
 
-          <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{post.hook}</p>
+          <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{post.hook}</p>
 
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.6875rem] text-muted-foreground">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             <span>/blog/{post.slug}</span>
             <span>
               {post.sections} {post.sections === 1 ? "section" : "sections"}

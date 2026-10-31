@@ -172,9 +172,9 @@ function SectionEditor({
       {sections.map((section, index) => (
         <fieldset
           key={index}
-          className="rounded-xl border border-border bg-card/40 px-4 py-4"
+          className="rounded-[20px] border border-border bg-card px-4 py-4"
         >
-          <legend className="px-1 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+          <legend className="px-1 text-[13px] font-semibold text-muted-foreground">
             Section {String(index + 1).padStart(2, "0")}
           </legend>
 
@@ -303,7 +303,7 @@ function SectionEditor({
                         })
                       }
                       aria-label={`Media type for section ${index + 1}`}
-                      className="h-8 rounded-lg border border-input bg-transparent px-2 text-xs text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                      className="h-9 rounded-full border border-input bg-card px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/15"
                     >
                       <option value="image">Image</option>
                       <option value="video">Video</option>

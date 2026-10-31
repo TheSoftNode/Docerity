@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PlusIcon, ExternalLinkIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { requireStaff } from "@/lib/auth/dal";
 import { database, storage } from "@/lib/config/env";
 import {
@@ -24,16 +23,6 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Projects" };
 
-/*
-  The accent hairline the overview counts carry, so a number reads as a number
-  everywhere in the tool rather than only on one page. Indexed by position,
-  which is enough: these strips are two or three cards that never reorder.
-*/
-const STRIP_EDGES = [
-  "before:bg-[linear-gradient(to_right,var(--brand-primary),transparent)]",
-  "before:bg-[linear-gradient(to_right,var(--brand-violet),transparent)]",
-  "before:bg-[linear-gradient(to_right,var(--brand-teal),transparent)]",
-] as const;
 
 export default async function AdminWorkPage() {
   await requireStaff("/admin/projects");
@@ -133,15 +122,12 @@ export default async function AdminWorkPage() {
         ].map(([label, value], index) => (
           <div
             key={String(label)}
-            className={cn(
-              "relative overflow-hidden rounded-xl border border-border bg-card px-4 py-3 before:absolute before:inset-x-0 before:top-0 before:h-px before:content-['']",
-              STRIP_EDGES[index % STRIP_EDGES.length]
-            )}
+            className="rounded-[20px] border border-border bg-card px-5 py-4"
           >
-            <dt className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
+            <dt className="text-[13px] font-semibold text-muted-foreground">
               {label}
             </dt>
-            <dd className="mt-1 font-heading text-xl font-semibold tabular-nums text-foreground">
+            <dd className="mt-1.5 font-heading text-[32px] leading-none font-extrabold tracking-[-0.04em] tabular-nums text-foreground">
               {value}
             </dd>
           </div>
@@ -161,7 +147,7 @@ export default async function AdminWorkPage() {
         overwrite anything edited here.
       */}
       {pendingImport > 0 && projects.length > 0 ? (
-        <div className="mt-5 flex flex-col items-center gap-2 rounded-xl border border-dashed border-primary/25 bg-primary/[0.04] px-5 py-4 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div className="mt-5 flex flex-col items-center gap-2 rounded-[20px] border border-border bg-card px-5 py-4 text-center sm:flex-row sm:justify-between sm:text-left">
           <p className="text-sm text-muted-foreground">
             <span className="font-medium text-foreground">
               {pendingImport} {pendingImport === 1 ? "project is" : "projects are"} built into

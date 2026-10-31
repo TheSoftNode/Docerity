@@ -31,7 +31,7 @@ function InviteForm({ token }: { token: string }) {
           minLength={12}
           required
           autoFocus
-          className="h-10"
+          className="h-11"
         />
         <p className="text-xs text-muted-foreground">
           At least 12 characters. A passphrase is easier to remember and harder
@@ -48,20 +48,20 @@ function InviteForm({ token }: { token: string }) {
           autoComplete="new-password"
           minLength={12}
           required
-          className="h-10"
+          className="h-11"
         />
       </div>
 
       {state?.message ? (
         <p
           role="alert"
-          className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive"
+          className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive"
         >
           {state.message}
         </p>
       ) : null}
 
-      <Button type="submit" size="lg" disabled={pending} className="h-11 w-full text-sm">
+      <Button type="submit" size="lg" disabled={pending} className="mt-1 w-full">
         {pending ? (
           <>
             <LoaderCircleIcon className="animate-spin" />
