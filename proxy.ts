@@ -36,6 +36,8 @@ export function proxy(request: NextRequest) {
   */
   const isLoginPage = pathname === "/admin/login";
   const isInvitePage = pathname.startsWith("/admin/invite/");
+  /* Forgotten passwords: somebody here cannot sign in, by definition. */
+  const isResetPage = pathname === "/admin/forgot" || pathname.startsWith("/admin/reset/");
 
   /*
     This file only ever redirects *to* the login page, never away from it.
@@ -53,7 +55,7 @@ export function proxy(request: NextRequest) {
     can verify the session. The login page does it, with the same DAL call as
     everything else.
   */
-  if (!isLoginPage && !isInvitePage && !hasSessionCookie) {
+  if (!isLoginPage && !isInvitePage && !isResetPage && !hasSessionCookie) {
     const login = new URL("/admin/login", request.url);
     /* Carried so signing in returns to the page that was asked for. The action
        validates it before redirecting; see `safeReturnPath`. */

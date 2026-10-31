@@ -77,6 +77,11 @@ test.describe("About page", () => {
     await expect(page.getByText(`"${about.founder.based}"`)).toBeVisible();
   });
 
+  test("with no team added, the team section is not shown", async ({ page }) => {
+    await page.goto("/about");
+    await expect(page.locator("#team")).toHaveCount(0);
+  });
+
   test("the changelog filters, and each role opens to its notes", async ({ page }) => {
     await page.goto("/about");
     const changelog = page.locator("#changelog");

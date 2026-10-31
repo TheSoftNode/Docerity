@@ -2,6 +2,7 @@ import "server-only";
 
 import { getBlock } from "@/lib/content/blocks/source";
 import { siteConfig } from "@/lib/config/site";
+import { safeLink } from "@/lib/content/blocks/links";
 import type { BlockRecord } from "@/lib/content/blocks/schema";
 
 /**
@@ -21,6 +22,8 @@ export type SiteSettings = {
   tagline: string;
   description: string;
   email: string;
+  /** A Cal.com or Calendly link; empty when none is set, and then nothing offers it. */
+  booking: { url: string; label: string };
   socials: { label: string; url: string; iconName: string }[];
   navLinks: { label: string; href: string }[];
   footerLinks: { label: string; href: string }[];
@@ -38,8 +41,13 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     tagline: (identity.tagline as string) || siteConfig.tagline,
     description: (identity.description as string) || siteConfig.description,
     email: (identity.email as string) || siteConfig.email,
+    booking: {
+      url: safeLink(identity.bookingUrl as string),
+      label: (identity.bookingLabel as string) || "Book a call",
+    },
     socials: (block.socials ?? []) as SiteSettings["socials"],
     navLinks: (block.navLinks ?? []) as SiteSettings["navLinks"],
     footerLinks: (block.footerLinks ?? []) as SiteSettings["footerLinks"],
   };
 }
+

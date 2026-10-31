@@ -129,6 +129,7 @@ function ContactView({
   email,
   forms,
   workLink = "",
+  booking = { url: "", label: "" },
 }: {
   initialType: ProjectType;
   headings: Record<ProjectType, ContactHeading>;
@@ -139,6 +140,8 @@ function ContactView({
   email: string;
   /** The link to How we work, shown to someone starting a software project. */
   workLink?: string;
+  /** A Cal.com or Calendly link, offered beside the form; nothing shows without one. */
+  booking?: { url: string; label: string };
 }) {
   const [type, setType] = useState<ProjectType>(initialType);
   const [status, setStatus] = useState<Status>("idle");
@@ -321,6 +324,22 @@ function ContactView({
             >
               {workLink} <span aria-hidden="true">→</span>
             </Link>
+          ) : null}
+
+          {booking.url ? (
+            <div className="mb-6 rounded-2xl border border-[rgb(var(--ld-tint-rgb)/0.18)] bg-[rgb(var(--ld-paper-rgb)/0.04)] p-5">
+              <p className="text-[15px] text-[var(--ld-muted)]">Rather talk it through first?</p>
+              <a
+                href={booking.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--ld-paper)] px-5 text-[15px] font-semibold text-[var(--ld-ink)] outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]"
+              >
+                {booking.label}
+                <span aria-hidden="true">↗</span>
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </div>
           ) : null}
 
           <p className="mt-2.5 flex flex-wrap items-center gap-x-[18px] gap-y-2.5 border-t border-[rgb(var(--ld-tint-rgb)/0.14)] pt-[22px] text-[14.5px] text-[var(--ld-muted-3)]">

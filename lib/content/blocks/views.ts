@@ -108,6 +108,8 @@ export type AboutContent = {
   founder: FounderView;
   /** The full story; when its body is empty the short version is shown instead. */
   fullStory?: { title: string; body: string };
+  /** Empty until people are added; the team section then shows specialties instead. */
+  team?: TeamMemberView[];
   story: string[];
   facts: FactView[];
   experience: ExperienceView[];
@@ -145,3 +147,6 @@ export type EngagementView = {
 };
 
 export type HabitView = { title: string; description: string };
+
+/** One person on the About page's team. */
+export type TeamMemberView = { name: string; role: string; focus: string; photo: string; link: string };
