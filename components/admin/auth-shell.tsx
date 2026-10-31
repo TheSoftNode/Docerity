@@ -12,20 +12,29 @@ const SHOTS = [
 ] as const;
 
 /**
- * The frame for every page a signed-out person sees in the admin: sign in,
- * forgot password, choosing a new one, and accepting an invitation.
+ * The frame for every page a signed-out person sees, in the admin and in the
+ * client portal: signing in and up, forgotten passwords, and invitations.
  *
  * On a wide screen, a navy panel on the left in the public site's language,
  * with real work from the projects page fanned out under the headline and the
  * footer's outlined wordmark at its foot; the form sits on paper to the right.
  * On a phone, only the form, with the mark above it.
  */
+const ADMIN_PANEL = {
+  tag: "Admin",
+  title: "Everything behind the site, in one place.",
+  line: "Enquiries, reviews, writing, projects and every page's words.",
+};
+
 function AuthShell({
   children,
   back = { href: "/", label: "Back to the site" },
+  panel = ADMIN_PANEL,
 }: {
   children: React.ReactNode;
   back?: { href: string; label: string };
+  /** The words on the navy panel. The admin's by default; the client portal has its own. */
+  panel?: { tag: string; title: string; line: string };
 }) {
   return (
     <main className="grid min-h-svh bg-background lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
@@ -36,14 +45,14 @@ function AuthShell({
         <div className="relative z-10 flex items-center gap-3">
           <BrandMark className="size-[34px]" />
           <span className="font-heading text-[22px] font-extrabold tracking-[-0.02em]">Docerity</span>
-          <span className="border-l border-[rgb(244_245_250/0.2)] pl-3 text-[13px] text-[#9aa7cf]">Admin</span>
+          <span className="border-l border-[rgb(244_245_250/0.2)] pl-3 text-[13px] text-[#9aa7cf]">{panel.tag}</span>
         </div>
 
         <p className="relative z-10 mt-14 max-w-[12ch] font-heading text-[clamp(40px,3.6vw,52px)] leading-none font-extrabold tracking-[-0.04em]">
-          Everything behind the site, in one place.
+          {panel.title}
         </p>
         <p className="relative z-10 mt-4 max-w-[28rem] text-[17px] leading-relaxed text-[#c4cbe3]">
-          Enquiries, reviews, writing, projects and every page&apos;s words.
+          {panel.line}
         </p>
 
         <div className="relative mt-10 min-h-[330px] flex-1">

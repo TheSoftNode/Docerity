@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   BriefcaseIcon,
+  ClipboardCheckIcon,
   FileTextIcon,
   ImagesIcon,
   InboxIcon,
@@ -41,6 +42,7 @@ const groups: { label: string; items: NavItem[] }[] = [
     label: "Inbox",
     items: [
       { href: "/admin/enquiries", label: "Enquiries", Icon: InboxIcon, visible: can.readEnquiries },
+      { href: "/admin/client-projects", label: "Client projects", Icon: ClipboardCheckIcon, visible: can.readEnquiries },
       { href: "/admin/reviews", label: "Reviews", Icon: StarIcon, visible: can.moderateReviews },
       { href: "/admin/subscribers", label: "Subscribers", Icon: MailIcon, visible: can.readSubscribers },
     ],

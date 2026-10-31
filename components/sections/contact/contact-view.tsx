@@ -395,6 +395,14 @@ function ContactView({
                   Send another
                 </button>
               </div>
+              {/* The portal finds requests by the address they came from, so this one is already waiting there. */}
+              <p className="mt-6 border-t border-[var(--ld-line)] pt-5 text-[15px] leading-relaxed text-[var(--ld-text-2)]">
+                Want to follow it?{" "}
+                <Link href="/account/signup" className="font-semibold text-[var(--ld-deep)] underline-offset-4 hover:underline">
+                  Create an account
+                </Link>{" "}
+                with the same email and you&apos;ll see where it stands, and your project once work starts.
+              </p>
             </div>
           ) : (
             <form

@@ -19,7 +19,7 @@
 
 export const privacy = {
   title: "Privacy policy",
-  updated: "25 October 2026",
+  updated: "31 October 2026",
   summary: [
     "We only collect what you type into our forms, plus the technical details needed to keep them free of spam.",
     "We use it to reply to you, to publish reviews you send us, and to send the newsletter you signed up for.",
@@ -32,7 +32,7 @@ Docerity is a software studio based in Lagos, Nigeria. In this policy, "we" and 
 
 ## What we collect
 
-We only collect what you choose to send us through this site.
+We only collect what you choose to send us through this site, or put in your account.
 
 When you use the contact form:
 - your name and email address
@@ -48,6 +48,11 @@ When you leave a review:
 When you join the newsletter:
 - your email address
 
+When you create an account:
+- your name, your email address and, if you give it, your company
+- your password, stored only in a scrambled form we cannot read back
+- the projects we run for you and the updates we post on them, which you can see in your account
+
 With every form you send, we also record the IP address it came from, so we can block spam and abuse.
 
 ## How we use it
@@ -55,6 +60,7 @@ With every form you send, we also record the IP address it came from, so we can 
 - To reply to your enquiry, and to do the work that follows if we work together
 - To publish your review once we have read it, with your name, title, photo and links as you gave them
 - To send you the newsletter. Every email has a link to unsubscribe.
+- To run your account: confirming your email address, showing your projects and requests, and emailing you when a project you follow has news
 - To keep the forms free of spam and abuse
 
 We don't sell your data or share it for advertising, and we don't make automated decisions about you.
@@ -63,7 +69,7 @@ We don't sell your data or share it for advertising, and we don't make automated
 
 Only the companies that run this site for us, and only so they can do that:
 - Vercel hosts the website
-- MongoDB Atlas stores form entries, reviews and newsletter sign-ups
+- MongoDB Atlas stores form entries, reviews, newsletter sign-ups, accounts and client projects
 - Cloudinary stores the files you attach and review photos. Attachments are private and can only be opened through links that expire.
 - Google (Gmail) delivers the email that tells us a form has been sent
 
@@ -71,13 +77,14 @@ We will also share data if the law requires us to.
 
 ## Cookies
 
-We don't use advertising or analytics cookies. The site remembers whether you chose the light or dark theme, in your own browser. The only cookie we set is for staff signing in to manage the site.
+We don't use advertising or analytics cookies. The site remembers whether you chose the light or dark theme, in your own browser. The only cookies we set keep you signed in: one for clients in their account, and one for staff managing the site.
 
 ## How long we keep it
 
 - Enquiries: for as long as we need to reply and to do any work that follows
 - Reviews: for as long as they are published, or until you ask us to remove one
 - Newsletter: until you unsubscribe. We keep a note that you unsubscribed, so we don't email you again.
+- Accounts: until you ask us to close yours. Projects stay on record as part of the work we did together.
 
 You can ask us to delete your data sooner at any time.
 
