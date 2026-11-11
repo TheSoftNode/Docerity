@@ -864,7 +864,8 @@
 .ld-hero-disc {
   display: none;
 }
-html[data-hero="light"] body {
+html[data-hero="light"] body,
+html[data-hero="light"] .ld-home {
   background: var(--ld-paper);
 }
 html[data-hero="light"] .ld-hero {
@@ -880,6 +881,9 @@ html[data-hero="light"] .ld-hero-disc {
   aspect-ratio: 1;
   border-radius: 999px;
   background: radial-gradient(circle at 35% 35%, var(--ld-tint-soft), rgb(var(--ld-tint-rgb) / 0.35) 60%, transparent 71%);
+  /* Fades out before the hero ends, so the band below never cuts it flat. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 82%);
+  mask-image: linear-gradient(to bottom, #000 45%, transparent 82%);
   pointer-events: none;
 }
 html[data-hero="light"] .ld-hero-eyebrow {
@@ -913,4 +917,54 @@ html[data-hero="light"] .ld-hero-secondary {
     right: -45%;
     width: 110vw;
   }
+}
+
+/* The header on the light hero: the same pill with its colours turned over,
+   so it is paper on paper at the top and a frosted white pill once scrolled. */
+html[data-hero="light"] .ld-nav {
+  --ld-paper: #08102e;
+  --ld-paper-rgb: 8 16 46;
+  --ld-ink-rgb: 255 255 255;
+  --ld-muted: #323953;
+}
+
+/* The board on the light hero: a white departures board with dark split-flap
+   tiles, on light-grey plates, and the boarding pass in navy in front of it. */
+html[data-hero="light"] .ld-board {
+  --ld-deep: #ffffff;
+  --ld-paper: #08102e;
+  --ld-paper-rgb: 8 16 46;
+  --ld-tint: #1c3a8c;
+  --ld-tint-rgb: 28 58 140;
+  --ld-muted-3: #6b7393;
+  --ld-row: #eef2ff;
+  border-color: rgb(8 16 46 / 0.08);
+}
+html[data-hero="light"] .ld-board .ld-tile:not([data-searching="true"]) {
+  color: #f4f5fa !important;
+}
+html[data-hero="light"] .ld-board li > a[data-active] {
+  box-shadow: 0 22px 34px -20px rgb(28 58 140 / 0.45);
+}
+html[data-hero="light"] .ld-plate-1 {
+  background: #e6ebf8;
+}
+html[data-hero="light"] .ld-plate-2 {
+  background: #d6def2;
+}
+html[data-hero="light"] .ld-plate-3 {
+  background: #c5d0ec;
+}
+html[data-hero="light"] .ld-floor {
+  background: rgb(28 58 140 / 0.28);
+}
+html[data-hero="light"] .ld-pass {
+  --ld-paper: #08102e;
+  --ld-ink: #f4f5fa;
+  --ld-ink-rgb: 244 245 250;
+  --ld-text-muted: #9aa7cf;
+  box-shadow: 0 40px 60px -24px rgb(8 16 46 / 0.55);
+}
+html[data-hero="light"] .ld-pass-stub {
+  color: #08102e;
 }

@@ -169,11 +169,11 @@ function NowBoard({
               thickness when it turns, rather than a card. */}
           <div
             aria-hidden="true"
-            className="absolute inset-x-[10%] -bottom-[70px] h-[46px] rounded-full bg-black/60 blur-[26px] [transform:translateZ(-80px)]"
+            className="ld-floor absolute inset-x-[10%] -bottom-[70px] h-[46px] rounded-full bg-black/60 blur-[26px] [transform:translateZ(-80px)]"
           />
-          <div aria-hidden="true" className="absolute inset-0 rounded-[22px] bg-[var(--ld-ink-3)] [transform:translateZ(-18px)]" />
-          <div aria-hidden="true" className="absolute inset-0 rounded-[22px] bg-[var(--ld-ink-2)] [transform:translateZ(-12px)]" />
-          <div aria-hidden="true" className="absolute inset-0 rounded-[22px] bg-[var(--ld-panel)] [transform:translateZ(-6px)]" />
+          <div aria-hidden="true" className="ld-plate-3 absolute inset-0 rounded-[22px] bg-[var(--ld-ink-3)] [transform:translateZ(-18px)]" />
+          <div aria-hidden="true" className="ld-plate-2 absolute inset-0 rounded-[22px] bg-[var(--ld-ink-2)] [transform:translateZ(-12px)]" />
+          <div aria-hidden="true" className="ld-plate-1 absolute inset-0 rounded-[22px] bg-[var(--ld-panel)] [transform:translateZ(-6px)]" />
 
           <div className="ld-board relative rounded-[22px] border border-[rgb(var(--ld-tint-rgb)/0.28)] border-t-[rgb(var(--ld-paper-rgb)/0.28)] bg-[var(--ld-deep)] p-3.5 [transform-style:preserve-3d] sm:p-5">
             <div className="flex items-center justify-between gap-3 px-1.5 pt-1 pb-4 font-mono text-xs tracking-[0.08em]">
@@ -202,6 +202,7 @@ function NowBoard({
                     <Link
                       href={row.hrefs[position]}
                       aria-label={`${row.label}: ${word}`}
+                      data-active={active ? "" : undefined}
                       className={cn(
                         "flex flex-col gap-2 rounded-xl border-l-[3px] px-2.5 py-3 sm:flex-row sm:items-center sm:gap-3 transition-[transform,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(.2,.7,.2,1)] hover:bg-[rgb(var(--ld-paper-rgb)/0.07)]",
                         active
@@ -268,7 +269,7 @@ function BoardingPass() {
       aria-label="Start a project"
       className="group absolute -right-1.5 -bottom-[70px] [transform:translateZ(110px)_rotate(-7deg)] sm:-right-[22px] sm:-bottom-[78px]"
     >
-      <span className="ld-float flex w-60 overflow-hidden rounded-2xl bg-[var(--ld-paper)] text-[var(--ld-ink)] shadow-[0_40px_60px_-24px_rgb(0_0_0/0.7)] transition-transform duration-300 group-hover:scale-[1.03] sm:w-[300px]">
+      <span className="ld-pass ld-float flex w-60 overflow-hidden rounded-2xl bg-[var(--ld-paper)] text-[var(--ld-ink)] shadow-[0_40px_60px_-24px_rgb(0_0_0/0.7)] transition-transform duration-300 group-hover:scale-[1.03] sm:w-[300px]">
         <span className="flex flex-1 flex-col gap-2 px-4 py-3.5">
           <span className="flex justify-between font-mono text-[9px] tracking-[0.14em] text-[var(--ld-text-muted)]">
             <span>BOARDING PASS</span>
@@ -291,7 +292,7 @@ function BoardingPass() {
             ))}
           </span>
         </span>
-        <span className="relative flex w-[74px] shrink-0 flex-col items-center justify-center gap-1.5 border-l-2 border-dashed border-[rgb(var(--ld-ink-rgb)/0.35)] bg-[var(--ld-accent)]">
+        <span className="ld-pass-stub relative flex w-[74px] shrink-0 flex-col items-center justify-center gap-1.5 border-l-2 border-dashed border-[rgb(var(--ld-ink-rgb)/0.35)] bg-[var(--ld-accent)]">
           {/* The punched notches, cut in the hero's colour so they read as
               holes through the ticket. */}
           <span aria-hidden="true" className="absolute -top-2 -left-2.5 size-4 rounded-full bg-[var(--ld-ink)]" />

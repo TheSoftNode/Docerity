@@ -38,6 +38,11 @@ function HeroTonePreview() {
       if (tone) window.localStorage.setItem(KEY, tone);
       else window.localStorage.removeItem(KEY);
     } catch {}
+    /* Leaving the homepage takes the preview with it, so other pages keep
+       their own header. */
+    return () => {
+      delete document.documentElement.dataset.hero;
+    };
   }, [tone]);
 
   if (!tone) return null;
