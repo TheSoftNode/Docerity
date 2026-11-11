@@ -154,7 +154,7 @@ function NowBoard({
     <div
       onPointerMove={onPointerMove}
       onPointerLeave={() => setTilt(null)}
-      className="px-3 pt-7 pb-24 [perspective:1300px] [perspective-origin:50%_40%]"
+      className="px-3 pt-7 pb-16 [perspective:1300px] [perspective-origin:50%_40%]"
     >
       <div
         className={cn("relative [transform-style:preserve-3d]", tilt ? "" : "ld-sway")}
@@ -263,47 +263,50 @@ function NowBoard({
  * second route to the contact page.
  */
 function BoardingPass() {
+  const reply = boardingPass.fields.find((field) => field.label === "Reply")?.value;
   return (
     <Link
       href="/contact"
       aria-label="Start a project"
-      className="group absolute -right-1.5 -bottom-[70px] [transform:translateZ(110px)_rotate(-7deg)] sm:-right-[22px] sm:-bottom-[78px]"
+      className="group absolute -right-1.5 -bottom-[38px] [transform:translateZ(110px)_rotate(-6deg)] sm:-right-[18px] sm:-bottom-[44px]"
     >
-      <span className="ld-pass ld-float flex w-60 overflow-hidden rounded-2xl bg-[var(--ld-paper)] text-[var(--ld-ink)] shadow-[0_40px_60px_-24px_rgb(0_0_0/0.7)] transition-transform duration-300 group-hover:scale-[1.03] sm:w-[300px]">
-        <span className="flex flex-1 flex-col gap-2 px-4 py-3.5">
-          <span className="flex justify-between font-mono text-[9px] tracking-[0.14em] text-[var(--ld-text-muted)]">
-            <span>BOARDING PASS</span>
-            <span>{boardingPass.code}</span>
-          </span>
-          <span className="ld-display flex items-center gap-2.5 text-2xl font-extrabold tracking-[-0.03em] uppercase">
+      {/* Just the trip and a way on: the route, how soon we answer, and the
+          stub to tear. The ticket fields that used to sit here made the
+          corner busier than the board it belongs to. */}
+      <span className="ld-pass ld-float flex overflow-hidden rounded-[14px] bg-[var(--ld-paper)] text-[var(--ld-ink)] shadow-[0_30px_50px_-22px_rgb(0_0_0/0.7)] transition-transform duration-300 group-hover:scale-[1.04]">
+        <span className="flex flex-col justify-center px-4 py-2.5">
+          <span className="ld-display flex items-center gap-2 text-[19px] leading-none font-extrabold tracking-[-0.03em] uppercase">
             {boardingPass.from}
-            <svg width="22" height="14" viewBox="0 0 22 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 22 14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
               <path d="M1 7h19" />
               <path d="M14 1l6 6-6 6" />
             </svg>
             {boardingPass.to}
           </span>
-          <span className="flex gap-4 font-mono text-[9px] text-[var(--ld-text-muted)] uppercase">
-            {boardingPass.fields.map((field) => (
-              <span key={field.label}>
-                {field.label}
-                <span className="block text-[11px] text-[var(--ld-ink)]">{field.value}</span>
-              </span>
-            ))}
-          </span>
+          {reply ? (
+            <span className="mt-1.5 text-[11px] font-medium text-[var(--ld-text-muted)]">Reply in {reply.toLowerCase()}</span>
+          ) : null}
         </span>
-        <span className="ld-pass-stub relative flex w-[74px] shrink-0 flex-col items-center justify-center gap-1.5 border-l-2 border-dashed border-[rgb(var(--ld-ink-rgb)/0.35)] bg-[var(--ld-accent)]">
+        <span className="ld-pass-stub relative grid w-12 shrink-0 place-items-center border-l-2 border-dashed border-[rgb(var(--ld-ink-rgb)/0.35)] bg-[var(--ld-accent)]">
           {/* The punched notches, cut in the hero's colour so they read as
               holes through the ticket. */}
-          <span aria-hidden="true" className="absolute -top-2 -left-2.5 size-4 rounded-full bg-[var(--ld-ink)]" />
-          <span aria-hidden="true" className="absolute -bottom-2 -left-2.5 size-4 rounded-full bg-[var(--ld-ink)]" />
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <span aria-hidden="true" className="absolute -top-2 -left-2 size-3.5 rounded-full bg-[var(--ld-ink)]" />
+          <span aria-hidden="true" className="absolute -bottom-2 -left-2 size-3.5 rounded-full bg-[var(--ld-ink)]" />
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          >
             <path d="M7 17L17 7" />
             <path d="M8 7h9v9" />
           </svg>
-          <span className="font-mono text-[10px] font-medium tracking-[0.1em] uppercase">
-            {boardingPass.stub}
-          </span>
         </span>
       </span>
     </Link>
