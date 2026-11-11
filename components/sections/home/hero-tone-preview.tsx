@@ -12,7 +12,7 @@ const KEY = "docerity-hero-preview";
  *
  * Visitors never see it: it only appears after opening the homepage with
  * `?hero=light` (or `?hero=dark`), and is remembered in this browser until
- * "Close preview" is pressed. It sets `data-hero` on the page, and home.css
+ * "Close" is pressed. It sets `data-hero` on the page, and home.css
  * does the rest.
  */
 function HeroTonePreview() {
@@ -51,19 +51,19 @@ function HeroTonePreview() {
           aria-pressed={tone === option}
           onClick={() => setTone(option)}
           className={cn(
-            "min-h-10 rounded-full px-4 capitalize transition-colors",
+            "min-h-10 rounded-full px-3.5 whitespace-nowrap capitalize transition-colors sm:px-4",
             tone === option ? "bg-[var(--ld-accent)] text-[var(--ld-ink)]" : "hover:bg-[rgb(var(--ld-paper-rgb)/0.1)]"
           )}
         >
-          {option} hero
+          {option}
         </button>
       ))}
       <button
         type="button"
         onClick={() => setTone(null)}
-        className="min-h-10 rounded-full px-3 text-[var(--ld-muted-3)] hover:text-[var(--ld-paper)]"
+        className="min-h-10 rounded-full px-3 whitespace-nowrap text-[var(--ld-muted-3)] hover:text-[var(--ld-paper)]"
       >
-        Close preview
+        Close
       </button>
     </div>
   );
