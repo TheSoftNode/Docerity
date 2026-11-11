@@ -31,7 +31,9 @@ async function HomeReviews() {
     <section
       id="reviews"
       aria-labelledby="home-reviews-title"
-      className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]"
+      /* With no reviews yet the empty slot is a whole phone screen saying
+         nothing, so phones skip it until the first one is approved. */
+      className={`scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)] ${featured ? "" : "hidden md:block"}`}
     >
       <div className="doc-shell pb-16 sm:pb-24 lg:pb-28">
         <div

@@ -1,6 +1,7 @@
 import { getHeading } from "@/lib/content/blocks/source";
 import { getFeaturedWork } from "@/lib/content/work";
 import { WorkIndex } from "@/components/sections/home/work-index";
+import { WorkRail } from "@/components/sections/home/work-rail";
 
 /**
  * Selected work, as an index beside a preview.
@@ -23,7 +24,7 @@ async function HomeWork() {
       className="scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]"
     >
       <div className="doc-shell py-16 sm:py-24 lg:py-28">
-        <div className="mb-[clamp(36px,5vw,64px)] max-w-3xl">
+        <div className="mb-8 max-w-3xl md:mb-[clamp(36px,5vw,64px)]">
           <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
             {heading.eyebrow}
           </p>
@@ -40,7 +41,14 @@ async function HomeWork() {
           ) : null}
         </div>
 
-        <WorkIndex projects={work.projects} media={work.media} />
+        {/* A phone gets a row of cards to swipe; the index and its stage, where
+            a tap changes the picture further down, are for wider screens. */}
+        <div className="md:hidden">
+          <WorkRail projects={work.projects} media={work.media} />
+        </div>
+        <div className="hidden md:block">
+          <WorkIndex projects={work.projects} media={work.media} />
+        </div>
       </div>
     </section>
   );

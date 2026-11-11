@@ -111,8 +111,10 @@ function HeroShowcase({
         {children}
       </div>
 
+      {/* On a phone the board would be a second screen of moving parts before
+          anything is explained, so the hero stops at the words and the button. */}
       <div
-        className="ld-up ld-delay-3 min-w-0 [container-type:inline-size]"
+        className="ld-up ld-delay-3 hidden min-w-0 [container-type:inline-size] md:block"
         onPointerEnter={() => {
           paused.current = true;
         }}
