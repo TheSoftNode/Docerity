@@ -3,18 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
-import { ArrowUpRightIcon } from "lucide-react";
+import { ArrowUpRightIcon, MoonIcon, SunIcon } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/content/blocks/site";
 import { useScrolled } from "@/hooks/use-scrolled";
-import { usePalette } from "@/hooks/use-palette";
-import { PALETTES } from "@/lib/theme/palettes";
 import { PaletteLogo } from "@/components/shared/palette/palette-logo";
-import {
-  PaletteSwatchRow,
-  PaletteSwitcher,
-} from "@/components/shared/palette/palette-switcher";
 
 type Props = Pick<SiteSettings, "name" | "navLinks" | "email">;
 
@@ -56,8 +51,10 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
      Projects link stays marked on a project's case study too. */
   const isCurrent = (href: string) =>
     href !== "/" && (pathname === href || pathname.startsWith(`${href}/`));
-  const { palette } = usePalette();
-  const currentPalette = PALETTES.find((entry) => entry.key === palette) ?? PALETTES[0];
+  const { resolvedTheme, setTheme } = useTheme();
+  /* Before next-themes has mounted, the class it set before paint is the truth. */
+  const isDark = () =>
+    resolvedTheme === undefined ? document.documentElement.classList.contains("dark") : resolvedTheme === "dark";
 
   /* Escape closes the menu, as it would a dialog. Listening only while it is
      open keeps the handler from competing with the palette popover's own. */
@@ -122,7 +119,18 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
           </ul>
 
           <div className="flex items-center gap-2">
-            <PaletteSwitcher className="hidden size-10 sm:grid" />
+            {/* Light and dark. Which icon shows is decided by the class on
+                <html>, so the server and the first paint agree. */}
+            <button
+              type="button"
+              onClick={() => setTheme(isDark() ? "light" : "dark")}
+              aria-label="Switch between light and dark"
+              title="Light or dark"
+              className="hidden size-10 place-items-center rounded-full border border-[rgb(var(--ld-paper-rgb)/0.18)] bg-[rgb(var(--ld-paper-rgb)/0.06)] text-[var(--ld-paper)] outline-none transition-colors hover:bg-[rgb(var(--ld-paper-rgb)/0.12)] focus-visible:ring-1 focus-visible:ring-[rgb(var(--ld-accent-rgb)/0.7)] sm:grid"
+            >
+              <SunIcon className="hidden size-[18px] dark:block" />
+              <MoonIcon className="size-[18px] dark:hidden" />
+            </button>
             {/* The client portal: projects, progress and requests, for people the studio works with. */}
             <Link
               href="/account"
@@ -167,7 +175,7 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
           <div
             id={menuId}
             className={cn(
-              "ld-zoom mt-2 max-h-[calc(100svh-5.5rem)] overflow-y-auto rounded-[26px] border p-1.5 backdrop-blur-[18px] xl:hidden",
+              "ld-nav-menu ld-zoom mt-2 max-h-[calc(100svh-5.5rem)] overflow-y-auto rounded-[26px] border p-1.5 backdrop-blur-[18px] xl:hidden",
               "border-[rgb(var(--ld-paper-rgb)/0.12)] bg-[rgb(var(--ld-ink-rgb)/0.92)] text-[var(--ld-paper)]",
               "shadow-[0_40px_80px_-30px_rgb(0_0_0/0.7)]"
             )}
@@ -204,14 +212,26 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
               ))}
             </ul>
 
-            <div className="mt-1.5 rounded-[20px] bg-[rgb(var(--ld-paper-rgb)/0.05)] px-3.5 pt-2.5 pb-1">
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="font-mono text-[10px] tracking-[0.14em] text-[var(--ld-muted-3)] uppercase">
-                  Colour theme
-                </p>
-                <p className="text-[13px] font-medium text-[var(--ld-muted)]">{currentPalette.name}</p>
+            <div className="mt-1.5 flex items-center justify-between gap-3 rounded-[20px] bg-[rgb(var(--ld-paper-rgb)/0.05)] py-1.5 pr-1.5 pl-3.5">
+              <p className="text-[14px] font-medium text-[var(--ld-muted)]">Appearance</p>
+              <div className="flex rounded-full bg-[rgb(var(--ld-paper-rgb)/0.06)] p-1">
+                {(["light", "dark"] as const).map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => setTheme(option)}
+                    className={cn(
+                      "inline-flex min-h-9 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold capitalize transition-colors",
+                      option === "light"
+                        ? "bg-transparent text-[var(--ld-muted)] [html.light_&]:bg-[var(--ld-accent)] [html.light_&]:text-[#08102e]"
+                        : "bg-transparent text-[var(--ld-muted)] [html.dark_&]:bg-[var(--ld-accent)] [html.dark_&]:text-[#08102e]"
+                    )}
+                  >
+                    {option === "light" ? <SunIcon className="size-3.5" /> : <MoonIcon className="size-3.5" />}
+                    {option}
+                  </button>
+                ))}
               </div>
-              <PaletteSwatchRow className="-mx-1.5 justify-between" />
             </div>
 
             <div className="px-1.5 pt-2.5 pb-1.5">
