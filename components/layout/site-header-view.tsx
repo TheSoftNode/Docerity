@@ -81,7 +81,7 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
         <nav
           aria-label="Main"
           className={cn(
-            "flex items-center justify-between gap-3 rounded-full border py-1.5 pr-1.5 pl-3.5 backdrop-blur-[14px] transition-[border-color,box-shadow] duration-300 sm:pl-4",
+            "ld-nav flex items-center justify-between gap-3 rounded-full border py-1.5 pr-1.5 pl-3.5 backdrop-blur-[14px] transition-[border-color,box-shadow] duration-300 sm:pl-4",
             /* Near-solid navy everywhere, so it is the same navy over a dark
                hero and a white one: see-through, it mixes with white into
                slate grey. At the top it has no border, so over the dark heroes
