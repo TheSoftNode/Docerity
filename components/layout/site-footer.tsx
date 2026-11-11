@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { getSiteSettings } from "@/lib/content/blocks/site";
 import { SocialIcon } from "@/components/shared/social-icon";
+import { PaletteSwitcher } from "@/components/shared/palette/palette-switcher";
 import { PaletteLogo } from "@/components/shared/palette/palette-logo";
 
 /**
@@ -54,9 +55,17 @@ async function SiteFooter() {
               Terms
             </Link>
           </p>
-          <a href={`mailto:${site.email}`} className="transition-opacity hover:opacity-65">
-            {site.email}
-          </a>
+          <div className="flex items-center gap-5">
+            <a href={`mailto:${site.email}`} className="transition-opacity hover:opacity-65">
+              {site.email}
+            </a>
+            {/* The colour moods, kept for anyone who wants to play; the
+                header's switch is light and dark. */}
+            <span className="flex items-center gap-2">
+              Colours
+              <PaletteSwitcher className="size-8 [&>*]:size-4.5" />
+            </span>
+          </div>
         </div>
 
         <div aria-hidden="true" className="mt-10 flex items-end justify-center gap-[2vw] whitespace-nowrap">

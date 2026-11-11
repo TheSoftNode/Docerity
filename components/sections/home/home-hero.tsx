@@ -6,7 +6,6 @@ import type { CheckpointView, HeroCopy, PairView } from "@/lib/content/blocks/vi
 import { getFeaturedWork } from "@/lib/content/work";
 import { HeroShowcase } from "@/components/sections/home/hero-showcase";
 import { buildBoardRows, headlinePhrases } from "@/components/sections/home/hero-content";
-import { HeroTonePreview } from "@/components/sections/home/hero-tone-preview";
 
 /**
  * The homepage hero.
@@ -37,9 +36,8 @@ async function HomeHero() {
 
   return (
     <section className="ld-hero relative overflow-hidden bg-[var(--ld-ink)] pb-10 text-[var(--ld-paper)] sm:pb-12">
-      {/* Only drawn in the light preview (see home.css). */}
+      {/* Only drawn in the light theme (see home.css). */}
       <div aria-hidden="true" className="ld-hero-disc" />
-      <HeroTonePreview />
       {/* Spacing kept tight on purpose: with the header, the whole hero fits
           inside a laptop viewport, so the page opens on a complete picture
           rather than a headline cut off at the fold. */}
