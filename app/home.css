@@ -855,3 +855,62 @@
 .ld-marquee-reverse:hover {
   animation-play-state: paused;
 }
+
+/* ---------------------------------------------------------------
+   The hero on paper: a preview, switched on by `?hero=light` (see
+   hero-tone-preview.tsx). Only the hero's own surfaces change; the
+   Now Board keeps its navy, so it reads as a lit screen on a desk.
+   --------------------------------------------------------------- */
+.ld-hero-disc {
+  display: none;
+}
+html[data-hero="light"] body {
+  background: var(--ld-paper);
+}
+html[data-hero="light"] .ld-hero {
+  background: var(--ld-paper);
+  color: var(--ld-ink);
+}
+html[data-hero="light"] .ld-hero-disc {
+  display: block;
+  position: absolute;
+  top: -18%;
+  right: -12%;
+  width: min(62vw, 820px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, var(--ld-tint-soft), rgb(var(--ld-tint-rgb) / 0.35) 60%, transparent 71%);
+  pointer-events: none;
+}
+html[data-hero="light"] .ld-hero-eyebrow {
+  color: var(--ld-deep);
+}
+html[data-hero="light"] .ld-hero-lede {
+  color: var(--ld-text-2);
+}
+html[data-hero="light"] .ld-hero-dot {
+  background: rgb(var(--ld-ink-rgb) / 0.18);
+}
+html[data-hero="light"] .ld-hero-dot[data-on] {
+  background: var(--ld-accent);
+}
+html[data-hero="light"] .ld-hero-secondary {
+  color: var(--ld-deep);
+}
+@media (min-width: 640px) {
+  html[data-hero="light"] .ld-hero-primary {
+    background: var(--ld-ink);
+    color: var(--ld-paper);
+  }
+  html[data-hero="light"] .ld-hero-secondary {
+    color: var(--ld-ink);
+    border-color: rgb(var(--ld-ink-rgb) / 0.3);
+  }
+}
+@media (max-width: 767px) {
+  html[data-hero="light"] .ld-hero-disc {
+    top: -8%;
+    right: -45%;
+    width: 110vw;
+  }
+}

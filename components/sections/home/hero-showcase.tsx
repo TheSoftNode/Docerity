@@ -97,8 +97,9 @@ function HeroShowcase({
             {phrases.map((_, index) => (
               <span
                 key={index}
+                data-on={index === current ? "" : undefined}
                 className={cn(
-                  "h-1 rounded-full transition-all duration-500",
+                  "ld-hero-dot h-1 rounded-full transition-all duration-500",
                   index === current
                     ? "w-14 bg-[var(--ld-accent)]"
                     : "w-5 bg-[rgb(var(--ld-paper-rgb)/0.25)]"
