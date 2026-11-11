@@ -25,9 +25,9 @@ async function HomeExplainers() {
     >
       <div
         aria-hidden="true"
-        className="ld-drift absolute top-[120px] -left-20 size-[180px] rounded-[40px] border-2 border-dashed border-[var(--ld-line-2)]"
+        className="ld-drift absolute top-[120px] hidden md:block -left-20 size-[180px] rounded-[40px] border-2 border-dashed border-[var(--ld-line-2)]"
       />
-      <div className="doc-shell relative flex flex-wrap items-center gap-14 py-16 sm:py-24 lg:py-28">
+      <div className="doc-shell relative flex flex-wrap items-center gap-8 py-14 sm:gap-14 sm:py-24 lg:py-28">
         <div className="flex-[1_1_400px]">
           <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
             {heading.eyebrow}

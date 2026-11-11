@@ -55,17 +55,17 @@ async function HomeHero() {
           <p className="ld-up ld-delay-3 mt-7 max-w-[34rem] text-[clamp(17px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">
             {hero.lede}
           </p>
-          <div className="ld-up ld-delay-4 mt-7 flex flex-wrap gap-3">
+          <div className="ld-up ld-delay-4 mt-7 flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:gap-3">
             <Link
               href="/contact"
-              className="group inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--ld-paper)] px-6 text-[15px] font-semibold text-[var(--ld-ink)] transition-transform hover:-translate-y-0.5"
+              className="group inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-[var(--ld-accent)] px-6 text-[16px] font-semibold text-[var(--ld-ink)] transition-transform hover:-translate-y-0.5 sm:min-h-12 sm:bg-[var(--ld-paper)] sm:text-[15px]"
             >
               {hero.primaryLabel}
               <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
               href="/#services"
-              className="inline-flex min-h-12 items-center rounded-full border-[1.5px] border-[rgb(var(--ld-paper-rgb)/0.35)] px-6 text-[15px] font-semibold transition-transform hover:-translate-y-0.5"
+              className="inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[15px] font-semibold text-[var(--ld-tint)] transition-transform hover:-translate-y-0.5 sm:border-[1.5px] sm:border-[rgb(var(--ld-paper-rgb)/0.35)] sm:text-inherit"
             >
               {hero.secondaryLabel}
             </Link>
