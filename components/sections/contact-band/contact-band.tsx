@@ -57,7 +57,7 @@ async function ContactBand() {
     <section
       id="contact"
       aria-labelledby="contact-band-title"
-      className="scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]"
+      className="ld-stay-dark scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]"
     >
       <div className="doc-shell pt-[clamp(72px,10vw,140px)]">
         <p className="mb-6 inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
