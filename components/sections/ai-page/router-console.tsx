@@ -22,7 +22,7 @@ function RouterConsole() {
   const saving = Math.round(result.saving * 100);
 
   return (
-    <div className="ld-up ld-delay-3 mt-[clamp(32px,4vw,52px)] overflow-hidden rounded-[30px] border border-[rgb(var(--ld-tint-rgb)/0.22)] bg-[rgb(10_20_56/0.75)] shadow-[0_70px_140px_-60px_rgb(0_0_0/0.8)] backdrop-blur-[10px]">
+    <div className="ld-keep-dark ld-up ld-delay-3 mt-[clamp(32px,4vw,52px)] overflow-hidden rounded-[30px] border border-[rgb(var(--ld-tint-rgb)/0.22)] bg-[rgb(10_20_56/0.75)] shadow-[0_70px_140px_-60px_rgb(0_0_0/0.8)] backdrop-blur-[10px]">
       <div className="border-b border-[rgb(var(--ld-tint-rgb)/0.12)] px-[clamp(18px,2.4vw,30px)] pt-[clamp(18px,2.4vw,30px)] pb-[18px]">
         <label htmlFor={`${id}-ask`} className="flex flex-wrap items-center gap-x-2.5 font-mono text-[11.5px] tracking-[0.1em] text-[var(--ld-muted-3)] uppercase">
           Your request

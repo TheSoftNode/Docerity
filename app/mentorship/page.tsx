@@ -23,7 +23,7 @@ export const revalidate = 300;
 
 export default function MentorshipPage() {
   return (
-    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+    <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
         <MentorshipHero />

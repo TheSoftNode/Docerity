@@ -148,7 +148,7 @@ function BranchGraph({ lanes, initLabel, children }: { lanes: Lane[]; initLabel:
         <div>{children}</div>
         {lane ? (
           <div aria-live="polite">
-            <div key={lane.index} className="ld-pop rounded-[22px] border border-[rgb(var(--ld-tint-rgb)/0.16)] bg-[rgb(17_35_88/0.5)] px-5 py-[18px] font-mono text-[12.5px] leading-[1.75]">
+            <div key={lane.index} className="ld-keep-dark ld-pop rounded-[22px] border border-[rgb(var(--ld-tint-rgb)/0.16)] bg-[rgb(17_35_88/0.5)] px-5 py-[18px] font-mono text-[12.5px] leading-[1.75]">
               <p className="text-[#e9c46a]">
                 commit {commitId(lane.org)} <span className="text-[var(--ld-muted-3)]">({lane.current ? "ongoing → HEAD" : "merged into main"})</span>
               </p>

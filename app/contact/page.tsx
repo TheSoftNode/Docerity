@@ -21,7 +21,7 @@ export default async function ContactPage({
   const { type } = await searchParams;
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+    <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
         <Contact initialType={Array.isArray(type) ? type[0] : type} />
