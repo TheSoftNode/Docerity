@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "lucide-react";
 
@@ -34,7 +35,12 @@ async function MentorshipReviews() {
   const [lead, ...rest] = enough ? [...reviews].sort((a, b) => b.body.length - a.body.length) : [];
 
   return (
-    <section aria-labelledby="mentee-reviews-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
+    <section
+      aria-labelledby="mentee-reviews-title"
+      /* Until enough reviews exist the section is a placeholder; a phone
+         skips it rather than spend a screen on it. */
+      className={cn("bg-[var(--ld-paper)] text-[var(--ld-ink)]", !enough && "hidden md:block")}
+    >
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{heading.eyebrow}</p>
         <h2

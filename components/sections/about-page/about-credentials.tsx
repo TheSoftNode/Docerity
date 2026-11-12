@@ -27,6 +27,24 @@ function AboutCredentials({
   if (certifications.length === 0 && education.length === 0) return null;
   const chosen = certifications[active];
 
+  const educationList =
+    education.length > 0 ? (
+              <div className="rounded-[20px] border border-[var(--ld-line)] bg-white px-[18px] py-2">
+                <h3 className="mt-2.5 mb-1 font-mono text-[11px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">Education</h3>
+                <ul>
+                  {education.map((entry) => (
+                    <li key={`${entry.qualification}-${entry.institution}`} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3.5 border-b border-[#eef1f8] py-[11px] last:border-0">
+                      <span>
+                        <span className="block text-[14.5px] font-semibold">{entry.qualification}</span>
+                        <span className="block text-[13px] text-[var(--ld-text-muted)]">{entry.institution}</span>
+                      </span>
+                      <span className="font-mono text-xs text-[var(--ld-text-muted)]">{entry.period}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+    ) : null;
+
   return (
     <section id="credentials" aria-labelledby="credentials-title" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
@@ -40,7 +58,36 @@ function AboutCredentials({
           {heading.lede ? <p className="max-w-[26rem] text-[17px] leading-relaxed text-[var(--ld-text-2)]">{heading.lede}</p> : null}
         </div>
 
-        <div className="mt-[clamp(40px,5vw,60px)] grid items-start gap-[clamp(20px,3vw,44px)] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+        {/* Below lg the viewer would sit under the whole wall, so choosing a
+            certificate changed something out of sight. There, each one is a
+            card to swipe, with its scan already large enough to read. */}
+        <div className="mt-9 lg:hidden">
+          <ul aria-label="Certifications" className="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-5 px-5 pb-2 [scrollbar-width:none] sm:-mx-8 sm:scroll-px-8 sm:px-8 [&::-webkit-scrollbar]:hidden">
+            {certifications.map((cert) => (
+              <li key={cert.name} className="w-[78%] max-w-[360px] shrink-0 snap-start overflow-hidden rounded-[20px] border border-[var(--ld-line)] bg-white">
+                <span className="relative m-2.5 block aspect-[1.42] overflow-hidden rounded-[12px] bg-[#f4f2ec]">
+                  {cert.image ? (
+                    <Image src={cert.image} alt={`${cert.name} certificate`} fill sizes="80vw" className="object-contain p-1" />
+                  ) : (
+                    <span className="grid h-full place-items-center px-4 text-center text-sm font-semibold text-[#3b3626]">{cert.name}</span>
+                  )}
+                </span>
+                <span className="block px-4 pt-1 pb-4">
+                  <span className="block text-[15px] leading-snug font-semibold">{cert.name}</span>
+                  <span className="mt-1 block text-[13px] text-[var(--ld-text-muted)]">{cert.issuer}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          {certifications.length > 1 ? (
+            <p className="mt-3 text-[13px] text-[var(--ld-text-muted)]">
+              {certifications.length} certificates. Swipe to see them all.
+            </p>
+          ) : null}
+          <div className="mt-8">{educationList}</div>
+        </div>
+
+        <div className="mt-[clamp(40px,5vw,60px)] hidden items-start gap-[clamp(20px,3vw,44px)] lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
           <ul aria-label="Certifications" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {certifications.map((cert, index) => {
               const on = index === active;
@@ -103,22 +150,7 @@ function AboutCredentials({
               </figure>
             ) : null}
 
-            {education.length > 0 ? (
-              <div className="rounded-[20px] border border-[var(--ld-line)] bg-white px-[18px] py-2">
-                <h3 className="mt-2.5 mb-1 font-mono text-[11px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">Education</h3>
-                <ul>
-                  {education.map((entry) => (
-                    <li key={`${entry.qualification}-${entry.institution}`} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3.5 border-b border-[#eef1f8] py-[11px] last:border-0">
-                      <span>
-                        <span className="block text-[14.5px] font-semibold">{entry.qualification}</span>
-                        <span className="block text-[13px] text-[var(--ld-text-muted)]">{entry.institution}</span>
-                      </span>
-                      <span className="font-mono text-xs text-[var(--ld-text-muted)]">{entry.period}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
+            {educationList}
           </div>
         </div>
       </div>

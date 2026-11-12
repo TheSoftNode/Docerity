@@ -131,11 +131,16 @@ function ProcessConsole({ stages }: { stages: ConsoleStage[] }) {
                     >
                       {item.summary}
                     </span>
-                    {active ? (
-                      <span className="ld-up mt-2.5 block max-w-[30rem] text-[14.5px] leading-normal text-[var(--ld-muted)]">
-                        {item.description}
-                      </span>
-                    ) : null}
+                    {/* On a phone every stage is open, so nothing grows or
+                        shrinks under the reader's thumb as the run moves on. */}
+                    <span
+                      className={cn(
+                        "mt-2.5 block max-w-[30rem] text-[14.5px] leading-normal text-[var(--ld-muted)]",
+                        active ? "ld-up" : "md:hidden"
+                      )}
+                    >
+                      {item.description}
+                    </span>
                   </span>
                 </button>
               </li>
@@ -144,7 +149,9 @@ function ProcessConsole({ stages }: { stages: ConsoleStage[] }) {
         </ol>
       </div>
 
-      <div className="flex min-h-[460px] flex-col bg-[var(--ld-ink-2)]">
+      {/* The log is a show piece; on a phone it is one more screen to scroll
+          past, so it starts at tablet width. */}
+      <div className="hidden min-h-[460px] flex-col bg-[var(--ld-ink-2)] md:flex">
         <div className="flex items-center gap-2 border-b border-[rgb(var(--ld-tint-rgb)/0.12)] px-[18px] py-3.5 font-mono text-xs text-[var(--ld-muted-3)]">
           <span aria-hidden="true" className="size-[9px] rounded-full bg-[#FF6B3D]" />
           <span aria-hidden="true" className="size-[9px] rounded-full bg-[#FFC94A]" />
