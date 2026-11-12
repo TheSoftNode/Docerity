@@ -1035,6 +1035,18 @@ html.light .ld-keep-dark {
   background-color: var(--lx-ink) !important;
   color: var(--lx-paper);
 }
+/* A light card inside a band that turned light (the contact form): it keeps
+   its own colours, and a shadow to sit on the page. */
+html.light .ld-keep-light {
+  --ld-ink: var(--lx-ink);
+  --ld-ink-rgb: var(--lx-ink-rgb);
+  --ld-paper: #ffffff;
+  --ld-paper-rgb: 255 255 255;
+  --ld-tint: var(--lx-tint);
+  --ld-tint-rgb: var(--lx-tint-rgb);
+  color: var(--lx-ink);
+  box-shadow: 0 40px 90px -50px rgb(8 16 46 / 0.35), 0 0 0 1px rgb(8 16 46 / 0.06);
+}
 html.light .ld-keep-dark,
 html.light :is(main, footer) [class*="bg-[var(--ld-deep)]"]:not(.ld-hero *) {
   --ld-ink: var(--lx-ink);
@@ -1051,4 +1063,5 @@ html.light :is(main, footer) [class*="bg-[var(--ld-deep)]"]:not(.ld-hero *) {
   --ld-muted-2: var(--lx-muted-2);
   --ld-muted-3: var(--lx-muted-3);
   --ld-dim: var(--lx-dim);
+  color: var(--lx-paper);
 }

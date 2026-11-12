@@ -54,17 +54,15 @@ function ProjectsShowcase({
   heading: SectionHeading;
 }) {
   const reduceMotion = useReducedMotion() ?? false;
-  const { filter, setFilter } = useProjectsFilter();
+  const { filter, setFilter, showAll, setShowAll } = useProjectsFilter();
   const [view, setView] = useState<View>("grid");
-  const [expandedFor, setExpandedFor] = useState<string | null>(null);
 
   const groups = useMemo(() => groupCounts(projects), [projects]);
   const shown = useMemo(() => filterProjects(projects, filter), [projects, filter]);
   const chips = [{ label: ALL_FILTER, count: projects.length }, ...groups];
   /* "Show all" belongs to the filter it was pressed under; choosing another
-     filter starts again from the first few. */
-  const expanded = expandedFor === filter;
-  const visible = expanded ? shown : shown.slice(0, FIRST_LOOK);
+     filter starts again from the first few (see filter-context). */
+  const visible = showAll ? shown : shown.slice(0, FIRST_LOOK);
   const hiddenCount = shown.length - visible.length;
 
   return (
@@ -225,7 +223,7 @@ function ProjectsShowcase({
           <div className="mt-10 flex justify-center">
             <button
               type="button"
-              onClick={() => setExpandedFor(filter)}
+              onClick={() => setShowAll(true)}
               className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)] transition-transform hover:-translate-y-0.5"
             >
               Show all {shown.length} projects

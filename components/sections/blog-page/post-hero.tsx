@@ -25,7 +25,7 @@ function PostHero({ element, author }: { element: BlogElement; author?: PostByli
       />
       <div className="doc-shell relative">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2.5 border-b-2 border-[var(--ld-ink)] pb-3.5 font-mono text-[11.5px] tracking-[0.1em] uppercase">
-          <Link href="/blog" className="text-[var(--ld-ink)] transition-colors hover:text-[var(--ld-deep)]">
+          <Link href="/blog" className="-my-3 inline-flex min-h-11 items-center text-[var(--ld-ink)] transition-colors hover:text-[var(--ld-deep)]">
             ← The table of explainers
           </Link>
           <span className="text-[var(--ld-text-muted)]">

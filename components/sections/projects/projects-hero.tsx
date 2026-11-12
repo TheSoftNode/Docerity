@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { SectionHeading } from "@/lib/content/blocks/source";
 import type { Project } from "@/components/sections/work/work-data";
 import { CommandBar } from "@/components/sections/projects/command-bar";
@@ -28,6 +30,11 @@ function statusDot(status: Project["status"]) {
  * in the accent. It is hidden from assistive technology because the same
  * projects are listed properly in the showcase, and it stops under reduced
  * motion. Rendered on the server: it moves with CSS alone.
+ *
+ * Each tile is a link to its project, because a tile looks like something
+ * to tap and a dead one reads as a broken page. They stay out of the tab
+ * order (the showcase is the keyboard route) and the fog and text layers in
+ * front let taps through to them.
  */
 function ProjectsHero({ projects, heading }: { projects: Project[]; heading: SectionHeading }) {
   const columns = wallColumns(projects);
@@ -42,9 +49,11 @@ function ProjectsHero({ projects, heading }: { projects: Project[]; heading: Sec
             <div key={index} className={index > 2 ? "hidden overflow-hidden md:block" : "overflow-hidden"}>
               <div className={`${COLUMN_MOTION[index % COLUMN_MOTION.length]} flex flex-col gap-[18px]`}>
                 {column.map((project, position) => (
-                  <div
+                  <Link
                     key={`${project.slug}-${position}`}
-                    className={`flex min-h-[150px] flex-col justify-between rounded-[18px] border border-[rgb(var(--ld-tint-rgb)/0.16)] p-[18px] ${
+                    href={`/projects/${project.slug}`}
+                    tabIndex={-1}
+                    className={`flex min-h-[150px] flex-col justify-between rounded-[18px] border border-[rgb(var(--ld-tint-rgb)/0.16)] p-[18px] transition-[filter] hover:brightness-110 ${
                       project.featured ? "bg-[var(--ld-accent)] text-[var(--ld-ink)]" : TILE_FILLS[(index + position) % TILE_FILLS.length]
                     }`}
                   >
@@ -63,7 +72,7 @@ function ProjectsHero({ projects, heading }: { projects: Project[]; heading: Sec
                         {project.category}
                       </span>
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -76,12 +85,12 @@ function ProjectsHero({ projects, heading }: { projects: Project[]; heading: Sec
           moving text. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(ellipse_62%_58%_at_50%_56%,rgb(var(--ld-ink-rgb)/0.94)_0%,rgb(var(--ld-ink-rgb)/0.82)_45%,rgb(var(--ld-ink-rgb)/0.25)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_58%_at_50%_56%,rgb(var(--ld-ink-rgb)/0.94)_0%,rgb(var(--ld-ink-rgb)/0.82)_45%,rgb(var(--ld-ink-rgb)/0.25)_100%)]"
       />
-      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[var(--ld-ink)] to-transparent" />
-      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-[var(--ld-ink)] to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[var(--ld-ink)] to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-[var(--ld-ink)] to-transparent" />
 
-      <div className="doc-shell relative flex h-full flex-col items-center justify-center pt-28 pb-10 text-center">
+      <div className="doc-shell pointer-events-none relative flex h-full flex-col items-center justify-center pt-28 pb-10 text-center [&>*]:pointer-events-auto">
         <h1 className="ld-display ld-up ld-delay-1 max-w-[15ch] text-[clamp(44px,7vw,108px)] leading-[0.94] font-extrabold tracking-[-0.05em] text-balance">
           {title.lead} <span className="text-[var(--ld-accent)]">{title.accent}</span>
         </h1>

@@ -42,11 +42,10 @@ function ProjectGlance({ project }: { project: Project }) {
               The full story of {project.name} hasn&apos;t been written up yet. Want it sooner? We are happy to walk
               you through it.
             </p>
-            <Link
-              href="/contact"
-              className="mt-3.5 inline-flex border-b-2 border-[var(--ld-accent)] pb-0.5 text-[15px] font-semibold"
-            >
-              Ask about {project.name} →
+            <Link href="/contact" className="mt-2 inline-flex min-h-11 items-center">
+              <span className="border-b-2 border-[var(--ld-accent)] pb-0.5 text-[15px] font-semibold">
+                Ask about {project.name} →
+              </span>
             </Link>
           </div>
         </div>

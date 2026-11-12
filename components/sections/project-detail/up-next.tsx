@@ -82,7 +82,7 @@ function UpNext({
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[rgb(var(--ld-tint-rgb)/0.14)] pt-5">
           <Link
             href={`/projects/${previous.slug}`}
-            className="group inline-flex items-center gap-3 text-[15px] text-[var(--ld-muted)] transition-colors hover:text-[var(--ld-paper)]"
+            className="group inline-flex min-h-11 items-center gap-3 text-[15px] text-[var(--ld-muted)] transition-colors hover:text-[var(--ld-paper)]"
           >
             <ArrowLeftIcon aria-hidden="true" className="size-4 transition-transform group-hover:-translate-x-1" />
             <span>

@@ -171,7 +171,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
           <div ref={stage} aria-hidden="true" className={cn("relative grid min-w-0 place-items-center overflow-hidden", melting && "[filter:url(#ld-melt)_blur(0.3px)]")}>
             <div
               style={{ top: "calc(50% - var(--word-h, 160px) / 2 - 34px)" }}
-              className="absolute inset-x-0 flex justify-center gap-2.5 font-mono text-[10.5px] tracking-[0.12em] text-[#9aa0b1] uppercase md:gap-3.5 md:text-[12.5px]">
+              className="absolute inset-x-0 flex justify-center gap-2.5 font-mono text-[10.5px] tracking-[0.12em] text-[var(--ld-text-muted)] uppercase md:gap-3.5 md:text-[12.5px]">
               <span className={cn("transition-colors duration-500", !current.analogy && "text-[var(--ld-ink)]")}>What it&apos;s called</span>
               <span className="relative h-px w-8 self-center overflow-hidden bg-[var(--ld-line)] md:w-14">
                 <span className={cn("absolute inset-y-0 left-0 bg-[var(--ld-ink)] transition-[width] duration-[1100ms] ease-linear", current.analogy !== melting ? "w-full" : "w-0")} />
@@ -236,7 +236,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
                     onClick={() => setStep(index * 2)}
                     className={cn(
                       "border-b-[1.5px] py-0.5 text-[15px] outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]",
-                      on ? "border-[var(--ld-ink)] text-[var(--ld-ink)]" : "border-transparent text-[#9aa0b1] hover:text-[var(--ld-ink)]"
+                      on ? "border-[var(--ld-ink)] text-[var(--ld-ink)]" : "border-transparent text-[var(--ld-text-muted)] hover:text-[var(--ld-ink)]"
                     )}
                   >
                     {item.concept}

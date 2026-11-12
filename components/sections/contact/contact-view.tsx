@@ -360,7 +360,7 @@ function ContactView({
           {sent ? (
             <div
               role="status"
-              className="ld-pop relative overflow-hidden rounded-[30px] bg-[var(--ld-paper)] p-[clamp(28px,4vw,56px)] text-[var(--ld-ink)] shadow-[0_60px_120px_-50px_rgb(0_0_0/0.75)]"
+              className="ld-keep-light ld-pop relative overflow-hidden rounded-[30px] bg-[var(--ld-paper)] p-[clamp(28px,4vw,56px)] text-[var(--ld-ink)] shadow-[0_60px_120px_-50px_rgb(0_0_0/0.75)]"
             >
               <span aria-hidden="true" className="absolute -top-20 -right-20 size-[260px] rounded-full border border-[rgb(var(--ld-ink-rgb)/0.08)]" />
               <span className="grid size-16 place-items-center rounded-[20px] bg-[var(--ld-ink)] text-[#8de3b6]">
@@ -408,7 +408,7 @@ function ContactView({
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="relative rounded-[30px] bg-[var(--ld-paper)] p-[clamp(22px,3.2vw,44px)] text-[var(--ld-ink)] shadow-[0_60px_120px_-50px_rgb(0_0_0/0.75)]"
+              className="ld-keep-light relative rounded-[30px] bg-[var(--ld-paper)] p-[clamp(22px,3.2vw,44px)] text-[var(--ld-ink)] shadow-[0_60px_120px_-50px_rgb(0_0_0/0.75)]"
             >
               <div className="mb-[26px] flex items-center justify-between gap-3">
                 <span className="font-mono text-[11.5px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{copy.sheetLabel}</span>
