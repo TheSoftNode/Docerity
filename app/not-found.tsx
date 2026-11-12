@@ -40,7 +40,7 @@ export default async function NotFound() {
   const pages = shelfFrom(site.navLinks, site.footerLinks);
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+    <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
         <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(1000px_560px_at_80%_10%,rgb(28_58_140/0.7),transparent_62%),var(--ld-ink)] pt-[132px] pb-[clamp(64px,7vw,100px)] text-[var(--ld-paper)]">

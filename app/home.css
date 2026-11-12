@@ -970,3 +970,85 @@ html.light .ld-pass {
 html.light .ld-pass-stub {
   color: #08102e;
 }
+
+/* ===============================================================
+   Light theme for every page.
+
+   The site's dark bands (navy sections, the footer, the contact band)
+   are drawn with --ld-ink behind and --ld-paper on top. In the light
+   theme those bands swap the two over, along with the greys and the
+   tint, so a navy band becomes a paper band with navy type, without
+   each section needing a second set of classes. The swap reads the
+   current colour mood (--lx-*), so it follows the footer's palette too.
+
+   Two things swap back inside a band: anything on coral keeps navy type,
+   and anything on the deep blue stays a dark surface with light type.
+   The homepage hero has its own light version further up and is left out.
+   =============================================================== */
+html.light {
+  --lx-ink: var(--ld-ink);
+  --lx-ink-rgb: var(--ld-ink-rgb);
+  --lx-paper: var(--ld-paper);
+  --lx-paper-rgb: var(--ld-paper-rgb);
+  --lx-tint: var(--ld-tint);
+  --lx-tint-rgb: var(--ld-tint-rgb);
+  --lx-deep: var(--ld-deep);
+  --lx-muted: var(--ld-muted);
+  --lx-muted-2: var(--ld-muted-2);
+  --lx-muted-3: var(--ld-muted-3);
+  --lx-panel: var(--ld-panel);
+  --lx-ink-2: var(--ld-ink-2);
+  --lx-ink-3: var(--ld-ink-3);
+  --lx-row: var(--ld-row);
+  --lx-dim: var(--ld-dim);
+}
+html.light .ld-page {
+  background: var(--ld-paper);
+}
+/* Navy bands: a plain navy background, or navy under a glow (the page
+   heroes end their gradient list with ",var(--ld-ink)]"). */
+html.light :is(main section, main > div, footer):is([class*="bg-[var(--ld-ink)]"], [class*=",var(--ld-ink)]"]):not(.ld-hero) {
+  --ld-ink: var(--lx-paper);
+  --ld-ink-rgb: var(--lx-paper-rgb);
+  --ld-paper: var(--lx-ink);
+  --ld-paper-rgb: var(--lx-ink-rgb);
+  --ld-tint: var(--lx-deep);
+  --ld-tint-rgb: 28 58 140;
+  --ld-ink-2: var(--ld-card);
+  --ld-ink-3: var(--ld-paper-2);
+  --ld-panel: var(--ld-card);
+  --ld-row: var(--ld-tint-soft);
+  --ld-muted: var(--ld-text-2);
+  --ld-muted-2: var(--ld-text-muted);
+  --ld-muted-3: var(--ld-text-dim);
+  --ld-dim: var(--ld-line-2);
+}
+/* Navy type stays on coral. */
+html.light [class*="bg-[var(--ld-accent)]"]:not(.ld-hero *) {
+  --ld-ink: var(--lx-ink);
+  --ld-ink-rgb: var(--lx-ink-rgb);
+}
+/* Deep blue stays a dark surface, with its own light type, and so do the
+   two consoles (the AI router demo and the About commit card) that are
+   meant to read as screens. */
+html.light .ld-keep-dark {
+  background-color: var(--lx-ink) !important;
+  color: var(--lx-paper);
+}
+html.light .ld-keep-dark,
+html.light :is(main, footer) [class*="bg-[var(--ld-deep)]"]:not(.ld-hero *) {
+  --ld-ink: var(--lx-ink);
+  --ld-ink-rgb: var(--lx-ink-rgb);
+  --ld-paper: var(--lx-paper);
+  --ld-paper-rgb: var(--lx-paper-rgb);
+  --ld-tint: var(--lx-tint);
+  --ld-tint-rgb: var(--lx-tint-rgb);
+  --ld-ink-2: var(--lx-ink-2);
+  --ld-ink-3: var(--lx-ink-3);
+  --ld-panel: var(--lx-panel);
+  --ld-row: var(--lx-row);
+  --ld-muted: var(--lx-muted);
+  --ld-muted-2: var(--lx-muted-2);
+  --ld-muted-3: var(--lx-muted-3);
+  --ld-dim: var(--lx-dim);
+}

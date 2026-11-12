@@ -76,7 +76,7 @@ export default async function UnsubscribePage({
       ];
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+    <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
         <section className="relative -mt-[76px] bg-[var(--ld-paper)] pt-[128px] pb-[clamp(64px,8vw,112px)] text-[var(--ld-ink)]">

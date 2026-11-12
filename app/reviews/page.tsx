@@ -82,7 +82,7 @@ export default async function Reviews() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
-      <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+      <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
         <SiteHeader />
         <main className="flex-1">
           <CaptionReel

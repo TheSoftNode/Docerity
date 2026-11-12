@@ -17,7 +17,7 @@ export default async function TermsPage() {
   const [text, site] = await Promise.all([getGroup<LegalText>("legal", "terms"), getSiteSettings()]);
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
+    <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
         <LegalDocument text={text} email={site.email} other={{ href: "/privacy", label: "Privacy policy" }} />
