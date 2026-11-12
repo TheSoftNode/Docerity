@@ -974,8 +974,8 @@ html.light .ld-pass-stub {
 /* ===============================================================
    Light theme for every page.
 
-   The site's dark bands (navy sections, the footer, the contact band)
-   are drawn with --ld-ink behind and --ld-paper on top. In the light
+   The site's dark bands (navy heroes and sections) are drawn with
+   --ld-ink behind and --ld-paper on top. In the light
    theme those bands swap the two over, along with the greys and the
    tint, so a navy band becomes a paper band with navy type, without
    each section needing a second set of classes. The swap reads the
@@ -1007,7 +1007,9 @@ html.light .ld-page {
 }
 /* Navy bands: a plain navy background, or navy under a glow (the page
    heroes end their gradient list with ",var(--ld-ink)]"). */
-html.light :is(main section, main > div, footer):is([class*="bg-[var(--ld-ink)]"], [class*=",var(--ld-ink)]"]):not(.ld-hero) {
+/* The contact band and the footer stay navy in both themes: they close
+   every page the same way. */
+html.light :is(main section, main > div):is([class*="bg-[var(--ld-ink)]"], [class*=",var(--ld-ink)]"]):not(.ld-hero, .ld-stay-dark) {
   --ld-ink: var(--lx-paper);
   --ld-ink-rgb: var(--lx-paper-rgb);
   --ld-paper: var(--lx-ink);
