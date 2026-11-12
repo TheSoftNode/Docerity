@@ -52,7 +52,7 @@ function ProjectHero({
         <div className="ld-up flex flex-col items-start justify-between gap-3.5 sm:flex-row sm:items-center">
           <Link
             href="/projects"
-            className="group inline-flex items-center gap-2.5 text-sm text-[var(--ld-muted)] transition-colors hover:text-[var(--ld-paper)]"
+            className="group -my-2 inline-flex min-h-11 items-center gap-2.5 text-sm text-[var(--ld-muted)] transition-colors hover:text-[var(--ld-paper)]"
           >
             <ArrowLeftIcon aria-hidden="true" className="size-4 transition-transform group-hover:-translate-x-1" />
             All projects

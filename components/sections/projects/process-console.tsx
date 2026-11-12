@@ -151,7 +151,7 @@ function ProcessConsole({ stages }: { stages: ConsoleStage[] }) {
 
       {/* The log is a show piece; on a phone it is one more screen to scroll
           past, so it starts at tablet width. */}
-      <div className="hidden min-h-[460px] flex-col bg-[var(--ld-ink-2)] md:flex">
+      <div className="ld-keep-dark hidden min-h-[460px] flex-col bg-[var(--ld-ink-2)] md:flex">
         <div className="flex items-center gap-2 border-b border-[rgb(var(--ld-tint-rgb)/0.12)] px-[18px] py-3.5 font-mono text-xs text-[var(--ld-muted-3)]">
           <span aria-hidden="true" className="size-[9px] rounded-full bg-[#FF6B3D]" />
           <span aria-hidden="true" className="size-[9px] rounded-full bg-[#FFC94A]" />

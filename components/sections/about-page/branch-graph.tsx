@@ -93,7 +93,7 @@ function BranchGraph({ lanes, initLabel, children }: { lanes: Lane[]; initLabel:
                     className="transition-all duration-300"
                   />
                   {branch.current && branch.x1 - branch.x0 > 300 ? (
-                    <text x={branch.x1} y={branch.y - 13} textAnchor="end" fill="#7d8ec0" className="font-mono text-[11px]">
+                    <text x={branch.x1} y={branch.y - 13} textAnchor="end" fill="var(--ld-muted-3)" className="font-mono text-[11px]">
                       ongoing →
                     </text>
                   ) : null}
@@ -101,15 +101,15 @@ function BranchGraph({ lanes, initLabel, children }: { lanes: Lane[]; initLabel:
               );
             })}
             <circle cx={24} cy={main} r={9} fill="var(--ld-ink)" stroke="#AFC4FF" strokeWidth={3} />
-            <text x={24} y={main + 32} fill="#adb0bd" className="font-mono text-[12px]">
+            <text x={24} y={main + 32} fill="var(--ld-muted-2)" className="font-mono text-[12px]">
               {initLabel}
             </text>
             <circle className="ld-live" cx={head} cy={main} r={17} fill="var(--ld-accent)" />
             <circle cx={head} cy={main} r={7} fill="var(--ld-ink)" />
-            <text x={head} y={main + 46} textAnchor="middle" fill="#F4F5FA" className="ld-display text-[22px] font-extrabold">
+            <text x={head} y={main + 46} textAnchor="middle" fill="var(--ld-paper)" className="ld-display text-[22px] font-extrabold">
               HEAD
             </text>
-            <text x={head} y={main + 66} textAnchor="middle" fill="#AFC4FF" className="font-mono text-[12px]">
+            <text x={head} y={main + 66} textAnchor="middle" fill="var(--ld-tint)" className="font-mono text-[12px]">
               docerity
             </text>
           </svg>
@@ -126,8 +126,8 @@ function BranchGraph({ lanes, initLabel, children }: { lanes: Lane[]; initLabel:
                     onClick={() => choose(index)}
                     style={{ left, top: pct(branch.y - 32, height) }}
                     className={cn(
-                      "absolute rounded-md font-mono text-[13px] leading-[1.2] font-medium whitespace-nowrap outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]",
-                      on ? "text-[var(--ld-paper)]" : "text-[#adb0bd] hover:text-[var(--ld-paper)]"
+                      "absolute -mx-1.5 -my-2 rounded-md px-1.5 py-2 font-mono text-[13px] leading-[1.2] font-medium whitespace-nowrap outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]",
+                      on ? "text-[var(--ld-paper)]" : "text-[var(--ld-muted-2)] hover:text-[var(--ld-paper)]"
                     )}
                   >
                     {branch.org}
