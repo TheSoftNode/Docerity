@@ -273,7 +273,28 @@ function AudiencePathView({
               ) : null}
             </div>
 
-            <ol aria-label="Stages" className="relative mt-12 md:mt-[clamp(48px,6vw,72px)] md:aspect-[1200/300]">
+            {/* A phone reads the stages top to bottom, each already open. The
+                drawn path, where choosing a stop changes the card under it
+                (and it moves on by itself), is for wider screens. */}
+            <ol aria-label="Stages" className="mt-9 md:hidden">
+              {stages.map((item, index) => (
+                <li key={item.label} className="relative border-l-[3px] border-[rgb(var(--ld-tint-rgb)/0.25)] pb-7 pl-6 last:pb-0">
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-0.5 -left-[13px] grid size-[23px] place-items-center rounded-full bg-[var(--ld-tint)] text-[12px] font-bold text-[var(--ld-ink)]"
+                  >
+                    {index + 1}
+                  </span>
+                  <h3 className="ld-display text-[22px] leading-tight font-bold tracking-[-0.02em]">{item.label}</h3>
+                  <p className="mt-1 text-[15px] font-medium text-[var(--ld-tint)]">{item.summary}</p>
+                  {item.description ? (
+                    <p className="mt-2 text-[15px] leading-relaxed text-[var(--ld-muted)]">{item.description}</p>
+                  ) : null}
+                </li>
+              ))}
+            </ol>
+
+            <ol aria-label="Stages" className="relative mt-12 hidden md:mt-[clamp(48px,6vw,72px)] md:block md:aspect-[1200/300]">
               <svg
                 viewBox="0 0 1200 300"
                 preserveAspectRatio="none"
@@ -381,7 +402,7 @@ function AudiencePathView({
             </ol>
 
             {stages[current] ? (
-              <div className="mt-[clamp(40px,8vw,104px)] grid gap-[clamp(28px,4vw,64px)] rounded-[26px] border border-[rgb(var(--ld-tint-rgb)/0.2)] bg-[rgb(var(--ld-ink-rgb)/0.42)] p-[clamp(24px,3vw,40px)] backdrop-blur-[10px] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+              <div className="mt-[clamp(40px,8vw,104px)] hidden gap-[clamp(28px,4vw,64px)] rounded-[26px] md:grid border border-[rgb(var(--ld-tint-rgb)/0.2)] bg-[rgb(var(--ld-ink-rgb)/0.42)] p-[clamp(24px,3vw,40px)] backdrop-blur-[10px] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
                 <div>
                   <p className="font-mono text-xs tracking-[0.1em] text-[var(--ld-tint)] uppercase">
                     Stage <span className="text-[var(--ld-accent)]">{pad(current + 1)}</span> of {pad(count)}
