@@ -116,7 +116,7 @@ export default async function BattlesPage() {
               </li>
               <li>
                 <strong className="block text-[var(--ld-ink)]">2. Vote</strong>
-                Entries are revealed together. Every student gets {VOTES_PER_BATTLE} votes for others&apos; work, never their own.
+                Entries are revealed together. {`Every student gets ${VOTES_PER_BATTLE} votes for others' work`}, never their own.
               </li>
               <li>
                 <strong className="block text-[var(--ld-ink)]">3. Podium</strong>

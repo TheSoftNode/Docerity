@@ -289,7 +289,8 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                       </div>
                       <h3 className="ld-display mt-4 text-[21px] leading-tight font-bold tracking-[-0.02em]">{entry.title}</h3>
                       {entry.note ? <p className="mt-2 line-clamp-3 text-[15px] leading-relaxed text-[var(--ld-text-2)]">{entry.note}</p> : null}
-                      <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-[var(--ld-line)] pt-4">
+                      <div className="mt-auto flex pt-5" aria-hidden="true" />
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--ld-line)] pt-4">
                         <span className="flex gap-4 text-[14px] font-semibold">
                           <a href={entry.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-1 text-[var(--ld-deep)]">
                             Live <ArrowUpRightIcon className="size-4" />
