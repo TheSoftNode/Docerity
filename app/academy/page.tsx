@@ -75,7 +75,7 @@ export default async function AcademyPage() {
             {standing ? (
               <StandingPanel standing={standing} className="ld-up ld-delay-3" />
             ) : first ? (
-              <div className="ld-keep-dark ld-up ld-delay-3 rounded-[26px] border border-[rgb(175_196_255/0.16)] bg-[#0b1433] p-7 text-[#f4f5fa] max-md:hidden" data-academy-preview>
+              <div className="ld-keep-dark rounded-[26px] border border-[rgb(175_196_255/0.16)] bg-[#0b1433] p-7 text-[#f4f5fa] max-md:hidden" data-academy-preview>
                 <p className="text-[13px] text-[#9aa7cf]">First course</p>
                 <p className="ld-display mt-1 text-[28px] leading-tight font-bold tracking-[-0.03em]">{first.title}</p>
                 <dl className="mt-6 grid grid-cols-3 gap-3 border-t border-[rgb(175_196_255/0.14)] pt-5">
