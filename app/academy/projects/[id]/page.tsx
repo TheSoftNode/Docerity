@@ -80,7 +80,7 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
             <div className="min-w-0">
               {brief.brief ? (
                 <article className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
-                  <h2 className="ld-display text-[26px] font-bold tracking-[-0.025em]">The brief</h2>
+                  <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">The brief</h2>
                   <div className="mt-3">
                     <LessonNotes source={brief.brief} />
                   </div>
@@ -88,7 +88,7 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
               ) : null}
 
               <div className="mt-6 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
-                <h2 className="ld-display text-[26px] font-bold tracking-[-0.025em]">What must work</h2>
+                <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">What must work</h2>
                 <ul className="mt-4 grid gap-3">
                   {brief.requirements.map((item, index) => (
                     <li key={item} className="flex gap-3 text-[16px] leading-relaxed text-[var(--ld-text-2)]">

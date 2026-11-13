@@ -164,7 +164,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                 const open = openModules(course, input);
                 return (
                   <li key={course.slug}>
-                    <Link href={`/academy/${course.slug}`} className="group grid overflow-hidden rounded-[32px] bg-[var(--ld-card)] shadow-[0_30px_60px_-40px_rgb(8_16_46/0.35)] ring-1 ring-[rgb(8_16_46/0.06)] transition-transform hover:-translate-y-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <Link href={`/academy/${course.slug}`} className="group grid grid-cols-1 overflow-hidden rounded-[32px] bg-[var(--ld-card)] shadow-[0_30px_60px_-40px_rgb(8_16_46/0.35)] ring-1 ring-[rgb(8_16_46/0.06)] transition-transform hover:-translate-y-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                       <div className="ld-keep-dark relative flex flex-col overflow-hidden bg-[#0b1433] p-7 text-[#f4f5fa] sm:p-10">
                         <span aria-hidden="true" className="pointer-events-none absolute -top-24 -right-16 size-80 rounded-full bg-[radial-gradient(circle,rgb(64_110_230/0.45),transparent_65%)]" />
                         <p className="relative flex flex-wrap gap-x-3 gap-y-1 text-[14px] text-[#9aa7cf]">
@@ -196,12 +196,12 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                           )}
                         </div>
                       </div>
-                      <ol className="grid content-center gap-1 p-5 sm:p-8">
+                      <ol className="grid min-w-0 grid-cols-1 content-center gap-1 p-5 sm:p-8">
                         {course.modules.map((module, index) => {
                           const done = enrollment ? module.lessons.every((lesson) => input.completed.includes(lesson.id)) : false;
                           const current = enrollment && open.has(module.id) && !done;
                           return (
-                            <li key={module.id} className={cn("flex items-center gap-4 rounded-2xl px-3 py-3", current && "bg-[#e6ecff]")}>
+                            <li key={module.id} className={cn("flex min-w-0 items-center gap-4 rounded-2xl px-3 py-3", current && "bg-[#e6ecff]")}>
                               <span
                                 className={cn(
                                   "ld-display grid size-9 shrink-0 place-items-center rounded-full text-[13px] font-bold",
@@ -256,7 +256,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                     return (
                       <li key={brief.id} className="w-[84%] max-w-[360px] shrink-0 snap-start sm:w-auto sm:max-w-none">
                         <Link href={`/academy/projects/${brief.id}`} className={cn("group relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[28px] p-7 transition-transform hover:-translate-y-1", tone.card)}>
-                          <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute -right-2 -bottom-8 text-[150px] leading-none font-extrabold tracking-[-0.06em]", tone.numeral)}>
+                          <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute -top-10 -right-3 text-[150px] leading-none font-extrabold tracking-[-0.06em]", tone.numeral)}>
                             {pad(index + 1)}
                           </span>
                           <span className={cn("relative text-[14px] font-semibold", tone.accent)}>
@@ -350,7 +350,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                     })}
                   </ol>
                   {leaders.length > 3 ? (
-                    <ol start={4} className="overflow-hidden rounded-[24px] border border-[rgb(var(--ld-paper-rgb)/0.12)]">
+                    <ol start={4} className="self-start overflow-hidden rounded-[24px] border border-[rgb(var(--ld-paper-rgb)/0.12)]">
                       {leaders.slice(3).map((leader, index) => {
                         const you = account?.id === String(leader._id);
                         return (
