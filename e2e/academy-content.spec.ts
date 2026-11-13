@@ -3,6 +3,7 @@ import { test, expect } from "@playwright/test";
 import { webDevelopment } from "@/lib/academy/catalog/web-development";
 import { normaliseCourse } from "@/lib/academy/normalise";
 import { parseNotes } from "@/lib/academy/markdown";
+import { SHIPPED_BRIEFS, githubRepo, normaliseBriefs } from "@/lib/academy/briefs";
 import {
   PASS_MARK,
   allLessons,
@@ -183,7 +184,6 @@ test.describe("parseNotes", () => {
 
 test.describe("project pool", () => {
   test("every shipped brief survives normalising unchanged, with unique ids", async () => {
-    const { SHIPPED_BRIEFS, normaliseBriefs } = await import("@/lib/academy/briefs");
     expect(SHIPPED_BRIEFS.length).toBeGreaterThanOrEqual(12);
     expect(normaliseBriefs(SHIPPED_BRIEFS)).toEqual(SHIPPED_BRIEFS);
     expect(new Set(SHIPPED_BRIEFS.map((brief) => brief.id)).size).toBe(SHIPPED_BRIEFS.length);
@@ -191,7 +191,6 @@ test.describe("project pool", () => {
   });
 
   test("normalising drops untitled briefs, dedupes ids and fixes bad values", async () => {
-    const { normaliseBriefs } = await import("@/lib/academy/briefs");
     const out = normaliseBriefs([
       { title: "  " },
       { title: "Todo App", level: "Expert", hours: -3, stack: "React\n\n", requirements: ["Add", "", "Remove"] },
@@ -203,7 +202,6 @@ test.describe("project pool", () => {
   });
 
   test("only https GitHub repositories are accepted", async () => {
-    const { githubRepo } = await import("@/lib/academy/briefs");
     expect(githubRepo("https://github.com/ada/portfolio.git")).toBe("https://github.com/ada/portfolio");
     expect(githubRepo("https://www.github.com/ada/portfolio/tree/main")).toBe("https://github.com/ada/portfolio");
     expect(githubRepo("http://github.com/ada/portfolio")).toBe("");
