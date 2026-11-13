@@ -17,7 +17,6 @@ function BlogSubscribe() {
       <div className="doc-shell relative pt-[clamp(80px,10vw,136px)]">
         <div className="grid items-end gap-10 lg:grid-cols-2">
           <div>
-            <p className="mb-[18px] font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">The list</p>
             <h2 id="subscribe-title" className="ld-display text-[clamp(42px,6.4vw,96px)] leading-[0.9] font-extrabold tracking-[-0.055em]">
               One explainer, now and <span className="ld-sheen">then</span>
               <span className="text-[var(--ld-accent)]">.</span>

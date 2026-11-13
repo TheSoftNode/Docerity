@@ -31,7 +31,7 @@ async function MentorshipFaq() {
             href={`mailto:${site.email}`}
             className="mt-6 inline-flex flex-wrap items-center gap-2.5 rounded-2xl bg-[var(--ld-ink)] px-[18px] py-3.5 text-[15px] text-[var(--ld-paper)] transition-transform hover:-translate-y-0.5"
           >
-            <span className="font-mono text-[11px] text-[var(--ld-muted-3)] uppercase">Still unsure?</span>
+            <span className="text-[var(--ld-muted-3)]">Still unsure?</span>
             {site.email}
           </a>
         </div>
