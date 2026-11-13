@@ -21,7 +21,7 @@ export async function markWithAi(lesson: Lesson, work: HandIn): Promise<AiMark |
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 45_000);
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch(`${ai.baseUrl}/v1/messages`, {
       method: "POST",
       signal: controller.signal,
       headers: {

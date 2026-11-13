@@ -69,6 +69,10 @@ export const ai = {
   get model() {
     return read("ACADEMY_AI_MODEL") ?? "claude-sonnet-5-5";
   },
+  /** Only for a proxy or a test stand-in; normally unset. */
+  get baseUrl() {
+    return (read("ANTHROPIC_BASE_URL") ?? "https://api.anthropic.com").replace(/\/+$/, "");
+  },
 };
 
 /* ── Email ────────────────────────────────────────────────────────────── */
