@@ -57,11 +57,14 @@ export const getCurrentAccount = cache(async (): Promise<CurrentAccount | null> 
   }
 });
 
-/** Only paths inside the portal are accepted as somewhere to return to, so `?next=` cannot send anyone off-site. */
+/**
+ * Only paths inside the portal or the Academy are accepted as somewhere to
+ * return to, so `?next=` cannot send anyone off-site.
+ */
 export function safeAccountPath(next: unknown): string {
-  if (typeof next !== "string") return "/account";
-  if (!next.startsWith("/account") || next.startsWith("//")) return "/account";
-  return next;
+  if (typeof next !== "string" || next.startsWith("//") || next.includes("\\")) return "/account";
+  if (/^\/(account|academy)(\/|\?|$)/.test(next)) return next;
+  return "/account";
 }
 
 export async function requireAccount(returnTo?: string): Promise<CurrentAccount> {

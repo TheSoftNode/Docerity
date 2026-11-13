@@ -14,8 +14,7 @@ import {
   MailIcon,
   StarIcon,
   UsersIcon,
-  type LucideIcon,
-} from "lucide-react";
+  type LucideIcon, RocketIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { can, type Role } from "@/lib/auth/permissions";
@@ -52,6 +51,7 @@ const groups: { label: string; items: NavItem[] }[] = [
     items: [
       { href: "/admin/posts", label: "Writing", Icon: FileTextIcon, visible: can.writePosts },
       { href: "/admin/projects", label: "Projects", Icon: BriefcaseIcon, visible: can.publishPosts },
+      { href: "/admin/academy", label: "Academy", Icon: RocketIcon, visible: can.publishPosts },
       /* The client logos, every page's headings and words, the About page and the rest. */
       { href: "/admin/content", label: "Page content", Icon: LayoutTemplateIcon, visible: can.publishPosts },
       { href: "/admin/media", label: "Media", Icon: ImagesIcon, visible: can.publishPosts },
