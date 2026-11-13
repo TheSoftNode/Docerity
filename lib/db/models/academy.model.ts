@@ -70,6 +70,48 @@ const xpSchema = new Schema(
 xpSchema.index({ accountId: 1, kind: 1, ref: 1 }, { unique: true });
 xpSchema.index({ at: -1 });
 
+/* A project a student took from the pool: started, handed in, reviewed. */
+const buildSchema = new Schema(
+  {
+    accountId: { type: Schema.Types.ObjectId, required: true },
+    briefId: { type: String, required: true, maxlength: 80 },
+    status: { type: String, enum: ["building", "submitted", "approved", "changes"], default: "building", index: true },
+    repoUrl: { type: String, default: "", maxlength: 300 },
+    liveUrl: { type: String, default: "", maxlength: 500 },
+    note: { type: String, default: "", maxlength: 2000 },
+    feedback: { type: String, default: "", maxlength: 4000 },
+    reviewedBy: { type: String, default: "", maxlength: 320 },
+    submittedAt: { type: Date, default: null },
+    reviewedAt: { type: Date, default: null },
+    /* Upvotes in the showcase: one per student, never your own. */
+    voters: { type: [Schema.Types.ObjectId], default: [] },
+    votes: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
+buildSchema.index({ accountId: 1, briefId: 1 }, { unique: true });
+buildSchema.index({ status: 1, votes: -1, reviewedAt: -1 });
+
+/* Academy content edited in the admin that is not a course (the project briefs). */
+const contentSchema = new Schema(
+  {
+    key: { type: String, required: true, unique: true, maxlength: 60 },
+    data: { type: Schema.Types.Mixed, required: true },
+    updatedBy: { type: String, default: "", maxlength: 320 },
+  },
+  { timestamps: true, minimize: false }
+);
+
+export type AcademyBuild = InferSchemaType<typeof buildSchema>;
+export type AcademyContent = InferSchemaType<typeof contentSchema>;
+export type BuildStatus = AcademyBuild["status"];
+
+export const AcademyBuildModel: Model<AcademyBuild> =
+  (mongoose.models.AcademyBuild as Model<AcademyBuild>) ?? mongoose.model<AcademyBuild>("AcademyBuild", buildSchema);
+
+export const AcademyContentModel: Model<AcademyContent> =
+  (mongoose.models.AcademyContent as Model<AcademyContent>) ?? mongoose.model<AcademyContent>("AcademyContent", contentSchema);
+
 export type AcademyCourseRecord = InferSchemaType<typeof courseSchema>;
 export type AcademyEnrollment = InferSchemaType<typeof enrollmentSchema>;
 export type AcademyLearner = InferSchemaType<typeof learnerSchema>;

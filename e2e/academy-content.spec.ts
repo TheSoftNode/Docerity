@@ -180,3 +180,35 @@ test.describe("parseNotes", () => {
     expect(blocks.map((block) => block.kind)).toEqual(["heading", "list", "code", "paragraph"]);
   });
 });
+
+test.describe("project pool", () => {
+  test("every shipped brief survives normalising unchanged, with unique ids", async () => {
+    const { SHIPPED_BRIEFS, normaliseBriefs } = await import("@/lib/academy/briefs");
+    expect(SHIPPED_BRIEFS.length).toBeGreaterThanOrEqual(12);
+    expect(normaliseBriefs(SHIPPED_BRIEFS)).toEqual(SHIPPED_BRIEFS);
+    expect(new Set(SHIPPED_BRIEFS.map((brief) => brief.id)).size).toBe(SHIPPED_BRIEFS.length);
+    for (const brief of SHIPPED_BRIEFS) expect(brief.requirements.length).toBeGreaterThan(0);
+  });
+
+  test("normalising drops untitled briefs, dedupes ids and fixes bad values", async () => {
+    const { normaliseBriefs } = await import("@/lib/academy/briefs");
+    const out = normaliseBriefs([
+      { title: "  " },
+      { title: "Todo App", level: "Expert", hours: -3, stack: "React\n\n", requirements: ["Add", "", "Remove"] },
+      { title: "Todo App" },
+    ]);
+    expect(out.map((brief) => brief.id)).toEqual(["todo-app", "todo-app-2"]);
+    expect(out[0]).toMatchObject({ level: "Beginner", hours: 6, stack: ["React"], requirements: ["Add", "Remove"] });
+    expect(normaliseBriefs("nope")).toEqual([]);
+  });
+
+  test("only https GitHub repositories are accepted", async () => {
+    const { githubRepo } = await import("@/lib/academy/briefs");
+    expect(githubRepo("https://github.com/ada/portfolio.git")).toBe("https://github.com/ada/portfolio");
+    expect(githubRepo("https://www.github.com/ada/portfolio/tree/main")).toBe("https://github.com/ada/portfolio");
+    expect(githubRepo("http://github.com/ada/portfolio")).toBe("");
+    expect(githubRepo("https://gitlab.com/ada/portfolio")).toBe("");
+    expect(githubRepo("https://github.com/ada")).toBe("");
+    expect(githubRepo("not a url")).toBe("");
+  });
+});
