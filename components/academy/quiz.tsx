@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { ArrowRightIcon, CheckIcon, LoaderCircleIcon, RotateCcwIcon } from "lucide-react";
 
-import { submitQuizAction, type Earned } from "@/app/academy/actions";
+import { submitQuizAction } from "@/app/academy/actions";
+import type { Earned } from "@/lib/academy/types";
 import { EarnedNote } from "@/components/academy/earned-toast";
 import type { QuizResult } from "@/lib/academy/types";
 import { cn } from "@/lib/utils";
@@ -119,15 +120,15 @@ export function Quiz({
             <li
               key={question.id}
               className={cn(
-                "rounded-[22px] border bg-[var(--ld-card)] p-5 sm:p-6",
-                marked ? (marked.correct ? "border-[#4cc59a]" : "border-[#ff7a59]") : "border-[var(--ld-line)]"
+                "rounded-[28px] bg-[var(--ld-card)] p-6 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] sm:p-8",
+                marked ? (marked.correct ? "ring-2 ring-[#4cc59a]" : "ring-2 ring-[#ff7a59]") : "ring-1 ring-[rgb(8_16_46/0.06)]"
               )}
             >
-              <p className="text-[13px] font-semibold text-[var(--ld-text-muted)]">
+              <p className="text-[13.5px] font-semibold text-[var(--ld-deep)]">
                 Question {index + 1} of {questions.length}
                 {question.multi ? " · choose all that apply" : ""}
               </p>
-              <p className="mt-1.5 text-[18px] leading-snug font-semibold text-[var(--ld-ink)]">{question.prompt}</p>
+              <p className="ld-display mt-2 text-[clamp(20px,2vw,24px)] leading-snug font-bold tracking-[-0.02em] text-[var(--ld-ink)]">{question.prompt}</p>
               {question.code ? (
                 <pre className="mt-3 overflow-x-auto rounded-[14px] bg-[#0b1433] px-4 py-3 font-mono text-[13.5px] leading-[1.7] text-[#dfe6ff]">
                   <code>{question.code}</code>
@@ -184,7 +185,7 @@ export function Quiz({
       </ol>
 
       {!result ? (
-        <div className="sticky bottom-4 z-10 mt-6 flex flex-wrap items-center justify-between gap-3 rounded-full border border-[var(--ld-line)] bg-[var(--ld-card)]/95 py-2 pr-2 pl-5 shadow-[0_20px_40px_-24px_rgb(8_16_46/0.45)] backdrop-blur">
+        <div className="sticky bottom-4 z-10 mt-6 flex flex-wrap items-center justify-between gap-3 rounded-full bg-[var(--ld-card)]/95 py-2 pr-2 pl-5 ring-1 ring-[rgb(8_16_46/0.08)] shadow-[0_20px_40px_-24px_rgb(8_16_46/0.45)] backdrop-blur">
           <span className="text-[14px] text-[var(--ld-text-muted)]">
             {answered} of {questions.length} answered
           </span>

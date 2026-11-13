@@ -2,7 +2,7 @@
 
 import { RocketIcon, StarIcon, ZapIcon } from "lucide-react";
 
-import type { Earned } from "@/app/academy/actions";
+import type { Earned } from "@/lib/academy/types";
 
 /**
  * What a student just earned, said where they are looking: the XP, a new

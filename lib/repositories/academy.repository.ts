@@ -11,6 +11,7 @@ import {
   AcademyCourseModel,
   AcademyEnrollmentModel,
   AcademyLearnerModel,
+  AcademySubmissionModel,
   AcademyXpModel,
 } from "@/lib/db/models/academy.model";
 import { dayKey, nextStreak, weekKey, type XpKind } from "@/lib/academy/rules";
@@ -531,4 +532,83 @@ export async function setBattleEntryHidden(entryId: string, hidden: boolean) {
   await connectDB();
   if (!Types.ObjectId.isValid(entryId)) return null;
   return AcademyBattleEntryModel.findOneAndUpdate({ _id: oid(entryId) }, { $set: { hidden } }, { new: true }).select("battleSlug").lean();
+}
+
+/* ── Assignments ────────────────────────────────────────────────────────── */
+
+export async function findSubmission(accountId: string, courseSlug: string, lessonId: string) {
+  await connectDB();
+  return AcademySubmissionModel.findOne({ accountId: oid(accountId), courseSlug, lessonId }).lean();
+}
+
+/** Stores a hand-in (replacing the last attempt) and clears its grade until it is marked again. */
+export async function saveSubmission(accountId: string, courseSlug: string, lessonId: string, work: { answer: string; repoUrl: string; liveUrl: string }) {
+  await connectDB();
+  return AcademySubmissionModel.findOneAndUpdate(
+    { accountId: oid(accountId), courseSlug, lessonId },
+    {
+      $set: { ...work, submittedAt: new Date(), status: "waiting", score: null, passed: false, criteria: [], feedback: "", gradedBy: "", gradedAt: null, checked: false, aiNote: "" },
+      $inc: { attempts: 1 },
+    },
+    { upsert: true, new: true }
+  ).lean();
+}
+
+export async function recordSubmissionGrade(
+  id: string,
+  grade: { score: number; passed: boolean; criteria: unknown; feedback: string; gradedBy: string; checked: boolean; status: "waiting" | "graded"; aiNote?: string }
+) {
+  await connectDB();
+  if (!Types.ObjectId.isValid(id)) return null;
+  return AcademySubmissionModel.findOneAndUpdate({ _id: oid(id) }, { $set: { ...grade, aiNote: grade.aiNote ?? "", gradedAt: new Date() } }, { new: true }).lean();
+}
+
+export async function findSubmissionById(id: string) {
+  await connectDB();
+  if (!Types.ObjectId.isValid(id)) return null;
+  return AcademySubmissionModel.findById(id).lean();
+}
+
+export type SubmissionRow = {
+  _id: Types.ObjectId;
+  accountId: Types.ObjectId;
+  courseSlug: string;
+  lessonId: string;
+  answer: string;
+  repoUrl: string;
+  liveUrl: string;
+  attempts: number;
+  submittedAt: Date;
+  status: "waiting" | "graded";
+  score: number | null;
+  passed: boolean;
+  criteria: { criterion: string; max: number; points: number; comment: string }[];
+  feedback: string;
+  gradedBy: string;
+  checked: boolean;
+  aiNote: string;
+  name: string;
+  email: string;
+};
+
+/** Hand-ins for staff: those waiting for a mark, or AI grades nobody has checked yet. Oldest first. */
+export async function listSubmissionsToReview(which: "waiting" | "check", limit = 100) {
+  await connectDB();
+  return AcademySubmissionModel.aggregate<SubmissionRow>([
+    { $match: which === "waiting" ? { status: "waiting" } : { status: "graded", checked: false } },
+    { $sort: { submittedAt: 1 } },
+    { $limit: limit },
+    { $lookup: { from: "clientaccounts", localField: "accountId", foreignField: "_id", as: "account" } },
+    { $addFields: { name: { $ifNull: [{ $first: "$account.name" }, "A student"] }, email: { $ifNull: [{ $first: "$account.email" }, ""] } } },
+    { $project: { account: 0 } },
+  ]);
+}
+
+export async function countSubmissionsToReview() {
+  await connectDB();
+  const [waiting, check] = await Promise.all([
+    AcademySubmissionModel.countDocuments({ status: "waiting" }),
+    AcademySubmissionModel.countDocuments({ status: "graded", checked: false }),
+  ]);
+  return { waiting, check };
 }

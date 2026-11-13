@@ -400,6 +400,37 @@ async function loadUser(id) {
 \`await\` pauses the function, not the page. Always check \`response.ok\`: \`fetch\` does not throw on a 404.
 `
         ),
+        {
+          id: "assignment-split-the-bill",
+          title: "Assignment: split the bill",
+          kind: "assignment",
+          youtubeId: "",
+          minutes: 30,
+          summary: "Write a small function that splits a restaurant bill fairly. Paste your code; it's marked in seconds.",
+          notes: `## The task
+
+Write a JavaScript function \`splitBill(total, tipPercent, people)\` that returns what each person pays.
+
+- \`total\` is the bill in naira, for example \`24000\`
+- \`tipPercent\` is the tip, for example \`10\` for 10%
+- \`people\` is how many are paying
+
+\`splitBill(24000, 10, 4)\` should return \`6600\`.
+
+## What to hand in
+
+Paste your function, then a few lines showing it running (with \`console.log\`), then one or two sentences on how you handled bad input: zero people, a negative total, a tip given as text.
+
+Round to the nearest naira. There's more than one right answer; we're looking for code that works and that someone else could read.`,
+          questions: [],
+          handIn: "text",
+          rubric: [
+            { criterion: "Returns the right amount per person, tip included, rounded to the nearest naira", points: 40 },
+            { criterion: "Handles bad input (zero or negative people or total, a tip that isn't a number) without crashing or returning nonsense", points: 30 },
+            { criterion: "Readable code: clear names, no repetition, shows it running with console.log", points: 20 },
+            { criterion: "Explains in a sentence or two how bad input is handled", points: 10 },
+          ],
+        },
         quiz("quiz-javascript", "Check: JavaScript", [
           q("const", "What happens here?", ["Prints 2", "Prints 1", "TypeError: assignment to constant", "Prints undefined"], [2], "A const binding cannot be reassigned.", "const total = 1;\ntotal = 2;\nconsole.log(total);"),
           q("equality", "What does 2 === \"2\" give?", ["true", "false", "undefined", "An error"], [1], "=== compares type and value: a number is not a string."),

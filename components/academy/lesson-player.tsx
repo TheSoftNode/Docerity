@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { ArrowRightIcon, CheckIcon, FilmIcon, LoaderCircleIcon } from "lucide-react";
 
-import { completeLessonAction, watchAction, type Earned } from "@/app/academy/actions";
+import { completeLessonAction, watchAction } from "@/app/academy/actions";
+import type { Earned } from "@/lib/academy/types";
 import { EarnedNote } from "@/components/academy/earned-toast";
 import { cn } from "@/lib/utils";
 

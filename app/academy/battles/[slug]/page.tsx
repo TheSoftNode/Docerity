@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon, ArrowUpIcon, ArrowUpRightIcon, CheckIcon, LockIcon, TrophyIcon, UsersIcon, ZapIcon } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, ArrowUpRightIcon, CheckIcon, LockIcon, TrophyIcon, UsersIcon, ZapIcon } from "lucide-react";
 
 import { getCurrentAccount } from "@/lib/account/session";
 import { BATTLE_XP, PHASE_LABEL, VOTES_PER_BATTLE, battlePhase, phaseEndsAt, watLabel } from "@/lib/academy/battles";
@@ -14,6 +14,7 @@ import { Countdown } from "@/components/academy/countdown";
 import { BattleEntryForm } from "@/components/academy/battle-entry-form";
 import { BattleVote } from "@/components/academy/battle-vote";
 import { cn } from "@/lib/utils";
+import { AcademyHero, Avatar, BrowserFrame, coverFor } from "@/components/academy/kit";
 
 export const dynamic = "force-dynamic";
 
@@ -29,15 +30,6 @@ const PLACES = [
   { label: "2nd", xp: BATTLE_XP.second, card: "bg-[var(--ld-deep)] text-white", sub: "text-[#c9d5ff]" },
   { label: "3rd", xp: BATTLE_XP.third, card: "ld-keep-dark bg-[#0b1433] text-[#f4f5fa]", sub: "text-[#9aa7cf]" },
 ] as const;
-
-const initials = (name: string) =>
-  name
-    .trim()
-    .split(/\s+/)
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
 
 /**
  * One battle. The page follows the clock: before it starts, the brief and a
@@ -74,20 +66,22 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
-        <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(900px_520px_at_88%_10%,rgb(255_122_89/0.14),transparent_62%),var(--ld-ink)] pt-[124px] pb-[clamp(44px,5vw,72px)] text-[var(--ld-paper)]">
-          <div className="doc-shell">
-            <Link href="/academy/battles" className="-my-2 inline-flex min-h-11 items-center gap-2 text-sm text-[var(--ld-muted)] transition-colors hover:text-[var(--ld-paper)]">
-              <ArrowLeftIcon className="size-4" /> Build battles
-            </Link>
-            <p className="mt-5 flex items-center gap-2 text-[15px] text-[var(--ld-muted)]">
+        <AcademyHero
+          back={{ href: "/academy/battles", label: "Build battles" }}
+          size="lg"
+          meta={
+            <>
               {phase === "open" || phase === "voting" ? <span className="size-2 animate-pulse rounded-full bg-[var(--ld-accent)]" aria-hidden="true" /> : null}
-              {PHASE_LABEL[phase]} · {battle.level}
-            </p>
-            <h1 className="ld-display ld-up mt-2 max-w-[20ch] text-[clamp(38px,5.4vw,76px)] leading-[0.96] font-extrabold tracking-[-0.05em] text-balance">{battle.title}</h1>
-            {battle.tagline ? <p className="ld-up ld-delay-2 mt-4 max-w-[40rem] text-[clamp(16px,1.3vw,18px)] leading-relaxed text-[var(--ld-muted)]">{battle.tagline}</p> : null}
-
-            <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-              <ol className="grid max-w-[620px] flex-1 grid-cols-3 gap-3" aria-label="Battle timeline">
+              <span>{PHASE_LABEL[phase]}</span>
+              <span aria-hidden="true">·</span>
+              <span>{battle.level}</span>
+            </>
+          }
+          title={battle.title}
+          aside={
+            <div>
+              {battle.tagline ? <p className="text-[clamp(16.5px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">{battle.tagline}</p> : null}
+              <ol className="mt-6 grid grid-cols-3 gap-3" aria-label="Battle timeline">
                 {timeline.map((step) => (
                   <li key={step.label}>
                     <span className={cn("block h-1.5 rounded-full", step.done ? "bg-[var(--ld-accent)]" : "bg-[rgb(var(--ld-paper-rgb)/0.16)]")} />
@@ -96,38 +90,38 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                   </li>
                 ))}
               </ol>
-              {ends ? (
-                <div className="md:text-right">
-                  <p className="text-[13px] text-[var(--ld-muted)]">{ENDS[phase]}</p>
-                  <Countdown to={ends} fallback={watLabel(ends)} className="ld-display text-[clamp(30px,3.4vw,44px)] font-extrabold tabular-nums tracking-[-0.03em]" />
-                </div>
+            </div>
+          }
+        >
+          {ends ? (
+            <div className="ld-keep-dark flex flex-col gap-5 rounded-[28px] bg-[#0b1433] p-5 text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
+              <div>
+                <p className="mb-2 text-[13px] text-[#9aa7cf]">{ENDS[phase]}</p>
+                <Countdown to={ends} fallback={watLabel(ends)} variant="tiles" />
+              </div>
+              {phase === "open" || phase === "voting" ? (
+                <a href={phase === "open" ? "#enter" : "#entries-title"} className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[15px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5">
+                  {phase === "open" ? (mine ? "Update my entry" : "Enter the battle") : "Vote on the entries"} <ArrowDownIcon className="size-4" />
+                </a>
               ) : null}
             </div>
-            {phase === "open" || phase === "voting" ? (
-              <a
-                href={phase === "open" ? "#enter" : "#entries-title"}
-                className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-accent)] px-6 text-[15px] font-bold text-[#08102e] lg:hidden"
-              >
-                {phase === "open" ? (mine ? "Update my entry" : "Enter the battle") : "Vote on the entries"}
-              </a>
-            ) : null}
-          </div>
-        </section>
+          ) : null}
+        </AcademyHero>
 
         <section className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
           <div className="doc-shell grid gap-10 py-[clamp(36px,5vw,72px)] lg:grid-cols-[minmax(0,1fr)_380px]">
             <div className="min-w-0">
               {battle.results ? (
                 <div className="mb-6">
-                  <h2 className="ld-display flex items-center gap-2 text-[26px] font-bold tracking-[-0.025em]">
-                    <TrophyIcon className="size-6 text-[var(--ld-accent)]" /> The podium
+                  <h2 className="ld-display flex items-center gap-3 text-[clamp(30px,3.6vw,48px)] leading-none font-extrabold tracking-[-0.04em]">
+                    <TrophyIcon className="size-8 text-[var(--ld-accent)]" /> The podium.
                   </h2>
-                  <ol className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <ol className="mt-8 grid gap-3 sm:grid-cols-3 sm:items-end">
                     {podiumEntries.map((entry, index) =>
                       entry ? (
-                        <li key={String(entry._id)} className={cn("flex flex-col rounded-[22px] p-5", PLACES[index].card)}>
-                          <span className="ld-display text-[34px] leading-none font-extrabold">{PLACES[index].label}</span>
-                          <span className="mt-3 text-[17px] leading-snug font-bold">{entry.title}</span>
+                        <li key={String(entry._id)} className={cn("flex min-h-[220px] flex-col rounded-[24px] p-6", PLACES[index].card, index === 0 && "sm:-translate-y-3")}>
+                          <span className="ld-display text-[44px] leading-none font-extrabold tracking-[-0.04em]">{PLACES[index].label}</span>
+                          <span className="ld-display mt-auto pt-4 text-[22px] leading-tight font-extrabold tracking-[-0.02em]">{entry.title}</span>
                           <span className={cn("mt-1 text-[14px]", PLACES[index].sub)}>
                             {entry.name} · {entry.votes} {entry.votes === 1 ? "vote" : "votes"}
                           </span>
@@ -142,16 +136,16 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
               ) : null}
 
               {battle.brief ? (
-                <article className="rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-8">
-                  <h2 className="ld-display text-[26px] font-bold tracking-[-0.025em]">The challenge</h2>
+                <article className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
+                  <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">The challenge</h2>
                   <div className="mt-3">
                     <LessonNotes source={battle.brief} />
                   </div>
                 </article>
               ) : null}
               {battle.rules.length ? (
-                <div className="mt-6 rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-8">
-                  <h2 className="ld-display text-[26px] font-bold tracking-[-0.025em]">The rules</h2>
+                <div className="mt-6 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
+                  <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">The rules</h2>
                   <ul className="mt-4 grid gap-3">
                     {battle.rules.map((rule) => (
                       <li key={rule} className="flex gap-3 text-[16px] leading-relaxed text-[var(--ld-text-2)]">
@@ -168,7 +162,7 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
 
             <aside id="enter" className="scroll-mt-24">
               <div className="grid gap-5 lg:sticky lg:top-24">
-                <div className="rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6">
+                <div className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6">
                   {phase === "upcoming" ? (
                     <>
                       <p className="ld-display text-[22px] font-bold tracking-[-0.02em]">Get ready</p>
@@ -240,7 +234,7 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                   )}
                 </div>
 
-                <dl className="grid grid-cols-2 gap-3 rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-5 text-[14px]">
+                <dl className="grid grid-cols-2 gap-3 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5 text-[14px]">
                   <div>
                     <dt className="text-[var(--ld-text-muted)]">Entries</dt>
                     <dd className="mt-0.5 inline-flex items-center gap-1.5 text-[20px] font-bold">
@@ -261,44 +255,44 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
 
         <section aria-labelledby="entries-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
           <div className="doc-shell pb-[clamp(56px,7vw,104px)]">
-            <h2 id="entries-title" className="ld-display scroll-mt-24 text-[clamp(28px,3.4vw,40px)] leading-none font-extrabold tracking-[-0.04em]">
-              {battle.results ? "Every other entry" : "The entries"}
+            <h2 id="entries-title" className="ld-display scroll-mt-24 text-[clamp(36px,5vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
+              {battle.results ? "Every other entry." : "The entries."}
             </h2>
             {!showEntries ? (
-              <p className="mt-4 flex max-w-[560px] items-start gap-3 rounded-[20px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-5 text-[15.5px] leading-relaxed text-[var(--ld-text-2)]">
+              <p className="mt-4 flex max-w-[560px] items-start gap-3 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5 text-[15.5px] leading-relaxed text-[var(--ld-text-2)]">
                 <LockIcon className="mt-1 size-4 shrink-0 text-[var(--ld-deep)]" />
                 Entries stay sealed until voting opens, so nobody builds off anyone else&apos;s idea.
               </p>
             ) : rest.length === 0 ? (
               <p className="mt-4 text-[15.5px] text-[var(--ld-text-2)]">{battle.results ? "Only the podium this time." : "No entries this time."}</p>
             ) : (
-              <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {rest.map((entry) => {
                   const own = account?.id === String(entry.accountId);
                   const voted = account ? entry.voters.some((voter) => String(voter) === account.id) : false;
                   return (
-                    <li key={String(entry._id)} className="flex flex-col rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6" data-entry>
+                    <li key={String(entry._id)} className="flex flex-col rounded-[28px] bg-[var(--ld-card)] p-3 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]" data-entry>
+                      <a href={entry.liveUrl} target="_blank" rel="noopener noreferrer" className="group block" aria-label={`Open ${entry.title} by ${entry.name}`}>
+                        <BrowserFrame url={entry.liveUrl}>
+                          <div className={cn("relative flex h-36 items-end p-5", coverFor(String(entry._id)))}>
+                            <span className="ld-display text-[24px] leading-[1] font-extrabold tracking-[-0.03em] text-white transition-transform group-hover:-translate-y-1">{entry.title}</span>
+                            <ArrowUpRightIcon className="absolute top-4 right-4 size-5 text-white/70" />
+                          </div>
+                        </BrowserFrame>
+                      </a>
+                      <div className="flex flex-1 flex-col px-3 pt-4 pb-2">
                       <div className="flex items-center gap-3">
-                        <span aria-hidden="true" className="grid size-10 shrink-0 place-items-center rounded-full bg-[var(--ld-deep)] text-[14px] font-bold text-white">
-                          {initials(entry.name) || "?"}
-                        </span>
+                        <Avatar name={entry.name} className="size-9 text-[13px]" />
                         <p className="min-w-0 truncate text-[15px] font-semibold">
                           {entry.name}
                           {own ? <span className="font-normal text-[var(--ld-text-muted)]"> · you</span> : null}
                         </p>
                       </div>
-                      <h3 className="ld-display mt-4 text-[21px] leading-tight font-bold tracking-[-0.02em]">{entry.title}</h3>
-                      {entry.note ? <p className="mt-2 line-clamp-3 text-[15px] leading-relaxed text-[var(--ld-text-2)]">{entry.note}</p> : null}
-                      <div className="mt-auto flex pt-5" aria-hidden="true" />
-                      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--ld-line)] pt-4">
-                        <span className="flex gap-4 text-[14px] font-semibold">
-                          <a href={entry.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-1 text-[var(--ld-deep)]">
-                            Live <ArrowUpRightIcon className="size-4" />
-                          </a>
-                          <a href={entry.repoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-1 text-[var(--ld-deep)]">
-                            Code <ArrowUpRightIcon className="size-4" />
-                          </a>
-                        </span>
+                      {entry.note ? <p className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-[var(--ld-text-2)]">{entry.note}</p> : null}
+                      <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-4">
+                        <a href={entry.repoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-1.5 text-[14px] font-semibold text-[var(--ld-deep)]">
+                          Read the code <ArrowUpRightIcon className="size-4" />
+                        </a>
                         {phase === "voting" ? (
                           <BattleVote
                             slug={battle.slug}
@@ -313,6 +307,7 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                             <ArrowUpIcon className="size-4" /> {entry.votes}
                           </span>
                         )}
+                      </div>
                       </div>
                     </li>
                   );

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon, ArrowRightIcon, ArrowUpRightIcon, CheckIcon, ClockIcon, StarIcon, ZapIcon } from "lucide-react";
+import { ArrowRightIcon, ArrowUpRightIcon, ClockIcon, StarIcon, ZapIcon } from "lucide-react";
 
 import { getCurrentAccount } from "@/lib/account/session";
 import { BUILD_XP } from "@/lib/academy/briefs";
@@ -14,6 +14,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { BuildForm } from "@/components/academy/build-form";
 import { cn } from "@/lib/utils";
+import { AcademyHero } from "@/components/academy/kit";
 
 export const dynamic = "force-dynamic";
 
@@ -42,48 +43,59 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
-        <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(900px_520px_at_88%_10%,rgb(28_58_140/0.6),transparent_62%),var(--ld-ink)] pt-[124px] pb-[clamp(44px,5vw,72px)] text-[var(--ld-paper)]">
-          <div className="doc-shell">
-            <Link href="/academy/projects" className="-my-2 inline-flex min-h-11 items-center gap-2 text-sm text-[var(--ld-muted)] transition-colors hover:text-[var(--ld-paper)]">
-              <ArrowLeftIcon className="size-4" /> Project pool
-            </Link>
-            <p className="mt-5 text-[15px] text-[var(--ld-muted)]">
-              {brief.level} · {brief.stack.join(" · ")}
-            </p>
-            <h1 className="ld-display ld-up mt-2 max-w-[20ch] text-[clamp(38px,5.4vw,76px)] leading-[0.96] font-extrabold tracking-[-0.05em] text-balance">{brief.title}</h1>
-            <p className="ld-up ld-delay-2 mt-4 max-w-[40rem] text-[clamp(16px,1.3vw,18px)] leading-relaxed text-[var(--ld-muted)]">{brief.summary}</p>
-            <p className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[15px] font-semibold">
-              <span className="inline-flex items-center gap-1.5">
-                <ClockIcon className="size-4 text-[var(--ld-tint)]" /> About {brief.hours} hours
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <ZapIcon className="size-4 text-[var(--ld-accent)]" /> {BUILD_XP[brief.level]} XP when approved
-              </span>
-            </p>
-          </div>
-        </section>
+        <AcademyHero
+          back={{ href: "/academy/projects", label: "Project pool" }}
+          size="lg"
+          meta={
+            <>
+              <span>{brief.level}</span>
+              <span aria-hidden="true">·</span>
+              <span>{brief.stack.join(" · ")}</span>
+            </>
+          }
+          title={brief.title}
+          aside={
+            <div>
+              <p className="text-[clamp(16.5px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">{brief.summary}</p>
+              <dl className="mt-6 grid grid-cols-2 gap-3">
+                <div className="rounded-[20px] bg-[rgb(var(--ld-tint-rgb)/0.08)] p-4 ring-1 ring-[rgb(var(--ld-tint-rgb)/0.14)]">
+                  <dt className="inline-flex items-center gap-1.5 text-[13px] text-[var(--ld-muted)]">
+                    <ClockIcon className="size-4" /> Time
+                  </dt>
+                  <dd className="ld-display mt-1 text-[26px] font-extrabold tracking-[-0.03em]">~{brief.hours}h</dd>
+                </div>
+                <div className="rounded-[20px] bg-[var(--ld-accent)] p-4 text-[#08102e]">
+                  <dt className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#08102e]/70">
+                    <ZapIcon className="size-4" /> When approved
+                  </dt>
+                  <dd className="ld-display mt-1 text-[26px] font-extrabold tracking-[-0.03em]">+{BUILD_XP[brief.level]} XP</dd>
+                </div>
+              </dl>
+            </div>
+          }
+        />
 
         <section className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
           <div className="doc-shell grid gap-10 py-[clamp(36px,5vw,72px)] lg:grid-cols-[minmax(0,1fr)_380px]">
             <div className="min-w-0">
               {brief.brief ? (
-                <article className="rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-8">
-                  <h2 className="ld-display text-[26px] font-bold tracking-[-0.025em]">The brief</h2>
+                <article className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
+                  <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">The brief</h2>
                   <div className="mt-3">
                     <LessonNotes source={brief.brief} />
                   </div>
                 </article>
               ) : null}
 
-              <div className="mt-6 rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-8">
-                <h2 className="ld-display text-[26px] font-bold tracking-[-0.025em]">What must work</h2>
+              <div className="mt-6 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
+                <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">What must work</h2>
                 <ul className="mt-4 grid gap-3">
-                  {brief.requirements.map((item) => (
+                  {brief.requirements.map((item, index) => (
                     <li key={item} className="flex gap-3 text-[16px] leading-relaxed text-[var(--ld-text-2)]">
-                      <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-md border-[1.5px] border-[var(--ld-deep)] text-[var(--ld-deep)]">
-                        <CheckIcon className="size-3.5" />
+                      <span className="ld-display grid size-8 shrink-0 place-items-center rounded-[10px] bg-[#e6ecff] text-[13px] font-extrabold text-[var(--ld-deep)]">
+                        {String(index + 1).padStart(2, "0")}
                       </span>
-                      {item}
+                      <span className="pt-1">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -105,7 +117,7 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
 
             <aside id="hand-in" className="scroll-mt-24">
               <div className="grid gap-5 lg:sticky lg:top-24">
-                <div className="rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6">
+                <div className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6">
                   <ol className="grid grid-cols-4 gap-2" aria-label="Where your build stands">
                     {STEPS.map((label, index) => (
                       <li key={label}>

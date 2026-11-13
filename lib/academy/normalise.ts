@@ -1,4 +1,4 @@
-import { COURSE_LEVELS, LESSON_KINDS, type Course, type CourseLevel, type Lesson, type LessonKind, type Module, type Question } from "@/lib/academy/types";
+import { COURSE_LEVELS, HAND_IN_KINDS, LESSON_KINDS, type Course, type CourseLevel, type HandInKind, type Lesson, type LessonKind, type Module, type Question, type RubricItem } from "@/lib/academy/types";
 import { youtubeIdFrom } from "@/lib/academy/rules";
 
 /**
@@ -56,6 +56,13 @@ function cleanLesson(raw: unknown, used: Set<string>): Lesson | null {
   const questionIds = new Set<string>();
   const questions = kind === "quiz" ? arr(value.questions).map((q, i) => cleanQuestion(q, i, questionIds)).filter((q): q is Question => q !== null).slice(0, 40) : [];
   const minutes = Math.round(Number(value.minutes));
+  const assignment =
+    kind === "assignment"
+      ? {
+          handIn: ((HAND_IN_KINDS as readonly string[]).includes(String(value.handIn)) ? value.handIn : "text") as HandInKind,
+          rubric: cleanRubric(value.rubric),
+        }
+      : {};
   return {
     id: uniqueId(text(value.id, 60) || title, "lesson", used),
     title,
@@ -65,7 +72,21 @@ function cleanLesson(raw: unknown, used: Set<string>): Lesson | null {
     summary: text(value.summary, 300),
     notes: text(value.notes, 20000),
     questions,
+    ...assignment,
   };
+}
+
+/** A marking guide: 1–10 lines, each worth 1–100 points. An empty guide becomes one line worth everything. */
+function cleanRubric(raw: unknown): RubricItem[] {
+  const items = arr(raw)
+    .map((item) => {
+      const value = obj(item);
+      const points = Math.round(Number(value.points));
+      return { criterion: text(value.criterion, 300), points: Number.isFinite(points) ? Math.min(Math.max(points, 1), 100) : 10 };
+    })
+    .filter((item) => item.criterion)
+    .slice(0, 10);
+  return items.length ? items : [{ criterion: "Does what the task asks, and works", points: 10 }];
 }
 
 function cleanModule(raw: unknown, usedModules: Set<string>, usedLessons: Set<string>): Module | null {

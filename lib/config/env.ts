@@ -46,6 +46,35 @@ export const database = {
   maxPoolSize: Number(read("MONGODB_MAX_POOL_SIZE") ?? 5),
 };
 
+/* ── AI marking (Academy assignments) ─────────────────────────────────── */
+
+/*
+  Optional. With a key, assignments are marked by Claude the moment they are
+  handed in; without one they wait in the admin for a person to mark. The
+  model can be changed without a deploy of new code.
+*/
+/* The placeholder in .env.example counts as "not set", so copying the example never sends it. */
+const aiKey = () => {
+  const key = read("ANTHROPIC_API_KEY");
+  return key && !key.startsWith("your-") ? key : undefined;
+};
+
+export const ai = {
+  get isConfigured() {
+    return Boolean(aiKey());
+  },
+  get apiKey() {
+    return require_({ ANTHROPIC_API_KEY: aiKey() }).ANTHROPIC_API_KEY;
+  },
+  get model() {
+    return read("ACADEMY_AI_MODEL") ?? "claude-sonnet-5-5";
+  },
+  /** Only for a proxy or a test stand-in; normally unset. */
+  get baseUrl() {
+    return (read("ANTHROPIC_BASE_URL") ?? "https://api.anthropic.com").replace(/\/+$/, "");
+  },
+};
+
 /* ── Email ────────────────────────────────────────────────────────────── */
 
 /*

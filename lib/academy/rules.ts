@@ -15,9 +15,10 @@ export const XP = {
   quizPass: 20,
   quizPerfect: 10,
   courseComplete: 150,
+  assignment: 40,
 } as const;
 
-export type XpKind = "lesson" | "quiz-pass" | "quiz-perfect" | "course" | "build" | "battle-entry" | "battle-podium" | "battle-win";
+export type XpKind = "lesson" | "quiz-pass" | "quiz-perfect" | "course" | "build" | "battle-entry" | "battle-podium" | "battle-win" | "assignment";
 
 /* ── Quizzes ─────────────────────────────────────────────────────────────── */
 
