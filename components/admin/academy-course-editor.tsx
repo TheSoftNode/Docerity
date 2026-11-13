@@ -200,7 +200,7 @@ export function CourseEditor({ initial, shipped }: { initial: Course; shipped: b
   }
 
   return (
-    <div className="grid gap-6 pb-28">
+    <div className="grid gap-6 pb-6">
       <section className="grid gap-4 rounded-[24px] border border-border bg-card p-6">
         <h2 className="font-heading text-[20px] font-bold text-foreground">Course details</h2>
         <label className={field}>
@@ -317,8 +317,8 @@ export function CourseEditor({ initial, shipped }: { initial: Course; shipped: b
         <PlusIcon /> Module
       </Button>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-3">
+      <div className="sticky bottom-4 z-30 rounded-full border border-border bg-background/95 shadow-[0_20px_40px_-24px_rgb(0_0_0/0.6)] backdrop-blur">
+        <div className="flex flex-wrap items-center justify-between gap-3 py-2 pr-2 pl-5">
           <p className={cn("text-sm", message ? (message.ok ? "text-[#1d7a52]" : "text-destructive") : "text-muted-foreground")} role="status">
             {message?.text ?? (dirty ? "Unsaved changes." : "No changes yet.")}
           </p>

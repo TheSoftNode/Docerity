@@ -111,7 +111,7 @@ export function Quiz({
         </p>
       ) : null}
 
-      <ol className="grid gap-5">
+      <ol className="grid gap-5 pb-2">
         {questions.map((question, index) => {
           const chosen = answers[question.id] ?? [];
           const marked = review.get(question.id);

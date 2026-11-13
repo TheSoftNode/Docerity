@@ -156,7 +156,7 @@ export function LessonPlayer({
             </div>
           </div>
         ) : (
-          <div className="ld-keep-dark flex aspect-video flex-col items-center justify-center gap-3 rounded-[22px] bg-[radial-gradient(600px_300px_at_70%_20%,rgb(28_58_140/0.6),transparent_70%),#08102e] px-6 text-center text-[#f4f5fa]">
+          <div className="ld-keep-dark flex aspect-video flex-col items-center justify-center gap-3 rounded-[22px] bg-[#08102e] bg-[image:radial-gradient(600px_300px_at_70%_20%,rgb(28_58_140/0.6),transparent_70%)] px-6 text-center text-[#f4f5fa]">
             <span className="grid size-14 place-items-center rounded-full bg-[rgb(175_196_255/0.12)] text-[#afc4ff]">
               <FilmIcon className="size-6" />
             </span>
