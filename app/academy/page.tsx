@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRightIcon, ClipboardCheckIcon, PlayIcon, RocketIcon, ZapIcon } from "lucide-react";
+import { ArrowRightIcon, ClipboardCheckIcon, PlayIcon, RocketIcon, SwordsIcon, ZapIcon } from "lucide-react";
 
 import { getCurrentAccount } from "@/lib/account/session";
 import { listCourses } from "@/lib/academy/courses";
-import { getStanding } from "@/lib/academy/standing";
+import { getAchievements, getStanding } from "@/lib/academy/standing";
+import { PHASE_LABEL, battlePhase, phaseEndsAt, watLabel } from "@/lib/academy/battles";
+import { getLiveBattle } from "@/lib/academy/battle-store";
 import { XP, allLessons, courseMinutes, courseProgress } from "@/lib/academy/rules";
 import { database } from "@/lib/config/env";
-import { listEnrollments, weeklyLeaders } from "@/lib/repositories/academy.repository";
+import { allTimeLeaders, listEnrollments, weeklyLeaders } from "@/lib/repositories/academy.repository";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { StandingPanel } from "@/components/academy/standing-panel";
 import { AcademyNav } from "@/components/academy/academy-nav";
+import { Achievements } from "@/components/academy/achievements";
+import { Countdown } from "@/components/academy/countdown";
+import { cn } from "@/lib/utils";
 import { BUILD_XP } from "@/lib/academy/briefs";
 import { getBriefs } from "@/lib/academy/pool";
 
@@ -29,13 +34,17 @@ const hours = (minutes: number) => (minutes >= 90 ? `${Math.round(minutes / 60)}
  * and this week's leaderboard. A signed-in student sees their level and
  * streak and goes straight back to where they were.
  */
-export default async function AcademyPage() {
-  const [account, courses, briefs] = await Promise.all([getCurrentAccount(), listCourses(), getBriefs()]);
+export default async function AcademyPage({ searchParams }: { searchParams: Promise<{ board?: string }> }) {
+  const board = (await searchParams).board === "all" ? "all" : "week";
+  const [account, courses, briefs, battle] = await Promise.all([getCurrentAccount(), listCourses(), getBriefs(), getLiveBattle()]);
   const [standing, enrollments, leaders] = await Promise.all([
     account ? getStanding(account.id) : null,
     account && database.isConfigured ? listEnrollments(account.id).catch(() => []) : [],
-    database.isConfigured ? weeklyLeaders(5).catch(() => []) : [],
+    database.isConfigured ? (board === "all" ? allTimeLeaders(10) : weeklyLeaders(10)).catch(() => []) : [],
   ]);
+  const achievements = account && standing ? await getAchievements(account.id, standing) : null;
+  const battlePhaseNow = battle ? battlePhase(battle) : null;
+  const battleEnds = battle && battlePhaseNow ? phaseEndsAt(battle, battlePhaseNow) : null;
   const enrolledIn = new Map(enrollments.map((row) => [row.courseSlug, row] as const));
   const first = courses[0];
   const resume = enrollments[0];
@@ -111,6 +120,37 @@ export default async function AcademyPage() {
           </div>
         </section>
 
+        {battle && battlePhaseNow && battleEnds ? (
+          <section aria-label="Build battle" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
+            <div className="doc-shell pt-[clamp(28px,4vw,48px)]">
+              <Link
+                href={`/academy/battles/${battle.slug}`}
+                className="group flex flex-col gap-4 rounded-[24px] bg-[var(--ld-deep)] p-5 text-white transition-transform hover:-translate-y-0.5 sm:flex-row sm:items-center sm:p-6"
+                data-battle-strip
+              >
+                <span className="grid size-12 shrink-0 place-items-center rounded-[14px] bg-[var(--ld-accent)] text-[#08102e]">
+                  <SwordsIcon className="size-6" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2 text-[13px] font-semibold text-[#ffb59f]">
+                    <span className="size-2 animate-pulse rounded-full bg-[#ff7a59]" aria-hidden="true" /> Build battle · {PHASE_LABEL[battlePhaseNow]}
+                  </span>
+                  <span className="ld-display mt-0.5 block truncate text-[22px] font-bold tracking-[-0.02em]">{battle.title}</span>
+                </span>
+                <span className="flex items-center justify-between gap-5 sm:justify-end">
+                  <span className="text-[14px] text-[#c9d5ff]">
+                    {battlePhaseNow === "open" ? "Entries close in " : "Voting ends in "}
+                    <Countdown to={battleEnds} fallback={watLabel(battleEnds)} className="font-bold text-white tabular-nums" />
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-[15px] font-bold text-[#ffb59f]">
+                    {battlePhaseNow === "open" ? "Enter" : "Vote"} <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </span>
+              </Link>
+            </div>
+          </section>
+        ) : null}
+
         <section aria-labelledby="courses-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
           <div className="doc-shell py-[clamp(56px,7vw,104px)]">
             <h2 id="courses-title" className="ld-display text-[clamp(34px,4.6vw,60px)] leading-[0.98] font-extrabold tracking-[-0.045em]">
@@ -157,6 +197,14 @@ export default async function AcademyPage() {
             </ul>
           </div>
         </section>
+
+        {achievements ? (
+          <section aria-labelledby="achievements-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
+            <div className="doc-shell pb-[clamp(56px,7vw,104px)]">
+              <Achievements items={achievements} />
+            </div>
+          </section>
+        ) : null}
 
         {briefs.length > 0 ? (
           <section aria-labelledby="pool-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
@@ -213,26 +261,59 @@ export default async function AcademyPage() {
               ))}
             </ol>
             <p className="mt-8 max-w-[60ch] text-[15.5px] leading-relaxed text-[var(--ld-muted)]">
-              Learn on any day and your streak grows; miss one day a week and it holds. XP adds up to levels, and the week&apos;s top learners are on the board below.
+              Learn on any day and your streak grows; miss one day a week and it holds. XP adds up to levels and achievements, build battles put you up against everyone else, and the top learners are on the board below.
             </p>
           </div>
         </section>
 
-        {leaders.length > 0 ? (
+        {database.isConfigured ? (
           <section aria-labelledby="board-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
             <div className="doc-shell py-[clamp(56px,7vw,96px)]">
-              <h2 id="board-title" className="ld-display text-[clamp(30px,4vw,48px)] leading-none font-extrabold tracking-[-0.04em]">
-                This week&apos;s leaders
-              </h2>
-              <ol className="mt-7 max-w-[640px] overflow-hidden rounded-[22px] border border-[var(--ld-line)] bg-[var(--ld-card)]">
-                {leaders.map((leader, index) => (
-                  <li key={String(leader._id)} className="flex items-center gap-4 border-t border-[var(--ld-line)] px-5 py-4 first:border-t-0">
-                    <span className="ld-display w-8 text-[24px] font-extrabold text-[var(--ld-deep)]">{index + 1}</span>
-                    <span className="flex-1 text-[16px] font-semibold">{leader.name.split(/\s+/)[0]}</span>
-                    <span className="text-[15px] font-bold text-[var(--ld-text-2)]">{leader.xp} XP</span>
-                  </li>
-                ))}
-              </ol>
+              <div className="flex max-w-[640px] flex-wrap items-end justify-between gap-4">
+                <h2 id="board-title" className="ld-display text-[clamp(30px,4vw,48px)] leading-none font-extrabold tracking-[-0.04em]">
+                  Leaderboard
+                </h2>
+                <nav aria-label="Leaderboard period" className="flex gap-1 rounded-full border border-[var(--ld-line)] bg-[var(--ld-card)] p-1">
+                  {[
+                    { key: "week", label: "This week", href: "/academy#board-title" },
+                    { key: "all", label: "All time", href: "/academy?board=all#board-title" },
+                  ].map((tab) => (
+                    <Link
+                      key={tab.key}
+                      href={tab.href}
+                      scroll={false}
+                      aria-current={board === tab.key ? "page" : undefined}
+                      className={cn(
+                        "inline-flex min-h-9 items-center rounded-full px-4 text-[14px] font-semibold transition-colors",
+                        board === tab.key ? "bg-[var(--ld-ink)] text-[var(--ld-paper)]" : "text-[var(--ld-text-2)] hover:text-[var(--ld-ink)]"
+                      )}
+                    >
+                      {tab.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+              {leaders.length > 0 ? (
+                <ol className="mt-6 max-w-[640px] overflow-hidden rounded-[22px] border border-[var(--ld-line)] bg-[var(--ld-card)]" data-board={board}>
+                  {leaders.map((leader, index) => {
+                    const you = account?.id === String(leader._id);
+                    return (
+                      <li key={String(leader._id)} className={cn("flex items-center gap-4 border-t border-[var(--ld-line)] px-5 py-4 first:border-t-0", you && "bg-[rgb(255_122_89/0.1)]")}>
+                        <span className={cn("ld-display w-8 text-[24px] font-extrabold", index === 0 ? "text-[var(--ld-accent)]" : "text-[var(--ld-deep)]")}>{index + 1}</span>
+                        <span className="flex-1 text-[16px] font-semibold">
+                          {leader.name.split(/\s+/)[0]}
+                          {you ? <span className="font-normal text-[var(--ld-text-muted)]"> · you</span> : null}
+                        </span>
+                        <span className="text-[15px] font-bold text-[var(--ld-text-2)]">{leader.xp.toLocaleString()} XP</span>
+                      </li>
+                    );
+                  })}
+                </ol>
+              ) : (
+                <p className="mt-6 max-w-[640px] rounded-[22px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-5 text-[15.5px] text-[var(--ld-text-2)]">
+                  {board === "week" ? "Nobody has earned XP this week yet. One lesson puts you on top." : "The board fills up as students earn XP."}
+                </p>
+              )}
             </div>
           </section>
         ) : null}

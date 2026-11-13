@@ -4,6 +4,8 @@ import { Types } from "mongoose";
 
 import { connectDB } from "@/lib/db/connect";
 import {
+  AcademyBattleEntryModel,
+  AcademyBattleModel,
   AcademyBuildModel,
   AcademyContentModel,
   AcademyCourseModel,
@@ -365,4 +367,168 @@ export async function toggleVote(buildId: string, voterId: string): Promise<{ vo
     .select("votes")
     .lean();
   return removed ? { votes: removed.votes, voted: false } : null;
+}
+
+/* ── Leaderboards and achievements ──────────────────────────────────────── */
+
+/** The top learners of all time by XP. */
+export async function allTimeLeaders(limit = 10) {
+  await connectDB();
+  return AcademyXpModel.aggregate<{ _id: Types.ObjectId; xp: number; name: string }>([
+    { $group: { _id: "$accountId", xp: { $sum: "$xp" } } },
+    { $sort: { xp: -1 } },
+    { $limit: limit },
+    { $lookup: { from: "clientaccounts", localField: "_id", foreignField: "_id", as: "account" } },
+    { $project: { xp: 1, name: { $ifNull: [{ $first: "$account.name" }, "A student"] } } },
+  ]);
+}
+
+/** How many of each kind of XP a student has earned: the facts behind their achievements. */
+export async function xpCounts(accountId: string): Promise<Record<string, number>> {
+  await connectDB();
+  const rows = await AcademyXpModel.aggregate<{ _id: string; count: number }>([
+    { $match: { accountId: oid(accountId) } },
+    { $group: { _id: "$kind", count: { $sum: 1 } } },
+  ]);
+  return Object.fromEntries(rows.map((row) => [row._id, row.count]));
+}
+
+/* ── Build battles ──────────────────────────────────────────────────────── */
+
+export async function listBattleRecords() {
+  await connectDB();
+  return AcademyBattleModel.find().select("slug data").lean();
+}
+
+export async function findBattleRecord(slug: string) {
+  await connectDB();
+  return AcademyBattleModel.findOne({ slug }).select("slug data").lean();
+}
+
+export async function saveBattleRecord(slug: string, data: unknown, by: string) {
+  await connectDB();
+  await AcademyBattleModel.updateOne({ slug }, { $set: { data, updatedBy: by } }, { upsert: true });
+}
+
+export async function deleteBattleRecord(slug: string) {
+  await connectDB();
+  await AcademyBattleModel.deleteOne({ slug });
+  await AcademyBattleEntryModel.deleteMany({ battleSlug: slug });
+}
+
+export async function findBattleEntry(battleSlug: string, accountId: string) {
+  await connectDB();
+  return AcademyBattleEntryModel.findOne({ battleSlug, accountId: oid(accountId) }).lean();
+}
+
+/** Enters a battle, or updates the entry. Returns whether this was the first time. */
+export async function saveBattleEntry(
+  battleSlug: string,
+  accountId: string,
+  values: { title: string; repoUrl: string; liveUrl: string; note: string }
+): Promise<{ created: boolean }> {
+  await connectDB();
+  const result = await AcademyBattleEntryModel.updateOne(
+    { battleSlug, accountId: oid(accountId) },
+    { $set: values, $setOnInsert: { submittedAt: new Date() } },
+    { upsert: true }
+  );
+  return { created: result.upsertedCount > 0 };
+}
+
+export type BattleEntryRow = {
+  _id: Types.ObjectId;
+  accountId: Types.ObjectId;
+  title: string;
+  repoUrl: string;
+  liveUrl: string;
+  note: string;
+  votes: number;
+  voters: Types.ObjectId[];
+  submittedAt: Date;
+  hidden: boolean;
+  name: string;
+  email: string;
+};
+
+/** A battle's entries, most upvoted first (earliest first on a tie). Hidden ones only for the admin. */
+export async function listBattleEntries(battleSlug: string, { includeHidden = false } = {}) {
+  await connectDB();
+  return AcademyBattleEntryModel.aggregate<BattleEntryRow>([
+    { $match: includeHidden ? { battleSlug } : { battleSlug, hidden: { $ne: true } } },
+    { $sort: { votes: -1, submittedAt: 1 } },
+    { $limit: 500 },
+    { $lookup: { from: "clientaccounts", localField: "accountId", foreignField: "_id", as: "account" } },
+    {
+      $project: {
+        accountId: 1,
+        title: 1,
+        repoUrl: 1,
+        liveUrl: 1,
+        note: 1,
+        votes: 1,
+        voters: 1,
+        submittedAt: 1,
+        hidden: 1,
+        name: { $ifNull: [{ $first: "$account.name" }, "A student"] },
+        email: { $ifNull: [{ $first: "$account.email" }, ""] },
+      },
+    },
+  ]);
+}
+
+export async function countBattleEntries(battleSlug: string) {
+  await connectDB();
+  return AcademyBattleEntryModel.countDocuments({ battleSlug, hidden: { $ne: true } });
+}
+
+/** How many of their votes a student has used in a battle. */
+export async function battleVotesUsed(battleSlug: string, voterId: string) {
+  await connectDB();
+  return AcademyBattleEntryModel.countDocuments({ battleSlug, voters: oid(voterId) });
+}
+
+/**
+ * Adds or takes back a vote in a battle: never on your own entry, once per
+ * entry, and at most `cap` across the battle. Returns null when not allowed,
+ * with the reason.
+ */
+export async function toggleBattleVote(
+  battleSlug: string,
+  entryId: string,
+  voterId: string,
+  cap: number
+): Promise<{ votes: number; voted: boolean } | { refused: "own" | "cap" | "missing" }> {
+  await connectDB();
+  if (!Types.ObjectId.isValid(entryId)) return { refused: "missing" };
+  const voter = oid(voterId);
+  const removed = await AcademyBattleEntryModel.findOneAndUpdate(
+    { _id: oid(entryId), battleSlug, voters: voter },
+    { $pull: { voters: voter }, $inc: { votes: -1 } },
+    { new: true }
+  )
+    .select("votes")
+    .lean();
+  if (removed) return { votes: removed.votes, voted: false };
+
+  const entry = await AcademyBattleEntryModel.findOne({ _id: oid(entryId), battleSlug, hidden: { $ne: true } })
+    .select("accountId")
+    .lean();
+  if (!entry) return { refused: "missing" };
+  if (String(entry.accountId) === voterId) return { refused: "own" };
+  if ((await battleVotesUsed(battleSlug, voterId)) >= cap) return { refused: "cap" };
+  const added = await AcademyBattleEntryModel.findOneAndUpdate(
+    { _id: oid(entryId), voters: { $ne: voter } },
+    { $addToSet: { voters: voter }, $inc: { votes: 1 } },
+    { new: true }
+  )
+    .select("votes")
+    .lean();
+  return added ? { votes: added.votes, voted: true } : { refused: "missing" };
+}
+
+export async function setBattleEntryHidden(entryId: string, hidden: boolean) {
+  await connectDB();
+  if (!Types.ObjectId.isValid(entryId)) return null;
+  return AcademyBattleEntryModel.findOneAndUpdate({ _id: oid(entryId) }, { $set: { hidden } }, { new: true }).select("battleSlug").lean();
 }

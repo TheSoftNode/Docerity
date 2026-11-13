@@ -102,6 +102,46 @@ const contentSchema = new Schema(
   { timestamps: true, minimize: false }
 );
 
+/* A build battle as edited in the admin, stored whole (see lib/academy/battles.ts). */
+const battleSchema = new Schema(
+  {
+    slug: { type: String, required: true, unique: true, trim: true, maxlength: 80 },
+    data: { type: Schema.Types.Mixed, required: true },
+    updatedBy: { type: String, default: "", maxlength: 320 },
+  },
+  { timestamps: true, minimize: false }
+);
+
+/* One student's entry in one battle, with its upvotes. */
+const battleEntrySchema = new Schema(
+  {
+    battleSlug: { type: String, required: true, maxlength: 80 },
+    accountId: { type: Schema.Types.ObjectId, required: true },
+    title: { type: String, default: "", maxlength: 120 },
+    repoUrl: { type: String, default: "", maxlength: 300 },
+    liveUrl: { type: String, default: "", maxlength: 500 },
+    note: { type: String, default: "", maxlength: 2000 },
+    submittedAt: { type: Date, default: () => new Date() },
+    voters: { type: [Schema.Types.ObjectId], default: [] },
+    votes: { type: Number, default: 0 },
+    /* Taken out of the battle by the admin (off-brief, copied, broken link). */
+    hidden: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+battleEntrySchema.index({ battleSlug: 1, accountId: 1 }, { unique: true });
+battleEntrySchema.index({ battleSlug: 1, voters: 1 });
+
+export type AcademyBattleRecord = InferSchemaType<typeof battleSchema>;
+export type AcademyBattleEntry = InferSchemaType<typeof battleEntrySchema>;
+
+export const AcademyBattleModel: Model<AcademyBattleRecord> =
+  (mongoose.models.AcademyBattle as Model<AcademyBattleRecord>) ?? mongoose.model<AcademyBattleRecord>("AcademyBattle", battleSchema);
+
+export const AcademyBattleEntryModel: Model<AcademyBattleEntry> =
+  (mongoose.models.AcademyBattleEntry as Model<AcademyBattleEntry>) ??
+  mongoose.model<AcademyBattleEntry>("AcademyBattleEntry", battleEntrySchema);
+
 export type AcademyBuild = InferSchemaType<typeof buildSchema>;
 export type AcademyContent = InferSchemaType<typeof contentSchema>;
 export type BuildStatus = AcademyBuild["status"];
