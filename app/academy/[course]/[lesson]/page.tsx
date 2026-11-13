@@ -19,6 +19,7 @@ import { LessonPlayer } from "@/components/academy/lesson-player";
 import { Quiz } from "@/components/academy/quiz";
 import { StandingPanel } from "@/components/academy/standing-panel";
 import { cn } from "@/lib/utils";
+import { AcademyHero, paperCard } from "@/components/academy/kit";
 
 export const dynamic = "force-dynamic";
 
@@ -132,31 +133,40 @@ export default async function LessonPage({ params }: { params: Params }) {
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
-        <section className="relative -mt-[76px] bg-[radial-gradient(800px_420px_at_90%_0%,rgb(28_58_140/0.55),transparent_62%),var(--ld-ink)] pt-[116px] pb-10 text-[var(--ld-paper)]">
-          <div className="doc-shell">
-            <Link href={`/academy/${slug}`} className="-my-2 inline-flex min-h-11 items-center gap-2 text-sm text-[var(--ld-muted)] transition-colors hover:text-[var(--ld-paper)]">
-              <ArrowLeftIcon className="size-4" /> {course.title}
-            </Link>
-            <p className="mt-4 text-[14px] text-[var(--ld-muted)]">
-              Module {course.modules.indexOf(module) + 1} · {module.title} · lesson {lessonNumber} of {module.lessons.length}
-            </p>
-            <h1 className="ld-display mt-2 max-w-[22ch] text-[clamp(32px,4.4vw,60px)] leading-[0.98] font-extrabold tracking-[-0.045em] text-balance">{lesson.title}</h1>
-            {lesson.summary ? <p className="mt-4 max-w-[46rem] text-[16.5px] leading-relaxed text-[var(--ld-muted)]">{lesson.summary}</p> : null}
-            {tracked ? (
-              <div className="mt-6 flex max-w-[460px] items-center gap-3">
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-[rgb(var(--ld-tint-rgb)/0.16)]">
-                  <div className="h-full rounded-full bg-[linear-gradient(90deg,var(--ld-tint),var(--ld-accent))]" style={{ width: `${progress.percent}%` }} />
+        <AcademyHero
+          back={{ href: `/academy/${slug}`, label: course.title }}
+          size="lg"
+          meta={
+            <>
+              <span>Module {course.modules.indexOf(module) + 1}</span>
+              <span aria-hidden="true">·</span>
+              <span>{module.title}</span>
+              <span aria-hidden="true">·</span>
+              <span>
+                lesson {lessonNumber} of {module.lessons.length}
+              </span>
+            </>
+          }
+          title={lesson.title}
+          aside={
+            <div className="grid gap-5">
+              {lesson.summary ? <p className="text-[clamp(16.5px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">{lesson.summary}</p> : null}
+              {tracked ? (
+                <div className="flex items-center gap-3">
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-[rgb(var(--ld-tint-rgb)/0.16)]">
+                    <div className="h-full rounded-full bg-[linear-gradient(90deg,var(--ld-tint),var(--ld-accent))]" style={{ width: `${progress.percent}%` }} />
+                  </div>
+                  <span className="text-[13px] font-semibold text-[var(--ld-muted)] tabular-nums">{progress.percent}% of the course</span>
                 </div>
-                <span className="text-[13px] font-semibold text-[var(--ld-muted)]">{progress.percent}% of the course</span>
-              </div>
-            ) : null}
-          </div>
-        </section>
+              ) : null}
+            </div>
+          }
+        />
 
         <section className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
           <div className="doc-shell grid gap-10 py-[clamp(32px,5vw,64px)] lg:grid-cols-[minmax(0,1fr)_300px]">
             <div className="min-w-0">
-              <details className="mb-6 rounded-[18px] border border-[var(--ld-line)] bg-[var(--ld-card)] lg:hidden">
+              <details className={cn(paperCard, "mb-6 rounded-[20px] lg:hidden")}>
                 <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between px-4 text-[15px] font-semibold">
                   Course outline <ChevronDownIcon className="size-4" />
                 </summary>
@@ -177,7 +187,7 @@ export default async function LessonPage({ params }: { params: Params }) {
               {lesson.kind === "assignment" ? (
                 <>
                   {lesson.notes ? (
-                    <article className="mb-6 rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-9">
+                    <article className={cn(paperCard, "mb-6 p-6 sm:p-10")}>
                       <LessonNotes source={lesson.notes} />
                     </article>
                   ) : null}
@@ -216,7 +226,7 @@ export default async function LessonPage({ params }: { params: Params }) {
                     showVideo={lesson.kind === "video"}
                   />
                   {lesson.notes ? (
-                    <article className="mt-10 rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-9">
+                    <article className={cn(paperCard, "mt-10 p-6 sm:p-10")}>
                       <LessonNotes source={lesson.notes} />
                     </article>
                   ) : null}
@@ -242,7 +252,7 @@ export default async function LessonPage({ params }: { params: Params }) {
             <aside className="hidden lg:block">
               <div className="sticky top-24 grid gap-5">
                 {standing ? <StandingPanel standing={standing} /> : null}
-                <div className="rounded-[22px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-4">
+                <div className={cn(paperCard, "rounded-[24px] p-4")}>
                   <Outline course={course} current={lesson.id} completed={progressInput.completed} open={open} enrolled={tracked} />
                 </div>
               </div>

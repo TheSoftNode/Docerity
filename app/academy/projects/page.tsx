@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRightIcon, CheckIcon, ClockIcon, ZapIcon } from "lucide-react";
+import { ArrowRightIcon, CheckIcon, ClockIcon } from "lucide-react";
 
 import { getCurrentAccount } from "@/lib/account/session";
 import { BUILD_XP } from "@/lib/academy/briefs";
@@ -10,7 +10,7 @@ import { database } from "@/lib/config/env";
 import { listBuildsFor } from "@/lib/repositories/academy.repository";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { AcademyNav } from "@/components/academy/academy-nav";
+import { AcademyHero, LEVEL_TONE } from "@/components/academy/kit";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -45,54 +45,88 @@ export default async function ProjectPoolPage({ searchParams }: { searchParams: 
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
-        <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(900px_520px_at_88%_10%,rgb(28_58_140/0.6),transparent_62%),var(--ld-ink)] pt-[124px] pb-[clamp(48px,6vw,80px)] text-[var(--ld-paper)]">
-          <div className="doc-shell">
-            <AcademyNav current="projects" />
-            <h1 className="ld-display ld-up mt-8 max-w-[16ch] text-[clamp(42px,6vw,84px)] leading-[0.95] font-extrabold tracking-[-0.05em] text-balance">
+        <AcademyHero
+          current="projects"
+          title={
+            <>
               Build something <span className="text-[var(--ld-accent)]">real.</span>
-            </h1>
-            <p className="ld-up ld-delay-2 mt-5 max-w-[40rem] text-[clamp(16px,1.3vw,18px)] leading-relaxed text-[var(--ld-muted)]">
-              Pick a brief, build it your way, and hand in the code and the live site. We review every build; approved ones earn XP and go in the showcase for everyone to see.
-            </p>
-            {builds.length ? (
-              <p className="mt-6 text-[15px] text-[var(--ld-muted)]">
-                You have {builds.length} {builds.length === 1 ? "build" : "builds"} on the go · {approved} approved
-              </p>
-            ) : null}
-          </div>
-        </section>
-
-        <section aria-label="Project briefs" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell py-[clamp(40px,5vw,80px)]">
-            <nav aria-label="Filter by level" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
-              {[null, ...COURSE_LEVELS].map((item) => {
-                const count = item ? briefs.filter((brief) => brief.level === item).length : briefs.length;
-                const on = item === active;
-                return (
-                  <Link
-                    key={item ?? "all"}
-                    href={item ? `/academy/projects?level=${item}` : "/academy/projects"}
-                    scroll={false}
-                    aria-current={on ? "page" : undefined}
-                    className={cn(
-                      "inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-medium whitespace-nowrap transition-colors",
-                      on ? "border-[var(--ld-ink)] bg-[var(--ld-ink)] text-[var(--ld-paper)]" : "border-[var(--ld-line-2)] hover:border-[var(--ld-ink)]"
-                    )}
-                  >
-                    {item ?? "All"} <span className="font-mono text-xs opacity-60">{count}</span>
+            </>
+          }
+          lede={
+            <>
+              Pick a brief, build it your way, and hand in the code and the live site. We review every build; approved ones earn XP and go in the showcase.
+              {builds.length ? (
+                <span className="mt-4 block text-[15px] font-semibold text-[var(--ld-paper)]">
+                  You have {builds.length} {builds.length === 1 ? "build" : "builds"} on the go · {approved} approved
+                </span>
+              ) : null}
+            </>
+          }
+        >
+          <ul className="grid gap-3 sm:grid-cols-3">
+            {COURSE_LEVELS.map((item) => {
+              const these = briefs.filter((brief) => brief.level === item);
+              const tone = LEVEL_TONE[item];
+              const hours = these.map((brief) => brief.hours);
+              return (
+                <li key={item}>
+                  <Link href={`/academy/projects?level=${item}#briefs`} scroll={false} className={cn("group flex h-full flex-col rounded-[24px] p-5 transition-transform hover:-translate-y-1 sm:p-6", tone.card)}>
+                    <span className="flex items-baseline justify-between gap-3">
+                      <span className="ld-display text-[24px] font-extrabold tracking-[-0.03em]">{item}</span>
+                      <span className={cn("text-[14px] font-semibold", tone.accent)}>{BUILD_XP[item]} XP</span>
+                    </span>
+                    <span className={cn("mt-1 text-[14.5px]", tone.text)}>
+                      {these.length} {these.length === 1 ? "project" : "projects"}
+                      {hours.length ? ` · ${Math.min(...hours)}–${Math.max(...hours)} hours each` : ""}
+                    </span>
                   </Link>
-                );
-              })}
-            </nav>
+                </li>
+              );
+            })}
+          </ul>
+        </AcademyHero>
 
-            <ul className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section id="briefs" aria-label="Project briefs" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
+          <div className="doc-shell py-[clamp(40px,5vw,96px)]">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <h2 className="ld-display text-[clamp(36px,5vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]">{active ? `${active}.` : "Every brief."}</h2>
+              <nav aria-label="Filter by level" className="-mx-5 flex max-w-[100vw] gap-1 overflow-x-auto px-5 [scrollbar-width:none] sm:mx-0 sm:rounded-full sm:bg-[var(--ld-card)] sm:p-1 sm:ring-1 sm:ring-[rgb(8_16_46/0.08)] [&::-webkit-scrollbar]:hidden">
+                {[null, ...COURSE_LEVELS].map((item) => {
+                  const count = item ? briefs.filter((brief) => brief.level === item).length : briefs.length;
+                  const on = item === active;
+                  return (
+                    <Link
+                      key={item ?? "all"}
+                      href={item ? `/academy/projects?level=${item}#briefs` : "/academy/projects#briefs"}
+                      scroll={false}
+                      aria-current={on ? "page" : undefined}
+                      className={cn(
+                        "inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full px-4 text-[14px] font-semibold whitespace-nowrap transition-colors",
+                        on ? "bg-[var(--ld-ink)] text-[var(--ld-paper)]" : "text-[var(--ld-text-2)] hover:text-[var(--ld-ink)] max-sm:ring-1 max-sm:ring-[var(--ld-line-2)]"
+                      )}
+                    >
+                      {item ?? "All"} <span className="tabular-nums opacity-60">{count}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {shown.map((brief) => {
                 const state = status.get(brief.id);
+                const tone = LEVEL_TONE[brief.level];
+                const number = briefs.indexOf(brief) + 1;
                 return (
                   <li key={brief.id}>
-                    <Link href={`/academy/projects/${brief.id}`} className="group flex h-full flex-col rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 transition-transform hover:-translate-y-1">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="text-[13px] font-semibold text-[var(--ld-deep)]">{brief.level}</span>
+                    <Link href={`/academy/projects/${brief.id}`} className={cn("group relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[28px] p-6 transition-transform hover:-translate-y-1 sm:p-7", tone.card)}>
+                      <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute -right-2 -bottom-8 text-[140px] leading-none font-extrabold tracking-[-0.06em]", tone.numeral)}>
+                        {String(number).padStart(2, "0")}
+                      </span>
+                      <div className="relative flex items-center justify-between gap-3">
+                        <span className={cn("text-[14px] font-semibold", tone.accent)}>
+                          {brief.level} · {BUILD_XP[brief.level]} XP
+                        </span>
                         {state ? (
                           <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-semibold", STATUS[state].tone)}>
                             {state === "approved" ? <CheckIcon className="size-3.5" /> : null}
@@ -100,19 +134,22 @@ export default async function ProjectPoolPage({ searchParams }: { searchParams: 
                           </span>
                         ) : null}
                       </div>
-                      <h2 className="ld-display mt-2 text-[23px] leading-tight font-bold tracking-[-0.025em]">{brief.title}</h2>
-                      <p className="mt-2 text-[15px] leading-relaxed text-[var(--ld-text-2)]">{brief.summary}</p>
-                      <p className="mt-4 text-[13px] text-[var(--ld-text-muted)]">{brief.stack.join(" · ")}</p>
-                      <div className="mt-auto flex items-center justify-between gap-3 border-t border-[var(--ld-line)] pt-4 text-[13.5px]">
-                        <span className="inline-flex items-center gap-3 text-[var(--ld-text-muted)]">
-                          <span className="inline-flex items-center gap-1">
-                            <ClockIcon className="size-3.5" /> ~{brief.hours}h
+                      <h3 className="ld-display relative mt-3 text-[27px] leading-[1.02] font-extrabold tracking-[-0.035em]">{brief.title}</h3>
+                      <p className={cn("relative mt-3 text-[15.5px] leading-relaxed", tone.text)}>{brief.summary}</p>
+                      <div className="relative mt-auto pt-6">
+                        <ul className="flex flex-wrap gap-1.5">
+                          {brief.stack.map((item) => (
+                            <li key={item} className={cn("rounded-full border px-2.5 py-1 text-[12.5px] font-medium", tone.chip)}>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                        <p className={cn("mt-4 flex items-center justify-between text-[14px]", tone.soft)}>
+                          <span className="inline-flex items-center gap-1.5">
+                            <ClockIcon className="size-4" /> About {brief.hours} hours
                           </span>
-                          <span className="inline-flex items-center gap-1 font-semibold text-[var(--ld-ink)]">
-                            <ZapIcon className="size-3.5" /> {BUILD_XP[brief.level]} XP
-                          </span>
-                        </span>
-                        <ArrowRightIcon className="size-4 text-[var(--ld-deep)] transition-transform group-hover:translate-x-1" />
+                          <ArrowRightIcon className={cn("size-5 transition-transform group-hover:translate-x-1", tone.accent)} />
+                        </p>
                       </div>
                     </Link>
                   </li>

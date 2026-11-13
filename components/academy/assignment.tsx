@@ -91,7 +91,7 @@ export function Assignment({
 
   return (
     <div className="grid gap-6">
-      <div className="rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-7">
+      <div className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-7">
         <h2 className="ld-display text-[22px] font-bold tracking-[-0.02em]">How it&apos;s marked</h2>
         <p className="mt-1 text-[14px] text-[var(--ld-text-muted)]">
           {total} points in all; 70% passes. {aiOn ? "It's marked the moment you hand it in, and a teacher can adjust the grade." : "Your teacher marks it and the grade appears here."}
@@ -128,7 +128,7 @@ export function Assignment({
       ) : !tracked ? (
         <p className="rounded-[20px] bg-[#e6ecff] p-5 text-[15px] text-[var(--ld-ink)]">Enrol in the course to hand this in.</p>
       ) : (
-        <form action={action} className="grid gap-4 rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-7" id="hand-in">
+        <form action={action} className="grid gap-4 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-7" id="hand-in">
           <h2 className="ld-display text-[22px] font-bold tracking-[-0.02em]">{shownGrade || waiting ? "Hand it in again" : "Hand it in"}</h2>
           <input type="hidden" name="slug" value={slug} />
           <input type="hidden" name="lessonId" value={lessonId} />
