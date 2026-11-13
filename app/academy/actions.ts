@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { getCurrentAccount } from "@/lib/account/session";
 import { getCourse } from "@/lib/academy/courses";
 import { XP, allLessons, findLesson, markQuiz, nextLesson, openModules } from "@/lib/academy/rules";
-import type { QuizAnswers, QuizResult } from "@/lib/academy/types";
+import type { Earned, QuizAnswers, QuizResult } from "@/lib/academy/types";
 import {
   awardXp,
   enrol,
@@ -24,10 +24,9 @@ import { githubRepo } from "@/lib/academy/briefs";
 import { MAX_AI_ATTEMPTS, type Grade } from "@/lib/academy/assignments";
 import { markWithAi } from "@/lib/academy/ai-marker";
 import { completeAssignment } from "@/lib/academy/progress";
-import { afterProgress, type Earned } from "@/lib/academy/progress";
+import { afterProgress } from "@/lib/academy/progress";
 import { createLogger } from "@/lib/core/logger";
 
-export type { Earned };
 
 /**
  * What a student does in the Academy. Every action checks, on the server,

@@ -78,3 +78,6 @@ export type QuizResult = {
   /** Per question: whether it was right, the right answer and why. */
   review: { id: string; correct: boolean; answer: number[]; explain: string }[];
 };
+
+/** What a student just earned from an action: XP, a new level, a finished course. */
+export type Earned = { xp: number; levelUp: number | null; courseDone: boolean };

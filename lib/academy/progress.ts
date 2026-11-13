@@ -10,7 +10,9 @@ import { awardXp, findEnrollment, markCompleted, markCourseComplete, totalXp } f
  * "use server" file can be called from a browser.
  */
 
-export type Earned = { xp: number; levelUp: number | null; courseDone: boolean };
+import type { Earned } from "@/lib/academy/types";
+
+export type { Earned };
 
 /** XP for finishing the course, once, when the last lesson lands. */
 export async function afterProgress(accountId: string, slug: string, before: number): Promise<Earned> {

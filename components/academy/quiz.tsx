@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { ArrowRightIcon, CheckIcon, LoaderCircleIcon, RotateCcwIcon } from "lucide-react";
 
-import { submitQuizAction, type Earned } from "@/app/academy/actions";
+import { submitQuizAction } from "@/app/academy/actions";
+import type { Earned } from "@/lib/academy/types";
 import { EarnedNote } from "@/components/academy/earned-toast";
 import type { QuizResult } from "@/lib/academy/types";
 import { cn } from "@/lib/utils";
