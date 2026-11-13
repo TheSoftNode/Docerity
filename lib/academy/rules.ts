@@ -17,7 +17,7 @@ export const XP = {
   courseComplete: 150,
 } as const;
 
-export type XpKind = "lesson" | "quiz-pass" | "quiz-perfect" | "course";
+export type XpKind = "lesson" | "quiz-pass" | "quiz-perfect" | "course" | "build";
 
 /* ── Quizzes ─────────────────────────────────────────────────────────────── */
 

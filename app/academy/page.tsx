@@ -11,6 +11,9 @@ import { listEnrollments, weeklyLeaders } from "@/lib/repositories/academy.repos
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { StandingPanel } from "@/components/academy/standing-panel";
+import { AcademyNav } from "@/components/academy/academy-nav";
+import { BUILD_XP } from "@/lib/academy/briefs";
+import { getBriefs } from "@/lib/academy/pool";
 
 export const metadata: Metadata = {
   title: "Academy",
@@ -27,7 +30,7 @@ const hours = (minutes: number) => (minutes >= 90 ? `${Math.round(minutes / 60)}
  * streak and goes straight back to where they were.
  */
 export default async function AcademyPage() {
-  const [account, courses] = await Promise.all([getCurrentAccount(), listCourses()]);
+  const [account, courses, briefs] = await Promise.all([getCurrentAccount(), listCourses(), getBriefs()]);
   const [standing, enrollments, leaders] = await Promise.all([
     account ? getStanding(account.id) : null,
     account && database.isConfigured ? listEnrollments(account.id).catch(() => []) : [],
@@ -42,7 +45,10 @@ export default async function AcademyPage() {
       <SiteHeader />
       <main className="flex-1">
         <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(900px_520px_at_85%_20%,rgb(28_58_140/0.6),transparent_62%),radial-gradient(700px_420px_at_10%_110%,rgb(255_122_89/0.12),transparent_60%),var(--ld-ink)] pt-[128px] pb-[clamp(56px,7vw,96px)] text-[var(--ld-paper)]">
-          <div className="doc-shell grid items-center gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+          <div className="doc-shell">
+            <AcademyNav current="courses" />
+          </div>
+          <div className="doc-shell mt-8 grid items-center gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
             <div>
               <h1 className="ld-display ld-up text-[clamp(44px,6.4vw,92px)] leading-[0.95] font-extrabold tracking-[-0.05em] text-balance">
                 Learn to build software the way we <span className="text-[var(--ld-accent)]">ship it.</span>
@@ -152,6 +158,37 @@ export default async function AcademyPage() {
           </div>
         </section>
 
+        {briefs.length > 0 ? (
+          <section aria-labelledby="pool-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
+            <div className="doc-shell pb-[clamp(56px,7vw,104px)]">
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <h2 id="pool-title" className="ld-display text-[clamp(34px,4.6vw,60px)] leading-[0.98] font-extrabold tracking-[-0.045em]">
+                  Then build something real
+                </h2>
+                <Link href="/academy/projects" className="inline-flex min-h-11 items-center gap-1.5 text-[15px] font-semibold text-[var(--ld-deep)]">
+                  All {briefs.length} projects <ArrowRightIcon className="size-4" />
+                </Link>
+              </div>
+              <ul className="-mx-5 mt-7 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
+                {briefs.slice(0, 3).map((brief) => (
+                  <li key={brief.id} className="w-[82%] max-w-[340px] shrink-0 snap-start sm:w-auto sm:max-w-none">
+                    <Link href={`/academy/projects/${brief.id}`} className="group flex h-full flex-col rounded-[24px] bg-[var(--ld-deep)] p-6 text-white transition-transform hover:-translate-y-1">
+                      <span className="text-[13px] font-semibold text-[#afc4ff]">
+                        {brief.level} · {BUILD_XP[brief.level]} XP
+                      </span>
+                      <span className="ld-display mt-2 text-[22px] leading-tight font-bold tracking-[-0.02em]">{brief.title}</span>
+                      <span className="mt-2 text-[15px] leading-relaxed text-[#c9d5ff]">{brief.summary}</span>
+                      <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-[14px] font-semibold text-[#ff9a80]">
+                        See the brief <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ) : null}
+
         <section id="how" aria-labelledby="how-title" className="scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]">
           <div className="doc-shell py-[clamp(56px,7vw,104px)]">
             <h2 id="how-title" className="ld-display max-w-[16ch] text-[clamp(34px,4.6vw,60px)] leading-[0.98] font-extrabold tracking-[-0.045em]">
@@ -161,7 +198,7 @@ export default async function AcademyPage() {
               {[
                 { Icon: PlayIcon, title: "Watch", body: "Short lessons on video, with notes and code under each one. Pick up where you left off on any device.", xp: `+${XP.lesson} XP a lesson` },
                 { Icon: ClipboardCheckIcon, title: "Check", body: "A quiz ends every module and marks itself on the spot, with the reason for each answer. Pass it to open the next.", xp: `+${XP.quizPass} XP a pass, +${XP.quizPerfect} for a perfect score` },
-                { Icon: RocketIcon, title: "Ship", body: "Finish with a real project on the internet. Project briefs and build battles are coming next.", xp: `+${XP.courseComplete} XP for the course` },
+                { Icon: RocketIcon, title: "Ship", body: "Take a brief from the project pool, build it, and hand in the code and the live site. Approved builds go in the showcase.", xp: `+${BUILD_XP.Beginner} to ${BUILD_XP.Advanced} XP a project` },
               ].map(({ Icon, title, body, xp }) => (
                 <li key={title} className="rounded-[24px] border border-[rgb(var(--ld-tint-rgb)/0.16)] bg-[rgb(var(--ld-tint-rgb)/0.05)] p-6">
                   <span className="grid size-11 place-items-center rounded-[14px] bg-[var(--ld-accent)] text-[#08102e]">

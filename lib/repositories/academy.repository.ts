@@ -4,6 +4,8 @@ import { Types } from "mongoose";
 
 import { connectDB } from "@/lib/db/connect";
 import {
+  AcademyBuildModel,
+  AcademyContentModel,
   AcademyCourseModel,
   AcademyEnrollmentModel,
   AcademyLearnerModel,
@@ -206,4 +208,161 @@ export async function listCourseStudents(courseSlug: string, limit = 200) {
       },
     },
   ]);
+}
+
+/* ── Academy content (project briefs) ───────────────────────────────────── */
+
+export async function findAcademyContent(key: string) {
+  await connectDB();
+  return AcademyContentModel.findOne({ key }).lean();
+}
+
+export async function saveAcademyContent(key: string, data: unknown, by: string) {
+  await connectDB();
+  await AcademyContentModel.updateOne({ key }, { $set: { data, updatedBy: by } }, { upsert: true });
+}
+
+export async function deleteAcademyContent(key: string) {
+  await connectDB();
+  await AcademyContentModel.deleteOne({ key });
+}
+
+/* ── Project builds ─────────────────────────────────────────────────────── */
+
+export async function listBuildsFor(accountId: string) {
+  await connectDB();
+  return AcademyBuildModel.find({ accountId: oid(accountId) }).select("-voters").lean();
+}
+
+export async function findBuild(accountId: string, briefId: string) {
+  await connectDB();
+  return AcademyBuildModel.findOne({ accountId: oid(accountId), briefId }).select("-voters").lean();
+}
+
+/** Starting twice is a no-op: one build per student per brief. */
+export async function startBuild(accountId: string, briefId: string) {
+  await connectDB();
+  await AcademyBuildModel.updateOne(
+    { accountId: oid(accountId), briefId },
+    { $setOnInsert: { accountId: oid(accountId), briefId, status: "building" } },
+    { upsert: true }
+  );
+}
+
+/** Hands a build in (or in again after changes). An approved build stays approved. */
+export async function submitBuild(accountId: string, briefId: string, values: { repoUrl: string; liveUrl: string; note: string }) {
+  await connectDB();
+  const result = await AcademyBuildModel.updateOne(
+    { accountId: oid(accountId), briefId, status: { $in: ["building", "changes", "submitted"] } },
+    { $set: { ...values, status: "submitted", submittedAt: new Date() } }
+  );
+  return result.matchedCount > 0;
+}
+
+export async function listSubmittedBuilds() {
+  await connectDB();
+  return AcademyBuildModel.aggregate<{
+    _id: Types.ObjectId;
+    accountId: Types.ObjectId;
+    briefId: string;
+    repoUrl: string;
+    liveUrl: string;
+    note: string;
+    submittedAt: Date;
+    name: string;
+    email: string;
+  }>([
+    { $match: { status: "submitted" } },
+    { $sort: { submittedAt: 1 } },
+    { $limit: 200 },
+    { $lookup: { from: "clientaccounts", localField: "accountId", foreignField: "_id", as: "account" } },
+    {
+      $project: {
+        accountId: 1,
+        briefId: 1,
+        repoUrl: 1,
+        liveUrl: 1,
+        note: 1,
+        submittedAt: 1,
+        name: { $ifNull: [{ $first: "$account.name" }, ""] },
+        email: { $ifNull: [{ $first: "$account.email" }, ""] },
+      },
+    },
+  ]);
+}
+
+export async function countSubmittedBuilds() {
+  await connectDB();
+  return AcademyBuildModel.countDocuments({ status: "submitted" });
+}
+
+/** Records a review. Returns the build as it was, or null if it was not waiting for one. */
+export async function reviewBuild(buildId: string, decision: "approved" | "changes", feedback: string, by: string) {
+  await connectDB();
+  if (!Types.ObjectId.isValid(buildId)) return null;
+  return AcademyBuildModel.findOneAndUpdate(
+    { _id: oid(buildId), status: "submitted" },
+    { $set: { status: decision, feedback, reviewedBy: by, reviewedAt: new Date() } },
+    { new: false }
+  )
+    .select("accountId briefId")
+    .lean();
+}
+
+/** Approved builds for the showcase, most upvoted first. */
+export async function listShowcase(limit = 60) {
+  await connectDB();
+  return AcademyBuildModel.aggregate<{
+    _id: Types.ObjectId;
+    accountId: Types.ObjectId;
+    briefId: string;
+    repoUrl: string;
+    liveUrl: string;
+    note: string;
+    votes: number;
+    reviewedAt: Date;
+    voters: Types.ObjectId[];
+    name: string;
+  }>([
+    { $match: { status: "approved" } },
+    { $sort: { votes: -1, reviewedAt: -1 } },
+    { $limit: limit },
+    { $lookup: { from: "clientaccounts", localField: "accountId", foreignField: "_id", as: "account" } },
+    {
+      $project: {
+        accountId: 1,
+        briefId: 1,
+        repoUrl: 1,
+        liveUrl: 1,
+        note: 1,
+        votes: 1,
+        reviewedAt: 1,
+        voters: 1,
+        name: { $ifNull: [{ $first: "$account.name" }, "A student"] },
+      },
+    },
+  ]);
+}
+
+/** Adds or takes back an upvote. Never on your own build; once per student. Returns the new count, or null. */
+export async function toggleVote(buildId: string, voterId: string): Promise<{ votes: number; voted: boolean } | null> {
+  await connectDB();
+  if (!Types.ObjectId.isValid(buildId)) return null;
+  const voter = oid(voterId);
+  const added = await AcademyBuildModel.findOneAndUpdate(
+    { _id: oid(buildId), status: "approved", accountId: { $ne: voter }, voters: { $ne: voter } },
+    { $addToSet: { voters: voter }, $inc: { votes: 1 } },
+    { new: true }
+  )
+    .select("votes")
+    .lean();
+  if (added) return { votes: added.votes, voted: true };
+  const removed = await AcademyBuildModel.findOneAndUpdate(
+    { _id: oid(buildId), status: "approved", voters: voter },
+    { $pull: { voters: voter }, $inc: { votes: -1 } },
+    { new: true }
+  )
+    .select("votes")
+    .lean();
+  return removed ? { votes: removed.votes, voted: false } : null;
 }

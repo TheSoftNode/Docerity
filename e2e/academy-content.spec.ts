@@ -3,6 +3,7 @@ import { test, expect } from "@playwright/test";
 import { webDevelopment } from "@/lib/academy/catalog/web-development";
 import { normaliseCourse } from "@/lib/academy/normalise";
 import { parseNotes } from "@/lib/academy/markdown";
+import { SHIPPED_BRIEFS, githubRepo, normaliseBriefs } from "@/lib/academy/briefs";
 import {
   PASS_MARK,
   allLessons,
@@ -178,5 +179,34 @@ test.describe("parseNotes", () => {
   test("reads headings, lists and code", () => {
     const blocks = parseNotes("## Title\n\n- one\n- two\n\n```js\nconst a = 1;\n```\n\nA paragraph.");
     expect(blocks.map((block) => block.kind)).toEqual(["heading", "list", "code", "paragraph"]);
+  });
+});
+
+test.describe("project pool", () => {
+  test("every shipped brief survives normalising unchanged, with unique ids", async () => {
+    expect(SHIPPED_BRIEFS.length).toBeGreaterThanOrEqual(12);
+    expect(normaliseBriefs(SHIPPED_BRIEFS)).toEqual(SHIPPED_BRIEFS);
+    expect(new Set(SHIPPED_BRIEFS.map((brief) => brief.id)).size).toBe(SHIPPED_BRIEFS.length);
+    for (const brief of SHIPPED_BRIEFS) expect(brief.requirements.length).toBeGreaterThan(0);
+  });
+
+  test("normalising drops untitled briefs, dedupes ids and fixes bad values", async () => {
+    const out = normaliseBriefs([
+      { title: "  " },
+      { title: "Todo App", level: "Expert", hours: -3, stack: "React\n\n", requirements: ["Add", "", "Remove"] },
+      { title: "Todo App" },
+    ]);
+    expect(out.map((brief) => brief.id)).toEqual(["todo-app", "todo-app-2"]);
+    expect(out[0]).toMatchObject({ level: "Beginner", hours: 6, stack: ["React"], requirements: ["Add", "Remove"] });
+    expect(normaliseBriefs("nope")).toEqual([]);
+  });
+
+  test("only https GitHub repositories are accepted", async () => {
+    expect(githubRepo("https://github.com/ada/portfolio.git")).toBe("https://github.com/ada/portfolio");
+    expect(githubRepo("https://www.github.com/ada/portfolio/tree/main")).toBe("https://github.com/ada/portfolio");
+    expect(githubRepo("http://github.com/ada/portfolio")).toBe("");
+    expect(githubRepo("https://gitlab.com/ada/portfolio")).toBe("");
+    expect(githubRepo("https://github.com/ada")).toBe("");
+    expect(githubRepo("not a url")).toBe("");
   });
 });

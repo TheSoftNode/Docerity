@@ -570,7 +570,7 @@ Build a portfolio site and deploy it on your own domain or a Vercel URL.
 
 ## Hand it in
 
-Push to GitHub and deploy. When the project pool opens, you will submit the repo and live link there for review and XP.
+Push to GitHub and deploy, then hand it in as the [portfolio project](/academy/projects/portfolio-site) in the project pool for review and XP.
 `.trim(),
           questions: [],
         },
