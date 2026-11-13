@@ -6,6 +6,8 @@ import { database, storage } from "@/lib/config/env";
 import { createLogger } from "@/lib/core/logger";
 import { findBlock } from "@/lib/repositories/site-content.repository";
 import { cleanBlock } from "@/lib/content/blocks/clean";
+import { withAcademyLink } from "@/lib/content/blocks/nav-launch";
+import type { BlockRecord } from "@/lib/content/blocks/schema";
 import { DEFAULTS } from "@/lib/content/blocks/defaults";
 import { blockFor, isBlockKey } from "@/lib/content/blocks/schema";
 import { BlockEditor } from "@/components/admin/block-editor";
@@ -62,7 +64,9 @@ export default async function AdminContentBlockPage({
   /* Cleaned on the way in as well as on the way out, so a document written
      before a field existed opens with that field present and empty rather than
      as an uncontrolled input. */
-  const initial = cleanBlock(key, stored?.data ?? DEFAULTS[key]);
+  const cleaned = cleanBlock(key, stored?.data ?? DEFAULTS[key]);
+  /* A menu saved before the Academy launched opens with the Academy link added, as the site shows it. */
+  const initial = key === "site" ? { ...cleaned, navLinks: withAcademyLink((cleaned.navLinks ?? []) as unknown as { label: string; href: string }[], stored?.updatedAt) as unknown as BlockRecord[] } : cleaned;
 
   const cloudName = storage.isConfigured ? storage.credentials.cloudName : "";
 

@@ -4,6 +4,9 @@ import { getBlock } from "@/lib/content/blocks/source";
 import { siteConfig } from "@/lib/config/site";
 import { safeLink } from "@/lib/content/blocks/links";
 import type { BlockRecord } from "@/lib/content/blocks/schema";
+import { withAcademyLink } from "@/lib/content/blocks/nav-launch";
+import { database } from "@/lib/config/env";
+import { findBlock } from "@/lib/repositories/site-content.repository";
 
 /**
  * The settings that appear on every page, read from the editable content.
@@ -30,7 +33,7 @@ export type SiteSettings = {
 };
 
 export async function getSiteSettings(): Promise<SiteSettings> {
-  const block = await getBlock("site");
+  const [block, savedAt] = await Promise.all([getBlock("site"), siteSavedAt()]);
   const identity = (block.identity ?? {}) as BlockRecord;
 
   return {
@@ -46,8 +49,18 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       label: (identity.bookingLabel as string) || "Book a call",
     },
     socials: (block.socials ?? []) as SiteSettings["socials"],
-    navLinks: (block.navLinks ?? []) as SiteSettings["navLinks"],
+    navLinks: withAcademyLink((block.navLinks ?? []) as SiteSettings["navLinks"], savedAt),
     footerLinks: (block.footerLinks ?? []) as SiteSettings["footerLinks"],
   };
 }
 
+
+/** When the site settings were last saved in the admin, or null when they never were (the defaults already list the Academy). */
+async function siteSavedAt(): Promise<Date | null> {
+  if (!database.isConfigured) return null;
+  try {
+    return (await findBlock("site"))?.updatedAt ?? null;
+  } catch {
+    return null;
+  }
+}

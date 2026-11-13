@@ -7,6 +7,7 @@ import { SHIPPED_BRIEFS, githubRepo, normaliseBriefs } from "@/lib/academy/brief
 import { battlePhase, draftBattle, fromWat, normaliseBattle, podium, timeLeft, toWat } from "@/lib/academy/battles";
 import { NO_FACTS, achievementsFor } from "@/lib/academy/achievements";
 import { cleanGrade, gradeTool, markingPrompt, scoreOf } from "@/lib/academy/assignments";
+import { withAcademyLink } from "@/lib/content/blocks/nav-launch";
 import {
   PASS_MARK,
   allLessons,
@@ -311,5 +312,24 @@ test.describe("assignments", () => {
     expect(course.modules[0].lessons[0]).toMatchObject({ handIn: "text", rubric: [{ criterion: "Does what the task asks, and works", points: 10 }] });
     const video = normaliseCourse({ title: "T", modules: [{ title: "M", lessons: [{ title: "Watch", kind: "video", rubric: [{ criterion: "x", points: 1 }] }] }] }, "t");
     expect(video.modules[0].lessons[0]).not.toHaveProperty("rubric");
+  });
+});
+
+test.describe("academy link in a saved menu", () => {
+  const menu = [
+    { label: "Projects", href: "/projects" },
+    { label: "Mentorship", href: "/mentorship" },
+    { label: "Blog", href: "/blog" },
+  ];
+
+  test("goes in after Mentorship for a menu saved before the launch", () => {
+    expect(withAcademyLink(menu, new Date("2026-11-01T10:00:00Z")).map((link) => link.label)).toEqual(["Projects", "Mentorship", "Academy", "Blog"]);
+  });
+
+  test("leaves a menu alone when it was saved after the launch, already has it, or was never saved", () => {
+    expect(withAcademyLink(menu, new Date("2026-11-20T10:00:00Z"))).toEqual(menu);
+    expect(withAcademyLink(menu, null)).toEqual(menu);
+    const has = [...menu, { label: "Learn", href: "/academy/" }];
+    expect(withAcademyLink(has, new Date("2026-11-01T10:00:00Z"))).toEqual(has);
   });
 });
