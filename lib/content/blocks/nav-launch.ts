@@ -1,6 +1,6 @@
 /**
- * Puts the Academy in a header menu that was saved before the Academy
- * existed.
+ * Puts the Academy in a header or footer menu that was saved before the
+ * Academy existed.
  *
  * The header links are editable, and a saved menu replaces the default one,
  * so a site whose menu was saved earlier never picked up the new link. This
