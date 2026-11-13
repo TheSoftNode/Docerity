@@ -74,7 +74,9 @@ async function ContactBand() {
       {/* Phone: the words, then the three options as slim rows. Tablet and
           small laptop: the same rows beside the words. Wide screens: one
           panel, the words on the left and the options as three tiles. */}
-      <div className="doc-shell pt-16 pb-14 sm:pt-20 sm:pb-16 xl:py-24">
+      {/* No padding at the bottom: the footer's own top space is the gap,
+          so the two don't stack into an empty stretch. */}
+      <div className="doc-shell pt-16 sm:pt-20 xl:pt-24">
         <div className="md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-end md:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] xl:items-center xl:gap-12 xl:rounded-[30px] xl:border xl:border-[rgb(var(--ld-tint-rgb)/0.14)] xl:bg-[linear-gradient(150deg,#0f1a42,#0b1433)] xl:p-11">
           <div>
             <h2
@@ -140,11 +142,19 @@ async function ContactBand() {
                     <span
                       className={
                         option.mono
-                          ? "mt-1.5 block font-mono text-[12.5px] break-all opacity-75"
+                          ? "mt-1.5 block font-mono text-[12.5px] opacity-75"
                           : "mt-1.5 block text-[13.5px] leading-[1.45] opacity-75"
                       }
                     >
-                      {option.detail}
+                      {option.mono
+                        ? option.detail.split("@").map((part, index) => (
+                            <span key={index}>
+                              {index > 0 ? "@" : null}
+                              {part}
+                              {index === 0 ? <wbr /> : null}
+                            </span>
+                          ))
+                        : option.detail}
                     </span>
                   </span>
                   <span
