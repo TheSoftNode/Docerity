@@ -50,7 +50,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     },
     socials: (block.socials ?? []) as SiteSettings["socials"],
     navLinks: withAcademyLink((block.navLinks ?? []) as SiteSettings["navLinks"], savedAt),
-    footerLinks: (block.footerLinks ?? []) as SiteSettings["footerLinks"],
+    footerLinks: withAcademyLink((block.footerLinks ?? []) as SiteSettings["footerLinks"], savedAt),
   };
 }
 

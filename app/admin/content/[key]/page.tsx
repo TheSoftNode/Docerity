@@ -66,7 +66,14 @@ export default async function AdminContentBlockPage({
      as an uncontrolled input. */
   const cleaned = cleanBlock(key, stored?.data ?? DEFAULTS[key]);
   /* A menu saved before the Academy launched opens with the Academy link added, as the site shows it. */
-  const initial = key === "site" ? { ...cleaned, navLinks: withAcademyLink((cleaned.navLinks ?? []) as unknown as { label: string; href: string }[], stored?.updatedAt) as unknown as BlockRecord[] } : cleaned;
+  const initial =
+    key === "site"
+      ? {
+          ...cleaned,
+          navLinks: withAcademyLink((cleaned.navLinks ?? []) as unknown as { label: string; href: string }[], stored?.updatedAt) as unknown as BlockRecord[],
+          footerLinks: withAcademyLink((cleaned.footerLinks ?? []) as unknown as { label: string; href: string }[], stored?.updatedAt) as unknown as BlockRecord[],
+        }
+      : cleaned;
 
   const cloudName = storage.isConfigured ? storage.credentials.cloudName : "";
 
