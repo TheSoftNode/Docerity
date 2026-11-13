@@ -54,7 +54,9 @@ export function BuildForm({ briefId, initial, again }: { briefId: string; initia
         ) : null}
       </label>
       <label className="grid gap-1.5 text-[14px] font-semibold text-[var(--ld-ink)]">
-        A note for the reviewer <span className="font-normal text-[var(--ld-text-muted)]">(optional)</span>
+        <span>
+          A note for the reviewer <span className="font-normal text-[var(--ld-text-muted)]">(optional)</span>
+        </span>
         <textarea
           name="note"
           rows={3}
