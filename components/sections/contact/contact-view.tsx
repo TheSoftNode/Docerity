@@ -269,9 +269,6 @@ function ContactView({
       <div className="doc-shell relative grid items-start gap-[clamp(36px,5vw,88px)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
         {/* Left: what this is, and what happens next. */}
         <div className="lg:sticky lg:top-[100px]">
-          <p className="ld-up mb-6 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-            {heading.eyebrow}
-          </p>
           {/* Keyed by kind, so a change replays the entrance. */}
           <div key={type}>
             <h1 className="ld-display ld-up text-[clamp(46px,6vw,92px)] leading-[0.9] font-extrabold tracking-[-0.055em] text-balance">

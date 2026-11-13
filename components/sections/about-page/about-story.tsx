@@ -46,9 +46,6 @@ function AboutStory({
     <section id="story" aria-labelledby="story-title" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
       <div className="doc-shell grid items-start gap-[clamp(32px,5vw,88px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
         <div className="lg:sticky lg:top-28">
-          <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-            {heading.eyebrow}
-          </p>
           <h2 id="story-title" className="ld-display max-w-[12ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
             {heading.title}
           </h2>

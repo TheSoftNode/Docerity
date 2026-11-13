@@ -74,9 +74,6 @@ function ProjectsShowcase({
       <div className="doc-shell py-16 sm:py-24 lg:py-28">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-3xl">
-            <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-              {heading.eyebrow}
-            </p>
             <h2
               id="showcase-title"
               className="ld-display text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance"

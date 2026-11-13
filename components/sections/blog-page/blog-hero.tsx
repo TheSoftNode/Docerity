@@ -164,7 +164,6 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
           <h1 id="blog-title" className="ld-display ld-up order-2 max-w-[24ch] text-[clamp(26px,2.2vw,32px)] leading-[1.12] font-bold tracking-[-0.025em] md:order-1">
             <TitlePieces title={heading.title} />
           </h1>
-          <p className="order-1 font-mono text-[12.5px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase md:order-2">{heading.eyebrow}</p>
         </div>
 
         {current && next ? (

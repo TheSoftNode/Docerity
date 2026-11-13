@@ -46,13 +46,6 @@ async function HomeHero() {
           title={hero.title.replace(/\n/g, " ")}
           phrases={headlinePhrases(hero.title)}
           rows={rows}
-          eyebrow={
-            <p
-              className="ld-hero-eyebrow ld-fade mb-7 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase"
-            >
-              {hero.eyebrow}
-            </p>
-          }
         >
           <p className="ld-hero-lede ld-up ld-delay-3 mt-7 max-w-[34rem] text-[clamp(17px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">
             {hero.lede}

@@ -29,9 +29,6 @@ async function HomeExplainers() {
       />
       <div className="doc-shell relative flex flex-wrap items-center gap-8 py-14 sm:gap-14 sm:py-24 lg:py-28">
         <div className="flex-[1_1_400px]">
-          <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-            {heading.eyebrow}
-          </p>
           <h2
             id="home-explainers-title"
             className="ld-display text-[clamp(40px,5.6vw,80px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance"

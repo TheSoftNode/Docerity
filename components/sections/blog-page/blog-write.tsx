@@ -18,7 +18,6 @@ function BlogWrite() {
       />
       <div className="doc-shell relative grid items-center gap-[clamp(32px,5vw,80px)] py-[clamp(64px,8vw,104px)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
         <div>
-          <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">Write for Docerity</p>
           <h2 id="write-title" className="ld-display max-w-[15ch] text-[clamp(38px,5vw,68px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
             Explain something you understand.
           </h2>

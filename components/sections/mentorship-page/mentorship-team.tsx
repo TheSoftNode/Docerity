@@ -24,10 +24,6 @@ async function MentorshipTeam() {
     >
       <div className="doc-shell grid items-center gap-[clamp(36px,6vw,96px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-2">
         <div>
-          <p className="mb-3.5 flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[#2a3a72] uppercase">
-            <span aria-hidden="true" className="size-[7px] rounded-[2px] bg-[var(--ld-accent)]" />
-            {heading.eyebrow}
-          </p>
           <h2
             id="team-title"
             className="ld-display max-w-[13ch] text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"

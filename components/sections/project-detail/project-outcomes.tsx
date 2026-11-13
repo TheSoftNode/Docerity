@@ -15,7 +15,6 @@ function ProjectOutcomes({ results }: { results: readonly string[] }) {
       <div className="doc-shell pt-[clamp(64px,8vw,112px)]">
         <div className="flex flex-wrap items-end justify-between gap-5">
           <div>
-            <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">Outcomes</p>
             <h2
               id="outcomes-title"
               className="ld-display text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"

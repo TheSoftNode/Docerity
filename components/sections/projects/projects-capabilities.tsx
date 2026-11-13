@@ -17,9 +17,6 @@ async function ProjectsCapabilities() {
       <div className="doc-shell py-16 sm:py-24 lg:py-28">
         <div className="mb-11 flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-              {heading.eyebrow}
-            </p>
             <h2
               id="capabilities-title"
               className="ld-display max-w-[16ch] text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"

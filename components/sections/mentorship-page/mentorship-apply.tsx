@@ -36,9 +36,6 @@ async function MentorshipApply() {
         className="absolute -top-[18%] left-1/2 aspect-[2.2/1] w-[min(110vw,1500px)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgb(64_110_230/0.38),transparent_62%)]"
       />
       <div className="doc-shell relative pt-[clamp(88px,11vw,150px)]">
-        <p className="mb-[22px] inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-          {heading.eyebrow}
-        </p>
         <div className="grid items-end gap-10 md:grid-cols-[minmax(0,1fr)_auto]">
           <h2
             id="apply-title"

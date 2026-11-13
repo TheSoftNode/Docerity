@@ -26,7 +26,6 @@ function ProjectGlance({ project }: { project: Project }) {
     <section aria-labelledby="glance-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
       <div className="doc-shell grid items-start gap-[clamp(32px,6vw,96px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
         <div>
-          <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">At a glance</p>
           <h2
             id="glance-title"
             className="ld-display text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"
@@ -34,11 +33,7 @@ function ProjectGlance({ project }: { project: Project }) {
             The short version.
           </h2>
           <div className="mt-8 rounded-[20px] border border-dashed border-[var(--ld-line-2)] p-6">
-            <p className="flex items-center gap-2.5 font-mono text-[11.5px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-              <span aria-hidden="true" className="ld-blink size-[7px] rounded-full bg-[var(--ld-accent)]" />
-              Write-up in progress
-            </p>
-            <p className="mt-3 text-base leading-normal text-[var(--ld-text-2)]">
+            <p className="text-base leading-normal text-[var(--ld-text-2)]">
               The full story of {project.name} hasn&apos;t been written up yet. Want it sooner? We are happy to walk
               you through it.
             </p>

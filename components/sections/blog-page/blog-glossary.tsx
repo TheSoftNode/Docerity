@@ -42,7 +42,6 @@ function BlogGlossary({ elements }: { elements: BlogElement[] }) {
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <div className="flex flex-wrap items-end justify-between gap-[22px]">
           <div>
-            <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">Everything</p>
             <h2 id="glossary-title" className="ld-display text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
               The glossary<span className="text-[var(--ld-accent)]">.</span>
             </h2>
