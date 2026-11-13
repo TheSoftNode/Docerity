@@ -38,7 +38,7 @@ export default async function AdminBattlePage({ params }: { params: Promise<{ sl
           </Link>
         ) : null}
       </AdminPageHeader>
-      <BattleEditor key={JSON.stringify(battle)} battle={battle} />
+      <BattleEditor key={battle.slug} battle={battle} />
       <h2 className="mt-4 mb-3 font-heading text-[22px] font-bold text-foreground">Entries</h2>
       <BattleEntries
         slug={battle.slug}
