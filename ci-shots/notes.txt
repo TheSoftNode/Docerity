@@ -1,0 +1,4 @@
+header: Docerity | Projects | AI | Web3 | Mentorship | Academy | Blog | About |  | Start a project
+footer: Projects | AI | Web3 | Mentorship | Academy | Blog | How we work | About | Reviews | Write for us | GitHub | LinkedIn
+phone menu has Academy: 2
+editor has /academy: true

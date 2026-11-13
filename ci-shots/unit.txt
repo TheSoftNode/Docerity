@@ -1,0 +1,40 @@
+
+Running 36 tests using 2 workers
+
+[1/36] [chromium] › e2e/academy-content.spec.ts:34:7 › markQuiz › all right is a perfect pass
+[2/36] [chromium] › e2e/academy-content.spec.ts:40:7 › markQuiz › a multi-answer question needs exactly the right set
+[3/36] [chromium] › e2e/academy-content.spec.ts:49:7 › markQuiz › nothing answered scores 0 and fails
+[4/36] [chromium] › e2e/academy-content.spec.ts:53:7 › markQuiz › the pass mark is 70
+[5/36] [chromium] › e2e/academy-content.spec.ts:59:7 › levels › level thresholds rise
+[6/36] [chromium] › e2e/academy-content.spec.ts:68:7 › levels › progress inside a level adds up
+[7/36] [chromium] › e2e/academy-content.spec.ts:84:7 › streaks › one missed day is forgiven once a week
+[8/36] [chromium] › e2e/academy-content.spec.ts:77:7 › streaks › first day starts at 1, the next day adds one, the same day does not
+[9/36] [chromium] › e2e/academy-content.spec.ts:92:7 › streaks › a lapsed streak reads as 0
+[10/36] [chromium] › e2e/academy-content.spec.ts:97:7 › streaks › weeks start on Monday
+[11/36] [chromium] › e2e/academy-content.spec.ts:102:7 › streaks › days are counted in West Africa Time
+[12/36] [chromium] › e2e/academy-content.spec.ts:108:7 › course order › only the first module is open at the start
+[13/36] [chromium] › e2e/academy-content.spec.ts:113:7 › course order › passing a module's quiz opens the next
+[14/36] [chromium] › e2e/academy-content.spec.ts:126:7 › course order › every lesson id in the shipped course is unique
+[15/36] [chromium] › e2e/academy-content.spec.ts:119:7 › course order › progress and the next lesson follow what is done
+[16/36] [chromium] › e2e/academy-content.spec.ts:131:7 › course order › every quiz answer points at a real option
+[17/36] [chromium] › e2e/academy-content.spec.ts:142:7 › youtubeIdFrom › reads every common link shape
+[18/36] [chromium] › e2e/academy-content.spec.ts:149:7 › youtubeIdFrom › refuses anything else
+[19/36] [chromium] › e2e/academy-content.spec.ts:156:7 › normaliseCourse › the shipped course survives a round trip unchanged
+[20/36] [chromium] › e2e/academy-content.spec.ts:160:7 › normaliseCourse › junk is cleaned: answers stay inside options, empty lessons go
+[21/36] [chromium] › e2e/academy-content.spec.ts:183:7 › parseNotes › reads headings, lists and code
+[22/36] [chromium] › e2e/academy-content.spec.ts:190:7 › project pool › every shipped brief survives normalising unchanged, with unique ids
+[23/36] [chromium] › e2e/academy-content.spec.ts:197:7 › project pool › normalising drops untitled briefs, dedupes ids and fixes bad values
+[24/36] [chromium] › e2e/academy-content.spec.ts:208:7 › project pool › only https GitHub repositories are accepted
+[25/36] [chromium] › e2e/academy-content.spec.ts:221:7 › build battles › the phase follows the clock, and confirmed results end it
+[26/36] [chromium] › e2e/academy-content.spec.ts:229:7 › build battles › the podium goes by votes, and a tie to whoever entered first
+[27/36] [chromium] › e2e/academy-content.spec.ts:240:7 › build battles › West Africa Time converts both ways
+[28/36] [chromium] › e2e/academy-content.spec.ts:246:7 › build battles › a battle with times out of order is refused
+[29/36] [chromium] › e2e/academy-content.spec.ts:256:7 › build battles › time left reads in its two biggest units
+[30/36] [chromium] › e2e/academy-content.spec.ts:265:7 › achievements › nothing is earned at the start, and progress is capped at the target
+[31/36] [chromium] › e2e/academy-content.spec.ts:286:7 › assignments › a grade is clamped to the guide: no extra points, missing lines score zero
+[32/36] [chromium] › e2e/academy-content.spec.ts:295:7 › assignments › the prompt fences the student's work off as data and lists the guide
+[33/36] [chromium] › e2e/academy-content.spec.ts:304:7 › assignments › the shipped course has an assignment with a guide worth 100 points
+[34/36] [chromium] › e2e/academy-content.spec.ts:310:7 › assignments › an assignment saved without a guide gets one line
+[35/36] [chromium] › e2e/academy-content.spec.ts:325:7 › academy link in a saved menu › goes in after Mentorship for a menu saved before the launch
+[36/36] [chromium] › e2e/academy-content.spec.ts:329:7 › academy link in a saved menu › leaves a menu alone when it was saved after the launch, already has it, or was never saved
+  36 passed (6.5s)
