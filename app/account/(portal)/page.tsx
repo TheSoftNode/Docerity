@@ -12,6 +12,7 @@ import { timeAgo } from "@/components/admin/admin-content";
 import { ProgressRing, RequestTrack, StatusPill, StatusPillOnDark, formatDate } from "@/components/account/portal-ui";
 import { VerifyBanner } from "@/components/account/verify-banner";
 import { LiveRefresh } from "@/components/account/live-refresh";
+import { LearningCard } from "@/components/academy/learning-card";
 
 export const metadata: Metadata = { title: "Overview" };
 export const dynamic = "force-dynamic";
@@ -90,6 +91,8 @@ export default async function AccountOverviewPage({ searchParams }: { searchPara
           </Link>
         </div>
       </div>
+
+      <LearningCard accountId={account.id} />
 
       <section aria-labelledby="projects-title" className="mt-12">
         <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">

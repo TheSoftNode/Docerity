@@ -103,6 +103,10 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "href": "/mentorship"
     },
     {
+      "label": "Academy",
+      "href": "/academy"
+    },
+    {
       "label": "Blog",
       "href": "/blog"
     },
@@ -127,6 +131,10 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
     {
       "label": "Mentorship",
       "href": "/mentorship"
+    },
+    {
+      "label": "Academy",
+      "href": "/academy"
     },
     {
       "label": "Blog",
