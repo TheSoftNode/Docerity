@@ -266,7 +266,7 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
             ) : rest.length === 0 ? (
               <p className="mt-4 text-[15.5px] text-[var(--ld-text-2)]">{battle.results ? "Only the podium this time." : "No entries this time."}</p>
             ) : (
-              <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {rest.map((entry) => {
                   const own = account?.id === String(entry.accountId);
                   const voted = account ? entry.voters.some((voter) => String(voter) === account.id) : false;

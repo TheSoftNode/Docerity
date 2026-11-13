@@ -75,13 +75,13 @@ export default async function ShowcasePage() {
                 </div>
               </div>
             ) : (
-              <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {builds.map((build) => {
                   const brief = titles.get(build.briefId);
                   const mine = account?.id === String(build.accountId);
                   const voted = account ? build.voters.some((voter) => String(voter) === account.id) : false;
                   return (
-                    <li key={String(build._id)} className="flex flex-col rounded-[28px] bg-[var(--ld-card)] p-3 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]">
+                    <li key={String(build._id)} className="flex min-w-0 flex-col rounded-[28px] bg-[var(--ld-card)] p-3 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]">
                       <a href={build.liveUrl} target="_blank" rel="noopener noreferrer" className="group block" aria-label={`Open ${brief?.title ?? "the build"} by ${build.name}`}>
                         <BrowserFrame url={build.liveUrl}>
                           <div className={cn("relative flex h-44 items-end p-5", coverFor(String(build._id)))}>
