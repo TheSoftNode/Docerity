@@ -5,19 +5,29 @@ import { redirect } from "next/navigation";
 
 import { getCurrentAccount } from "@/lib/account/session";
 import { getCourse } from "@/lib/academy/courses";
-import { XP, allLessons, courseProgress, findLesson, levelFor, markQuiz, nextLesson, openModules } from "@/lib/academy/rules";
+import { XP, allLessons, findLesson, markQuiz, nextLesson, openModules } from "@/lib/academy/rules";
 import type { QuizAnswers, QuizResult } from "@/lib/academy/types";
 import {
   awardXp,
   enrol,
   findEnrollment,
+  findSubmission,
   markCompleted,
-  markCourseComplete,
   recordQuiz,
+  recordSubmissionGrade,
   recordWatched,
+  saveSubmission,
   totalXp,
 } from "@/lib/repositories/academy.repository";
+import { safeHttps } from "@/lib/account/rules";
+import { githubRepo } from "@/lib/academy/briefs";
+import { MAX_AI_ATTEMPTS, type Grade } from "@/lib/academy/assignments";
+import { markWithAi } from "@/lib/academy/ai-marker";
+import { completeAssignment } from "@/lib/academy/progress";
+import { afterProgress, type Earned } from "@/lib/academy/progress";
 import { createLogger } from "@/lib/core/logger";
+
+export type { Earned };
 
 /**
  * What a student does in the Academy. Every action checks, on the server,
@@ -27,7 +37,6 @@ import { createLogger } from "@/lib/core/logger";
 
 const logger = createLogger("academy");
 
-export type Earned = { xp: number; levelUp: number | null; courseDone: boolean };
 export type LessonResult = { ok: true; earned: Earned } | { ok: false; message: string };
 export type QuizOutcome = { ok: true; result: QuizResult; earned: Earned } | { ok: false; message: string };
 
@@ -44,26 +53,6 @@ async function context(slug: string, lessonId: string) {
   const open = openModules(course, { completed: enrollment.completed, passed: enrollment.passed });
   if (!open.has(found.module.id)) return { error: "Pass the quiz before this module to open it." } as const;
   return { account, course, found, enrollment } as const;
-}
-
-/** XP for finishing the course, once, when the last lesson lands. */
-async function afterProgress(accountId: string, slug: string, before: number): Promise<Earned> {
-  const course = await getCourse(slug);
-  const enrollment = await findEnrollment(accountId, slug);
-  let courseDone = false;
-  let bonus = 0;
-  if (course && enrollment) {
-    const progress = courseProgress(course, { completed: enrollment.completed, passed: enrollment.passed });
-    if (progress.total > 0 && progress.done === progress.total) {
-      await markCourseComplete(accountId, slug);
-      bonus = await awardXp(accountId, "course", slug, XP.courseComplete);
-      courseDone = bonus > 0;
-    }
-  }
-  const after = (await totalXp(accountId)).total;
-  const levelBefore = levelFor(before).level;
-  const levelAfter = levelFor(after).level;
-  return { xp: after - before, levelUp: levelAfter > levelBefore ? levelAfter : null, courseDone };
 }
 
 export async function enrolAction(formData: FormData): Promise<void> {
@@ -85,6 +74,7 @@ export async function completeLessonAction(slug: string, lessonId: string): Prom
     const ctx = await context(slug, lessonId);
     if ("error" in ctx) return { ok: false, message: ctx.error ?? "Something went wrong." };
     if (ctx.found.lesson.kind === "quiz") return { ok: false, message: "A quiz completes when you pass it." };
+    if (ctx.found.lesson.kind === "assignment") return { ok: false, message: "An assignment completes when it passes." };
     const before = (await totalXp(ctx.account.id)).total;
     await markCompleted(ctx.account.id, slug, lessonId);
     await awardXp(ctx.account.id, "lesson", `${slug}/${lessonId}`, XP.lesson);
@@ -129,5 +119,86 @@ export async function submitQuizAction(slug: string, lessonId: string, answers: 
   } catch (error) {
     logger.error("quiz submit failed", error);
     return { ok: false, message: "We couldn't mark that. Try again in a moment." };
+  }
+}
+
+export type HandInState = {
+  ok?: boolean;
+  message?: string;
+  /** "graded": marked now; "waiting": a person will mark it. */
+  outcome?: "graded" | "waiting";
+  grade?: Grade;
+  earned?: Earned;
+  errors?: { answer?: string; repoUrl?: string; liveUrl?: string };
+  values?: { answer: string; repoUrl: string; liveUrl: string };
+};
+
+/**
+ * Hands in an assignment. With AI marking on, it's marked straight away:
+ * a pass completes the lesson and earns its XP. When the AI is unsure,
+ * unavailable, or the student has used their AI attempts, it waits for a
+ * person instead.
+ */
+export async function submitAssignmentAction(_previous: HandInState, formData: FormData): Promise<HandInState> {
+  const slug = String(formData.get("slug") ?? "");
+  const lessonId = String(formData.get("lessonId") ?? "");
+  const values = {
+    answer: String(formData.get("answer") ?? "").trim().slice(0, 20000),
+    repoUrl: String(formData.get("repoUrl") ?? "").trim().slice(0, 300),
+    liveUrl: String(formData.get("liveUrl") ?? "").trim().slice(0, 500),
+  };
+  try {
+    const ctx = await context(slug, lessonId);
+    if ("error" in ctx) return { message: ctx.error ?? "Something went wrong.", values };
+    const lesson = ctx.found.lesson;
+    if (lesson.kind !== "assignment") return { message: "That lesson has no assignment.", values };
+
+    const previous = await findSubmission(ctx.account.id, slug, lessonId);
+    // A hand-in that's waiting for a person can still be replaced; it goes back in the queue.
+    if (previous?.passed) return { message: "This assignment already passed.", values };
+
+    const errors: HandInState["errors"] = {};
+    const work = { answer: values.answer, repoUrl: "", liveUrl: "" };
+    if (lesson.handIn === "link") {
+      work.repoUrl = githubRepo(values.repoUrl);
+      work.liveUrl = values.liveUrl ? safeHttps(values.liveUrl) : "";
+      if (!work.repoUrl) errors.repoUrl = "A public GitHub repository, like https://github.com/you/project.";
+      if (values.liveUrl && !work.liveUrl) errors.liveUrl = "The live site's address, starting with https://.";
+      if (values.answer.length < 20) errors.answer = "Say in a few sentences what you built and how.";
+    } else if (values.answer.length < 20) {
+      errors.answer = "Write your answer (or paste your code) here first.";
+    }
+    if (errors.answer || errors.repoUrl || errors.liveUrl) return { errors, values };
+
+    const saved = await saveSubmission(ctx.account.id, slug, lessonId, work);
+    if (!saved) return { message: "That didn't save. Try again in a moment.", values };
+
+    const mark = saved.attempts <= MAX_AI_ATTEMPTS ? await markWithAi(lesson, work) : null;
+    if (!mark) {
+      revalidatePath(`/academy/${slug}/${lessonId}`);
+      return { ok: true, outcome: "waiting", message: "Handed in. Your teacher will mark it and you'll see the grade here.", values };
+    }
+
+    const { grade, needsHuman } = mark;
+    if (needsHuman) {
+      await recordSubmissionGrade(String(saved._id), { ...grade, gradedBy: "ai", checked: false, status: "waiting", aiNote: `AI suggested ${grade.score}% and asked for a teacher to check.` });
+      revalidatePath(`/academy/${slug}/${lessonId}`);
+      return { ok: true, outcome: "waiting", message: "Handed in. A teacher will check this one and you'll see the grade here.", values };
+    }
+
+    await recordSubmissionGrade(String(saved._id), { ...grade, gradedBy: "ai", checked: false, status: "graded" });
+    const earned = grade.passed ? await completeAssignment(ctx.account.id, slug, lessonId) : undefined;
+    revalidatePath(`/academy/${slug}`);
+    return {
+      ok: true,
+      outcome: "graded",
+      grade,
+      earned,
+      message: grade.passed ? "Passed. Well done." : "Not quite there yet. Read the feedback, improve it, and hand it in again.",
+      values,
+    };
+  } catch (error) {
+    logger.error("assignment hand-in failed", error);
+    return { message: "That didn't send. Try again in a moment.", values };
   }
 }

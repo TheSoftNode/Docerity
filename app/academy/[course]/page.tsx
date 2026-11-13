@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ClipboardCheckIcon, FileTextIcon, LockIcon, PlayIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ClipboardCheckIcon, FileTextIcon, LockIcon, PencilIcon, PlayIcon } from "lucide-react";
 
 import { getCurrentAccount } from "@/lib/account/session";
 import { getCourse } from "@/lib/academy/courses";
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ course: s
   return { title: course.title, description: course.tagline, alternates: { canonical: `/academy/${course.slug}` } };
 }
 
-const KIND_ICON: Record<LessonKind, typeof PlayIcon> = { video: PlayIcon, reading: FileTextIcon, quiz: ClipboardCheckIcon };
+const KIND_ICON: Record<LessonKind, typeof PlayIcon> = { video: PlayIcon, reading: FileTextIcon, quiz: ClipboardCheckIcon, assignment: PencilIcon };
 
 /**
  * One course: what it is, what you will be able to do, the way in (enrol, or

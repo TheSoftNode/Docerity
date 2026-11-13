@@ -12,7 +12,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-const KIND_LABEL = { video: "Video", reading: "Reading", quiz: "Quiz" } as const;
+const KIND_LABEL = { video: "Video", reading: "Reading", quiz: "Quiz", assignment: "Assignment" } as const;
+const DEFAULT_RUBRIC = [
+  { criterion: "Does what the task asks", points: 40 },
+  { criterion: "Clean, readable code with sensible names", points: 30 },
+  { criterion: "Explains the choices made", points: 30 },
+];
 const field = "grid gap-1.5 text-[13px] font-medium text-muted-foreground";
 const select = "h-10 rounded-xl border border-input bg-transparent px-3 text-sm text-foreground";
 
@@ -105,7 +110,14 @@ function LessonEditor({ lesson, onChange }: { lesson: Lesson; onChange: (lesson:
         </label>
         <label className={field}>
           Kind
-          <select className={select} value={lesson.kind} onChange={(event) => onChange({ ...lesson, kind: event.target.value as Lesson["kind"] })}>
+          <select
+            className={select}
+            value={lesson.kind}
+            onChange={(event) => {
+              const kind = event.target.value as Lesson["kind"];
+              onChange(kind === "assignment" ? { ...lesson, kind, handIn: lesson.handIn ?? "text", rubric: lesson.rubric?.length ? lesson.rubric : DEFAULT_RUBRIC } : { ...lesson, kind });
+            }}
+          >
             {LESSON_KINDS.map((kind) => (
               <option key={kind} value={kind}>
                 {KIND_LABEL[kind]}
@@ -138,9 +150,47 @@ function LessonEditor({ lesson, onChange }: { lesson: Lesson; onChange: (lesson:
         One-line summary
         <Input value={lesson.summary} onChange={(event) => onChange({ ...lesson, summary: event.target.value })} />
       </label>
+      {lesson.kind === "assignment" ? (
+        <div className="grid gap-3 rounded-2xl border border-border p-4">
+          <label className={cn(field, "max-w-[280px]")}>
+            Students hand in
+            <select className={select} value={lesson.handIn ?? "text"} onChange={(event) => onChange({ ...lesson, handIn: event.target.value as "text" | "link" })}>
+              <option value="text">Written answer or code</option>
+              <option value="link">GitHub repo (+ live link)</option>
+            </select>
+          </label>
+          <p className="text-[13px] font-medium text-foreground">Marking guide</p>
+          <p className="-mt-2 text-[12px] text-muted-foreground">What earns the points. The AI (and you) mark against exactly these lines; 70% passes.</p>
+          {(lesson.rubric ?? []).map((item, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Input
+                value={item.criterion}
+                onChange={(event) => onChange({ ...lesson, rubric: (lesson.rubric ?? []).map((row, i) => (i === index ? { ...row, criterion: event.target.value } : row)) })}
+                placeholder="What earns these points"
+                aria-label={`Marking line ${index + 1}`}
+              />
+              <Input
+                type="number"
+                min={1}
+                max={100}
+                value={item.points}
+                onChange={(event) => onChange({ ...lesson, rubric: (lesson.rubric ?? []).map((row, i) => (i === index ? { ...row, points: Number(event.target.value) } : row)) })}
+                aria-label={`Points for line ${index + 1}`}
+                className="w-20"
+              />
+              <Button type="button" variant="ghost" size="sm" aria-label={`Remove line ${index + 1}`} onClick={() => onChange({ ...lesson, rubric: (lesson.rubric ?? []).filter((_, i) => i !== index) })}>
+                <Trash2Icon />
+              </Button>
+            </div>
+          ))}
+          <Button type="button" variant="outline" size="sm" className="justify-self-start" onClick={() => onChange({ ...lesson, rubric: [...(lesson.rubric ?? []), { criterion: "", points: 10 }] })}>
+            <PlusIcon /> Marking line
+          </Button>
+        </div>
+      ) : null}
       {lesson.kind !== "quiz" ? (
         <label className={field}>
-          Notes (## heading, - list, ```code```, **bold**, `code`, [link](https://…))
+          {lesson.kind === "assignment" ? "The task (what to build or answer, in the same Markdown as notes)" : "Notes (## heading, - list, ```code```, **bold**, `code`, [link](https://…))"}
           <Textarea value={lesson.notes} onChange={(event) => onChange({ ...lesson, notes: event.target.value })} rows={10} className="font-mono text-[13px]" />
         </label>
       ) : (
@@ -270,7 +320,7 @@ export function CourseEditor({ initial, shipped }: { initial: Course; shipped: b
                       <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-foreground">{lesson.title || "Untitled lesson"}</span>
                       <span className="shrink-0 text-[12px] text-muted-foreground">
                         {KIND_LABEL[lesson.kind]}
-                        {lesson.kind === "video" ? (lesson.youtubeId ? " · video in" : " · no video yet") : lesson.kind === "quiz" ? ` · ${lesson.questions.length} questions` : ""}
+                        {lesson.kind === "video" ? (lesson.youtubeId ? " · video in" : " · no video yet") : lesson.kind === "quiz" ? ` · ${lesson.questions.length} questions` : lesson.kind === "assignment" ? ` · ${(lesson.rubric ?? []).reduce((sum, item) => sum + item.points, 0)} points` : ""}
                       </span>
                     </button>
                     <Button type="button" variant="ghost" size="sm" aria-label="Move lesson up" onClick={() => setModule(moduleIndex, { ...module, lessons: move(module.lessons, lessonIndex, -1) })}>
@@ -296,7 +346,17 @@ export function CourseEditor({ initial, shipped }: { initial: Course; shipped: b
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  const lesson: Lesson = { id: tempId("lesson"), title: `New ${KIND_LABEL[kind].toLowerCase()}`, kind, youtubeId: "", minutes: kind === "quiz" ? 5 : 10, summary: "", notes: "", questions: [] };
+                  const lesson: Lesson = {
+                    id: tempId("lesson"),
+                    title: `New ${KIND_LABEL[kind].toLowerCase()}`,
+                    kind,
+                    youtubeId: "",
+                    minutes: kind === "quiz" ? 5 : kind === "assignment" ? 30 : 10,
+                    summary: "",
+                    notes: "",
+                    questions: [],
+                    ...(kind === "assignment" ? { handIn: "text" as const, rubric: DEFAULT_RUBRIC } : {}),
+                  };
                   setModule(moduleIndex, { ...module, lessons: [...module.lessons, lesson] });
                   setOpenLesson(lesson.id);
                 }}

@@ -132,6 +132,45 @@ const battleEntrySchema = new Schema(
 battleEntrySchema.index({ battleSlug: 1, accountId: 1 }, { unique: true });
 battleEntrySchema.index({ battleSlug: 1, voters: 1 });
 
+/*
+ * A student's hand-in for an assignment lesson: the latest attempt and its
+ * grade. "waiting" = a person needs to mark it; "graded" = it has a grade the
+ * student can see. `checked` says whether a person has confirmed it (an AI
+ * grade starts unchecked).
+ */
+const submissionSchema = new Schema(
+  {
+    accountId: { type: Schema.Types.ObjectId, required: true },
+    courseSlug: { type: String, required: true, maxlength: 80 },
+    lessonId: { type: String, required: true, maxlength: 80 },
+    answer: { type: String, default: "", maxlength: 20000 },
+    repoUrl: { type: String, default: "", maxlength: 300 },
+    liveUrl: { type: String, default: "", maxlength: 500 },
+    attempts: { type: Number, default: 0 },
+    submittedAt: { type: Date, default: () => new Date() },
+    status: { type: String, enum: ["waiting", "graded"], default: "waiting" },
+    score: { type: Number, default: null },
+    passed: { type: Boolean, default: false },
+    criteria: { type: Schema.Types.Mixed, default: [] },
+    feedback: { type: String, default: "", maxlength: 3000 },
+    /* "ai" or the staff member's email. */
+    gradedBy: { type: String, default: "", maxlength: 320 },
+    gradedAt: { type: Date, default: null },
+    checked: { type: Boolean, default: false },
+    /* What the AI suggested when it asked for a person to check. */
+    aiNote: { type: String, default: "", maxlength: 200 },
+  },
+  { timestamps: true, minimize: false }
+);
+submissionSchema.index({ accountId: 1, courseSlug: 1, lessonId: 1 }, { unique: true });
+submissionSchema.index({ status: 1, checked: 1, submittedAt: 1 });
+
+export type AcademySubmission = InferSchemaType<typeof submissionSchema>;
+
+export const AcademySubmissionModel: Model<AcademySubmission> =
+  (mongoose.models.AcademySubmission as Model<AcademySubmission>) ??
+  mongoose.model<AcademySubmission>("AcademySubmission", submissionSchema);
+
 export type AcademyBattleRecord = InferSchemaType<typeof battleSchema>;
 export type AcademyBattleEntry = InferSchemaType<typeof battleEntrySchema>;
 

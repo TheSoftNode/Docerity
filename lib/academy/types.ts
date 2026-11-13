@@ -1,13 +1,13 @@
 /**
  * The shape of an Academy course, as the pages, the admin and the grading
  * all read it. A course is a list of modules; a module is a list of lessons;
- * a lesson is a video, a reading, or a quiz.
+ * a lesson is a video, a reading, a quiz, or an assignment.
  *
  * Courses ship in code (`lib/academy/catalog`) and can be edited in the
  * admin; an edited course is stored whole and replaces the shipped one.
  */
 
-export const LESSON_KINDS = ["video", "reading", "quiz"] as const;
+export const LESSON_KINDS = ["video", "reading", "quiz", "assignment"] as const;
 export type LessonKind = (typeof LESSON_KINDS)[number];
 
 export const COURSE_LEVELS = ["Beginner", "Intermediate", "Advanced"] as const;
@@ -25,6 +25,13 @@ export type Question = {
   explain: string;
 };
 
+/** One line of an assignment's marking guide: what earns the points, and how many. */
+export type RubricItem = { criterion: string; points: number };
+
+/** What a student hands in for an assignment: written work (text or code), or a GitHub repo and live link. */
+export const HAND_IN_KINDS = ["text", "link"] as const;
+export type HandInKind = (typeof HAND_IN_KINDS)[number];
+
 export type Lesson = {
   id: string;
   title: string;
@@ -36,6 +43,9 @@ export type Lesson = {
   /** The lesson's notes, in a small subset of Markdown (see `lib/academy/markdown`). */
   notes: string;
   questions: Question[];
+  /** Assignments only: how the work is handed in, and the marking guide. The task itself is in `notes`. */
+  handIn?: HandInKind;
+  rubric?: RubricItem[];
 };
 
 export type Module = {

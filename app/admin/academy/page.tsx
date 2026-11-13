@@ -6,7 +6,7 @@ import { requireStaff } from "@/lib/auth/dal";
 import { database } from "@/lib/config/env";
 import { listCourses } from "@/lib/academy/courses";
 import { allLessons } from "@/lib/academy/rules";
-import { countSubmittedBuilds, courseStats } from "@/lib/repositories/academy.repository";
+import { countSubmissionsToReview, countSubmittedBuilds, courseStats } from "@/lib/repositories/academy.repository";
 import { getBriefs } from "@/lib/academy/pool";
 import { getBattles } from "@/lib/academy/battle-store";
 import { battlePhase } from "@/lib/academy/battles";
@@ -40,6 +40,7 @@ export default async function AdminAcademyPage() {
   }
 
   const [courses, waiting, briefs, battles] = await Promise.all([listCourses({ drafts: true }), countSubmittedBuilds().catch(() => 0), getBriefs(), getBattles({ drafts: true })]);
+  const marking = await countSubmissionsToReview().catch(() => ({ waiting: 0, check: 0 }));
   const toConfirm = battles.filter((battle) => battle.status === "published" && battlePhase(battle) === "judging").length;
   const liveBattles = battles.filter((battle) => battle.status === "published" && ["open", "voting"].includes(battlePhase(battle))).length;
   const stats = await Promise.all(courses.map((course) => courseStats(course.slug).catch(() => ({ enrolled: 0, finished: 0, activeWeek: 0 }))));
@@ -47,7 +48,15 @@ export default async function AdminAcademyPage() {
   return (
     <>
       {header}
-      <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2">
+        <Link href="/admin/academy/assignments" className="group flex items-center justify-between gap-4 rounded-[24px] border border-border bg-card p-6 transition-colors hover:border-foreground/25">
+          <span>
+            <span className="block text-[13px] text-muted-foreground">Assignments to mark</span>
+            <span className="font-heading text-[30px] font-bold text-foreground">{marking.waiting}</span>
+            {marking.check ? <span className="block text-[13px] text-muted-foreground">{marking.check} AI {marking.check === 1 ? "mark" : "marks"} to check</span> : null}
+          </span>
+          {marking.waiting > 0 ? <span className="rounded-full bg-[#ff7a59] px-3 py-1 text-[13px] font-bold text-[#08102e]">Waiting on you</span> : <ArrowRightIcon className="size-5 text-muted-foreground" />}
+        </Link>
         <Link href="/admin/academy/builds" className="group flex items-center justify-between gap-4 rounded-[24px] border border-border bg-card p-6 transition-colors hover:border-foreground/25">
           <span>
             <span className="block text-[13px] text-muted-foreground">Builds to review</span>

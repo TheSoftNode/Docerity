@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeftIcon, CheckIcon, ChevronDownIcon, ClipboardCheckIcon, FileTextIcon, LockIcon, PlayIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon, ChevronDownIcon, ClipboardCheckIcon, FileTextIcon, LockIcon, PencilIcon, PlayIcon } from "lucide-react";
 
 import { getCurrentAccount } from "@/lib/account/session";
 import { getCourse } from "@/lib/academy/courses";
@@ -9,8 +9,10 @@ import { PASS_MARK, allLessons, courseProgress, findLesson, openModules } from "
 import type { Course, LessonKind } from "@/lib/academy/types";
 import { LessonNotes } from "@/lib/academy/markdown";
 import { getStanding } from "@/lib/academy/standing";
-import { database } from "@/lib/config/env";
-import { findEnrollment } from "@/lib/repositories/academy.repository";
+import { ai, database } from "@/lib/config/env";
+import { findEnrollment, findSubmission } from "@/lib/repositories/academy.repository";
+import { Assignment, type SubmissionView } from "@/components/academy/assignment";
+import type { Grade } from "@/lib/academy/assignments";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { LessonPlayer } from "@/components/academy/lesson-player";
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return { title: `${found.lesson.title} · ${course.title}`, description: found.lesson.summary, robots: { index: false } };
 }
 
-const KIND_ICON: Record<LessonKind, typeof PlayIcon> = { video: PlayIcon, reading: FileTextIcon, quiz: ClipboardCheckIcon };
+const KIND_ICON: Record<LessonKind, typeof PlayIcon> = { video: PlayIcon, reading: FileTextIcon, quiz: ClipboardCheckIcon, assignment: PencilIcon };
 
 function Outline({ course, current, completed, open, enrolled }: { course: Course; current: string; completed: string[]; open: Set<string>; enrolled: boolean }) {
   return (
@@ -111,6 +113,20 @@ export default async function LessonPage({ params }: { params: Params }) {
   const standing = tracked && account ? await getStanding(account.id) : null;
   const best = enrollment ? ((enrollment.best as Record<string, number> | undefined)?.[lesson.id] ?? null) : null;
   const lessonNumber = module.lessons.findIndex((item) => item.id === lesson.id) + 1;
+  const stored = lesson.kind === "assignment" && enrollment && account ? await findSubmission(account.id, slug, lesson.id).catch(() => null) : null;
+  const submission: SubmissionView | null = stored
+    ? {
+        status: stored.status,
+        grade:
+          stored.status === "graded" && typeof stored.score === "number"
+            ? ({ score: stored.score, passed: stored.passed, feedback: stored.feedback, criteria: (stored.criteria ?? []) as Grade["criteria"] } satisfies Grade)
+            : null,
+        gradedBy: stored.gradedBy === "ai" ? "ai" : stored.gradedBy ? "teacher" : "",
+        checked: stored.checked,
+        submittedAt: new Date(stored.submittedAt).toISOString(),
+        values: { answer: stored.answer, repoUrl: stored.repoUrl, liveUrl: stored.liveUrl },
+      }
+    : null;
 
   return (
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
@@ -158,7 +174,25 @@ export default async function LessonPage({ params }: { params: Params }) {
                 </div>
               ) : null}
 
-              {lesson.kind === "quiz" ? (
+              {lesson.kind === "assignment" ? (
+                <>
+                  {lesson.notes ? (
+                    <article className="mb-6 rounded-[24px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:p-9">
+                      <LessonNotes source={lesson.notes} />
+                    </article>
+                  ) : null}
+                  <Assignment
+                    slug={slug}
+                    lessonId={lesson.id}
+                    handIn={lesson.handIn ?? "text"}
+                    rubric={lesson.rubric ?? []}
+                    tracked={tracked}
+                    aiOn={ai.isConfigured}
+                    submission={submission}
+                    nextHref={nextHref}
+                  />
+                </>
+              ) : lesson.kind === "quiz" ? (
                 <Quiz
                   slug={slug}
                   lessonId={lesson.id}
