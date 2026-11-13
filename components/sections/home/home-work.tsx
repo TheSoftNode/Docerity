@@ -25,9 +25,6 @@ async function HomeWork() {
     >
       <div className="doc-shell py-16 sm:py-24 lg:py-28">
         <div className="mb-8 max-w-3xl md:mb-[clamp(36px,5vw,64px)]">
-          <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-            {heading.eyebrow}
-          </p>
           <h2
             id="home-work-title"
             className="ld-display text-[clamp(40px,5.6vw,80px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance"

@@ -48,9 +48,6 @@ function AboutCredentials({
   return (
     <section id="credentials" aria-labelledby="credentials-title" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
-        <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-          {heading.eyebrow}
-        </p>
         <div className="flex flex-wrap items-end justify-between gap-[22px]">
           <h2 id="credentials-title" className="ld-display max-w-[14ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
             {heading.title}

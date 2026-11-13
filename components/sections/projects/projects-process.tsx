@@ -38,9 +38,6 @@ async function ProjectsProcess() {
       <div className="doc-shell relative pb-16 sm:pb-24 lg:pb-28">
         <div className="mb-11 flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-              {heading.eyebrow}
-            </p>
             <h2
               id="process-title"
               className="ld-display max-w-[14ch] text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"

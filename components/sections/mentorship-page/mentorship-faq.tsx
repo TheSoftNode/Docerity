@@ -20,7 +20,6 @@ async function MentorshipFaq() {
     <section aria-labelledby="faq-title" className="bg-[#eef1fa] text-[var(--ld-ink)]">
       <div className="doc-shell grid items-start gap-[clamp(32px,6vw,96px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
         <div className="lg:sticky lg:top-28">
-          <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{heading.eyebrow}</p>
           <h2
             id="faq-title"
             className="ld-display max-w-[12ch] text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"

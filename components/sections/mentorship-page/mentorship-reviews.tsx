@@ -42,7 +42,6 @@ async function MentorshipReviews() {
       className={cn("bg-[var(--ld-paper)] text-[var(--ld-ink)]", !enough && "hidden md:block")}
     >
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
-        <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{heading.eyebrow}</p>
         <h2
           id="mentee-reviews-title"
           className="ld-display text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"

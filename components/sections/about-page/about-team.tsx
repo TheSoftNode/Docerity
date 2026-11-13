@@ -23,7 +23,6 @@ function AboutTeam({ heading, members }: { heading: SectionHeading; members: Tea
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <div className="grid items-end gap-6 lg:grid-cols-2 lg:gap-16">
           <div>
-            <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-muted-3)] uppercase">{heading.eyebrow}</p>
             <h2
               id="team-title"
               className="ld-display max-w-[14ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance"

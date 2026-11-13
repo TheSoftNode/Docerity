@@ -65,7 +65,6 @@ function ExplorerContracts({
         <div className="doc-shell pb-[clamp(40px,5vw,56px)]">
           <div className="mb-[22px] flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="mb-2.5 font-mono text-xs tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{heading.eyebrow}</p>
               <h2 id="contracts-title" className="ld-display text-[clamp(30px,3.6vw,48px)] leading-none font-extrabold tracking-[-0.04em]">
                 {heading.title}
               </h2>

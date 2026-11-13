@@ -89,9 +89,6 @@ function CaptionReel({
       className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(1000px_520px_at_15%_0%,rgb(28_58_140/0.75),transparent_62%),radial-gradient(800px_500px_at_100%_100%,rgb(28_58_140/0.35),transparent_60%),var(--ld-ink)] pt-[136px] text-[var(--ld-paper)]"
     >
       <div className="doc-shell relative">
-        <p className="ld-up inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-          {heading.eyebrow}
-        </p>
         <h1
           id="reviews-title"
           className="ld-display ld-up ld-delay-1 mt-[26px] max-w-[17ch] text-[clamp(42px,5.6vw,88px)] leading-[0.92] font-extrabold tracking-[-0.055em] text-balance"

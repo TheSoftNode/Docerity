@@ -46,7 +46,7 @@ async function HomeReviews() {
           <div className="flex-[1_1_480px]">
             <h2
               id="home-reviews-title"
-              className="font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase"
+              className="ld-display text-[22px] font-bold tracking-[-0.02em] text-[var(--ld-ink)]"
             >
               {heading.eyebrow}
             </h2>

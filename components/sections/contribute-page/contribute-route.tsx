@@ -45,7 +45,6 @@ function ContributeRoute({
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <div className="flex flex-wrap items-end justify-between gap-[22px]">
           <div>
-            <p className="mb-3.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">{heading.eyebrow}</p>
             <h2 id="route-title" className="ld-display max-w-[14ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
               {heading.title}
             </h2>

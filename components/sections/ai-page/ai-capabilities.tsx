@@ -115,10 +115,6 @@ async function AiCapabilities() {
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="mb-3.5 flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-              <span aria-hidden="true" className="size-[7px] rounded-[2px] bg-[var(--ld-accent)]" />
-              {heading.eyebrow}
-            </p>
             <h2 id="ai-capabilities-title" className="ld-display text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
               {heading.title}
             </h2>
@@ -144,7 +140,6 @@ async function AiCapabilities() {
         {models && models.length > 0 ? (
           <div className="mt-[clamp(48px,6vw,72px)] grid gap-6 border-t border-[rgb(var(--ld-tint-rgb)/0.16)] pt-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
             <div>
-              <p className="mb-3 font-mono text-[11.5px] tracking-[0.1em] text-[var(--ld-muted-3)] uppercase">{modelsHeading.eyebrow}</p>
               <h2 className="ld-display max-w-[16ch] text-[clamp(26px,3vw,40px)] leading-none font-extrabold tracking-[-0.04em]">{modelsHeading.title}</h2>
               {modelsHeading.lede ? <p className="mt-3 max-w-[30rem] text-[15.5px] leading-relaxed text-[var(--ld-muted)]">{modelsHeading.lede}</p> : null}
             </div>

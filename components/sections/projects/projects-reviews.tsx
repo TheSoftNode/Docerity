@@ -28,9 +28,6 @@ async function ProjectsReviews() {
   return (
     <section aria-labelledby="project-reviews-title" className="bg-[var(--ld-paper-2)] text-[var(--ld-ink)]">
       <div className="doc-shell py-16 sm:py-24 lg:py-28">
-        <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-          {heading.eyebrow}
-        </p>
         <h2
           id="project-reviews-title"
           className="ld-display max-w-[18ch] text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"

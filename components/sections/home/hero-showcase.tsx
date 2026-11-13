@@ -28,7 +28,7 @@ function HeroShowcase({
   title: string;
   phrases: HeadlinePhrase[];
   rows: BoardRow[];
-  eyebrow: ReactNode;
+  eyebrow?: ReactNode;
   /** The lede and the actions, rendered on the server. */
   children: ReactNode;
 }) {

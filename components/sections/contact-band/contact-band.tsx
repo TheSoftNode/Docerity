@@ -60,9 +60,6 @@ async function ContactBand() {
       className="ld-stay-dark scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]"
     >
       <div className="doc-shell pt-[clamp(72px,10vw,140px)]">
-        <p className="mb-6 inline-flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-          {heading.eyebrow}
-        </p>
         <h2
           id="contact-band-title"
           className="ld-display max-w-[14ch] text-[clamp(48px,10vw,156px)] leading-[0.9] font-extrabold tracking-[-0.055em]"

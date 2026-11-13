@@ -15,9 +15,6 @@ async function AiHero() {
       <div className="doc-shell relative">
         <div className="grid items-end gap-[clamp(24px,4vw,64px)] lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
           <div>
-            <p className="ld-up mb-[22px] font-mono text-[13px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
-              {heading.eyebrow}
-            </p>
             <h1 className="ld-display ld-up ld-delay-1 text-[clamp(42px,5.4vw,84px)] leading-[0.92] font-extrabold tracking-[-0.055em] text-balance">
               <TitlePieces title={heading.title} />
             </h1>

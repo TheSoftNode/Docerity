@@ -35,9 +35,6 @@ function AboutChangelog({ heading, experience }: { heading: SectionHeading; expe
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
         <div className="flex flex-wrap items-end justify-between gap-[22px]">
           <div>
-            <p className="mb-3.5 flex flex-wrap items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-              {heading.eyebrow}
-            </p>
             <h2 id="changelog-title" className="ld-display max-w-[14ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
               {heading.title}
             </h2>
@@ -74,10 +71,7 @@ function AboutChangelog({ heading, experience }: { heading: SectionHeading; expe
                 <div className="col-start-2 pt-[18px] md:col-start-1 md:py-[26px] md:text-right">
                   <span className="block font-mono text-[13px]">{entry.period}</span>
                   {current ? (
-                    <span className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-[var(--ld-line)] px-2 py-0.5 font-mono text-[10.5px] text-[var(--ld-text-muted)] uppercase">
-                      <span aria-hidden="true" className="size-1.5 rounded-full bg-[var(--ld-accent)]" />
-                      Current
-                    </span>
+                    <span className="mt-1 block text-[13px] font-medium text-[var(--ld-deep)]">Current</span>
                   ) : null}
                 </div>
                 <div aria-hidden="true" className="relative col-start-1 row-span-2 row-start-1 flex justify-center md:col-start-2 md:row-span-1">

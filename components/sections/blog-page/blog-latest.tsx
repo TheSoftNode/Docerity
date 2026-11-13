@@ -18,10 +18,7 @@ function BlogLatest({ element }: { element: BlogElement | undefined }) {
   return (
     <section aria-labelledby="latest-title" className="bg-[#e9edf8] text-[var(--ld-ink)]">
       <div className="doc-shell py-[clamp(64px,8vw,112px)]">
-        <p className="mb-[22px] flex items-center gap-2.5 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-          <span aria-hidden="true" className="size-[7px] rounded-[2px] bg-[var(--ld-accent)]" />
-          Latest · {element.date}
-        </p>
+        <p className="mb-4 text-[15px] text-[var(--ld-text-muted)]">Latest, {element.date}</p>
         <Link
           href={`/blog/${element.slug}`}
           className="group grid items-center gap-[clamp(28px,4vw,64px)] rounded-[32px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-[clamp(20px,2.6vw,32px)] outline-none transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(.2,.7,.2,1)] hover:-translate-y-1 hover:shadow-[0_40px_80px_-48px_rgb(var(--ld-ink-rgb)/0.45)] focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"

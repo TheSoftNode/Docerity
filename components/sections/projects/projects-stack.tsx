@@ -17,9 +17,6 @@ async function ProjectsStack() {
     <section aria-labelledby="stack-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
       <div className="doc-shell grid items-center gap-10 py-16 sm:py-24 md:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:py-28">
         <div>
-          <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-            {heading.eyebrow}
-          </p>
           <h2
             id="stack-title"
             className="ld-display max-w-[14ch] text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"
