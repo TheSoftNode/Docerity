@@ -4,6 +4,8 @@ import { webDevelopment } from "@/lib/academy/catalog/web-development";
 import { normaliseCourse } from "@/lib/academy/normalise";
 import { parseNotes } from "@/lib/academy/markdown";
 import { SHIPPED_BRIEFS, githubRepo, normaliseBriefs } from "@/lib/academy/briefs";
+import { battlePhase, draftBattle, fromWat, normaliseBattle, podium, timeLeft, toWat } from "@/lib/academy/battles";
+import { NO_FACTS, achievementsFor } from "@/lib/academy/achievements";
 import {
   PASS_MARK,
   allLessons,
@@ -208,5 +210,66 @@ test.describe("project pool", () => {
     expect(githubRepo("https://gitlab.com/ada/portfolio")).toBe("");
     expect(githubRepo("https://github.com/ada")).toBe("");
     expect(githubRepo("not a url")).toBe("");
+  });
+});
+
+test.describe("build battles", () => {
+  const base = { startsAt: "2026-11-20T17:00:00.000Z", submitBy: "2026-11-27T17:00:00.000Z", voteBy: "2026-11-30T17:00:00.000Z", results: null };
+
+  test("the phase follows the clock, and confirmed results end it", () => {
+    expect(battlePhase(base, new Date("2026-11-19T00:00:00Z"))).toBe("upcoming");
+    expect(battlePhase(base, new Date("2026-11-20T17:00:00Z"))).toBe("open");
+    expect(battlePhase(base, new Date("2026-11-27T17:00:00Z"))).toBe("voting");
+    expect(battlePhase(base, new Date("2026-12-01T00:00:00Z"))).toBe("judging");
+    expect(battlePhase({ ...base, results: { first: "a", second: "", third: "" } }, new Date("2026-11-21T00:00:00Z"))).toBe("finished");
+  });
+
+  test("the podium goes by votes, and a tie to whoever entered first", () => {
+    const entries = [
+      { id: "late", votes: 4, submittedAt: "2026-11-26T10:00:00Z" },
+      { id: "early", votes: 4, submittedAt: "2026-11-21T10:00:00Z" },
+      { id: "top", votes: 9, submittedAt: "2026-11-25T10:00:00Z" },
+      { id: "quiet", votes: 0, submittedAt: "2026-11-20T18:00:00Z" },
+    ];
+    expect(podium(entries)).toEqual(["top", "early", "late"]);
+    expect(podium(entries.slice(3))).toEqual(["quiet"]);
+  });
+
+  test("West Africa Time converts both ways", () => {
+    expect(fromWat("2026-11-20T18:00")).toBe("2026-11-20T17:00:00.000Z");
+    expect(toWat("2026-11-20T17:00:00.000Z")).toBe("2026-11-20T18:00");
+    expect(fromWat("next friday")).toBe("");
+  });
+
+  test("a battle with times out of order is refused", () => {
+    expect(normaliseBattle({ title: "", ...base })).toEqual({ error: "Give the battle a title." });
+    expect("error" in normaliseBattle({ title: "Budget app", ...base, voteBy: base.startsAt })).toBe(true);
+    const ok = normaliseBattle({ title: "Budget app!", ...base, level: "Wizard", rules: "One\n\nTwo" });
+    expect("battle" in ok && ok.battle).toMatchObject({ slug: "budget-app", level: "Beginner", rules: ["One", "Two"], status: "draft" });
+    const draft = draftBattle("Speed run", new Date("2026-11-13T10:00:00Z"));
+    expect("battle" in normaliseBattle(draft, draft.slug)).toBe(true);
+    expect(draft.startsAt).toBe("2026-11-14T17:00:00.000Z");
+  });
+
+  test("time left reads in its two biggest units", () => {
+    expect(timeLeft(((2 * 24 + 4) * 3600 + 30) * 1000)).toBe("2d 4h");
+    expect(timeLeft((3 * 3600 + 12 * 60) * 1000)).toBe("3h 12m");
+    expect(timeLeft((12 * 60 + 5) * 1000)).toBe("12m 05s");
+    expect(timeLeft(-5)).toBe("0m 00s");
+  });
+});
+
+test.describe("achievements", () => {
+  test("nothing is earned at the start, and progress is capped at the target", () => {
+    expect(achievementsFor(NO_FACTS).filter((item) => item.earned)).toEqual([]);
+    const items = achievementsFor({ ...NO_FACTS, lessons: 12, bestStreak: 9, builds: 2, wins: 1, podiums: 1, level: 6 });
+    const byId = Object.fromEntries(items.map((item) => [item.id, item]));
+    expect(byId["first-step"]).toMatchObject({ earned: true, value: 1 });
+    expect(byId["on-a-roll"].earned).toBe(true);
+    expect(byId["unbreakable"]).toMatchObject({ earned: false, value: 9, target: 30 });
+    expect(byId["builder"]).toMatchObject({ earned: false, value: 2 });
+    expect(byId["champion"].earned).toBe(true);
+    expect(byId["level-5"].earned).toBe(true);
+    expect(new Set(items.map((item) => item.id)).size).toBe(items.length);
   });
 });

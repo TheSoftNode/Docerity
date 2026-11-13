@@ -2,7 +2,8 @@ import "server-only";
 
 import { database } from "@/lib/config/env";
 import { dayKey, levelFor, liveStreak } from "@/lib/academy/rules";
-import { findLearner, totalXp } from "@/lib/repositories/academy.repository";
+import { NO_FACTS, achievementsFor, type Achievement } from "@/lib/academy/achievements";
+import { findLearner, totalXp, xpCounts } from "@/lib/repositories/academy.repository";
 
 export type Standing = {
   xp: number;
@@ -50,5 +51,27 @@ export async function getStanding(accountId: string): Promise<Standing> {
     };
   } catch {
     return EMPTY_STANDING;
+  }
+}
+
+/** A student's achievements, worked out from their XP ledger and streak. */
+export async function getAchievements(accountId: string, standing: Standing): Promise<Achievement[]> {
+  if (!database.isConfigured) return achievementsFor(NO_FACTS);
+  try {
+    const counts = await xpCounts(accountId);
+    const n = (kind: string) => counts[kind] ?? 0;
+    return achievementsFor({
+      lessons: n("lesson"),
+      perfectQuizzes: n("quiz-perfect"),
+      courses: n("course"),
+      builds: n("build"),
+      battles: n("battle-entry"),
+      podiums: n("battle-podium") + n("battle-win"),
+      wins: n("battle-win"),
+      bestStreak: Math.max(standing.bestStreak, standing.streak),
+      level: standing.level,
+    });
+  } catch {
+    return achievementsFor(NO_FACTS);
   }
 }

@@ -5,10 +5,11 @@ import { cn } from "@/lib/utils";
 const LINKS = [
   { href: "/academy", label: "Courses", key: "courses" },
   { href: "/academy/projects", label: "Project pool", key: "projects" },
+  { href: "/academy/battles", label: "Battles", key: "battles" },
   { href: "/academy/showcase", label: "Showcase", key: "showcase" },
 ] as const;
 
-/** The Academy's three rooms, as a row of pills at the top of each Academy page. */
+/** The Academy's rooms, as a row of pills at the top of each Academy page. */
 export function AcademyNav({ current }: { current: (typeof LINKS)[number]["key"] }) {
   return (
     <nav aria-label="Academy" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
