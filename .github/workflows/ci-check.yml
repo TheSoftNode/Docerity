@@ -1,0 +1,48 @@
+name: ci-check
+on:
+  push:
+    branches: [ci-check-portal]
+    paths-ignore: ["ci-shots/**"]
+permissions:
+  contents: write
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7
+        ports: ["27017:27017"]
+    env:
+      SESSION_SECRET: "ci-only-secret-ci-only-secret-ci-only-1234"
+      MONGODB_URI: "mongodb://localhost:27017/docerity"
+      ANTHROPIC_API_KEY: "ci-stand-in-key"
+      ANTHROPIC_BASE_URL: "http://localhost:4010"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - name: typecheck
+        run: npx tsc --noEmit -p . 2>&1 | tee tsc.txt; exit ${PIPESTATUS[0]}
+      - name: unit
+        run: npx playwright test e2e/academy-content.spec.ts --project=chromium --reporter=line 2>&1 | tail -40 | tee unit.txt
+        env:
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+      - run: npx next build
+      - run: node .ci/seed.cjs
+      - name: screenshots
+        run: |
+          mkdir -p ci-shots
+          node .ci/mock-claude.cjs &
+          npx next start -p 3000 &
+          npx wait-on -t 60000 http://localhost:3000/ || sleep 20
+          node .ci/shots.cjs
+      - name: commit screenshots
+        if: always()
+        run: |
+          mkdir -p ci-shots; cp tsc.txt unit.txt ci-shots/ 2>/dev/null || true
+          git config user.name ci && git config user.email ci@users.noreply.github.com
+          git add -f ci-shots && git commit -m "ci-shots" && git push origin HEAD:ci-check-portal
