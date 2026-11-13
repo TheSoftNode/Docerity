@@ -6,8 +6,8 @@ import { splitEmphasis } from "@/components/sections/home/hero-content";
 
 /**
  * The closing call to action of the redesigned pages: three ways to get in
- * touch. On a phone, slim rows under the words; on a laptop, one panel with
- * the words beside three tiles.
+ * touch. Slim rows on smaller screens; on a wide screen, one panel with the
+ * words beside three tiles.
  *
  * The title and lede are the editable `home-cta` heading, emphasis included,
  * and the address is the site's own contact email from settings.
@@ -71,15 +71,15 @@ async function ContactBand() {
       aria-labelledby="contact-band-title"
       className="ld-stay-dark scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]"
     >
-      {/* Below laptop width: the words, then the three options as slim rows.
-          From laptop width: one panel, words on the left and the options as
-          three tiles beside them. */}
-      <div className="doc-shell pt-16 pb-14 sm:pt-20 sm:pb-16 lg:py-24">
-        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:items-center lg:gap-12 lg:rounded-[30px] lg:border lg:border-[rgb(var(--ld-tint-rgb)/0.14)] lg:bg-[linear-gradient(150deg,#0f1a42,#0b1433)] lg:p-11">
+      {/* Phone: the words, then the three options as slim rows. Tablet and
+          small laptop: the same rows beside the words. Wide screens: one
+          panel, the words on the left and the options as three tiles. */}
+      <div className="doc-shell pt-16 pb-14 sm:pt-20 sm:pb-16 xl:py-24">
+        <div className="md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-end md:gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] xl:items-center xl:gap-12 xl:rounded-[30px] xl:border xl:border-[rgb(var(--ld-tint-rgb)/0.14)] xl:bg-[linear-gradient(150deg,#0f1a42,#0b1433)] xl:p-11">
           <div>
             <h2
               id="contact-band-title"
-              className="ld-display max-w-[12ch] text-[clamp(42px,7vw,66px)] leading-[0.94] font-extrabold tracking-[-0.05em] lg:text-[clamp(44px,4.4vw,66px)]"
+              className="ld-display max-w-[12ch] text-[clamp(42px,7vw,66px)] leading-[0.94] font-extrabold tracking-[-0.05em] xl:text-[clamp(44px,4.4vw,66px)]"
             >
               {splitEmphasis(heading.title).map((piece, index) =>
                 piece.emphasis ? (
@@ -92,13 +92,13 @@ async function ContactBand() {
               )}
             </h2>
             {heading.lede ? (
-              <p className="mt-4 max-w-[26rem] text-base leading-relaxed text-[var(--ld-muted)] sm:text-[17px] lg:mt-[18px]">
+              <p className="mt-4 max-w-[26rem] text-base leading-relaxed text-[var(--ld-muted)] sm:text-[17px] xl:mt-[18px]">
                 {heading.lede}
               </p>
             ) : null}
           </div>
 
-          <ul className="mt-8 lg:hidden">
+          <ul className="mt-8 md:mt-0 xl:hidden">
             {options.map((option) => (
               <li key={option.number} className="border-t border-[rgb(var(--ld-paper-rgb)/0.14)] last:border-b">
                 <a
@@ -128,7 +128,7 @@ async function ContactBand() {
             ))}
           </ul>
 
-          <ul className="hidden grid-cols-3 gap-3 lg:grid">
+          <ul className="hidden grid-cols-3 gap-3 xl:grid">
             {options.map((option) => (
               <li key={option.number} className="flex">
                 <a
