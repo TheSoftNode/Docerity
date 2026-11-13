@@ -43,9 +43,6 @@ async function HomeTracks() {
       <div className="doc-shell py-14 sm:py-24 lg:py-28">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-12 md:gap-6">
           <div>
-            <p className="mb-4 font-mono text-[13px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
-              What we do
-            </p>
             <h2
               id="home-tracks-title"
               className="ld-display text-[clamp(40px,5.6vw,80px)] leading-[0.95] font-extrabold tracking-[-0.045em]"
