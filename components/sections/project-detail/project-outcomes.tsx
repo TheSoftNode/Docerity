@@ -7,7 +7,15 @@ import { resultFigure } from "@/components/sections/project-detail/project-detai
  * apart from it, so the number and its claim cannot drift. A result with no
  * number is shown as its sentence alone.
  */
-function ProjectOutcomes({ results }: { results: readonly string[] }) {
+const NOTE: Record<string, string> = {
+  Live: "Measured in production, not in a demo.",
+  "Client work": "Measured in production, on the client's system.",
+  "Hackathon build": "What the build achieved in the time the hackathon allowed.",
+  Prototype: "What the prototype proved.",
+  Discontinued: "What it achieved while it ran.",
+};
+
+function ProjectOutcomes({ results, status = "Live" }: { results: readonly string[]; status?: string }) {
   if (results.length === 0) return null;
 
   return (
@@ -23,7 +31,7 @@ function ProjectOutcomes({ results }: { results: readonly string[] }) {
             </h2>
           </div>
           <p className="max-w-[22rem] text-[15px] leading-normal text-[var(--ld-text-muted)]">
-            Measured in production, not in a demo.
+            {NOTE[status] ?? "What it achieved so far."}
           </p>
         </div>
 

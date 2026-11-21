@@ -116,7 +116,7 @@ const projectSchema = new Schema(
     */
     status: {
       type: String,
-      enum: ["Live", "In progress", "On hold"],
+      enum: ["Live", "In progress", "On hold", "Client work", "Hackathon build", "Prototype", "Discontinued"],
       default: "Live",
       required: true,
     },
@@ -189,6 +189,19 @@ const projectSchema = new Schema(
     timeline: { type: String, default: "", maxlength: 120 },
     results: { type: [String], default: [] },
     body: { type: [caseStudySectionSchema], default: [] },
+
+    /* Case-study evidence, for work that can't be shown by a live link or
+       public code: a confidential client, a prize, a walkthrough video, what
+       the author did themselves, and public proof of the same technique. */
+    confidential: { type: Boolean, default: false },
+    recognition: { type: String, default: "", maxlength: 160 },
+    recognitionUrl: { type: String, default: "", maxlength: 500 },
+    demoUrl: { type: String, default: "", maxlength: 500 },
+    contributions: { type: [String], default: [] },
+    proofUrl: { type: String, default: "", maxlength: 500 },
+    proofLabel: { type: String, default: "", maxlength: 120 },
+    /* Which part of the founder's portfolio it belongs to; "" for none. */
+    showcase: { type: String, enum: ["", "professional", "docerity", "hackathon", "prototype"], default: "" },
 
     updatedBy: { type: String, default: "" },
   },

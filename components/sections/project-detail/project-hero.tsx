@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeftIcon, ArrowUpRightIcon, ChevronLeftIcon, ChevronRightIcon, GitBranchIcon } from "lucide-react";
+import { statusDot } from "@/lib/content/project-schema";
 
 import { cn } from "@/lib/utils";
 import type { Project } from "@/components/sections/work/work-data";
@@ -151,7 +152,7 @@ function ProjectHero({
                     aria-hidden="true"
                     className={cn(
                       "size-2 rounded-full",
-                      project.status === "Live" ? "ld-live bg-[#54D696]" : project.status === "In progress" ? "bg-[#FFC94A]" : "bg-[var(--ld-muted-3)]"
+                      project.status === "Live" ? "ld-live bg-[#54D696]" : statusDot(project.status)
                     )}
                   />
                 ) : null}

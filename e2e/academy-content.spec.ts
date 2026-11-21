@@ -8,6 +8,7 @@ import { battlePhase, draftBattle, fromWat, normaliseBattle, podium, timeLeft, t
 import { NO_FACTS, achievementsFor } from "@/lib/academy/achievements";
 import { cleanGrade, gradeTool, markingPrompt, scoreOf } from "@/lib/academy/assignments";
 import { withAcademyLink } from "@/lib/content/blocks/nav-launch";
+import { PROJECT_STATUSES, statusDot, videoEmbedUrl } from "@/lib/content/project-schema";
 import {
   PASS_MARK,
   allLessons,
@@ -331,5 +332,22 @@ test.describe("academy link in a saved menu", () => {
     expect(withAcademyLink(menu, null)).toEqual(menu);
     const has = [...menu, { label: "Learn", href: "/academy/" }];
     expect(withAcademyLink(has, new Date("2026-11-01T10:00:00Z"))).toEqual(has);
+  });
+});
+
+test.describe("case-study evidence", () => {
+  test("walkthrough links turn into players, and anything else is refused", () => {
+    expect(videoEmbedUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ")).toBe("https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ");
+    expect(videoEmbedUrl("youtu.be/dQw4w9WgXcQ")).toBe("https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ");
+    expect(videoEmbedUrl("https://www.loom.com/share/0123456789abcdef0123456789abcdef")).toBe("https://www.loom.com/embed/0123456789abcdef0123456789abcdef");
+    expect(videoEmbedUrl("https://vimeo.com/76979871")).toBe("https://player.vimeo.com/video/76979871");
+    expect(videoEmbedUrl("https://example.com/video.mp4")).toBeNull();
+    expect(videoEmbedUrl("javascript:alert(1)")).toBeNull();
+  });
+
+  test("every status has a dot, and the honest ones are distinct", () => {
+    const dots = PROJECT_STATUSES.map(statusDot);
+    expect(dots.every(Boolean)).toBe(true);
+    expect(new Set(["Live", "In progress", "Client work", "Hackathon build", "Prototype"].map(statusDot)).size).toBe(5);
   });
 });

@@ -113,6 +113,14 @@ function toDocument(input: ProjectInput, updatedBy: string) {
     timeline: input.timeline.trim(),
     results: input.results,
     body: input.body,
+    confidential: input.confidential,
+    recognition: input.recognition.trim(),
+    recognitionUrl: input.recognitionUrl.trim(),
+    demoUrl: input.demoUrl.trim(),
+    contributions: input.contributions,
+    proofUrl: input.proofUrl.trim(),
+    proofLabel: input.proofLabel.trim(),
+    showcase: input.showcase,
     updatedBy,
   };
 }

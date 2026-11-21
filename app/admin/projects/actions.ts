@@ -9,12 +9,14 @@ import { storage } from "@/lib/config/env";
 import { destroyAsset } from "@/lib/storage/cloudinary";
 import {
   cleanGallery,
+  cleanLines,
   cleanList,
   cleanSections,
   normaliseProjectUrl,
   slugifyProject,
   validateProject,
   PROJECT_LIMITS,
+  PROJECT_SHOWCASES,
   type ProjectFieldErrors,
   type ProjectInput,
 } from "@/lib/content/project-schema";
@@ -63,6 +65,8 @@ export type SimpleResult = { ok: true; message?: string } | { ok: false; message
 function revalidateWork(slug?: string) {
   revalidatePath("/");
   revalidatePath("/projects");
+  /* The portfolio lists the projects placed on it as case studies. */
+  revalidatePath("/theo");
   if (slug) revalidatePath(`/projects/${slug}`);
   revalidatePath("/sitemap.xml");
   revalidatePath("/admin/projects");
@@ -81,6 +85,13 @@ function normalise(input: ProjectInput): ProjectInput {
     body: cleanSections(input.body),
     gallery: cleanGallery(input.gallery),
     client: input.client.trim(),
+    recognition: input.recognition.trim().slice(0, 160),
+    recognitionUrl: normaliseProjectUrl(input.recognitionUrl) ?? "",
+    demoUrl: normaliseProjectUrl(input.demoUrl) ?? "",
+    proofUrl: normaliseProjectUrl(input.proofUrl) ?? "",
+    proofLabel: input.proofLabel.trim().slice(0, 120),
+    contributions: cleanLines(input.contributions, PROJECT_LIMITS.maxContributions),
+    showcase: PROJECT_SHOWCASES.some((item) => item.value === input.showcase) ? input.showcase : "",
     /* Run through the protocol check, so a bare "acme.com" becomes a usable
        href and `javascript:` never reaches an anchor. */
     liveUrl: normaliseProjectUrl(input.liveUrl) ?? "",
@@ -323,6 +334,14 @@ export async function importBuiltInProjects(): Promise<
               image: null,
             }))
           : [],
+        confidential: false,
+        recognition: "",
+        recognitionUrl: "",
+        demoUrl: "",
+        contributions: [],
+        proofUrl: "",
+        proofLabel: "",
+        showcase: "",
       };
     });
 

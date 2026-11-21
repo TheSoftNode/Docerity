@@ -10,6 +10,7 @@ import { ProjectHero } from "@/components/sections/project-detail/project-hero";
 import { ProjectPreview } from "@/components/sections/project-detail/project-preview";
 import { StackTicker } from "@/components/sections/project-detail/stack-ticker";
 import { ProjectOutcomes } from "@/components/sections/project-detail/project-outcomes";
+import { ProjectEvidence } from "@/components/sections/project-detail/project-evidence";
 import { ProjectWriteUp } from "@/components/sections/project-detail/project-write-up";
 import { ProjectGlance } from "@/components/sections/project-detail/project-glance";
 import { ProjectGallery } from "@/components/sections/project-detail/project-gallery";
@@ -81,7 +82,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <ProjectHero project={project} siblings={siblings} hasWriteUp={hasWriteUp} />
           <ProjectPreview project={project} media={found.media} />
           <StackTicker tags={project.tags} />
-          <ProjectOutcomes results={project.results ?? []} />
+          <ProjectEvidence project={project} />
+          <ProjectOutcomes results={project.results ?? []} status={project.status} />
           {hasWriteUp ? <ProjectWriteUp sections={sections} /> : <ProjectGlance project={project} />}
           <ProjectGallery images={project.gallery ?? []} name={project.name} />
         </article>

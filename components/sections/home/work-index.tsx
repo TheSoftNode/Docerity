@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { statusDot } from "@/lib/content/project-schema";
 import { useEffect, useState } from "react";
 import { ArrowLeftIcon, ArrowRightIcon, ArrowUpRightIcon, CodeIcon } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
@@ -105,7 +106,7 @@ function WorkIndex({ projects, media }: Props) {
                   <span className="hidden items-center gap-2 font-mono text-[11px] text-[var(--ld-muted-3)] uppercase sm:inline-flex">
                     <span
                       aria-hidden="true"
-                      className={cn("size-1.5 rounded-full", item.status === "Live" ? "bg-[#54D696]" : "bg-[#FFC94A]")}
+                      className={cn("size-1.5 rounded-full", statusDot(item.status))}
                     />
                     {item.category}
                   </span>
