@@ -120,7 +120,7 @@ export default async function ProjectPoolPage({ searchParams }: { searchParams: 
                 return (
                   <li key={brief.id}>
                     <Link href={`/academy/projects/${brief.id}`} className={cn("group relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[22px] p-6 transition-transform hover:-translate-y-1 sm:p-7", tone.card)}>
-                      <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute -top-9 -right-3 text-[140px] leading-none font-semibold tracking-[-0.06em]", tone.numeral)}>
+                      <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute right-6 bottom-14 text-[32px] leading-none font-medium tracking-[-0.03em]", tone.numeral)}>
                         {String(number).padStart(2, "0")}
                       </span>
                       <div className="relative flex items-center justify-between gap-3">

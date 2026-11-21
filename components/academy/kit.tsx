@@ -115,7 +115,7 @@ export const LEVEL_TONE: Record<CourseLevel, { card: string; text: string; soft:
     soft: "text-[#4f556b]",
     chip: "border-[rgb(8_16_46/0.14)] bg-[rgb(255_255_255/0.55)]",
     accent: "text-[#1c3a8c]",
-    numeral: "text-[rgb(28_58_140/0.12)]",
+    numeral: "text-[rgb(28_58_140/0.22)]",
   },
   Intermediate: {
     card: "bg-[#1c3a8c] text-white",
@@ -123,7 +123,7 @@ export const LEVEL_TONE: Record<CourseLevel, { card: string; text: string; soft:
     soft: "text-[#afc4ff]",
     chip: "border-[rgb(255_255_255/0.22)] bg-[rgb(255_255_255/0.06)]",
     accent: "text-[#afc4ff]",
-    numeral: "text-[rgb(175_196_255/0.14)]",
+    numeral: "text-[rgb(175_196_255/0.3)]",
   },
   Advanced: {
     card: "ld-keep-dark bg-[#0b1433] text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.12)]",
@@ -131,7 +131,7 @@ export const LEVEL_TONE: Record<CourseLevel, { card: string; text: string; soft:
     soft: "text-[#9aa7cf]",
     chip: "border-[rgb(175_196_255/0.2)] bg-[rgb(175_196_255/0.05)]",
     accent: "text-[#ff9a80]",
-    numeral: "text-[rgb(255_122_89/0.12)]",
+    numeral: "text-[rgb(255_122_89/0.35)]",
   },
 };
 

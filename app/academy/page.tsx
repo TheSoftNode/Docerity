@@ -256,7 +256,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                     return (
                       <li key={brief.id} className="w-[84%] max-w-[360px] shrink-0 snap-start sm:w-auto sm:max-w-none">
                         <Link href={`/academy/projects/${brief.id}`} className={cn("group relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[22px] p-7 transition-transform hover:-translate-y-1", tone.card)}>
-                          <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute -top-10 -right-3 text-[96px] leading-none font-semibold tracking-[-0.06em]", tone.numeral)}>
+                          <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute top-5 right-6 text-[32px] leading-none font-medium tracking-[-0.03em]", tone.numeral)}>
                             {pad(index + 1)}
                           </span>
                           <span className={cn("relative text-[14px] font-semibold", tone.accent)}>
