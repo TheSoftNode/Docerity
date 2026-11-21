@@ -18,12 +18,50 @@ export const PROJECT_LIMITS = {
   /* Enough to show the product, few enough that the page is still a page
      rather than a contact sheet. */
   maxGallery: 8,
+  maxContributions: 10,
 } as const;
 
-export type ProjectStatus = "Live" | "In progress" | "On hold";
+/*
+  The project's real-world state, shown on every card. Honest labels for the
+  work that never reached users is better than "Live" on a dead link:
+  private client work, hackathon builds, prototypes and things shut down all
+  have a name of their own.
+*/
+export type ProjectStatus = "Live" | "In progress" | "On hold" | "Client work" | "Hackathon build" | "Prototype" | "Discontinued";
 export type ProjectPreview = "dashboard" | "grid" | "list";
 
-export const PROJECT_STATUSES: ProjectStatus[] = ["Live", "In progress", "On hold"];
+export const PROJECT_STATUSES: ProjectStatus[] = ["Live", "In progress", "Client work", "Hackathon build", "Prototype", "On hold", "Discontinued"];
+
+/** The dot beside a status, the same on every card and page. */
+export function statusDot(status: string): string {
+  switch (status) {
+    case "Live":
+      return "bg-[#54D696]";
+    case "In progress":
+      return "bg-[#FFC94A]";
+    case "Client work":
+      return "bg-[#AFC4FF]";
+    case "Hackathon build":
+      return "bg-[#FF7A59]";
+    case "Prototype":
+      return "bg-[#C9B4FF]";
+    default:
+      return "bg-[var(--ld-muted-3)]";
+  }
+}
+
+/*
+  Where a project sits on the founder's portfolio (/theo), as a case study.
+  "" keeps it off the portfolio; the projects page lists everything anyway.
+*/
+export type ProjectShowcase = "" | "professional" | "docerity" | "hackathon" | "prototype";
+export const PROJECT_SHOWCASES: { value: ProjectShowcase; label: string }[] = [
+  { value: "", label: "Not on the portfolio" },
+  { value: "professional", label: "Leadership & professional work" },
+  { value: "docerity", label: "Docerity" },
+  { value: "hackathon", label: "Hackathons" },
+  { value: "prototype", label: "Prototypes & experiments" },
+];
 export const PROJECT_PREVIEWS: ProjectPreview[] = ["dashboard", "grid", "list"];
 
 /*
@@ -88,6 +126,19 @@ export type ProjectInput = {
   timeline: string;
   results: string[];
   body: CaseStudySectionInput[];
+  /** The client's work is under NDA: say so, and name them only as `client` describes them. */
+  confidential: boolean;
+  /** A prize or mention, e.g. "Winner, ETHGlobal Lagos 2025", and where to check it. */
+  recognition: string;
+  recognitionUrl: string;
+  /** A walkthrough video: YouTube, Loom or Vimeo. */
+  demoUrl: string;
+  /** "My part": what you did yourself, one per line. */
+  contributions: string[];
+  /** Public proof when the real code is private: a repo or article showing the same technique. */
+  proofUrl: string;
+  proofLabel: string;
+  showcase: ProjectShowcase;
 };
 
 export type ProjectFieldErrors = Partial<
@@ -99,6 +150,9 @@ export type ProjectFieldErrors = Partial<
     | "tags"
     | "liveUrl"
     | "repoUrl"
+    | "recognitionUrl"
+    | "demoUrl"
+    | "proofUrl"
     | "media"
     | "gallery"
     | "body"
@@ -194,6 +248,15 @@ export function validateProject(input: ProjectInput): ProjectFieldErrors {
   }
   if (input.repoUrl.trim() && !normaliseProjectUrl(input.repoUrl)) {
     errors.repoUrl = "That does not look like a web address.";
+  }
+  if (input.recognitionUrl.trim() && !normaliseProjectUrl(input.recognitionUrl)) {
+    errors.recognitionUrl = "That does not look like a web address.";
+  }
+  if (input.demoUrl.trim() && !videoEmbedUrl(input.demoUrl)) {
+    errors.demoUrl = "A YouTube, Loom or Vimeo link.";
+  }
+  if (input.proofUrl.trim() && !normaliseProjectUrl(input.proofUrl)) {
+    errors.proofUrl = "That does not look like a web address.";
   }
 
   /*
@@ -297,5 +360,51 @@ export function emptyProject(): ProjectInput {
     timeline: "",
     results: [],
     body: [],
+    confidential: false,
+    recognition: "",
+    recognitionUrl: "",
+    demoUrl: "",
+    contributions: [],
+    proofUrl: "",
+    proofLabel: "",
+    showcase: "",
   };
+}
+
+/** Trims and drops blank lines, keeping longer text than `cleanList` (a sentence each). */
+export function cleanLines(values: string[], max: number, length = 240): string[] {
+  return values
+    .map((value) => value.trim().slice(0, length))
+    .filter(Boolean)
+    .slice(0, max);
+}
+
+/**
+ * The embeddable player address for a walkthrough video, or null when the
+ * link isn't one we can play: YouTube (played from the privacy-enhanced
+ * host), Loom or Vimeo.
+ */
+export function videoEmbedUrl(raw: string): string | null {
+  const href = normaliseProjectUrl(raw);
+  if (!href) return null;
+  const url = new URL(href);
+  const host = url.hostname.replace(/^www\./, "").replace(/^m\./, "");
+  const id = (value: string | null | undefined) => (value && /^[\w-]{6,64}$/.test(value) ? value : null);
+  if (host === "youtube.com") {
+    const v = id(url.searchParams.get("v")) ?? id(url.pathname.match(/^\/(?:shorts|embed|live)\/([\w-]+)/)?.[1]);
+    return v ? `https://www.youtube-nocookie.com/embed/${v}` : null;
+  }
+  if (host === "youtu.be") {
+    const v = id(url.pathname.slice(1));
+    return v ? `https://www.youtube-nocookie.com/embed/${v}` : null;
+  }
+  if (host === "loom.com") {
+    const v = id(url.pathname.match(/^\/(?:share|embed)\/([\w-]+)/)?.[1]);
+    return v ? `https://www.loom.com/embed/${v}` : null;
+  }
+  if (host === "vimeo.com" || host === "player.vimeo.com") {
+    const v = url.pathname.match(/(\d{6,12})/)?.[1];
+    return v ? `https://player.vimeo.com/video/${v}` : null;
+  }
+  return null;
 }

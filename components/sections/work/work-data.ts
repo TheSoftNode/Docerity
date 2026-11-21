@@ -21,7 +21,8 @@ export type CaseStudySection = {
   image?: ProjectImage;
 };
 
-export type ProjectStatus = "Live" | "In progress" | "On hold";
+export type { ProjectStatus } from "@/lib/content/project-schema";
+import type { ProjectShowcase, ProjectStatus } from "@/lib/content/project-schema";
 
 export type Project = {
   index: string;
@@ -52,6 +53,16 @@ export type Project = {
      in this file, which is why both are optional. */
   client?: string;
   gallery?: readonly ProjectImage[];
+  /* Case-study evidence (see the project model). */
+  confidential?: boolean;
+  recognition?: string;
+  recognitionUrl?: string;
+  /** The embeddable player address, already checked. */
+  demoEmbed?: string;
+  contributions?: readonly string[];
+  proofUrl?: string;
+  proofLabel?: string;
+  showcase?: ProjectShowcase;
 };
 
 /*

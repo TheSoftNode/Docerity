@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { statusDot } from "@/lib/content/project-schema";
 import { useMemo, useState } from "react";
 import { ArrowUpRightIcon } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
@@ -25,11 +26,7 @@ type View = "grid" | "index";
    few enough that the page does not become thirty screens on a phone. */
 const FIRST_LOOK = 9;
 
-function statusTone(status: Project["status"]) {
-  if (status === "Live") return "bg-[#54D696]";
-  if (status === "In progress") return "bg-[#FFC94A]";
-  return "bg-[var(--ld-text-dim)]";
-}
+const statusTone = statusDot;
 
 /**
  * Every project, filterable, as a grid of cards or a dense index.

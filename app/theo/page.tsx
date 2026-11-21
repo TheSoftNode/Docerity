@@ -17,6 +17,7 @@ import { AboutCredentials } from "@/components/sections/about-page/about-credent
 import { PortfolioActions } from "@/components/sections/about-page/studio";
 import { WorkIndex } from "@/components/sections/home/work-index";
 import { WorkRail } from "@/components/sections/home/work-rail";
+import { CaseStudies } from "@/components/sections/about-page/case-studies";
 
 export const revalidate = 300;
 
@@ -51,6 +52,9 @@ export default async function PortfolioPage() {
     getHeading("about", "about-credentials"),
   ]);
   const about = block as unknown as AboutContent;
+  /* Projects placed on the portfolio in the projects editor; until there are
+     any, the homepage's featured projects stand in. */
+  const caseStudies = work.projects.filter((project) => project.showcase);
   const facts: FactView[] = [...about.facts, { value: String(work.projects.length), label: "Shipped projects", since: "every one listed on the projects page" }];
 
   return (
@@ -69,12 +73,18 @@ export default async function PortfolioPage() {
               </h2>
               {selected.lede ? <p className="text-[15.5px] leading-relaxed text-[var(--ld-muted)]">{selected.lede}</p> : null}
             </div>
-            <div className="md:hidden">
-              <WorkRail projects={featured.projects} media={featured.media} />
-            </div>
-            <div className="hidden md:block">
-              <WorkIndex projects={featured.projects} media={featured.media} />
-            </div>
+            {caseStudies.length ? (
+              <CaseStudies projects={caseStudies} />
+            ) : (
+              <>
+                <div className="md:hidden">
+                  <WorkRail projects={featured.projects} media={featured.media} />
+                </div>
+                <div className="hidden md:block">
+                  <WorkIndex projects={featured.projects} media={featured.media} />
+                </div>
+              </>
+            )}
           </div>
         </section>
         <AboutChangelog heading={experience} experience={about.experience} />

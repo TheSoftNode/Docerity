@@ -1,5 +1,6 @@
 import "server-only";
 
+import { videoEmbedUrl } from "@/lib/content/project-schema";
 import { database, storage } from "@/lib/config/env";
 import { createLogger } from "@/lib/core/logger";
 import {
@@ -165,6 +166,13 @@ function toProject(project: LeanProject, position: number): Project {
     ...(project.timeline ? { timeline: project.timeline } : {}),
     ...(project.results?.length ? { results: project.results } : {}),
     ...(project.client ? { client: project.client } : {}),
+    ...(project.confidential ? { confidential: true } : {}),
+    ...(project.recognition ? { recognition: project.recognition } : {}),
+    ...(project.recognitionUrl ? { recognitionUrl: project.recognitionUrl } : {}),
+    ...(project.demoUrl && videoEmbedUrl(project.demoUrl) ? { demoEmbed: videoEmbedUrl(project.demoUrl)! } : {}),
+    ...(project.contributions?.length ? { contributions: project.contributions } : {}),
+    ...(project.proofUrl ? { proofUrl: project.proofUrl, proofLabel: project.proofLabel || "" } : {}),
+    ...(project.showcase ? { showcase: project.showcase as Project["showcase"] } : {}),
     ...(project.gallery?.length
       ? {
           gallery: project.gallery

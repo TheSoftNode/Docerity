@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { SectionHeading } from "@/lib/content/blocks/source";
+import { statusDot } from "@/lib/content/project-schema";
 import type { Project } from "@/components/sections/work/work-data";
 import { CommandBar } from "@/components/sections/projects/command-bar";
 import {
@@ -15,11 +16,6 @@ const COLUMN_MOTION = ["ld-wall-up", "ld-wall-down", "ld-wall-up-slow", "ld-wall
 
 const TILE_FILLS = ["bg-[var(--ld-panel)]", "bg-[var(--ld-deep)]", "bg-[var(--ld-ink-2)]", "bg-[var(--ld-row)]"];
 
-function statusDot(status: Project["status"]) {
-  if (status === "Live") return "bg-[#54D696]";
-  if (status === "In progress") return "bg-[#FFC94A]";
-  return "bg-[var(--ld-muted-3)]";
-}
 
 /**
  * The projects hero: every project on a tilted, drifting wall, with the

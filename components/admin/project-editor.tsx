@@ -28,6 +28,7 @@ import { saveProject } from "@/app/admin/projects/actions";
 import {
   PROJECT_LIMITS,
   PROJECT_PREVIEWS,
+  PROJECT_SHOWCASES,
   PROJECT_STATUSES,
   SUGGESTED_GROUPS,
   slugifyProject,
@@ -622,6 +623,98 @@ function ProjectEditor({
                 />
               </div>
 
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="contributions">My part</Label>
+                <Textarea
+                  id="contributions"
+                  value={project.contributions.join("\n")}
+                  onChange={(event) => set("contributions", event.target.value.split("\n"))}
+                  rows={4}
+                  className="resize-y"
+                  placeholder={"What you did yourself, one per line.\nDesigned the queue that stopped scans failing at 40 at once."}
+                />
+                <p className="text-xs text-muted-foreground">Separate from the team&apos;s work, so a reader knows exactly what was yours. Up to {PROJECT_LIMITS.maxContributions}.</p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="recognition">Recognition</Label>
+                  <Input
+                    id="recognition"
+                    value={project.recognition}
+                    onChange={(event) => set("recognition", event.target.value)}
+                    className="h-10"
+                    placeholder="Winner, ETHGlobal Lagos 2025"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="recognitionUrl">Where to check it</Label>
+                  <Input
+                    id="recognitionUrl"
+                    value={project.recognitionUrl}
+                    onChange={(event) => set("recognitionUrl", event.target.value)}
+                    className="h-10"
+                    placeholder="The Devpost or DoraHacks page"
+                  />
+                  <FieldError message={errors.recognitionUrl} />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="demoUrl">Walkthrough video</Label>
+                <Input
+                  id="demoUrl"
+                  value={project.demoUrl}
+                  onChange={(event) => set("demoUrl", event.target.value)}
+                  className="h-10"
+                  placeholder="A YouTube, Loom or Vimeo link"
+                />
+                <p className="text-xs text-muted-foreground">Plays on the project page. A two-minute screen recording of it running is often the best proof there is.</p>
+                <FieldError message={errors.demoUrl} />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="proofUrl">Public proof</Label>
+                  <Input
+                    id="proofUrl"
+                    value={project.proofUrl}
+                    onChange={(event) => set("proofUrl", event.target.value)}
+                    className="h-10"
+                    placeholder="A public repo or article"
+                  />
+                  <FieldError message={errors.proofUrl} />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="proofLabel">What it shows</Label>
+                  <Input
+                    id="proofLabel"
+                    value={project.proofLabel}
+                    onChange={(event) => set("proofLabel", event.target.value)}
+                    className="h-10"
+                    placeholder="The same queueing technique, open source"
+                  />
+                </div>
+              </div>
+              <p className="-mt-2 text-xs text-muted-foreground">When the real code is private, a small public version of the same technique, or a write-up, shows the skill without showing anyone&apos;s code.</p>
+
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="showcase">On your portfolio (/theo)</Label>
+                <select
+                  id="showcase"
+                  value={project.showcase}
+                  onChange={(event) => set("showcase", event.target.value as ProjectInput["showcase"])}
+                  className={selectClass}
+                >
+                  {PROJECT_SHOWCASES.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-muted-foreground">Projects placed here appear on your portfolio as case studies, in that group.</p>
+              </div>
+
               {project.body.map((section, index) => (
                 <div key={index} className="rounded-lg border border-border/70 p-3">
                   <div className="flex items-start gap-2">
@@ -856,8 +949,18 @@ function ProjectEditor({
             />
             <p className="text-xs text-muted-foreground">
               Leave empty for your own projects. Do not name a client who has
-              not agreed to it.
+              not agreed to it; describe them instead (&ldquo;A regtech platform for African banks&rdquo;).
             </p>
+            <label className="mt-1 flex cursor-pointer items-center gap-2 text-sm text-foreground">
+              <input
+                type="checkbox"
+                checked={project.confidential}
+                onChange={(event) => set("confidential", event.target.checked)}
+                className="size-4 rounded border-input"
+              />
+              Confidential client work
+            </label>
+            <p className="text-xs text-muted-foreground">Says on the page that the code and screens are private, so a missing link reads as a choice, not a gap.</p>
           </div>
 
           <div className="flex flex-col gap-1.5">
