@@ -81,11 +81,11 @@ function StoryReader({ title, blocks, minutes, byline }: { title: string; blocks
         {shown.map((block, index) => {
           const last = index === shown.length - 1 && (open || !more);
           return block.kind === "heading" ? (
-            <h4 key={index} className="ld-display mt-4 mb-4 text-[clamp(22px,1.9vw,26px)] font-bold tracking-[-0.02em]">
+            <h4 key={index} className="ld-display mt-4 mb-4 text-[clamp(22px,1.9vw,26px)] font-semibold tracking-[-0.02em]">
               {block.text}
             </h4>
           ) : (
-            <p key={index} className="pb-[22px] text-[clamp(16.5px,1.35vw,19px)] leading-[1.72] text-[var(--ld-text-2)] last:pb-0">
+            <p key={index} className="pb-[22px] text-[clamp(15.5px,1.15vw,17.5px)] leading-[1.72] text-[var(--ld-text-2)] last:pb-0">
               <Text text={block.text} />
               {last ? <span aria-hidden="true" className="ld-blink ml-1 inline-block h-[1.1em] w-[9px] translate-y-[3px] bg-[var(--ld-accent)]" /> : null}
             </p>

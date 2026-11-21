@@ -47,9 +47,9 @@ function AboutCredentials({
 
   return (
     <section id="credentials" aria-labelledby="credentials-title" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-      <div className="doc-shell py-[clamp(64px,8vw,112px)]">
+      <div className="doc-shell py-[clamp(50px,5.6vw,72px)]">
         <div className="flex flex-wrap items-end justify-between gap-[22px]">
-          <h2 id="credentials-title" className="ld-display max-w-[14ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
+          <h2 id="credentials-title" className="ld-display max-w-[14ch] text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance">
             {heading.title}
           </h2>
           {heading.lede ? <p className="max-w-[26rem] text-[17px] leading-relaxed text-[var(--ld-text-2)]">{heading.lede}</p> : null}
@@ -128,7 +128,7 @@ function AboutCredentials({
                     <span className="grid h-full place-items-center px-6 text-center">
                       <span>
                         <span className="block font-mono text-[11px] tracking-[0.2em] text-[#8a7f62] uppercase">No scan on file</span>
-                        <span className="ld-display mt-2 block text-[clamp(18px,2vw,26px)] font-extrabold text-[#3b3626]">{chosen.name}</span>
+                        <span className="ld-display mt-2 block text-[clamp(18px,2vw,26px)] font-semibold text-[#3b3626]">{chosen.name}</span>
                       </span>
                     </span>
                   )}

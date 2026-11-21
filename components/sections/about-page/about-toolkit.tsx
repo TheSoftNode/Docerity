@@ -20,9 +20,9 @@ function AboutToolkit({ heading, groups, tools }: { heading: SectionHeading; gro
 
   return (
     <section id="toolkit" aria-labelledby="toolkit-title" className="scroll-mt-24 bg-[#eef1f8] text-[var(--ld-ink)]">
-      <div className="doc-shell grid items-center gap-[clamp(32px,5vw,80px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+      <div className="doc-shell grid items-center gap-[clamp(32px,5vw,80px)] py-[clamp(50px,5.6vw,72px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
         <div>
-          <h2 id="toolkit-title" className="ld-display max-w-[12ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
+          <h2 id="toolkit-title" className="ld-display max-w-[12ch] text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance">
             {heading.title}
           </h2>
           {heading.lede ? <p className="mt-5 max-w-[26rem] text-[17px] leading-relaxed text-[var(--ld-text-2)]">{heading.lede}</p> : null}

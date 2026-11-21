@@ -366,6 +366,36 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "eyebrow": "Credentials",
         "title": "Studied, certified, and checkable.",
         "lede": "The certificates themselves, not a line claiming them. Pick one to look at it properly."
+      },
+      "studio-build": {
+        "eyebrow": "",
+        "title": "We build",
+        "lede": "Web, AI and Web3 products for clients, from the first sketch to the system in production."
+      },
+      "studio-explain": {
+        "eyebrow": "",
+        "title": "We explain",
+        "lede": "Plain-language writing on how the work is done, so clients understand what they are paying for."
+      },
+      "studio-teach": {
+        "eyebrow": "",
+        "title": "We teach",
+        "lede": "Mentorship and a free Academy for the engineers who will build and maintain what comes next."
+      },
+      "studio-founder": {
+        "eyebrow": "",
+        "title": "Founded by an engineer who still ships.",
+        "lede": "Docerity was started by Theophilus Uchechukwu, a full-stack and Web3 engineer. His career, his work and his credentials are on his own page."
+      },
+      "portfolio-hero": {
+        "eyebrow": "Portfolio",
+        "title": "Theophilus Uchechukwu, *full-stack & Web3 engineer.*",
+        "lede": "Banking middleware, AI products and smart contracts, shipped for clients across three continents. Every branch of the career below merged into Docerity."
+      },
+      "portfolio-work": {
+        "eyebrow": "Selected work",
+        "title": "Selected work.",
+        "lede": "A few of the projects I've led and built. Every one is written up on the projects page."
       }
     },
     founder: {
@@ -373,6 +403,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       /* The portrait was a constant in `about-hero.tsx`. Its path is the
          default; replacing it is now an upload rather than a commit. */
       portrait: "/about/headshot.webp",
+      cvUrl: "",
     },
     team: [],
     story: [...story],
