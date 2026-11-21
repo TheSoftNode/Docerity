@@ -30,7 +30,7 @@ export function VoteButton({ buildId, votes, voted, disabled, hint }: { buildId:
           })
         }
         className={cn(
-          "inline-flex min-h-10 items-center gap-1.5 rounded-full border-[1.5px] px-3.5 text-[14px] font-bold transition-colors disabled:cursor-default",
+          "inline-flex min-h-10 items-center gap-1.5 rounded-full border-[1.5px] px-3.5 text-[14px] font-semibold transition-colors disabled:cursor-default",
           state.voted ? "border-[var(--ld-accent)] bg-[var(--ld-accent)] text-[#08102e]" : "border-[var(--ld-line-2)] text-[var(--ld-ink)] enabled:hover:border-[var(--ld-accent)]"
         )}
       >

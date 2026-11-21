@@ -150,7 +150,7 @@ export default async function LessonPage({ params }: { params: Params }) {
           title={lesson.title}
           aside={
             <div className="grid gap-5">
-              {lesson.summary ? <p className="text-[clamp(16.5px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">{lesson.summary}</p> : null}
+              {lesson.summary ? <p className="text-[clamp(15.5px,1.15vw,17.5px)] leading-relaxed text-[var(--ld-muted)]">{lesson.summary}</p> : null}
               {tracked ? (
                 <div className="flex items-center gap-3">
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-[rgb(var(--ld-tint-rgb)/0.16)]">
@@ -187,7 +187,7 @@ export default async function LessonPage({ params }: { params: Params }) {
               {lesson.kind === "assignment" ? (
                 <>
                   {lesson.notes ? (
-                    <article className={cn(paperCard, "mb-6 p-6 sm:p-10")}>
+                    <article className={cn(paperCard, "mb-6 p-5 sm:p-8")}>
                       <LessonNotes source={lesson.notes} />
                     </article>
                   ) : null}
@@ -226,7 +226,7 @@ export default async function LessonPage({ params }: { params: Params }) {
                     showVideo={lesson.kind === "video"}
                   />
                   {lesson.notes ? (
-                    <article className={cn(paperCard, "mt-10 p-6 sm:p-10")}>
+                    <article className={cn(paperCard, "mt-10 p-5 sm:p-8")}>
                       <LessonNotes source={lesson.notes} />
                     </article>
                   ) : null}

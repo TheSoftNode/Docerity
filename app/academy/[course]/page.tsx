@@ -68,12 +68,12 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
           title={course.title}
           aside={
             <>
-              <p className="mb-6 text-[clamp(16.5px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">{course.tagline}</p>
-                  <div className="ld-keep-dark rounded-[28px] bg-[#0b1433] p-7 text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14),0_40px_80px_-40px_rgb(0_0_0/0.7)]">
+              <p className="mb-6 text-[clamp(15.5px,1.15vw,17.5px)] leading-relaxed text-[var(--ld-muted)]">{course.tagline}</p>
+                  <div className="ld-keep-dark rounded-[22px] bg-[#0b1433] p-7 text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14),0_40px_80px_-40px_rgb(0_0_0/0.7)]">
                     {enrollment ? (
                       <>
                         <p className="text-[13px] text-[#9aa7cf]">Your progress</p>
-                        <p className="ld-display mt-1 text-[44px] leading-none font-extrabold tracking-[-0.04em]">{progress.percent}%</p>
+                        <p className="ld-display mt-1 text-[32px] leading-none font-semibold tracking-[-0.03em]">{progress.percent}%</p>
                         <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-[rgb(175_196_255/0.14)]">
                           <div className="h-full rounded-full bg-[linear-gradient(90deg,#afc4ff,#ff7a59)]" style={{ width: `${progress.percent}%` }} />
                         </div>
@@ -81,7 +81,7 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
                           {progress.done} of {progress.total} lessons done
                         </p>
                         {resume ? (
-                          <Link href={`/academy/${course.slug}/${resume.id}`} className="mt-5 flex min-h-13 items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[16px] font-bold text-[#08102e] transition-transform hover:-translate-y-0.5">
+                          <Link href={`/academy/${course.slug}/${resume.id}`} className="mt-5 flex min-h-13 items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[16px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5">
                             Continue: {resume.title} <ArrowRightIcon className="size-4 shrink-0" />
                           </Link>
                         ) : (
@@ -90,7 +90,7 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
                       </>
                     ) : (
                       <>
-                        <p className="ld-display text-[24px] leading-tight font-bold tracking-[-0.02em]">{course.price ? "Enrol to start" : "Free. Start now."}</p>
+                        <p className="ld-display text-[19px] leading-tight font-semibold tracking-[-0.02em]">{course.price ? "Enrol to start" : "Free. Start now."}</p>
                         <p className="mt-2 text-[15px] leading-relaxed text-[#c4cbe3]">
                           {account ? (account.verified ? "Your progress, XP and streak are saved to your account." : "Confirm your email first, then come back to enrol.") : "Create a free account to save your progress, earn XP and keep a streak."}
                         </p>
@@ -98,18 +98,18 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
                           account.verified ? (
                             <form action={enrolAction} className="mt-5">
                               <input type="hidden" name="slug" value={course.slug} />
-                              <button type="submit" className="flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[16px] font-bold text-[#08102e] transition-transform hover:-translate-y-0.5">
+                              <button type="submit" className="flex min-h-13 w-full items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[16px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5">
                                 Enrol for free <ArrowRightIcon className="size-4" />
                               </button>
                             </form>
                           ) : (
-                            <Link href="/account" className="mt-5 flex min-h-13 items-center justify-center rounded-full bg-[#afc4ff] px-6 text-[16px] font-bold text-[#08102e]">
+                            <Link href="/account" className="mt-5 flex min-h-13 items-center justify-center rounded-full bg-[#afc4ff] px-6 text-[16px] font-semibold text-[#08102e]">
                               Go to your account
                             </Link>
                           )
                         ) : (
                           <div className="mt-5 grid gap-2">
-                            <Link href="/account/signup" className="flex min-h-13 items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[16px] font-bold text-[#08102e] transition-transform hover:-translate-y-0.5">
+                            <Link href="/account/signup" className="flex min-h-13 items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[16px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5">
                               Create a free account <ArrowRightIcon className="size-4" />
                             </Link>
                             <Link href={`/account/login?next=${encodeURIComponent(`/academy/${course.slug}`)}`} className="flex min-h-11 items-center justify-center text-[15px] font-semibold text-[#afc4ff]">
@@ -130,11 +130,11 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
         />
 
         <section aria-labelledby="outline-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell grid gap-8 py-[clamp(48px,6vw,112px)] lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-12">
+          <div className="doc-shell grid gap-8 py-[clamp(37px,4.2vw,72px)] lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-12">
             <div>
-              <div className="relative overflow-hidden rounded-[28px] bg-[var(--ld-deep)] p-7 text-white sm:p-8 lg:sticky lg:top-24">
+              <div className="relative overflow-hidden rounded-[22px] bg-[var(--ld-deep)] p-7 text-white sm:p-8 lg:sticky lg:top-24">
                 <span aria-hidden="true" className="pointer-events-none absolute -right-16 -bottom-20 size-64 rounded-full bg-[radial-gradient(circle,rgb(255_122_89/0.3),transparent_65%)]" />
-                <h2 className="ld-display relative text-[clamp(28px,3vw,38px)] leading-[1] font-extrabold tracking-[-0.04em]">By the end, you can</h2>
+                <h2 className="ld-display relative text-[clamp(22px,1.86vw,28px)] leading-[1] font-semibold tracking-[-0.03em]">By the end, you can</h2>
                 <ul className="relative mt-6 grid gap-3.5">
                   {course.outcomes.map((outcome) => (
                     <li key={outcome} className="flex gap-3 text-[16px] leading-relaxed text-[#d5dffc]">
@@ -149,7 +149,7 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
             </div>
 
             <div>
-              <h2 id="outline-title" className="ld-display mb-6 text-[clamp(36px,4.4vw,64px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
+              <h2 id="outline-title" className="ld-display mb-6 text-[clamp(28px,2.73vw,38px)] leading-[1.05] font-semibold tracking-[-0.03em]">
                 The course.
               </h2>
               <ol className="grid gap-4">
@@ -162,14 +162,14 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
                       <div className="flex items-start gap-4 p-5 sm:p-6">
                         <span
                           className={cn(
-                            "ld-display grid size-12 shrink-0 place-items-center rounded-[16px] text-[17px] font-extrabold",
+                            "ld-display grid size-12 shrink-0 place-items-center rounded-[16px] text-[17px] font-semibold",
                             allDone ? "bg-[#e3f6ec] text-[#1d7a52]" : isOpen && enrollment ? "bg-[var(--ld-deep)] text-white" : "bg-[var(--ld-paper-2)] text-[var(--ld-text-muted)]"
                           )}
                         >
                           {allDone ? <CheckIcon className="size-5" /> : String(moduleIndex + 1).padStart(2, "0")}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <h3 className="ld-display text-[21px] leading-tight font-bold tracking-[-0.02em]">{module.title}</h3>
+                          <h3 className="ld-display text-[17px] leading-tight font-semibold tracking-[-0.02em]">{module.title}</h3>
                           <p className="mt-1 text-[15px] leading-relaxed text-[var(--ld-text-muted)]">{module.summary}</p>
                         </div>
                         {enrollment ? (

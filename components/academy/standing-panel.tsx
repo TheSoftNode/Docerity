@@ -28,11 +28,11 @@ export function StandingPanel({ standing, className }: { standing: Standing; cla
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[13px] text-[#9aa7cf]">Level</p>
-          <p className="ld-display text-[44px] leading-none font-extrabold tracking-[-0.04em]">{standing.level}</p>
+          <p className="ld-display text-[32px] leading-none font-semibold tracking-[-0.03em]">{standing.level}</p>
         </div>
         <div className="text-right">
           <p className="text-[13px] text-[#9aa7cf]">Streak</p>
-          <p className="mt-1 inline-flex items-center gap-1.5 text-[22px] font-bold">
+          <p className="mt-1 inline-flex items-center gap-1.5 text-[18px] font-semibold">
             <StreakFlame lit={standing.streak > 0} />
             {standing.streak} {standing.streak === 1 ? "day" : "days"}
           </p>
@@ -49,11 +49,11 @@ export function StandingPanel({ standing, className }: { standing: Standing; cla
       <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-[rgb(175_196_255/0.14)] pt-4">
         <div>
           <dt className="text-[13px] text-[#9aa7cf]">Total XP</dt>
-          <dd className="text-[20px] font-bold">{standing.xp.toLocaleString()}</dd>
+          <dd className="text-[17px] font-semibold">{standing.xp.toLocaleString()}</dd>
         </div>
         <div>
           <dt className="text-[13px] text-[#9aa7cf]">This week</dt>
-          <dd className="text-[20px] font-bold">{standing.weekXp.toLocaleString()}</dd>
+          <dd className="text-[17px] font-semibold">{standing.weekXp.toLocaleString()}</dd>
         </div>
       </dl>
       {standing.streak > 0 && !standing.doneToday ? (

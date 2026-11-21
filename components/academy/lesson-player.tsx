@@ -161,7 +161,7 @@ export function LessonPlayer({
             <span className="grid size-14 place-items-center rounded-full bg-[rgb(175_196_255/0.12)] text-[#afc4ff]">
               <FilmIcon className="size-6" />
             </span>
-            <p className="ld-display text-[22px] font-bold tracking-[-0.02em]">The video for this lesson is on its way</p>
+            <p className="ld-display text-[18px] font-semibold tracking-[-0.02em]">The video for this lesson is on its way</p>
             <p className="max-w-[40ch] text-[15px] text-[#c4cbe3]">Everything it covers is in the notes below, so you can carry on now.</p>
           </div>
         )

@@ -56,19 +56,19 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
           title={brief.title}
           aside={
             <div>
-              <p className="text-[clamp(16.5px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">{brief.summary}</p>
+              <p className="text-[clamp(15.5px,1.15vw,17.5px)] leading-relaxed text-[var(--ld-muted)]">{brief.summary}</p>
               <dl className="mt-6 grid grid-cols-2 gap-3">
                 <div className="rounded-[20px] bg-[rgb(var(--ld-tint-rgb)/0.08)] p-4 ring-1 ring-[rgb(var(--ld-tint-rgb)/0.14)]">
                   <dt className="inline-flex items-center gap-1.5 text-[13px] text-[var(--ld-muted)]">
                     <ClockIcon className="size-4" /> Time
                   </dt>
-                  <dd className="ld-display mt-1 text-[26px] font-extrabold tracking-[-0.03em]">~{brief.hours}h</dd>
+                  <dd className="ld-display mt-1 text-[20px] font-semibold tracking-[-0.03em]">~{brief.hours}h</dd>
                 </div>
                 <div className="rounded-[20px] bg-[var(--ld-accent)] p-4 text-[#08102e]">
                   <dt className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#08102e]/70">
                     <ZapIcon className="size-4" /> When approved
                   </dt>
-                  <dd className="ld-display mt-1 text-[26px] font-extrabold tracking-[-0.03em]">+{BUILD_XP[brief.level]} XP</dd>
+                  <dd className="ld-display mt-1 text-[20px] font-semibold tracking-[-0.03em]">+{BUILD_XP[brief.level]} XP</dd>
                 </div>
               </dl>
             </div>
@@ -76,23 +76,23 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
         />
 
         <section className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell grid gap-10 py-[clamp(36px,5vw,72px)] lg:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="doc-shell grid gap-10 py-[clamp(28px,3.5vw,46px)] lg:grid-cols-[minmax(0,1fr)_380px]">
             <div className="min-w-0">
               {brief.brief ? (
-                <article className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
-                  <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">The brief</h2>
+                <article className="rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
+                  <h2 className="ld-display text-[clamp(20px,1.61vw,26px)] leading-none font-semibold tracking-[-0.025em]">The brief</h2>
                   <div className="mt-3">
                     <LessonNotes source={brief.brief} />
                   </div>
                 </article>
               ) : null}
 
-              <div className="mt-6 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
-                <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">What must work</h2>
+              <div className="mt-6 rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
+                <h2 className="ld-display text-[clamp(20px,1.61vw,26px)] leading-none font-semibold tracking-[-0.025em]">What must work</h2>
                 <ul className="mt-4 grid gap-3">
                   {brief.requirements.map((item, index) => (
                     <li key={item} className="flex gap-3 text-[16px] leading-relaxed text-[var(--ld-text-2)]">
-                      <span className="ld-display grid size-8 shrink-0 place-items-center rounded-[10px] bg-[#e6ecff] text-[13px] font-extrabold text-[var(--ld-deep)]">
+                      <span className="ld-display grid size-8 shrink-0 place-items-center rounded-[10px] bg-[#e6ecff] text-[13px] font-semibold text-[var(--ld-deep)]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span className="pt-1">{item}</span>
@@ -117,7 +117,7 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
 
             <aside id="hand-in" className="scroll-mt-24">
               <div className="grid gap-5 lg:sticky lg:top-24">
-                <div className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6">
+                <div className="rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6">
                   <ol className="grid grid-cols-4 gap-2" aria-label="Where your build stands">
                     {STEPS.map((label, index) => (
                       <li key={label}>
@@ -135,17 +135,17 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
                       {account?.verified ? (
                         <form action={startBuildAction} className="mt-5">
                           <input type="hidden" name="briefId" value={brief.id} />
-                          <button type="submit" className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-bold text-[var(--ld-paper)] transition-transform hover:-translate-y-0.5">
+                          <button type="submit" className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)] transition-transform hover:-translate-y-0.5">
                             Take this project <ArrowRightIcon className="size-4" />
                           </button>
                         </form>
                       ) : account ? (
-                        <Link href="/account" className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-bold text-[var(--ld-paper)]">
+                        <Link href="/account" className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)]">
                           Confirm your email first
                         </Link>
                       ) : (
                         <div className="mt-5 grid gap-2">
-                          <Link href="/account/signup" className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-bold text-[var(--ld-paper)]">
+                          <Link href="/account/signup" className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)]">
                             Create a free account <ArrowRightIcon className="size-4" />
                           </Link>
                           <Link href={`/account/login?next=${encodeURIComponent(`/academy/projects/${brief.id}`)}`} className="flex min-h-11 items-center justify-center text-[15px] font-semibold text-[var(--ld-deep)]">
@@ -156,7 +156,7 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
                     </div>
                   ) : build.status === "approved" ? (
                     <div className="mt-6">
-                      <p className="ld-display text-[24px] font-bold tracking-[-0.02em] text-[#1d7a52]">Approved. +{BUILD_XP[brief.level]} XP</p>
+                      <p className="ld-display text-[19px] font-semibold tracking-[-0.02em] text-[#1d7a52]">Approved. +{BUILD_XP[brief.level]} XP</p>
                       {build.feedback ? <p className="mt-3 rounded-2xl bg-[#e3f6ec] px-4 py-3 text-[15px] leading-relaxed text-[#0f4d33]">{build.feedback}</p> : null}
                       <div className="mt-4 grid gap-2 text-[15px]">
                         <a href={build.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-semibold text-[var(--ld-deep)]">
