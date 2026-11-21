@@ -101,7 +101,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
               <Link href={resumeHref ?? "#"} className={cn(inkCard, "group flex flex-col justify-between gap-6 p-6 sm:p-8")}>
                 <div>
                   <p className="text-[14px] text-[#9aa7cf]">Pick up where you left off</p>
-                  <p className="ld-display mt-2 text-[clamp(26px,3vw,40px)] leading-[1.02] font-extrabold tracking-[-0.035em]">{resumeLesson?.title ?? resumeCourse.title}</p>
+                  <p className="ld-display mt-2 text-[clamp(22px,1.86vw,30px)] leading-[1.1] font-semibold tracking-[-0.025em]">{resumeLesson?.title ?? resumeCourse.title}</p>
                   <p className="mt-2 text-[15px] text-[#c4cbe3]">{resumeCourse.title}</p>
                 </div>
                 <div>
@@ -116,10 +116,10 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                   </p>
                 </div>
               </Link>
-              <StandingPanel standing={standing} className="rounded-[28px] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.12)]" />
+              <StandingPanel standing={standing} className="rounded-[22px] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.12)]" />
             </div>
           ) : standing ? (
-            <StandingPanel standing={standing} className="max-w-[560px] rounded-[28px]" />
+            <StandingPanel standing={standing} className="max-w-[560px] rounded-[22px]" />
           ) : first ? (
             <LearningConsole modules={first.modules.map((module) => ({ title: module.title, lessons: module.lessons.length }))} lesson={allLessons(first)[0]?.title ?? first.title} />
           ) : null}
@@ -128,7 +128,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
         {battle && battlePhaseNow && battleEnds ? (
           <section aria-label="Build battle" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
             <div className="doc-shell pt-[clamp(28px,4vw,48px)]">
-              <Link href={`/academy/battles/${battle.slug}`} className="group relative flex flex-col gap-4 overflow-hidden rounded-[28px] bg-[var(--ld-deep)] p-5 text-white transition-transform hover:-translate-y-0.5 sm:flex-row sm:items-center sm:p-6" data-battle-strip>
+              <Link href={`/academy/battles/${battle.slug}`} className="group relative flex flex-col gap-4 overflow-hidden rounded-[22px] bg-[var(--ld-deep)] p-5 text-white transition-transform hover:-translate-y-0.5 sm:flex-row sm:items-center sm:p-6" data-battle-strip>
                 <span aria-hidden="true" className="pointer-events-none absolute -right-10 -bottom-24 size-64 rounded-full bg-[radial-gradient(circle,rgb(255_122_89/0.35),transparent_65%)]" />
                 <span className="relative grid size-14 shrink-0 place-items-center rounded-[18px] bg-[var(--ld-accent)] text-[#08102e]">
                   <SwordsIcon className="size-6" />
@@ -137,14 +137,14 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                   <span className="flex items-center gap-2 text-[14px] font-semibold text-[#ffb59f]">
                     <span className="size-2 animate-pulse rounded-full bg-[#ff7a59]" aria-hidden="true" /> Build battle · {PHASE_LABEL[battlePhaseNow]}
                   </span>
-                  <span className="ld-display mt-0.5 block truncate text-[clamp(22px,2.4vw,30px)] font-extrabold tracking-[-0.03em]">{battle.title}</span>
+                  <span className="ld-display mt-0.5 block truncate text-[clamp(19px,1.49vw,24px)] font-semibold tracking-[-0.03em]">{battle.title}</span>
                 </span>
                 <span className="relative flex items-center justify-between gap-6 sm:justify-end">
                   <span className="text-right">
                     <span className="block text-[13px] text-[#c9d5ff]">{battlePhaseNow === "open" ? "Entries close in" : "Voting ends in"}</span>
-                    <Countdown to={battleEnds} fallback={watLabel(battleEnds)} className="ld-display text-[24px] font-extrabold tabular-nums tracking-[-0.02em]" />
+                    <Countdown to={battleEnds} fallback={watLabel(battleEnds)} className="ld-display text-[19px] font-semibold tabular-nums tracking-[-0.02em]" />
                   </span>
-                  <span className="inline-flex h-12 items-center gap-1.5 rounded-full bg-white px-5 text-[15px] font-bold text-[#08102e]">
+                  <span className="inline-flex h-12 items-center gap-1.5 rounded-full bg-white px-5 text-[15px] font-semibold text-[#08102e]">
                     {battlePhaseNow === "open" ? "Enter" : "Vote"} <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
                   </span>
                 </span>
@@ -154,7 +154,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
         ) : null}
 
         <section aria-labelledby="courses-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell py-[clamp(56px,7vw,112px)]">
+          <div className="doc-shell py-[clamp(44px,4.9vw,72px)]">
             <SectionHead id="courses-title" title="Courses." lede="Free while we're getting started. Each one ends with something real you built and shipped." />
             <ul className="grid gap-5">
               {courses.map((course) => {
@@ -164,7 +164,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                 const open = openModules(course, input);
                 return (
                   <li key={course.slug}>
-                    <Link href={`/academy/${course.slug}`} className="group grid grid-cols-1 overflow-hidden rounded-[32px] bg-[var(--ld-card)] shadow-[0_30px_60px_-40px_rgb(8_16_46/0.35)] ring-1 ring-[rgb(8_16_46/0.06)] transition-transform hover:-translate-y-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <Link href={`/academy/${course.slug}`} className="group grid grid-cols-1 overflow-hidden rounded-[24px] bg-[var(--ld-card)] shadow-[0_30px_60px_-40px_rgb(8_16_46/0.35)] ring-1 ring-[rgb(8_16_46/0.06)] transition-transform hover:-translate-y-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                       <div className="ld-keep-dark relative flex flex-col overflow-hidden bg-[#0b1433] p-7 text-[#f4f5fa] sm:p-10">
                         <span aria-hidden="true" className="pointer-events-none absolute -top-24 -right-16 size-80 rounded-full bg-[radial-gradient(circle,rgb(64_110_230/0.45),transparent_65%)]" />
                         <p className="relative flex flex-wrap gap-x-3 gap-y-1 text-[14px] text-[#9aa7cf]">
@@ -174,7 +174,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                           <span aria-hidden="true">·</span>
                           <span>about {hours(courseMinutes(course))}</span>
                         </p>
-                        <h3 className="ld-display relative mt-3 text-[clamp(32px,3.6vw,52px)] leading-[0.98] font-extrabold tracking-[-0.045em] text-balance">{course.title}</h3>
+                        <h3 className="ld-display relative mt-3 text-[clamp(26px,2.23vw,36px)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance">{course.title}</h3>
                         <p className="relative mt-4 max-w-[34rem] text-[16.5px] leading-relaxed text-[#c4cbe3]">{course.tagline}</p>
                         <div className="relative mt-auto pt-8">
                           {progress ? (
@@ -204,7 +204,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                             <li key={module.id} className={cn("flex min-w-0 items-center gap-4 rounded-2xl px-3 py-3", current && "bg-[#e6ecff]")}>
                               <span
                                 className={cn(
-                                  "ld-display grid size-9 shrink-0 place-items-center rounded-full text-[13px] font-bold",
+                                  "ld-display grid size-9 shrink-0 place-items-center rounded-full text-[13px] font-semibold",
                                   done ? "bg-[#e3f6ec] text-[#1d7a52]" : current ? "bg-[var(--ld-deep)] text-white" : "bg-[var(--ld-paper-2)] text-[var(--ld-text-muted)]"
                                 )}
                               >
@@ -229,7 +229,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
 
         {achievements ? (
           <section aria-labelledby="achievements-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-            <div className="doc-shell pb-[clamp(56px,7vw,112px)]">
+            <div className="doc-shell pb-[clamp(44px,4.9vw,72px)]">
               <Achievements items={achievements} />
             </div>
           </section>
@@ -237,7 +237,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
 
         {briefs.length > 0 ? (
           <section aria-labelledby="pool-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-            <div className="doc-shell pb-[clamp(56px,7vw,112px)]">
+            <div className="doc-shell pb-[clamp(44px,4.9vw,72px)]">
               <SectionHead
                 id="pool-title"
                 title="Then build something real."
@@ -255,14 +255,14 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                     const tone = LEVEL_TONE[brief.level];
                     return (
                       <li key={brief.id} className="w-[84%] max-w-[360px] shrink-0 snap-start sm:w-auto sm:max-w-none">
-                        <Link href={`/academy/projects/${brief.id}`} className={cn("group relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[28px] p-7 transition-transform hover:-translate-y-1", tone.card)}>
-                          <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute -top-10 -right-3 text-[150px] leading-none font-extrabold tracking-[-0.06em]", tone.numeral)}>
+                        <Link href={`/academy/projects/${brief.id}`} className={cn("group relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[22px] p-7 transition-transform hover:-translate-y-1", tone.card)}>
+                          <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute top-5 right-6 text-[32px] leading-none font-medium tracking-[-0.03em]", tone.numeral)}>
                             {pad(index + 1)}
                           </span>
                           <span className={cn("relative text-[14px] font-semibold", tone.accent)}>
                             {brief.level} · {BUILD_XP[brief.level]} XP
                           </span>
-                          <span className="ld-display relative mt-3 text-[28px] leading-[1.02] font-extrabold tracking-[-0.035em]">{brief.title}</span>
+                          <span className="ld-display relative mt-3 text-[22px] leading-[1.1] font-semibold tracking-[-0.025em]">{brief.title}</span>
                           <span className={cn("relative mt-3 text-[15.5px] leading-relaxed", tone.text)}>{brief.summary}</span>
                           <span className={cn("relative mt-auto inline-flex items-center gap-1.5 pt-6 text-[15px] font-semibold", tone.accent)}>
                             See the brief <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
@@ -277,16 +277,16 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
         ) : null}
 
         <section id="how" aria-labelledby="how-title" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell pb-[clamp(56px,7vw,112px)]">
+          <div className="doc-shell pb-[clamp(44px,4.9vw,72px)]">
             <SectionHead id="how-title" title="A little every day adds up." lede="Learn on any day and your streak grows; miss one day a week and it holds. XP adds up to levels and achievements." />
             <ol className="grid gap-4 md:grid-cols-3">
               {STEPS.map(({ title, body, xp, Picture, tone, soft, chip }, index) => (
-                <li key={title} className={cn("flex flex-col overflow-hidden rounded-[28px]", tone)}>
+                <li key={title} className={cn("flex flex-col overflow-hidden rounded-[22px]", tone)}>
                   <Picture />
                   <div className="flex flex-1 flex-col p-6 sm:p-7">
                     <p className="flex items-baseline gap-3">
                       <span className={cn("font-mono text-[13px]", soft)}>{pad(index + 1)}</span>
-                      <span className="ld-display text-[28px] font-extrabold tracking-[-0.03em]">{title}</span>
+                      <span className="ld-display text-[22px] font-semibold tracking-[-0.03em]">{title}</span>
                     </p>
                     <p className={cn("mt-2 text-[15.5px] leading-relaxed", soft)}>{body}</p>
                     <p className={cn("mt-auto inline-flex items-center gap-1.5 pt-5 text-[14px] font-semibold", chip)}>
@@ -301,9 +301,9 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
 
         {database.isConfigured ? (
           <section aria-labelledby="board-title" className="bg-[var(--ld-ink)] text-[var(--ld-paper)]">
-            <div className="doc-shell py-[clamp(56px,7vw,112px)]">
+            <div className="doc-shell py-[clamp(44px,4.9vw,72px)]">
               <div className="mb-8 flex flex-wrap items-end justify-between gap-6 md:mb-12">
-                <h2 id="board-title" className="ld-display text-[clamp(36px,5vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
+                <h2 id="board-title" className="ld-display text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em]">
                   Leaderboard.
                 </h2>
                 <nav aria-label="Leaderboard period" className="flex gap-1 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.18)] p-1">
@@ -336,10 +336,10 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                       const you = account?.id === String(leader._id);
                       return (
                         <li key={rank} className={cn("flex flex-col rounded-[24px] p-4 sm:p-6", look.card, look.lift, rank === 0 ? "min-h-[230px]" : "min-h-[190px]")}>
-                          <span className="ld-display text-[clamp(30px,3.4vw,48px)] leading-none font-extrabold tracking-[-0.04em]">{look.place}</span>
+                          <span className="ld-display text-[clamp(24px,2.11vw,34px)] leading-none font-semibold tracking-[-0.03em]">{look.place}</span>
                           <span className="mt-auto flex items-center gap-2 pt-4">
                             <Avatar name={leader.name} className="hidden size-8 text-[12px] sm:grid" />
-                            <span className="truncate text-[16px] font-bold">
+                            <span className="truncate text-[16px] font-semibold">
                               {leader.name.split(/\s+/)[0]}
                               {you ? " (you)" : ""}
                             </span>
@@ -360,7 +360,7 @@ export default async function AcademyPage({ searchParams }: { searchParams: Prom
                               {leader.name.split(/\s+/)[0]}
                               {you ? <span className="font-normal text-[var(--ld-muted)]"> · you</span> : null}
                             </span>
-                            <span className="text-[15px] font-bold tabular-nums">{leader.xp.toLocaleString()} XP</span>
+                            <span className="text-[15px] font-semibold tabular-nums">{leader.xp.toLocaleString()} XP</span>
                           </li>
                         );
                       })}

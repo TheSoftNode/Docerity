@@ -42,7 +42,7 @@ export function Achievements({ items }: { items: Achievement[] }) {
   return (
     <div>
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h2 id="achievements-title" className="ld-display text-[clamp(28px,3.4vw,40px)] leading-none font-extrabold tracking-[-0.04em]">
+        <h2 id="achievements-title" className="ld-display text-[clamp(22px,2.11vw,30px)] leading-none font-semibold tracking-[-0.03em]">
           Your achievements
         </h2>
         <p className="text-[15px] font-semibold text-[var(--ld-text-2)]">
@@ -64,7 +64,7 @@ export function Achievements({ items }: { items: Achievement[] }) {
               <span className={cn("grid size-10 place-items-center rounded-[12px]", item.earned ? "bg-[var(--ld-accent)] text-[#08102e]" : "bg-[var(--ld-paper-2)] text-[var(--ld-text-muted)]")}>
                 <Icon className="size-5" />
               </span>
-              <span className="mt-3 text-[15px] leading-tight font-bold">{item.title}</span>
+              <span className="mt-3 text-[15px] leading-tight font-semibold">{item.title}</span>
               <span className={cn("mt-1 text-[13px] leading-snug", item.earned ? "text-[#c9d5ff]" : "text-[var(--ld-text-muted)]")}>{item.how}</span>
               {!item.earned && item.target > 1 ? (
                 <span className="mt-auto pt-3">

@@ -106,7 +106,7 @@ function BranchGraph({ lanes, initLabel, children }: { lanes: Lane[]; initLabel:
             </text>
             <circle className="ld-live" cx={head} cy={main} r={17} fill="var(--ld-accent)" />
             <circle cx={head} cy={main} r={7} fill="var(--ld-ink)" />
-            <text x={head} y={main + 46} textAnchor="middle" fill="var(--ld-paper)" className="ld-display text-[22px] font-extrabold">
+            <text x={head} y={main + 46} textAnchor="middle" fill="var(--ld-paper)" className="ld-display text-[18px] font-semibold">
               HEAD
             </text>
             <text x={head} y={main + 66} textAnchor="middle" fill="var(--ld-tint)" className="font-mono text-[12px]">

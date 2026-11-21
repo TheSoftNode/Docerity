@@ -20,12 +20,12 @@ function AboutTeam({ heading, members }: { heading: SectionHeading; members: Tea
 
   return (
     <section id="team" aria-labelledby="team-title" className="scroll-mt-24 bg-[var(--ld-ink)] text-[var(--ld-paper)]">
-      <div className="doc-shell py-[clamp(64px,8vw,112px)]">
+      <div className="doc-shell py-[clamp(50px,5.6vw,72px)]">
         <div className="grid items-end gap-6 lg:grid-cols-2 lg:gap-16">
           <div>
             <h2
               id="team-title"
-              className="ld-display max-w-[14ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance"
+              className="ld-display max-w-[14ch] text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance"
             >
               {heading.title}
             </h2>
@@ -41,7 +41,7 @@ function AboutTeam({ heading, members }: { heading: SectionHeading; members: Tea
                 {person.photo ? (
                   <Image src={person.photo} alt="" width={64} height={64} className="size-16 rounded-full object-cover" />
                 ) : (
-                  <span aria-hidden="true" className="grid size-16 place-items-center rounded-full bg-[var(--ld-deep)] text-lg font-bold text-[var(--ld-tint)]">
+                  <span aria-hidden="true" className="grid size-16 place-items-center rounded-full bg-[var(--ld-deep)] text-lg font-semibold text-[var(--ld-tint)]">
                     {initialsOf(person.name)}
                   </span>
                 )}

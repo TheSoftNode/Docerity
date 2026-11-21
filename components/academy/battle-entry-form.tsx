@@ -58,7 +58,7 @@ export function BattleEntryForm({ slug, initial, entered }: { slug: string; init
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[var(--ld-accent)] px-6 text-[15px] font-bold text-[#08102e] transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+        className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[var(--ld-accent)] px-6 text-[15px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5 disabled:opacity-60"
       >
         {pending ? <LoaderCircleIcon className="size-4 animate-spin" /> : <SwordsIcon className="size-4" />}
         {isIn ? "Update my entry" : "Enter the battle"}

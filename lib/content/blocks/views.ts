@@ -22,6 +22,8 @@ export type FounderView = {
   hours: string;
   /** "" falls back to the file the page shipped with. */
   portrait: string;
+  /** A link to the CV; "" hides the button. */
+  cvUrl?: string;
 };
 
 export type FactView = { value: string; label: string; since: string };

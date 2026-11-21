@@ -28,7 +28,7 @@ function GradeCard({ grade, by, checked }: { grade: Grade; by: "ai" | "teacher" 
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className={cn("text-[14px] font-semibold", grade.passed ? "text-[#1d7a52]" : "text-[#b4401f]")}>{grade.passed ? "Passed" : "Not passed yet"}</p>
-          <p className="ld-display text-[48px] leading-none font-extrabold tracking-[-0.04em] text-[var(--ld-ink)]">{grade.score}%</p>
+          <p className="ld-display text-[32px] leading-none font-semibold tracking-[-0.03em] text-[var(--ld-ink)]">{grade.score}%</p>
         </div>
         <p className="inline-flex items-center gap-1.5 text-[13px] text-[var(--ld-text-2)]">
           {by === "ai" ? <SparklesIcon className="size-4" /> : <UserCheckIcon className="size-4" />}
@@ -91,8 +91,8 @@ export function Assignment({
 
   return (
     <div className="grid gap-6">
-      <div className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-7">
-        <h2 className="ld-display text-[22px] font-bold tracking-[-0.02em]">How it&apos;s marked</h2>
+      <div className="rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-7">
+        <h2 className="ld-display text-[18px] font-semibold tracking-[-0.02em]">How it&apos;s marked</h2>
         <p className="mt-1 text-[14px] text-[var(--ld-text-muted)]">
           {total} points in all; 70% passes. {aiOn ? "It's marked the moment you hand it in, and a teacher can adjust the grade." : "Your teacher marks it and the grade appears here."}
         </p>
@@ -121,15 +121,15 @@ export function Assignment({
 
       {passed ? (
         nextHref ? (
-          <Link href={nextHref} className="inline-flex h-12 items-center gap-2 justify-self-start rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-bold text-[var(--ld-paper)]">
+          <Link href={nextHref} className="inline-flex h-12 items-center gap-2 justify-self-start rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)]">
             Next lesson <ArrowRightIcon className="size-4" />
           </Link>
         ) : null
       ) : !tracked ? (
         <p className="rounded-[20px] bg-[#e6ecff] p-5 text-[15px] text-[var(--ld-ink)]">Enrol in the course to hand this in.</p>
       ) : (
-        <form action={action} className="grid gap-4 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-7" id="hand-in">
-          <h2 className="ld-display text-[22px] font-bold tracking-[-0.02em]">{shownGrade || waiting ? "Hand it in again" : "Hand it in"}</h2>
+        <form action={action} className="grid gap-4 rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-7" id="hand-in">
+          <h2 className="ld-display text-[18px] font-semibold tracking-[-0.02em]">{shownGrade || waiting ? "Hand it in again" : "Hand it in"}</h2>
           <input type="hidden" name="slug" value={slug} />
           <input type="hidden" name="lessonId" value={lessonId} />
           {handIn === "link" ? (
@@ -164,7 +164,7 @@ export function Assignment({
           <button
             type="submit"
             disabled={pending}
-            className="inline-flex h-12 items-center justify-center gap-2 justify-self-start rounded-full bg-[var(--ld-accent)] px-6 text-[15px] font-bold text-[#08102e] transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+            className="inline-flex h-12 items-center justify-center gap-2 justify-self-start rounded-full bg-[var(--ld-accent)] px-6 text-[15px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5 disabled:opacity-60"
           >
             {pending ? <LoaderCircleIcon className="size-4 animate-spin" /> : <SendIcon className="size-4" />}
             {pending ? (aiOn ? "Marking…" : "Sending…") : "Hand it in"}

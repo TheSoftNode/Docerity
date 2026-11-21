@@ -49,18 +49,18 @@ export default async function ShowcasePage() {
             ].map((stat) => (
               <div key={stat.label} className="rounded-[20px] bg-[rgb(var(--ld-tint-rgb)/0.07)] p-4 ring-1 ring-[rgb(var(--ld-tint-rgb)/0.14)] sm:p-5">
                 <dt className="text-[13px] text-[var(--ld-muted)]">{stat.label}</dt>
-                <dd className="ld-display mt-1 text-[clamp(26px,3vw,40px)] leading-none font-extrabold tracking-[-0.03em] tabular-nums">{stat.value}</dd>
+                <dd className="ld-display mt-1 text-[clamp(22px,1.86vw,30px)] leading-none font-semibold tracking-[-0.03em] tabular-nums">{stat.value}</dd>
               </div>
             ))}
           </dl>
         </AcademyHero>
 
         <section aria-label="Approved builds" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell py-[clamp(40px,5vw,96px)]">
+          <div className="doc-shell py-[clamp(31px,3.5vw,61px)]">
             {builds.length === 0 ? (
-              <div className={cn(inkCard, "grid items-center gap-8 overflow-hidden p-7 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]")}>
+              <div className={cn(inkCard, "grid items-center gap-8 overflow-hidden p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]")}>
                 <div>
-                  <p className="ld-display text-[clamp(28px,3vw,40px)] leading-[1] font-extrabold tracking-[-0.035em]">The first builds are on their way.</p>
+                  <p className="ld-display text-[clamp(22px,1.86vw,30px)] leading-[1] font-semibold tracking-[-0.025em]">The first builds are on their way.</p>
                   <p className="mt-3 text-[16px] leading-relaxed text-[#c4cbe3]">Take a project from the pool, ship it, and yours could be the first one here.</p>
                   <Link href="/academy/projects" className="mt-6 inline-flex h-12 items-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[15px] font-semibold text-[#08102e]">
                     Open the project pool <ArrowRightIcon className="size-4" />
@@ -81,11 +81,11 @@ export default async function ShowcasePage() {
                   const mine = account?.id === String(build.accountId);
                   const voted = account ? build.voters.some((voter) => String(voter) === account.id) : false;
                   return (
-                    <li key={String(build._id)} className="flex min-w-0 flex-col rounded-[28px] bg-[var(--ld-card)] p-3 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]">
+                    <li key={String(build._id)} className="flex min-w-0 flex-col rounded-[22px] bg-[var(--ld-card)] p-3 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]">
                       <a href={build.liveUrl} target="_blank" rel="noopener noreferrer" className="group block" aria-label={`Open ${brief?.title ?? "the build"} by ${build.name}`}>
                         <BrowserFrame url={build.liveUrl}>
                           <div className={cn("relative flex h-44 items-end p-5", coverFor(String(build._id)))}>
-                            <span className="ld-display text-[26px] leading-[1] font-extrabold tracking-[-0.035em] text-white transition-transform group-hover:-translate-y-1">{brief?.title ?? build.briefId}</span>
+                            <span className="ld-display text-[20px] leading-[1] font-semibold tracking-[-0.025em] text-white transition-transform group-hover:-translate-y-1">{brief?.title ?? build.briefId}</span>
                             <ArrowUpRightIcon className="absolute top-4 right-4 size-5 text-white/70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                           </div>
                         </BrowserFrame>

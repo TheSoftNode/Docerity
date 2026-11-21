@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 /** The hero's console: a lesson playing, the module list ticking off, XP landing. */
 export function LearningConsole({ modules, lesson }: { modules: { title: string; lessons: number }[]; lesson: string }) {
   return (
-    <div aria-hidden="true" className="ld-keep-dark overflow-hidden rounded-[28px] bg-[#0b1433] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14),0_40px_80px_-40px_rgb(0_0_0/0.7)]">
+    <div aria-hidden="true" className="ld-keep-dark overflow-hidden rounded-[22px] bg-[#0b1433] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14),0_40px_80px_-40px_rgb(0_0_0/0.7)]">
       <div className="flex items-center gap-2 border-b border-[rgb(175_196_255/0.1)] px-5 py-3">
         <span className="size-2.5 rounded-full bg-[#ff7a59]" />
         <span className="size-2.5 rounded-full bg-[#afc4ff]/50" />
@@ -32,7 +32,7 @@ export function LearningConsole({ modules, lesson }: { modules: { title: string;
             </span>
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-2.5">
-            <span className="ld-pop inline-flex items-center gap-1.5 rounded-full bg-[#ff7a59] px-3 py-1.5 text-[13px] font-bold text-[#08102e]">
+            <span className="ld-pop inline-flex items-center gap-1.5 rounded-full bg-[#ff7a59] px-3 py-1.5 text-[13px] font-semibold text-[#08102e]">
               <ZapIcon className="size-3.5" /> +10 XP
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-[rgb(175_196_255/0.2)] px-3 py-1.5 text-[13px] font-semibold text-[#f4f5fa]">
@@ -46,7 +46,7 @@ export function LearningConsole({ modules, lesson }: { modules: { title: string;
             <li key={module.title} className="flex items-center gap-3 border-b border-[rgb(175_196_255/0.08)] py-2.5 last:border-b-0">
               <span
                 className={cn(
-                  "grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-bold",
+                  "grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-semibold",
                   index < 2 ? "bg-[#4cc59a] text-[#08102e]" : index === 2 ? "bg-[#ff7a59] text-[#08102e]" : "bg-[rgb(175_196_255/0.1)] text-[#7d8ec0]"
                 )}
               >
@@ -94,7 +94,7 @@ export function CheckPicture() {
             index === 1 ? "border-[#4cc59a] shadow-[0_0_0_3px_rgb(76_197_154/0.18)]" : "border-[rgb(8_16_46/0.08)]"
           )}
         >
-          <span className={cn("grid size-6 place-items-center rounded-lg text-[11px] font-bold", index === 1 ? "bg-[#4cc59a] text-white" : "bg-[#e8eaf0] text-[#4f556b]")}>
+          <span className={cn("grid size-6 place-items-center rounded-lg text-[11px] font-semibold", index === 1 ? "bg-[#4cc59a] text-white" : "bg-[#e8eaf0] text-[#4f556b]")}>
             {index === 1 ? <CheckIcon className="size-3.5" /> : "ABC"[index]}
           </span>
           {option}
@@ -117,7 +117,7 @@ export function ShipPicture() {
       <span className="ld-log-line [animation-delay:1.2s]">
         <span className="text-[#8de3b6]">✓</span> Deployed to production
       </span>
-      <span className="ld-log-line mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-[#ff7a59] px-3 font-sans text-[12.5px] font-bold text-[#08102e] [animation-delay:1.8s]">
+      <span className="ld-log-line mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-[#ff7a59] px-3 font-sans text-[12.5px] font-semibold text-[#08102e] [animation-delay:1.8s]">
         ada-portfolio.vercel.app ↗
       </span>
     </div>

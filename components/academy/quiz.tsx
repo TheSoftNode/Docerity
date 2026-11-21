@@ -85,7 +85,7 @@ export function Quiz({
           )}
           role="status"
         >
-          <p className="ld-display text-[40px] leading-none font-extrabold tracking-[-0.04em]">{result.score}%</p>
+          <p className="ld-display text-[28px] leading-none font-semibold tracking-[-0.03em]">{result.score}%</p>
           <p className="mt-2 text-[16px] font-semibold">
             {result.perfect ? "Perfect. Every answer right." : result.passed ? "Passed. The next module is open." : `Not yet. You need ${passMark}% to pass; read the reasons below and try again.`}
           </p>
@@ -120,7 +120,7 @@ export function Quiz({
             <li
               key={question.id}
               className={cn(
-                "rounded-[28px] bg-[var(--ld-card)] p-6 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] sm:p-8",
+                "rounded-[22px] bg-[var(--ld-card)] p-6 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] sm:p-8",
                 marked ? (marked.correct ? "ring-2 ring-[#4cc59a]" : "ring-2 ring-[#ff7a59]") : "ring-1 ring-[rgb(8_16_46/0.06)]"
               )}
             >
@@ -128,7 +128,7 @@ export function Quiz({
                 Question {index + 1} of {questions.length}
                 {question.multi ? " · choose all that apply" : ""}
               </p>
-              <p className="ld-display mt-2 text-[clamp(20px,2vw,24px)] leading-snug font-bold tracking-[-0.02em] text-[var(--ld-ink)]">{question.prompt}</p>
+              <p className="ld-display mt-2 text-[clamp(18px,1.24vw,20px)] leading-snug font-semibold tracking-[-0.02em] text-[var(--ld-ink)]">{question.prompt}</p>
               {question.code ? (
                 <pre className="mt-3 overflow-x-auto rounded-[14px] bg-[#0b1433] px-4 py-3 font-mono text-[13.5px] leading-[1.7] text-[#dfe6ff]">
                   <code>{question.code}</code>
@@ -162,7 +162,7 @@ export function Quiz({
                       <span
                         aria-hidden="true"
                         className={cn(
-                          "grid size-7 shrink-0 place-items-center rounded-lg text-[13px] font-bold",
+                          "grid size-7 shrink-0 place-items-center rounded-lg text-[13px] font-semibold",
                           picked && !marked ? "bg-[var(--ld-deep)] text-white" : marked && right ? "bg-[#4cc59a] text-white" : "bg-[var(--ld-paper-2)] text-[var(--ld-text-muted)]"
                         )}
                       >
@@ -194,7 +194,7 @@ export function Quiz({
               type="button"
               onClick={submit}
               disabled={pending || answered < questions.length}
-              className="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--ld-accent)] px-5 text-[15px] font-bold text-[#08102e] transition-opacity disabled:opacity-50"
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--ld-accent)] px-5 text-[15px] font-semibold text-[#08102e] transition-opacity disabled:opacity-50"
             >
               {pending ? <LoaderCircleIcon className="size-4 animate-spin" /> : null}
               Check my answers

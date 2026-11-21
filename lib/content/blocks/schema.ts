@@ -524,15 +524,21 @@ export const BLOCKS: Block[] = [
     page: "About",
     path: "/about",
     description:
-      "Everything on /about except the project count, which is counted from the work section rather than typed.",
+      "Both /about (the studio) and /theo (your portfolio). The studio page shows the hero, what the studio does, the team and a card about you; your portfolio shows your career, story, selected work, experience, toolkit and credentials. The project count is counted from the work section rather than typed.",
     groups: [
       headings([
-        { key: "about-hero", label: "Hero", hint: "Wrap words in *asterisks* to light them; the career graph is drawn from Experience." },
-        { key: "about-story", label: "The story" },
-        { key: "about-team", label: "The team", hint: "Above the team members. Hidden, with the section, until someone is added." },
-        { key: "about-experience", label: "Experience" },
-        { key: "about-toolkit", label: "Toolkit" },
-        { key: "about-credentials", label: "Credentials" },
+        { key: "about-hero", label: "Studio: hero", hint: "The top of /about. Wrap words in *asterisks* to light them." },
+        { key: "studio-build", label: "Studio: we build", hint: "The first of the three things the studio does; links to the projects." },
+        { key: "studio-explain", label: "Studio: we explain", hint: "Links to the blog." },
+        { key: "studio-teach", label: "Studio: we teach", hint: "Links to mentorship and the Academy." },
+        { key: "about-team", label: "Studio: the team", hint: "Above the team members. Hidden, with the section, until someone is added." },
+        { key: "studio-founder", label: "Studio: the founder card", hint: "The card on /about that leads to your portfolio." },
+        { key: "portfolio-hero", label: "Portfolio: hero", hint: "The top of /theo. The career graph is drawn from Experience." },
+        { key: "about-story", label: "Portfolio: the story" },
+        { key: "portfolio-work", label: "Portfolio: selected work", hint: "Shows the projects featured on the homepage." },
+        { key: "about-experience", label: "Portfolio: experience" },
+        { key: "about-toolkit", label: "Portfolio: toolkit" },
+        { key: "about-credentials", label: "Portfolio: credentials" },
       ]),
       {
         kind: "object",
@@ -557,6 +563,13 @@ export const BLOCKS: Block[] = [
             required: true,
             maxLength: 40,
             hint: "The same fact cut to fit the narrow rail. Keep the two in step.",
+          },
+          {
+            name: "cvUrl",
+            label: "CV link",
+            kind: "text",
+            maxLength: 500,
+            hint: "Optional. A link to your CV (a PDF, Google Drive or Dropbox). Must start with https://. Shows a \"Download CV\" button on your portfolio.",
           },
           {
             name: "portrait",

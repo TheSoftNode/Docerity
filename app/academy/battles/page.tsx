@@ -58,7 +58,7 @@ export default async function BattlesPage() {
           {feature && phase && ends ? (
             <Link
               href={`/academy/battles/${feature.slug}`}
-              className="ld-keep-dark group relative grid gap-6 overflow-hidden rounded-[28px] bg-[#0b1433] p-6 text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14),0_40px_80px_-40px_rgb(0_0_0/0.7)] transition-transform hover:-translate-y-1 sm:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center"
+              className="ld-keep-dark group relative grid gap-6 overflow-hidden rounded-[22px] bg-[#0b1433] p-6 text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14),0_40px_80px_-40px_rgb(0_0_0/0.7)] transition-transform hover:-translate-y-1 sm:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center"
               data-live-battle
             >
               <span aria-hidden="true" className="pointer-events-none absolute -top-32 -left-20 size-96 rounded-full bg-[radial-gradient(circle,rgb(255_122_89/0.22),transparent_65%)]" />
@@ -72,7 +72,7 @@ export default async function BattlesPage() {
                     </span>
                   ) : null}
                 </p>
-                <p className="ld-display mt-2 text-[clamp(30px,3.6vw,52px)] leading-[0.98] font-extrabold tracking-[-0.04em]">{feature.title}</p>
+                <p className="ld-display mt-2 text-[clamp(26px,2.23vw,36px)] leading-[1.05] font-semibold tracking-[-0.03em]">{feature.title}</p>
                 {feature.tagline ? <p className="mt-3 max-w-[40rem] text-[16px] leading-relaxed text-[#c4cbe3]">{feature.tagline}</p> : null}
                 <span className="mt-6 inline-flex h-12 items-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[15px] font-semibold text-[#08102e]">
                   {phase === "open" ? "Enter the battle" : phase === "voting" ? "Vote on the entries" : "Read the brief"} <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" />
@@ -87,7 +87,7 @@ export default async function BattlesPage() {
         </AcademyHero>
 
         <section aria-labelledby="prizes-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell py-[clamp(48px,6vw,88px)]">
+          <div className="doc-shell py-[clamp(37px,4.2vw,56px)]">
             <SectionHead id="prizes-title" title="What's on the line." lede="Points for the podium, and something for everyone who ships an entry." className="md:mb-10" />
             <dl className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
@@ -98,7 +98,7 @@ export default async function BattlesPage() {
               ].map((prize) => (
                 <div key={prize.label} className={`rounded-[24px] p-5 sm:p-6 ${prize.tone}`}>
                   <dt className="text-[14px] font-semibold opacity-80">{prize.label}</dt>
-                  <dd className="ld-display mt-6 text-[clamp(30px,3.4vw,44px)] leading-none font-extrabold tracking-[-0.04em]">+{prize.xp}<span className="ml-1 text-[0.5em] tracking-normal">XP</span></dd>
+                  <dd className="ld-display mt-6 text-[clamp(24px,2.11vw,32px)] leading-none font-semibold tracking-[-0.03em]">+{prize.xp}<span className="ml-1 text-[0.5em] tracking-normal">XP</span></dd>
                 </div>
               ))}
             </dl>
@@ -111,7 +111,7 @@ export default async function BattlesPage() {
                 <li key={step.title} className="rounded-[24px] bg-[var(--ld-card)] p-6 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]">
                   <p className="flex items-baseline gap-3">
                     <span className="font-mono text-[13px] text-[var(--ld-text-muted)]">{String(index + 1).padStart(2, "0")}</span>
-                    <span className="ld-display text-[24px] font-extrabold tracking-[-0.03em]">{step.title}</span>
+                    <span className="ld-display text-[19px] font-semibold tracking-[-0.03em]">{step.title}</span>
                   </p>
                   <p className="mt-2 text-[15.5px] leading-relaxed text-[var(--ld-text-2)]">{step.body}</p>
                 </li>
@@ -122,12 +122,12 @@ export default async function BattlesPage() {
 
         {upcoming.filter((battle) => battle !== feature).length > 0 || past.length > 0 || !feature ? (
           <section aria-label="More battles" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-            <div className="doc-shell pb-[clamp(56px,7vw,104px)]">
+            <div className="doc-shell pb-[clamp(44px,4.9vw,67px)]">
               {!feature ? (
-                <div className="mb-10 grid max-w-[560px] gap-3 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-7">
-                  <p className="ld-display text-[26px] leading-tight font-bold tracking-[-0.025em]">The next battle is being set.</p>
+                <div className="mb-10 grid max-w-[560px] gap-3 rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-7">
+                  <p className="ld-display text-[20px] leading-tight font-semibold tracking-[-0.025em]">The next battle is being set.</p>
                   <p className="text-[16px] leading-relaxed text-[var(--ld-text-2)]">Sharpen up in the project pool while you wait; every build there makes you faster here.</p>
-                  <Link href="/academy/projects" className="mt-2 inline-flex h-12 items-center gap-2 justify-self-start rounded-full bg-[var(--ld-ink)] px-5 text-[15px] font-bold text-[var(--ld-paper)]">
+                  <Link href="/academy/projects" className="mt-2 inline-flex h-12 items-center gap-2 justify-self-start rounded-full bg-[var(--ld-ink)] px-5 text-[15px] font-semibold text-[var(--ld-paper)]">
                     Open the project pool <ArrowRightIcon className="size-4" />
                   </Link>
                 </div>
@@ -135,16 +135,16 @@ export default async function BattlesPage() {
 
               {upcoming.filter((battle) => battle !== feature).length > 0 ? (
                 <>
-                  <h2 className="ld-display text-[clamp(30px,3.6vw,48px)] leading-none font-extrabold tracking-[-0.04em]">Coming up.</h2>
+                  <h2 className="ld-display text-[clamp(24px,2.23vw,34px)] leading-none font-semibold tracking-[-0.03em]">Coming up.</h2>
                   <ul className="mt-6 grid gap-3 md:grid-cols-2">
                     {upcoming
                       .filter((battle) => battle !== feature)
                       .map((battle) => (
                         <li key={battle.slug}>
-                          <Link href={`/academy/battles/${battle.slug}`} className="group flex items-center justify-between gap-4 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5">
+                          <Link href={`/academy/battles/${battle.slug}`} className="group flex items-center justify-between gap-4 rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5">
                             <span className="min-w-0">
                               <span className="block text-[13px] text-[var(--ld-text-muted)]">Starts {watLabel(battle.startsAt)}</span>
-                              <span className="block truncate text-[18px] font-bold">{battle.title}</span>
+                              <span className="block truncate text-[18px] font-semibold">{battle.title}</span>
                             </span>
                             <ArrowRightIcon className="size-5 shrink-0 text-[var(--ld-deep)] transition-transform group-hover:translate-x-1" />
                           </Link>
@@ -156,14 +156,14 @@ export default async function BattlesPage() {
 
               {past.length > 0 ? (
                 <>
-                  <h2 className="ld-display mt-14 text-[clamp(30px,3.6vw,48px)] leading-none font-extrabold tracking-[-0.04em] first:mt-0">Past battles.</h2>
+                  <h2 className="ld-display mt-14 text-[clamp(24px,2.23vw,34px)] leading-none font-semibold tracking-[-0.03em] first:mt-0">Past battles.</h2>
                   <ul className="mt-6 grid gap-3 md:grid-cols-2">
                     {past.map((battle, index) => (
                       <li key={battle.slug}>
-                        <Link href={`/academy/battles/${battle.slug}`} className="group flex items-center justify-between gap-4 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5">
+                        <Link href={`/academy/battles/${battle.slug}`} className="group flex items-center justify-between gap-4 rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5">
                           <span className="min-w-0">
                             <span className="block text-[13px] text-[var(--ld-text-muted)]">{battle.results ? `Ended ${watLabel(battle.voteBy)}` : "Results coming"}</span>
-                            <span className="block truncate text-[18px] font-bold">{battle.title}</span>
+                            <span className="block truncate text-[18px] font-semibold">{battle.title}</span>
                             {winners[index] ? (
                               <span className="mt-1 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[var(--ld-deep)]">
                                 <TrophyIcon className="size-4 text-[var(--ld-accent)]" /> {winners[index]}

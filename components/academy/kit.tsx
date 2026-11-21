@@ -31,7 +31,7 @@ type HeroProps = {
 
 export function AcademyHero({ current, back, meta, title, lede, actions, aside, children, size = "xl" }: HeroProps) {
   return (
-    <section className="relative -mt-[76px] overflow-hidden bg-[linear-gradient(180deg,var(--ld-ink)_0%,#0b1844_58%,#13296b_100%)] pt-[124px] pb-[clamp(44px,6vw,88px)] text-[var(--ld-paper)]">
+    <section className="relative -mt-[76px] overflow-hidden bg-[linear-gradient(180deg,var(--ld-ink)_0%,#0b1844_58%,#13296b_100%)] pt-[124px] pb-[clamp(34px,4.2vw,56px)] text-[var(--ld-paper)]">
       <span
         aria-hidden="true"
         className="ld-beam pointer-events-none absolute -top-[20%] left-[6%] h-[140%] w-[44%] rotate-[14deg] bg-[linear-gradient(100deg,transparent_30%,rgb(var(--ld-tint-rgb)/0.08)_50%,transparent_70%)]"
@@ -56,8 +56,8 @@ export function AcademyHero({ current, back, meta, title, lede, actions, aside, 
             {meta ? <p className="ld-up mb-4 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[15px] text-[var(--ld-muted)]">{meta}</p> : null}
             <h1
               className={cn(
-                "ld-display ld-up ld-delay-1 font-extrabold text-balance",
-                size === "xl" ? "text-[clamp(46px,7.4vw,116px)] leading-[0.9] tracking-[-0.055em]" : "text-[clamp(40px,5.8vw,86px)] leading-[0.94] tracking-[-0.05em]"
+                "ld-display ld-up ld-delay-1 font-semibold text-balance",
+                size === "xl" ? "text-[clamp(34px,4.59vw,60px)] leading-[1.05] tracking-[-0.03em]" : "text-[clamp(30px,3.6vw,48px)] leading-[1.05] tracking-[-0.03em]"
               )}
             >
               {title}
@@ -66,7 +66,7 @@ export function AcademyHero({ current, back, meta, title, lede, actions, aside, 
           <div className="ld-up ld-delay-2 min-w-0 pb-1">
             {aside ?? (
               <>
-                {lede ? <div className="text-[clamp(16.5px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">{lede}</div> : null}
+                {lede ? <div className="text-[clamp(15.5px,1.15vw,17.5px)] leading-relaxed text-[var(--ld-muted)]">{lede}</div> : null}
                 {actions ? <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">{actions}</div> : null}
               </>
             )}
@@ -82,7 +82,7 @@ export function AcademyHero({ current, back, meta, title, lede, actions, aside, 
 export function SectionHead({ id, title, lede, action, className }: { id?: string; title: ReactNode; lede?: ReactNode; action?: ReactNode; className?: string }) {
   return (
     <div className={cn("mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 md:mb-12", className)}>
-      <h2 id={id} className="ld-display max-w-[18ch] text-[clamp(36px,5vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
+      <h2 id={id} className="ld-display max-w-[18ch] text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance">
         {title}
       </h2>
       {lede || action ? (
@@ -97,11 +97,11 @@ export function SectionHead({ id, title, lede, action, className }: { id?: strin
 
 /** The site's buttons, in the hero (on dark) and on paper. */
 export const btn = {
-  accent: "inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-[var(--ld-accent)] px-6 text-[15px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5",
+  accent: "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--ld-accent)] px-6 text-[15px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5",
   ghostDark:
-    "inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.22)] px-[22px] text-[15px] font-semibold text-[var(--ld-paper)] transition-[transform,border-color] hover:-translate-y-0.5 hover:border-[rgb(var(--ld-paper-rgb)/0.5)]",
-  ink: "inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)] transition-transform hover:-translate-y-0.5",
-  ghost: "inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full border border-[var(--ld-line-2)] px-[22px] text-[15px] font-semibold text-[var(--ld-ink)] transition-[transform,border-color] hover:-translate-y-0.5 hover:border-[var(--ld-ink)]",
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.22)] px-[22px] text-[15px] font-semibold text-[var(--ld-paper)] transition-[transform,border-color] hover:-translate-y-0.5 hover:border-[rgb(var(--ld-paper-rgb)/0.5)]",
+  ink: "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)] transition-transform hover:-translate-y-0.5",
+  ghost: "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[var(--ld-line-2)] px-[22px] text-[15px] font-semibold text-[var(--ld-ink)] transition-[transform,border-color] hover:-translate-y-0.5 hover:border-[var(--ld-ink)]",
 };
 
 /**
@@ -115,7 +115,7 @@ export const LEVEL_TONE: Record<CourseLevel, { card: string; text: string; soft:
     soft: "text-[#4f556b]",
     chip: "border-[rgb(8_16_46/0.14)] bg-[rgb(255_255_255/0.55)]",
     accent: "text-[#1c3a8c]",
-    numeral: "text-[rgb(28_58_140/0.12)]",
+    numeral: "text-[rgb(28_58_140/0.22)]",
   },
   Intermediate: {
     card: "bg-[#1c3a8c] text-white",
@@ -123,7 +123,7 @@ export const LEVEL_TONE: Record<CourseLevel, { card: string; text: string; soft:
     soft: "text-[#afc4ff]",
     chip: "border-[rgb(255_255_255/0.22)] bg-[rgb(255_255_255/0.06)]",
     accent: "text-[#afc4ff]",
-    numeral: "text-[rgb(175_196_255/0.14)]",
+    numeral: "text-[rgb(175_196_255/0.3)]",
   },
   Advanced: {
     card: "ld-keep-dark bg-[#0b1433] text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.12)]",
@@ -131,15 +131,15 @@ export const LEVEL_TONE: Record<CourseLevel, { card: string; text: string; soft:
     soft: "text-[#9aa7cf]",
     chip: "border-[rgb(175_196_255/0.2)] bg-[rgb(175_196_255/0.05)]",
     accent: "text-[#ff9a80]",
-    numeral: "text-[rgb(255_122_89/0.12)]",
+    numeral: "text-[rgb(255_122_89/0.35)]",
   },
 };
 
 /** A light card on paper: the quiet surface for reading. */
-export const paperCard = "rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]";
+export const paperCard = "rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]";
 
 /** A dark card that stays dark in light mode. */
-export const inkCard = "ld-keep-dark rounded-[28px] bg-[#0b1433] text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.12),0_30px_60px_-36px_rgb(8_16_46/0.6)]";
+export const inkCard = "ld-keep-dark rounded-[22px] bg-[#0b1433] text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.12),0_30px_60px_-36px_rgb(8_16_46/0.6)]";
 
 /**
  * A browser window with the site's address in its bar: the cover for a
@@ -178,7 +178,7 @@ export function Avatar({ name, className }: { name: string; className?: string }
       .join("")
       .toUpperCase() || "?";
   return (
-    <span aria-hidden="true" className={cn("grid size-10 shrink-0 place-items-center rounded-full bg-[linear-gradient(140deg,#1c3a8c,#2e4b9a)] text-[14px] font-bold text-white ring-2 ring-[rgb(255_255_255/0.7)]", className)}>
+    <span aria-hidden="true" className={cn("grid size-10 shrink-0 place-items-center rounded-full bg-[linear-gradient(140deg,#1c3a8c,#2e4b9a)] text-[14px] font-semibold text-white ring-2 ring-[rgb(255_255_255/0.7)]", className)}>
       {letters}
     </span>
   );

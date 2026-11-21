@@ -32,10 +32,10 @@ function AboutChangelog({ heading, experience }: { heading: SectionHeading; expe
 
   return (
     <section id="changelog" aria-labelledby="changelog-title" className="scroll-mt-24 bg-white text-[var(--ld-ink)]">
-      <div className="doc-shell py-[clamp(64px,8vw,112px)]">
+      <div className="doc-shell py-[clamp(50px,5.6vw,72px)]">
         <div className="flex flex-wrap items-end justify-between gap-[22px]">
           <div>
-            <h2 id="changelog-title" className="ld-display max-w-[14ch] text-[clamp(36px,4.8vw,66px)] leading-[0.95] font-extrabold tracking-[-0.045em] text-balance">
+            <h2 id="changelog-title" className="ld-display max-w-[14ch] text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance">
               {heading.title}
             </h2>
             {heading.lede ? <p className="mt-4 max-w-[30rem] text-[17px] leading-relaxed text-[var(--ld-text-2)]">{heading.lede}</p> : null}
@@ -94,7 +94,7 @@ function AboutChangelog({ heading, experience }: { heading: SectionHeading; expe
                       className="group flex w-full items-start justify-between gap-[18px] rounded-lg py-1.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--ld-accent)]"
                     >
                       <span>
-                        <span className="ld-display block text-[clamp(21px,2vw,27px)] font-bold tracking-[-0.02em] transition-colors group-hover:text-[var(--ld-deep)]">
+                        <span className="ld-display block text-[clamp(21px,2vw,27px)] font-semibold tracking-[-0.02em] transition-colors group-hover:text-[var(--ld-deep)]">
                           {entry.role}
                         </span>
                         <span className="mt-1 block text-[15px] font-semibold text-[var(--ld-deep)]">{entry.org}</span>

@@ -72,7 +72,7 @@ export default async function ProjectPoolPage({ searchParams }: { searchParams: 
                 <li key={item}>
                   <Link href={`/academy/projects?level=${item}#briefs`} scroll={false} className={cn("group flex h-full flex-col rounded-[24px] p-5 transition-transform hover:-translate-y-1 sm:p-6", tone.card)}>
                     <span className="flex items-baseline justify-between gap-3">
-                      <span className="ld-display text-[24px] font-extrabold tracking-[-0.03em]">{item}</span>
+                      <span className="ld-display text-[19px] font-semibold tracking-[-0.03em]">{item}</span>
                       <span className={cn("text-[14px] font-semibold", tone.accent)}>{BUILD_XP[item]} XP</span>
                     </span>
                     <span className={cn("mt-1 text-[14.5px]", tone.text)}>
@@ -87,9 +87,9 @@ export default async function ProjectPoolPage({ searchParams }: { searchParams: 
         </AcademyHero>
 
         <section id="briefs" aria-label="Project briefs" className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell py-[clamp(40px,5vw,96px)]">
+          <div className="doc-shell py-[clamp(31px,3.5vw,61px)]">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <h2 className="ld-display text-[clamp(36px,5vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]">{active ? `${active}.` : "Every brief."}</h2>
+              <h2 className="ld-display text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em]">{active ? `${active}.` : "Every brief."}</h2>
               <nav aria-label="Filter by level" className="-mx-5 flex max-w-[100vw] gap-1 overflow-x-auto px-5 [scrollbar-width:none] sm:mx-0 sm:rounded-full sm:bg-[var(--ld-card)] sm:p-1 sm:ring-1 sm:ring-[rgb(8_16_46/0.08)] [&::-webkit-scrollbar]:hidden">
                 {[null, ...COURSE_LEVELS].map((item) => {
                   const count = item ? briefs.filter((brief) => brief.level === item).length : briefs.length;
@@ -119,8 +119,8 @@ export default async function ProjectPoolPage({ searchParams }: { searchParams: 
                 const number = briefs.indexOf(brief) + 1;
                 return (
                   <li key={brief.id}>
-                    <Link href={`/academy/projects/${brief.id}`} className={cn("group relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[28px] p-6 transition-transform hover:-translate-y-1 sm:p-7", tone.card)}>
-                      <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute -top-9 -right-3 text-[140px] leading-none font-extrabold tracking-[-0.06em]", tone.numeral)}>
+                    <Link href={`/academy/projects/${brief.id}`} className={cn("group relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[22px] p-6 transition-transform hover:-translate-y-1 sm:p-7", tone.card)}>
+                      <span aria-hidden="true" className={cn("ld-display pointer-events-none absolute right-6 bottom-14 text-[32px] leading-none font-medium tracking-[-0.03em]", tone.numeral)}>
                         {String(number).padStart(2, "0")}
                       </span>
                       <div className="relative flex items-center justify-between gap-3">
@@ -134,7 +134,7 @@ export default async function ProjectPoolPage({ searchParams }: { searchParams: 
                           </span>
                         ) : null}
                       </div>
-                      <h3 className="ld-display relative mt-3 text-[27px] leading-[1.02] font-extrabold tracking-[-0.035em]">{brief.title}</h3>
+                      <h3 className="ld-display relative mt-3 text-[21px] leading-[1.1] font-semibold tracking-[-0.025em]">{brief.title}</h3>
                       <p className={cn("relative mt-3 text-[15.5px] leading-relaxed", tone.text)}>{brief.summary}</p>
                       <div className="relative mt-auto pt-6">
                         <ul className="flex flex-wrap gap-1.5">

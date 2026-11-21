@@ -80,7 +80,7 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
           title={battle.title}
           aside={
             <div>
-              {battle.tagline ? <p className="text-[clamp(16.5px,1.35vw,19px)] leading-relaxed text-[var(--ld-muted)]">{battle.tagline}</p> : null}
+              {battle.tagline ? <p className="text-[clamp(15.5px,1.15vw,17.5px)] leading-relaxed text-[var(--ld-muted)]">{battle.tagline}</p> : null}
               <ol className="mt-6 grid grid-cols-3 gap-3" aria-label="Battle timeline">
                 {timeline.map((step) => (
                   <li key={step.label}>
@@ -94,13 +94,13 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
           }
         >
           {ends ? (
-            <div className="ld-keep-dark flex flex-col gap-5 rounded-[28px] bg-[#0b1433] p-5 text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
+            <div className="ld-keep-dark flex flex-col gap-5 rounded-[22px] bg-[#0b1433] p-5 text-[#f4f5fa] shadow-[inset_0_0_0_1px_rgb(175_196_255/0.14)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
               <div>
                 <p className="mb-2 text-[13px] text-[#9aa7cf]">{ENDS[phase]}</p>
                 <Countdown to={ends} fallback={watLabel(ends)} variant="tiles" />
               </div>
               {phase === "open" || phase === "voting" ? (
-                <a href={phase === "open" ? "#enter" : "#entries-title"} className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[15px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5">
+                <a href={phase === "open" ? "#enter" : "#entries-title"} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#ff7a59] px-6 text-[15px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5">
                   {phase === "open" ? (mine ? "Update my entry" : "Enter the battle") : "Vote on the entries"} <ArrowDownIcon className="size-4" />
                 </a>
               ) : null}
@@ -109,23 +109,23 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
         </AcademyHero>
 
         <section className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell grid gap-10 py-[clamp(36px,5vw,72px)] lg:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="doc-shell grid gap-10 py-[clamp(28px,3.5vw,46px)] lg:grid-cols-[minmax(0,1fr)_380px]">
             <div className="min-w-0">
               {battle.results ? (
                 <div className="mb-6">
-                  <h2 className="ld-display flex items-center gap-3 text-[clamp(30px,3.6vw,48px)] leading-none font-extrabold tracking-[-0.04em]">
+                  <h2 className="ld-display flex items-center gap-3 text-[clamp(24px,2.23vw,34px)] leading-none font-semibold tracking-[-0.03em]">
                     <TrophyIcon className="size-8 text-[var(--ld-accent)]" /> The podium.
                   </h2>
                   <ol className="mt-8 grid gap-3 sm:grid-cols-3 sm:items-end">
                     {podiumEntries.map((entry, index) =>
                       entry ? (
                         <li key={String(entry._id)} className={cn("flex min-h-[220px] flex-col rounded-[24px] p-6", PLACES[index].card, index === 0 && "sm:-translate-y-3")}>
-                          <span className="ld-display text-[44px] leading-none font-extrabold tracking-[-0.04em]">{PLACES[index].label}</span>
-                          <span className="ld-display mt-auto pt-4 text-[22px] leading-tight font-extrabold tracking-[-0.02em]">{entry.title}</span>
+                          <span className="ld-display text-[32px] leading-none font-semibold tracking-[-0.03em]">{PLACES[index].label}</span>
+                          <span className="ld-display mt-auto pt-4 text-[18px] leading-tight font-semibold tracking-[-0.02em]">{entry.title}</span>
                           <span className={cn("mt-1 text-[14px]", PLACES[index].sub)}>
                             {entry.name} · {entry.votes} {entry.votes === 1 ? "vote" : "votes"}
                           </span>
-                          <a href={entry.liveUrl} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex min-h-10 items-center gap-1 pt-3 text-[14px] font-bold">
+                          <a href={entry.liveUrl} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex min-h-10 items-center gap-1 pt-3 text-[14px] font-semibold">
                             See it live <ArrowUpRightIcon className="size-4" />
                           </a>
                         </li>
@@ -136,16 +136,16 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
               ) : null}
 
               {battle.brief ? (
-                <article className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
-                  <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">The challenge</h2>
+                <article className="rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
+                  <h2 className="ld-display text-[clamp(20px,1.61vw,26px)] leading-none font-semibold tracking-[-0.025em]">The challenge</h2>
                   <div className="mt-3">
                     <LessonNotes source={battle.brief} />
                   </div>
                 </article>
               ) : null}
               {battle.rules.length ? (
-                <div className="mt-6 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
-                  <h2 className="ld-display text-[clamp(26px,2.6vw,34px)] leading-none font-extrabold tracking-[-0.035em]">The rules</h2>
+                <div className="mt-6 rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6 sm:p-8">
+                  <h2 className="ld-display text-[clamp(20px,1.61vw,26px)] leading-none font-semibold tracking-[-0.025em]">The rules</h2>
                   <ul className="mt-4 grid gap-3">
                     {battle.rules.map((rule) => (
                       <li key={rule} className="flex gap-3 text-[16px] leading-relaxed text-[var(--ld-text-2)]">
@@ -162,15 +162,15 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
 
             <aside id="enter" className="scroll-mt-24">
               <div className="grid gap-5 lg:sticky lg:top-24">
-                <div className="rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6">
+                <div className="rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-6">
                   {phase === "upcoming" ? (
                     <>
-                      <p className="ld-display text-[22px] font-bold tracking-[-0.02em]">Get ready</p>
+                      <p className="ld-display text-[18px] font-semibold tracking-[-0.02em]">Get ready</p>
                       <p className="mt-2 text-[15px] leading-relaxed text-[var(--ld-text-2)]">
                         Entries open {watLabel(battle.startsAt)}. Read the challenge now and plan your build.
                       </p>
                       {!account ? (
-                        <Link href={signIn} className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-bold text-[var(--ld-paper)]">
+                        <Link href={signIn} className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)]">
                           Sign in to take part
                         </Link>
                       ) : null}
@@ -178,7 +178,7 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                   ) : phase === "open" ? (
                     account?.verified ? (
                       <>
-                        <p className="ld-display text-[22px] font-bold tracking-[-0.02em]">{mine ? "You're in" : "Enter the battle"}</p>
+                        <p className="ld-display text-[18px] font-semibold tracking-[-0.02em]">{mine ? "You're in" : "Enter the battle"}</p>
                         <p className="mt-1 mb-5 text-[14px] text-[var(--ld-text-muted)]">
                           {mine ? "Update your entry until entries close." : `+${BATTLE_XP.entry} XP just for entering.`}
                         </p>
@@ -186,16 +186,16 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                       </>
                     ) : (
                       <>
-                        <p className="ld-display text-[22px] font-bold tracking-[-0.02em]">Enter the battle</p>
+                        <p className="ld-display text-[18px] font-semibold tracking-[-0.02em]">Enter the battle</p>
                         <p className="mt-2 text-[15px] leading-relaxed text-[var(--ld-text-2)]">Sign in with your Docerity account to hand in an entry. It&apos;s free.</p>
-                        <Link href={account ? "/account" : signIn} className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-bold text-[var(--ld-paper)]">
+                        <Link href={account ? "/account" : signIn} className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)]">
                           {account ? "Confirm your email first" : "Sign in to enter"}
                         </Link>
                       </>
                     )
                   ) : phase === "voting" ? (
                     <>
-                      <p className="ld-display text-[22px] font-bold tracking-[-0.02em]">Voting is open</p>
+                      <p className="ld-display text-[18px] font-semibold tracking-[-0.02em]">Voting is open</p>
                       {account?.verified ? (
                         <>
                           <p className="mt-2 text-[15px] leading-relaxed text-[var(--ld-text-2)]">Open each entry, then vote for the ones you rate. Change your mind any time before voting ends.</p>
@@ -211,39 +211,39 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                           </div>
                         </>
                       ) : (
-                        <Link href={account ? "/account" : signIn} className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-bold text-[var(--ld-paper)]">
+                        <Link href={account ? "/account" : signIn} className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)]">
                           {account ? "Confirm your email to vote" : "Sign in to vote"}
                         </Link>
                       )}
                     </>
                   ) : phase === "judging" ? (
                     <>
-                      <p className="ld-display text-[22px] font-bold tracking-[-0.02em]">Voting has closed</p>
+                      <p className="ld-display text-[18px] font-semibold tracking-[-0.02em]">Voting has closed</p>
                       <p className="mt-2 text-[15px] leading-relaxed text-[var(--ld-text-2)]">We&apos;re checking the top entries now. The podium goes up here as soon as it&apos;s confirmed.</p>
                     </>
                   ) : (
                     <>
-                      <p className="ld-display text-[22px] font-bold tracking-[-0.02em]">That&apos;s a wrap</p>
+                      <p className="ld-display text-[18px] font-semibold tracking-[-0.02em]">That&apos;s a wrap</p>
                       <p className="mt-2 text-[15px] leading-relaxed text-[var(--ld-text-2)]">
                         {entries.length} {entries.length === 1 ? "entry" : "entries"}. Thanks to everyone who built and voted.
                       </p>
-                      <Link href="/academy/battles" className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-bold text-[var(--ld-paper)]">
+                      <Link href="/academy/battles" className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--ld-ink)] px-6 text-[15px] font-semibold text-[var(--ld-paper)]">
                         See other battles
                       </Link>
                     </>
                   )}
                 </div>
 
-                <dl className="grid grid-cols-2 gap-3 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5 text-[14px]">
+                <dl className="grid grid-cols-2 gap-3 rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5 text-[14px]">
                   <div>
                     <dt className="text-[var(--ld-text-muted)]">Entries</dt>
-                    <dd className="mt-0.5 inline-flex items-center gap-1.5 text-[20px] font-bold">
+                    <dd className="mt-0.5 inline-flex items-center gap-1.5 text-[17px] font-semibold">
                       <UsersIcon className="size-4 text-[var(--ld-deep)]" /> {entries.length}
                     </dd>
                   </div>
                   <div>
                     <dt className="text-[var(--ld-text-muted)]">Winner takes</dt>
-                    <dd className="mt-0.5 inline-flex items-center gap-1.5 text-[20px] font-bold">
+                    <dd className="mt-0.5 inline-flex items-center gap-1.5 text-[17px] font-semibold">
                       <ZapIcon className="size-4 text-[var(--ld-accent)]" /> {BATTLE_XP.first} XP
                     </dd>
                   </div>
@@ -254,12 +254,12 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
         </section>
 
         <section aria-labelledby="entries-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-          <div className="doc-shell pb-[clamp(56px,7vw,104px)]">
-            <h2 id="entries-title" className="ld-display scroll-mt-24 text-[clamp(36px,5vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
+          <div className="doc-shell pb-[clamp(44px,4.9vw,67px)]">
+            <h2 id="entries-title" className="ld-display scroll-mt-24 text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em]">
               {battle.results ? "Every other entry." : "The entries."}
             </h2>
             {!showEntries ? (
-              <p className="mt-4 flex max-w-[560px] items-start gap-3 rounded-[28px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5 text-[15.5px] leading-relaxed text-[var(--ld-text-2)]">
+              <p className="mt-4 flex max-w-[560px] items-start gap-3 rounded-[22px] bg-[var(--ld-card)] shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)] p-5 text-[15.5px] leading-relaxed text-[var(--ld-text-2)]">
                 <LockIcon className="mt-1 size-4 shrink-0 text-[var(--ld-deep)]" />
                 Entries stay sealed until voting opens, so nobody builds off anyone else&apos;s idea.
               </p>
@@ -271,11 +271,11 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                   const own = account?.id === String(entry.accountId);
                   const voted = account ? entry.voters.some((voter) => String(voter) === account.id) : false;
                   return (
-                    <li key={String(entry._id)} className="flex flex-col rounded-[28px] bg-[var(--ld-card)] p-3 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]" data-entry>
+                    <li key={String(entry._id)} className="flex flex-col rounded-[22px] bg-[var(--ld-card)] p-3 shadow-[0_1px_0_rgb(8_16_46/0.04),0_24px_48px_-32px_rgb(8_16_46/0.22)] ring-1 ring-[rgb(8_16_46/0.06)]" data-entry>
                       <a href={entry.liveUrl} target="_blank" rel="noopener noreferrer" className="group block" aria-label={`Open ${entry.title} by ${entry.name}`}>
                         <BrowserFrame url={entry.liveUrl}>
                           <div className={cn("relative flex h-36 items-end p-5", coverFor(String(entry._id)))}>
-                            <span className="ld-display text-[24px] leading-[1] font-extrabold tracking-[-0.03em] text-white transition-transform group-hover:-translate-y-1">{entry.title}</span>
+                            <span className="ld-display text-[19px] leading-[1] font-semibold tracking-[-0.03em] text-white transition-transform group-hover:-translate-y-1">{entry.title}</span>
                             <ArrowUpRightIcon className="absolute top-4 right-4 size-5 text-white/70" />
                           </div>
                         </BrowserFrame>
@@ -303,7 +303,7 @@ export default async function BattlePage({ params }: { params: Promise<{ slug: s
                             hint={own ? "Your own entry" : "Sign in to vote"}
                           />
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[14px] font-bold text-[var(--ld-text-2)]">
+                          <span className="inline-flex items-center gap-1 text-[14px] font-semibold text-[var(--ld-text-2)]">
                             <ArrowUpIcon className="size-4" /> {entry.votes}
                           </span>
                         )}
