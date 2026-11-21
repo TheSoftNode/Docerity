@@ -65,6 +65,8 @@ export type SimpleResult = { ok: true; message?: string } | { ok: false; message
 function revalidateWork(slug?: string) {
   revalidatePath("/");
   revalidatePath("/projects");
+  /* The portfolio lists the projects placed on it as case studies. */
+  revalidatePath("/theo");
   if (slug) revalidatePath(`/projects/${slug}`);
   revalidatePath("/sitemap.xml");
   revalidatePath("/admin/projects");
