@@ -95,7 +95,7 @@ function ExplorerTop({
           <dl className="ld-up ld-delay-2 grid grid-cols-2 gap-px overflow-hidden rounded-[20px] border border-[var(--ld-line)] bg-[var(--ld-line)]">
             {stats.map((stat) => (
               <div key={stat.label} className="bg-white px-5 py-[18px]">
-                <dt className="font-mono text-[10.5px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{stat.label}</dt>
+                <dt className="text-[13px] text-[var(--ld-text-muted)]">{stat.label}</dt>
                 <dd className="ld-display mt-2 text-[clamp(26px,2.6vw,36px)] leading-none font-extrabold tracking-[-0.04em]">{stat.value}</dd>
               </div>
             ))}

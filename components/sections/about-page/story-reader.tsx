@@ -40,7 +40,7 @@ function Byline({ byline, minutes }: { byline: StoryByline; minutes: number }) {
       ) : null}
       <span className="flex min-w-0 flex-col leading-[1.3]">
         <span className="text-[14.5px] font-semibold text-[var(--ld-ink)]">{byline.name}</span>
-        <span className="mt-0.5 font-mono text-[11.5px] tracking-[0.04em] text-[var(--ld-text-muted)] uppercase">
+        <span className="mt-0.5 text-[13px] text-[var(--ld-text-muted)]">
           {[byline.role, `${minutes} min read`].filter(Boolean).join(" · ")}
         </span>
       </span>
@@ -109,7 +109,7 @@ function StoryReader({ title, blocks, minutes, byline }: { title: string; blocks
               {open ? <ArrowUpIcon aria-hidden="true" className="size-3.5" /> : <ArrowDownIcon aria-hidden="true" className="size-3.5" />}
             </span>
           </button>
-          {open || byline?.name ? null : <span className="font-mono text-xs text-[var(--ld-text-muted)] uppercase">{minutes} min read</span>}
+          {open || byline?.name ? null : <span className="text-[13px] text-[var(--ld-text-muted)]">{minutes} min read</span>}
         </div>
       ) : null}
     </div>

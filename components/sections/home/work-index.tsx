@@ -103,7 +103,7 @@ function WorkIndex({ projects, media }: Props) {
                       {item.name}
                     </span>
                   </span>
-                  <span className="hidden items-center gap-2 font-mono text-[11px] text-[var(--ld-muted-3)] uppercase sm:inline-flex">
+                  <span className="hidden items-center gap-2 text-[13px] text-[var(--ld-muted-3)] sm:inline-flex">
                     <span
                       aria-hidden="true"
                       className={cn("size-1.5 rounded-full", statusDot(item.status))}
@@ -129,10 +129,14 @@ function WorkIndex({ projects, media }: Props) {
           })}
         </ul>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[rgb(var(--ld-tint-rgb)/0.16)] pt-5 font-mono text-xs text-[var(--ld-muted-3)]">
-          <span className="inline-flex items-center gap-2">
-            <span aria-hidden="true" className="size-1.5 rounded-full bg-[#54D696]" /> Live
-            <span aria-hidden="true" className="ml-2.5 size-1.5 rounded-full bg-[#FFC94A]" /> In progress
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[rgb(var(--ld-tint-rgb)/0.16)] pt-5 text-[13px] text-[var(--ld-muted-3)]">
+          <span className="inline-flex flex-wrap items-center gap-x-4 gap-y-1">
+            {/* A key for the dots, listing only the statuses shown here. */}
+            {[...new Set(projects.map((item) => item.status))].map((status) => (
+              <span key={status} className="inline-flex items-center gap-2">
+                <span aria-hidden="true" className={cn("size-1.5 rounded-full", statusDot(status))} /> {status}
+              </span>
+            ))}
           </span>
           <Link href="/projects" className="border-b border-current text-[var(--ld-paper)] hover:opacity-70">
             All projects →

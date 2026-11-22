@@ -82,7 +82,7 @@ function StairsView({ checkpoints, actions }: { checkpoints: CheckpointView[]; a
         aria-live="polite"
         className="flex-[1_1_300px] rounded-3xl border border-[rgb(var(--ld-tint-rgb)/0.3)] bg-[rgb(var(--ld-ink-rgb)/0.35)] p-7"
       >
-        <p className="font-mono text-xs text-[var(--ld-tint)] uppercase">Stage {number(index)}</p>
+        <p className="text-[13px] text-[var(--ld-tint)]">Stage {number(index)}</p>
         <p className="ld-display mt-3.5 text-[40px] leading-none font-extrabold tracking-[-0.035em]">
           {current.label}
         </p>

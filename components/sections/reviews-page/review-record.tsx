@@ -99,7 +99,7 @@ function ReviewRecord({ reviews, eyebrow, title }: { reviews: ShownReview[]; eye
                         <span key={star} className={cn("size-2 rounded-full", star <= review.rating ? "bg-[var(--ld-deep)]" : "bg-[#e4e7f0]")} />
                       ))}
                     </span>
-                    <span className="font-mono text-[11px] text-[var(--ld-text-muted)] uppercase">
+                    <span className="text-[13px] text-[var(--ld-text-muted)]">
                       {kindTag(review.kind)}
                       {monthOf(review.publishedAt) ? ` · ${monthOf(review.publishedAt)}` : ""}
                     </span>

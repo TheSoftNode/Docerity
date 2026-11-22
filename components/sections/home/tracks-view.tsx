@@ -116,7 +116,7 @@ function TracksView({ serviceLines, pair }: Props) {
 function PanelHeader({ track, inverse }: { track: (typeof tracks)[number]; inverse?: boolean }) {
   return (
     <>
-      <p className={cn("font-mono text-[13px] uppercase", inverse ? "text-[var(--ld-tint)]" : "opacity-80")}>
+      <p className={cn("text-[13px]", inverse ? "text-[var(--ld-tint)]" : "opacity-80")}>
         {track.number} / {track.label}
       </p>
       <h3 className="ld-display relative mt-5 max-w-[32rem] text-[clamp(26px,3vw,40px)] leading-[1.1] font-bold tracking-[-0.03em]">
@@ -181,13 +181,13 @@ function MentorPanel() {
   return (
     <div className="ld-zoom flex h-full flex-col rounded-[28px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-[clamp(24px,4vw,48px)]">
       <PanelHeader track={track} />
-      <p className="mt-8 mb-3 font-mono text-xs text-[var(--ld-text-muted)] uppercase">Your week</p>
+      <p className="mt-8 mb-3 text-[13px] text-[var(--ld-text-muted)]">Your week</p>
       <ol className="grid grid-cols-7 gap-1.5">
         {mentorWeek.map((entry, index) => (
           <li
             key={entry.day}
             className={cn(
-              "ld-up flex h-[92px] flex-col justify-between rounded-xl p-2 font-mono text-[11px] uppercase",
+              "ld-up flex h-[92px] flex-col justify-between rounded-xl p-2 text-[13px]",
               "role" in entry ? tones[entry.tone] : "bg-[var(--ld-paper)]",
               CASCADE[index % CASCADE.length]
             )}
@@ -217,14 +217,14 @@ function ExplainPanel({ pair }: { pair: Props["pair"] }) {
       {pair ? (
         <div className="mt-9 flex flex-wrap items-center gap-4">
           <div className="ld-up ld-delay-1 flex-[1_1_200px] rounded-[20px] bg-[var(--ld-ink)] p-6 text-[var(--ld-paper)]">
-            <p className="font-mono text-xs text-[var(--ld-tint)] uppercase">The concept</p>
+            <p className="text-[13px] text-[var(--ld-tint)]">The concept</p>
             <p className="ld-display mt-2 text-[34px] font-extrabold tracking-[-0.03em]">{pair.concept}</p>
           </div>
           <span aria-label="is like" className="ld-up ld-delay-2 ld-display text-5xl font-extrabold">
             ≈
           </span>
           <div className="ld-up ld-delay-3 flex-[1_1_200px] rounded-[20px] bg-[var(--ld-paper)] p-6">
-            <p className="font-mono text-xs text-[var(--ld-text-muted)] uppercase">Like this</p>
+            <p className="text-[13px] text-[var(--ld-text-muted)]">Like this</p>
             <p className="ld-display mt-2 text-[26px] leading-[1.1] font-extrabold tracking-[-0.02em]">
               {pair.analogy}
             </p>

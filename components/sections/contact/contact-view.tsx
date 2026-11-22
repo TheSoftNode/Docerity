@@ -52,7 +52,7 @@ function Field({
 }) {
   return (
     <div className={cn("flex min-w-0 flex-col gap-[7px]", className)}>
-      <label htmlFor={id} className="font-mono text-[11.5px] tracking-[0.08em] text-[var(--ld-text-muted)] uppercase">
+      <label htmlFor={id} className="text-[13px] text-[var(--ld-text-muted)]">
         {label}
         {optional ? <span className="ml-1.5 tracking-normal text-[#8a90a6] normal-case">optional</span> : null}
       </label>
@@ -86,7 +86,7 @@ function ChipGroup({
 }) {
   return (
     <fieldset className="min-w-0">
-      <legend className="mb-[7px] font-mono text-[11.5px] tracking-[0.08em] text-[var(--ld-text-muted)] uppercase">{legend}</legend>
+      <legend className="mb-[7px] text-[13px] text-[var(--ld-text-muted)]">{legend}</legend>
       <div className="flex flex-wrap gap-1.5">
         {options.map((option) => (
           <label key={option.value || "none"} className="cursor-pointer">
@@ -283,7 +283,7 @@ function ContactView({
 
           {steps.length > 0 ? (
             <div className="mt-[clamp(36px,4.5vw,56px)]">
-              <p className="mb-[18px] font-mono text-[11.5px] tracking-[0.1em] text-[var(--ld-muted-3)] uppercase">What happens next</p>
+              <p className="mb-[18px] text-[13px] text-[var(--ld-muted-3)]">What happens next</p>
               <ol className="relative">
                 <span
                   aria-hidden="true"
@@ -300,7 +300,7 @@ function ContactView({
                     />
                     <span
                       className={cn(
-                        "block font-mono text-[11px] tracking-[0.08em] uppercase",
+                        "block text-[13px]",
                         index === 0 ? "text-[var(--ld-paper)]" : "text-[var(--ld-muted-3)]"
                       )}
                     >
@@ -373,7 +373,7 @@ function ContactView({
               </p>
               {reference ? (
                 <p className="mt-[26px] inline-flex items-center gap-3.5 rounded-2xl border border-dashed border-[#c3cce3] bg-[#eef1fa] px-[18px] py-3.5">
-                  <span className="font-mono text-[11px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">Reference</span>
+                  <span className="text-[13px] text-[var(--ld-text-muted)]">Reference</span>
                   <span className="font-mono text-xl font-medium tracking-[0.06em]">{reference}</span>
                 </p>
               ) : null}
@@ -408,7 +408,7 @@ function ContactView({
               className="ld-keep-light relative rounded-[30px] bg-[var(--ld-paper)] p-[clamp(22px,3.2vw,44px)] text-[var(--ld-ink)] shadow-[0_60px_120px_-50px_rgb(0_0_0/0.75)]"
             >
               <div className="mb-[26px] flex items-center justify-between gap-3">
-                <span className="font-mono text-[11.5px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{copy.sheetLabel}</span>
+                <span className="text-[13px] text-[var(--ld-text-muted)]">{copy.sheetLabel}</span>
                 <span className="inline-flex items-center gap-2.5 font-mono text-[11px] text-[var(--ld-text-muted)]">
                   <span
                     role="progressbar"
@@ -514,7 +514,7 @@ function ContactView({
 
                 {fields.stage && audiences.length > 0 ? (
                   <fieldset className="mt-4">
-                    <legend className="mb-[7px] font-mono text-[11.5px] tracking-[0.08em] text-[var(--ld-text-muted)] uppercase">
+                    <legend className="mb-[7px] text-[13px] text-[var(--ld-text-muted)]">
                       Which sounds like you?
                     </legend>
                     <div className="grid gap-2 sm:grid-cols-3">
@@ -524,7 +524,7 @@ function ContactView({
                           <span className="block h-full rounded-[14px] border border-[var(--ld-line)] bg-white p-3.5 transition-colors hover:border-[var(--ld-ink)] peer-checked:border-[var(--ld-deep)] peer-checked:bg-[var(--ld-deep)] peer-checked:text-[var(--ld-paper)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--ld-accent)] peer-focus-visible:ring-offset-2">
                             <span className="block text-sm leading-tight font-bold">{audience.title}</span>
                             {audience.startsAt ? (
-                              <span className="mt-1.5 block font-mono text-[10.5px] tracking-[0.04em] text-[var(--ld-text-muted)] uppercase group-has-checked:text-[var(--ld-tint)]">
+                              <span className="mt-1.5 block text-[13px] text-[var(--ld-text-muted)] group-has-checked:text-[var(--ld-tint)]">
                                 Usually starts at {audience.startsAt}
                               </span>
                             ) : null}

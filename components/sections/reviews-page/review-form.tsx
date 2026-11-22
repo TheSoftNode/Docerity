@@ -290,7 +290,7 @@ function ReviewForm({ submitLabel = "Send for reading" }: { submitLabel?: string
             );
           })}
         </div>
-        <p aria-hidden="true" className="mt-2 font-mono text-[11.5px] text-[var(--ld-text-muted)] uppercase">
+        <p aria-hidden="true" className="mt-2 text-[13px] text-[var(--ld-text-muted)]">
           {rating ? `${rating} out of 5 · ${RATING_WORDS[rating]}` : "Pick from 1 to 5"}
         </p>
         {errors.rating ? <p className="mt-1 text-[13px] text-[#c2492b]">{errors.rating}</p> : null}
@@ -361,7 +361,7 @@ function ReviewForm({ submitLabel = "Send for reading" }: { submitLabel?: string
       {/* The optional pieces under one legend, so the required fields above
           read as the real length of the form. */}
       <fieldset className="rounded-2xl border border-dashed border-[var(--ld-line-2)] px-4 pt-2 pb-4">
-        <legend className="px-1.5 font-mono text-[11px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">Optional</legend>
+        <legend className="px-1.5 text-[13px] text-[var(--ld-text-muted)]">Optional</legend>
         <div className="grid gap-3.5 sm:grid-cols-2">
           <Field id="linkTitle" label="A link" hint="Your company, or the project.">
             <input id="linkTitle" name="linkTitle" placeholder="Acme" className={INPUT} />

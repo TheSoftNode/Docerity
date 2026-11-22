@@ -156,7 +156,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
     <section
       ref={section}
       aria-labelledby="blog-title"
-      className="relative -mt-[76px] flex h-[100svh] min-h-[600px] flex-col bg-white pt-[104px] pb-7 text-[var(--ld-ink)]"
+      className="relative -mt-[76px] flex h-[clamp(460px,72svh,720px)] flex-col bg-white pt-[104px] pb-6 text-[var(--ld-ink)]"
     >
       {/* Exactly the window's height: the word takes whatever the heading and the row under it leave. */}
       <div className="doc-shell grid min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto]">
@@ -170,7 +170,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
           <div ref={stage} aria-hidden="true" className={cn("relative grid min-w-0 place-items-center overflow-hidden", melting && "[filter:url(#ld-melt)_blur(0.3px)]")}>
             <div
               style={{ top: "calc(50% - var(--word-h, 160px) / 2 - 34px)" }}
-              className="absolute inset-x-0 flex justify-center gap-2.5 font-mono text-[10.5px] tracking-[0.12em] text-[var(--ld-text-muted)] uppercase md:gap-3.5 md:text-[12.5px]">
+              className="absolute inset-x-0 flex justify-center gap-2.5 text-[13px] text-[var(--ld-text-muted)] md:gap-3.5 md:text-[13px]">
               <span className={cn("transition-colors duration-500", !current.analogy && "text-[var(--ld-ink)]")}>What it&apos;s called</span>
               <span className="relative h-px w-8 self-center overflow-hidden bg-[var(--ld-line)] md:w-14">
                 <span className={cn("absolute inset-y-0 left-0 bg-[var(--ld-ink)] transition-[width] duration-[1100ms] ease-linear", current.analogy !== melting ? "w-full" : "w-0")} />
@@ -186,7 +186,7 @@ function BlogHero({ heading, elements }: { heading: SectionHeading; elements: Bl
                 ref={ref}
                 style={{ opacity: shown ? 1 : 0 }}
                 className={cn(
-                  "ld-display absolute w-full px-1 text-center text-[clamp(40px,12vw,56px)] leading-[0.98] md:text-[clamp(72px,11vw,200px)] font-extrabold tracking-[-0.06em] select-none md:w-auto md:px-0 md:leading-none md:whitespace-nowrap",
+                  "ld-display absolute w-full px-1 text-center text-[clamp(40px,12vw,56px)] leading-[0.98] md:text-[clamp(64px,9vw,150px)] font-extrabold tracking-[-0.055em] select-none md:w-auto md:px-0 md:leading-none md:whitespace-nowrap",
                   word.analogy ? "text-[var(--ld-deep)]" : "text-[var(--ld-ink)]"
                 )}
               >

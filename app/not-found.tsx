@@ -54,7 +54,7 @@ export default async function NotFound() {
               </div>
               <div className="ld-up ld-delay-2 grid gap-1.5 sm:grid-cols-[minmax(0,1fr)_44px_minmax(0,1fr)] sm:gap-0">
                 <div className="rounded-[18px] border border-[rgb(var(--ld-tint-rgb)/0.16)] bg-[rgb(var(--ld-paper-rgb)/0.06)] px-[18px] py-4">
-                  <span className="font-mono text-[11px] text-[var(--ld-muted-3)] uppercase">The concept</span>
+                  <span className="text-[13px] text-[var(--ld-muted-3)]">The concept</span>
                   <span className="ld-display mt-2 block text-[22px] font-extrabold">{copy.concept}</span>
                   <span className="mt-1 block text-[13.5px] text-[var(--ld-muted)]">{copy.conceptCaption}</span>
                 </div>
@@ -62,7 +62,7 @@ export default async function NotFound() {
                   ≈
                 </div>
                 <div className="rounded-[18px] bg-[var(--ld-paper)] px-[18px] py-4 text-[var(--ld-ink)]">
-                  <span className="font-mono text-[11px] text-[var(--ld-text-muted)] uppercase">Works like</span>
+                  <span className="text-[13px] text-[var(--ld-text-muted)]">Works like</span>
                   <span className="ld-display mt-2 block text-[22px] leading-[1.05] font-extrabold">{copy.analogy}</span>
                   <span className="mt-1 block text-[13.5px] text-[var(--ld-text-muted)]">{copy.analogyCaption}</span>
                 </div>

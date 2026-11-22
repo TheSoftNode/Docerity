@@ -30,7 +30,7 @@ function AboutCredentials({
   const educationList =
     education.length > 0 ? (
               <div className="rounded-[20px] border border-[var(--ld-line)] bg-white px-[18px] py-2">
-                <h3 className="mt-2.5 mb-1 font-mono text-[11px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">Education</h3>
+                <h3 className="mt-2.5 mb-1 text-[13px] text-[var(--ld-text-muted)]">Education</h3>
                 <ul>
                   {education.map((entry) => (
                     <li key={`${entry.qualification}-${entry.institution}`} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3.5 border-b border-[#eef1f8] py-[11px] last:border-0">
@@ -103,7 +103,7 @@ function AboutCredentials({
                       {cert.image ? (
                         <Image src={cert.image} alt="" fill sizes="(min-width: 1024px) 14vw, (min-width: 640px) 30vw, 45vw" className="object-contain p-1" />
                       ) : (
-                        <span className="grid h-full place-items-center bg-[#eef1f8] px-2 text-center font-mono text-[10.5px] text-[var(--ld-text-muted)] uppercase">
+                        <span className="grid h-full place-items-center bg-[#eef1f8] px-2 text-center text-[13px] text-[var(--ld-text-muted)]">
                           No scan · text only
                         </span>
                       )}
@@ -127,7 +127,7 @@ function AboutCredentials({
                   ) : (
                     <span className="grid h-full place-items-center px-6 text-center">
                       <span>
-                        <span className="block font-mono text-[11px] tracking-[0.2em] text-[#8a7f62] uppercase">No scan on file</span>
+                        <span className="block text-[13px] text-[#8a7f62]">No scan on file</span>
                         <span className="ld-display mt-2 block text-[clamp(18px,2vw,26px)] font-semibold text-[#3b3626]">{chosen.name}</span>
                       </span>
                     </span>

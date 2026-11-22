@@ -125,7 +125,7 @@ function AudiencePathView({
                   {audienceHeading.title}
                 </h2>
               </div>
-              <p className="font-mono text-xs tracking-[0.08em] text-[var(--ld-text-muted)] uppercase">
+              <p className="text-[13px] text-[var(--ld-text-muted)]">
                 Pick the one that sounds like you →
               </p>
             </div>
@@ -382,7 +382,7 @@ function AudiencePathView({
                     {isStart ? (
                       <span
                         className={cn(
-                          "ld-pop z-10 mt-2 inline-flex items-center gap-2 rounded-[10px] border border-[rgb(var(--ld-tint-rgb)/0.35)] bg-[var(--ld-ink)] px-3 py-1.5 font-mono text-[11px] tracking-[0.06em] whitespace-nowrap text-[var(--ld-paper)] uppercase shadow-[0_16px_30px_-12px_rgb(0_0_0/0.6)]",
+                          "ld-pop z-10 mt-2 inline-flex items-center gap-2 rounded-[10px] border border-[rgb(var(--ld-tint-rgb)/0.35)] bg-[var(--ld-ink)] px-3 py-1.5 text-[13px] whitespace-nowrap text-[var(--ld-paper)] shadow-[0_16px_30px_-12px_rgb(0_0_0/0.6)]",
                           "md:absolute md:left-[var(--x)] md:mt-0 md:-translate-x-1/2",
                           station.high ? "md:top-[calc(var(--y)+40px)]" : "md:top-[calc(var(--y)-40px)] md:-translate-y-full"
                         )}
@@ -400,7 +400,7 @@ function AudiencePathView({
             {stages[current] ? (
               <div className="mt-[clamp(40px,8vw,104px)] hidden gap-[clamp(28px,4vw,64px)] rounded-[26px] md:grid border border-[rgb(var(--ld-tint-rgb)/0.2)] bg-[rgb(var(--ld-ink-rgb)/0.42)] p-[clamp(24px,3vw,40px)] backdrop-blur-[10px] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
                 <div>
-                  <p className="font-mono text-xs tracking-[0.1em] text-[var(--ld-tint)] uppercase">
+                  <p className="text-[13px] text-[var(--ld-tint)]">
                     Stage <span className="text-[var(--ld-accent)]">{pad(current + 1)}</span> of {pad(count)}
                   </p>
                   <h3 className="ld-display mt-3.5 text-[clamp(36px,4.2vw,60px)] leading-[0.95] font-extrabold tracking-[-0.045em]">
@@ -421,7 +421,7 @@ function AudiencePathView({
                         style={paused ? undefined : { animationDuration: `${STAGE_INTERVAL_MS}ms` }}
                       />
                     </span>
-                    <span className="font-mono text-[11px] tracking-[0.08em] text-[var(--ld-muted)] uppercase">
+                    <span className="text-[13px] text-[var(--ld-muted)]">
                       {paused ? "Paused" : "Auto"}
                     </span>
                   </div>

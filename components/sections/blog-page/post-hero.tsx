@@ -24,7 +24,7 @@ function PostHero({ element, author }: { element: BlogElement; author?: PostByli
         className="absolute top-[10%] -left-[10%] aspect-square w-[min(70vw,900px)] rounded-full bg-[radial-gradient(circle,rgb(var(--ld-tint-rgb)/0.45),transparent_65%)]"
       />
       <div className="doc-shell relative">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2.5 border-b-2 border-[var(--ld-ink)] pb-3.5 font-mono text-[11.5px] tracking-[0.1em] uppercase">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2.5 border-b-2 border-[var(--ld-ink)] pb-3.5 text-[13px]">
           <Link href="/blog" className="-my-3 inline-flex min-h-11 items-center text-[var(--ld-ink)] transition-colors hover:text-[var(--ld-deep)]">
             ← The table of explainers
           </Link>
@@ -55,7 +55,7 @@ function PostHero({ element, author }: { element: BlogElement; author?: PostByli
           </div>
 
           <div>
-            <p className="ld-up flex items-center gap-3 font-mono text-[12.5px] tracking-[0.1em] text-[var(--ld-deep)] uppercase">
+            <p className="ld-up flex items-center gap-3 text-[13px] text-[var(--ld-deep)]">
               {explainer ? (
                 <>
                   Explainer · {element.name}

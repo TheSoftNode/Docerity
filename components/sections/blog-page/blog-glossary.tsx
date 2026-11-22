@@ -115,7 +115,7 @@ function BlogGlossary({ elements }: { elements: BlogElement[] }) {
                   </span>
                   {/* An article has no analogy, so its title takes that column too. */}
                   <span className={cn("min-w-0", !explainer && "md:col-span-2")}>
-                    <span className={cn("block font-mono text-[11px] tracking-[0.08em] uppercase", explainer ? "text-[var(--ld-deep)]" : "text-[var(--ld-text-muted)]")}>
+                    <span className={cn("block text-[13px]", explainer ? "text-[var(--ld-deep)]" : "text-[var(--ld-text-muted)]")}>
                       {element.kind}
                     </span>
                     <span className="ld-display mt-1.5 block text-[clamp(22px,2.2vw,30px)] leading-[1.05] font-extrabold tracking-[-0.03em]">
@@ -135,7 +135,7 @@ function BlogGlossary({ elements }: { elements: BlogElement[] }) {
                       {element.hook}
                     </span>
                   </span>
-                  <span className="hidden text-right font-mono text-[11.5px] leading-relaxed text-[var(--ld-text-muted)] uppercase md:block">
+                  <span className="hidden text-right text-[13px] leading-relaxed text-[var(--ld-text-muted)] md:block">
                     {element.read} read
                     <br />
                     {element.date}

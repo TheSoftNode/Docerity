@@ -66,7 +66,7 @@ function ContributeRoute({
                   here ? "border-[rgb(var(--ld-tint-rgb)/0.5)] bg-[rgb(28_58_140/0.45)]" : "border-[rgb(var(--ld-tint-rgb)/0.14)] bg-[rgb(var(--ld-paper-rgb)/0.03)]"
                 )}
               >
-                <div className="flex items-center justify-between font-mono text-xs text-[var(--ld-muted-3)] uppercase">
+                <div className="flex items-center justify-between text-[13px] text-[var(--ld-muted-3)]">
                   <span className="inline-flex items-center gap-2">
                     <span
                       aria-hidden="true"
@@ -81,7 +81,7 @@ function ContributeRoute({
                 <div aria-hidden="true" className="grid min-h-[110px] flex-1 content-start pt-4">
                   {here ? (
                     <div key={current} className="ld-pop rounded-[14px] bg-[var(--ld-paper)] p-3.5 text-[var(--ld-ink)] shadow-[0_24px_40px_-26px_rgb(0_0_0/0.8)]">
-                      <span className="block font-mono text-[10.5px] text-[var(--ld-text-muted)] uppercase">Explainer</span>
+                      <span className="block text-[13px] text-[var(--ld-text-muted)]">Explainer</span>
                       <span className="ld-display mt-1 block text-lg font-bold">Your first explainer</span>
                       {stage.cardNote ? (
                         <span className="mt-2.5 flex items-center gap-2 text-[12.5px] text-[var(--ld-text-muted)]">
