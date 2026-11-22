@@ -15,7 +15,7 @@ function BlogSubscribe() {
         className="absolute -top-[20%] left-1/2 aspect-[2.2/1] w-[min(110vw,1500px)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgb(64_110_230/0.34),transparent_62%)]"
       />
       <div className="doc-shell relative pt-[clamp(80px,10vw,136px)]">
-        <div className="grid items-end gap-10 lg:grid-cols-2">
+        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-2 [&>*]:min-w-0">
           <div>
             <h2 id="subscribe-title" className="ld-display text-[clamp(42px,6.4vw,96px)] leading-[0.9] font-extrabold tracking-[-0.055em]">
               One explainer, now and <span className="ld-sheen">then</span>

@@ -33,10 +33,10 @@ function PostHero({ element, author }: { element: BlogElement; author?: PostByli
           </span>
         </div>
 
-        <div className="grid items-end gap-[clamp(28px,4.5vw,72px)] py-[clamp(40px,5.5vw,76px)] md:grid-cols-[auto_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 items-end gap-[clamp(24px,4vw,64px)] py-[clamp(28px,4.5vw,64px)] md:grid-cols-[auto_minmax(0,1fr)]">
           <div
             aria-hidden="true"
-            className={`ld-up relative aspect-[4/5] w-[clamp(180px,24vw,320px)] -rotate-2 rounded-[26px] p-[22px] text-[var(--ld-paper)] shadow-[0_50px_90px_-50px_rgb(var(--ld-ink-rgb)/0.75)] ${
+            className={`ld-up relative aspect-[4/5] w-[clamp(150px,20vw,280px)] -rotate-2 rounded-[26px] p-[22px] text-[var(--ld-paper)] shadow-[0_50px_90px_-50px_rgb(var(--ld-ink-rgb)/0.75)] ${
               explainer ? "bg-[var(--ld-ink)]" : "bg-[var(--ld-deep)]"
             }`}
           >
@@ -66,11 +66,11 @@ function PostHero({ element, author }: { element: BlogElement; author?: PostByli
                 <>Article · {element.kind}</>
               )}
             </p>
-            <h1 className="ld-display ld-up ld-delay-1 mt-4 max-w-[16ch] text-[clamp(40px,5.8vw,92px)] leading-[0.9] font-extrabold tracking-[-0.055em] text-balance">
+            <h1 className="ld-display ld-up ld-delay-1 mt-3 max-w-[18ch] text-[clamp(34px,4.6vw,68px)] leading-[1] font-semibold tracking-[-0.04em] text-balance">
               {title.text}
               <span className="text-[var(--ld-accent)]">{title.stop}</span>
             </h1>
-            <p className="ld-up ld-delay-2 mt-6 max-w-[38rem] text-[clamp(18px,1.55vw,21px)] leading-relaxed text-[var(--ld-text-2)]">
+            <p className="ld-up ld-delay-2 mt-4 max-w-[38rem] text-[clamp(16.5px,1.3vw,19px)] leading-relaxed text-[var(--ld-text-2)]">
               {element.hook}
             </p>
           </div>

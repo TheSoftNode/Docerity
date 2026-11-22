@@ -68,7 +68,7 @@ function BlogGlossary({ elements }: { elements: BlogElement[] }) {
         </div>
 
         {tags.length > 1 ? (
-          <div role="group" aria-label="Topics" className="mt-[26px] flex flex-wrap gap-2">
+          <div role="group" aria-label="Topics" className="-mx-5 mt-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:-mx-8 sm:px-8 md:mx-0 md:flex-wrap md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
             {[{ tag: "", count: elements.length }, ...tags].map((option) => {
               const on = option.tag === tag;
               return (
@@ -78,7 +78,7 @@ function BlogGlossary({ elements }: { elements: BlogElement[] }) {
                   aria-pressed={on}
                   onClick={() => setTag(option.tag)}
                   className={cn(
-                    "min-h-9 rounded-full border px-3.5 text-[13.5px] font-medium transition-colors",
+                    "min-h-9 shrink-0 rounded-full border px-3.5 text-[13.5px] font-medium whitespace-nowrap transition-colors",
                     on
                       ? "border-[var(--ld-deep)] bg-[var(--ld-deep)] text-[var(--ld-paper)]"
                       : "border-[var(--ld-line-2)] text-[var(--ld-text-2)] hover:border-[var(--ld-ink)] hover:text-[var(--ld-ink)]"
@@ -118,9 +118,12 @@ function BlogGlossary({ elements }: { elements: BlogElement[] }) {
                     <span className={cn("block text-[13px]", explainer ? "text-[var(--ld-deep)]" : "text-[var(--ld-text-muted)]")}>
                       {element.kind}
                     </span>
-                    <span className="ld-display mt-1.5 block text-[clamp(22px,2.2vw,30px)] leading-[1.05] font-extrabold tracking-[-0.03em]">
+                    <span className="ld-display mt-1 block text-[clamp(20px,2vw,28px)] leading-[1.1] font-semibold tracking-[-0.025em]">
                       {element.name}
                     </span>
+                    {/* On a phone the everyday comparison goes under the name,
+                        since it is the reason to open an explainer. */}
+                    {explainer ? <span className="mt-1 block text-[14.5px] leading-snug text-[var(--ld-text-2)] md:hidden">≈ {element.line}</span> : null}
                     {explainer ? null : (
                       <span className="hidden max-h-0 overflow-hidden text-[15px] leading-normal text-[var(--ld-text-muted)] opacity-0 transition-[max-height,opacity,margin] duration-500 group-hover:mt-1.5 group-hover:max-h-20 group-hover:opacity-100 group-focus-visible:mt-1.5 group-focus-visible:max-h-20 group-focus-visible:opacity-100 md:block">
                         {element.hook}
