@@ -34,7 +34,7 @@ function BlogWrite() {
         </div>
 
         <div aria-hidden="true" className="rounded-3xl border border-[rgb(var(--ld-tint-rgb)/0.2)] bg-[rgb(var(--ld-ink-rgb)/0.45)] p-[26px] backdrop-blur-[8px]">
-          <p className="font-mono text-[11px] tracking-[0.1em] text-[var(--ld-muted-3)] uppercase">Your byline, on your piece</p>
+          <p className="text-[13px] text-[var(--ld-muted-3)]">Your byline, on your piece</p>
           <div className="mt-[18px] flex items-center gap-3.5">
             <span className="grid size-[52px] place-items-center rounded-full bg-[var(--ld-tint)] font-mono text-[15px] text-[var(--ld-ink)]">YN</span>
             <span>

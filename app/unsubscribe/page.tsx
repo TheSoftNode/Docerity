@@ -83,7 +83,7 @@ export default async function UnsubscribePage({
           <div className="doc-shell">
             <div className="grid items-center gap-[clamp(28px,4vw,64px)] rounded-[32px] bg-[var(--ld-ink)] p-[clamp(24px,4vw,56px)] text-[var(--ld-paper)] lg:grid-cols-2">
               <div>
-                <p className="mb-4 font-mono text-xs tracking-[0.1em] text-[var(--ld-tint)] uppercase">Unsubscribe</p>
+                <p className="mb-4 text-[13px] text-[var(--ld-tint)]">Unsubscribe</p>
                 <h1 className="ld-display max-w-[12ch] text-[clamp(38px,4.6vw,66px)] leading-[0.94] font-extrabold tracking-[-0.045em] text-balance">
                   {removed ? copy.doneTitle : copy.failedTitle}
                   <span className="text-[var(--ld-accent)]">.</span>
@@ -138,7 +138,7 @@ export default async function UnsubscribePage({
                     </li>
                   ))}
                 </ul>
-                <p className="mt-4 font-mono text-[11.5px] text-[var(--ld-text-muted)] uppercase">
+                <p className="mt-4 text-[13px] text-[var(--ld-text-muted)]">
                   {removed ? "The switch is off · nothing else about you changed" : "Nothing was changed"}
                 </p>
               </div>

@@ -42,7 +42,7 @@ function PostNext({ next, related, relatedLabel }: { next?: BlogElement; related
             <span aria-hidden="true" className="absolute -right-15 -bottom-20 size-[260px] rounded-full border border-[rgb(var(--ld-tint-rgb)/0.18)]" />
             <Tile element={next} size="large" />
             <span className="relative min-w-0">
-              <span className="block font-mono text-xs tracking-[0.1em] text-[var(--ld-tint)] uppercase">
+              <span className="block text-[13px] text-[var(--ld-tint)]">
                 Next · {next.kind}
                 {next.type === "explainer" ? ` · ${next.name}` : ""}
               </span>
@@ -62,7 +62,7 @@ function PostNext({ next, related, relatedLabel }: { next?: BlogElement; related
 
         {related.length > 0 ? (
           <>
-            <p className="mt-[clamp(44px,5vw,64px)] mb-[18px] font-mono text-xs tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">{relatedLabel}</p>
+            <p className="mt-[clamp(44px,5vw,64px)] mb-[18px] text-[13px] text-[var(--ld-text-muted)]">{relatedLabel}</p>
             <ul className="grid gap-3.5 md:grid-cols-3">
               {related.map((element) => (
                 <li key={element.slug}>
@@ -72,10 +72,10 @@ function PostNext({ next, related, relatedLabel }: { next?: BlogElement; related
                   >
                     <span className="flex items-center justify-between">
                       <Tile element={element} size="small" />
-                      <span className="font-mono text-[11px] text-[var(--ld-text-muted)] uppercase">{element.read}</span>
+                      <span className="text-[13px] text-[var(--ld-text-muted)]">{element.read}</span>
                     </span>
                     <span>
-                      <span className="block font-mono text-[11px] tracking-[0.08em] text-[var(--ld-deep)] uppercase">
+                      <span className="block text-[13px] text-[var(--ld-deep)]">
                         {element.kind}
                         {element.type === "explainer" ? ` · ${element.name}` : ""}
                       </span>

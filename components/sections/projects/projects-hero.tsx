@@ -64,7 +64,7 @@ function ProjectsHero({ projects, heading }: { projects: Project[]; heading: Sec
                       <span className="ld-display block text-[26px] leading-none font-extrabold tracking-[-0.03em]">
                         {project.name}
                       </span>
-                      <span className="mt-1.5 block font-mono text-[10.5px] uppercase opacity-60">
+                      <span className="mt-1.5 block text-[13px] opacity-60">
                         {project.category}
                       </span>
                     </span>

@@ -52,7 +52,7 @@ function BlogLatest({ element }: { element: BlogElement | undefined }) {
             ) : null}
           </div>
           <div>
-            <p className="font-mono text-xs tracking-[0.1em] text-[var(--ld-deep)] uppercase">
+            <p className="text-[13px] text-[var(--ld-deep)]">
               {element.kind}
               {explainer ? ` · ${element.name}` : ""}
             </p>
@@ -68,7 +68,7 @@ function BlogLatest({ element }: { element: BlogElement | undefined }) {
                   <ArrowRightIcon aria-hidden="true" className="size-3.5" />
                 </span>
               </span>
-              <span className="font-mono text-xs text-[var(--ld-text-muted)] uppercase">
+              <span className="text-[13px] text-[var(--ld-text-muted)]">
                 {element.read} read · {element.tags.join(" · ")}
               </span>
             </div>
@@ -85,7 +85,7 @@ function ElementTile({ className, symbol, label }: { className: string; symbol: 
       <span className="ld-display absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[54%] text-[clamp(34px,4.6vw,64px)] font-extrabold tracking-[-0.04em]">
         {symbol}
       </span>
-      <span className="absolute inset-x-0 bottom-[11%] truncate px-2 text-center font-mono text-[clamp(7.5px,0.7vw,9.5px)] tracking-[0.06em] uppercase opacity-70">
+      <span className="absolute inset-x-0 bottom-[11%] truncate px-2 text-center text-[clamp(7.5px,0.7vw,9.5px)] opacity-70">
         {label}
       </span>
     </div>

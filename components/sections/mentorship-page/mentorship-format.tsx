@@ -28,7 +28,7 @@ function CallPicture() {
         <span className="grid size-14 place-items-center rounded-2xl bg-[var(--ld-ink)]">
           <Image src="/brand/logo-sapphire.png" alt="" width={34} height={34} className="size-[34px] object-contain" />
         </span>
-        <span className="absolute bottom-2.5 left-3 font-mono text-[10.5px] text-[var(--ld-muted)] uppercase">Your mentor</span>
+        <span className="absolute bottom-2.5 left-3 text-[13px] text-[var(--ld-muted)]">Your mentor</span>
       </div>
       <span className="absolute bottom-3.5 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full border border-[rgb(var(--ld-tint-rgb)/0.2)] bg-[rgb(6_11_32/0.85)] px-3 py-1.5 font-mono text-[11px] text-[var(--ld-paper)]">
         <span className="ld-blink size-[7px] rounded-full bg-[#FF6B3D]" />
@@ -71,7 +71,7 @@ function PlanPicture({ stages }: { stages: StageView[] }) {
             ✓
           </span>
           <span className="text-sm font-medium">{stage.label}</span>
-          <span className="ml-auto font-mono text-[11px] text-[var(--ld-text-muted)] uppercase">Stage {pad(index + 1)}</span>
+          <span className="ml-auto text-[13px] text-[var(--ld-text-muted)]">Stage {pad(index + 1)}</span>
         </div>
       ))}
     </div>

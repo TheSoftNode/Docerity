@@ -26,7 +26,7 @@ function PostBody({ entry, url, title }: { entry: BlogEntry; url: string; title:
         <aside className="lg:sticky lg:top-24 lg:self-start">
           {sections.length > 1 ? (
             <>
-              <p className="mb-4 font-mono text-[11.5px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">In this piece</p>
+              <p className="mb-4 text-[13px] text-[var(--ld-text-muted)]">In this piece</p>
               <ChapterRail chapters={sections.map((section) => ({ id: section.id, heading: section.heading }))} />
             </>
           ) : null}
@@ -61,7 +61,7 @@ function PostBody({ entry, url, title }: { entry: BlogEntry; url: string; title:
               </div>
               {explainer && section.sidenote ? (
                 <aside className="self-start rounded-[20px] border border-[rgb(28_58_140/0.15)] bg-[linear-gradient(160deg,#dfe6fb,#cfdafd)] p-5 xl:mt-[34px]">
-                  <p className="flex items-center gap-2.5 font-mono text-[10.5px] tracking-[0.1em] text-[#2a3a72] uppercase">
+                  <p className="flex items-center gap-2.5 text-[13px] text-[#2a3a72]">
                     <span aria-hidden="true" className="ld-display grid size-6 place-items-center rounded-[7px] bg-[var(--ld-paper)] text-sm font-extrabold text-[var(--ld-deep)]">
                       ≈
                     </span>
@@ -75,7 +75,7 @@ function PostBody({ entry, url, title }: { entry: BlogEntry; url: string; title:
 
           <div className="grid items-center gap-5 rounded-[22px] border border-[var(--ld-line)] bg-[var(--ld-card)] p-6 sm:grid-cols-[minmax(0,1fr)_auto]">
             <div>
-              <p className="mb-3 font-mono text-[11px] tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">Written by</p>
+              <p className="mb-3 text-[13px] text-[var(--ld-text-muted)]">Written by</p>
               <Byline author={entry.author} />
             </div>
             <Link

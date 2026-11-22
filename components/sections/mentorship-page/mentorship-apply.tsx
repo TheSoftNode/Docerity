@@ -65,7 +65,7 @@ async function MentorshipApply() {
 
         {steps && steps.length > 0 ? (
           <div className="mt-[clamp(56px,7vw,88px)] rounded-[28px] border border-[rgb(var(--ld-tint-rgb)/0.14)] bg-[linear-gradient(180deg,rgb(var(--ld-tint-rgb)/0.07),rgb(var(--ld-tint-rgb)/0.02))] p-[clamp(24px,3vw,36px)]">
-            <p className="mb-[26px] font-mono text-[11.5px] tracking-[0.1em] text-[var(--ld-muted-3)] uppercase">What happens next</p>
+            <p className="mb-[26px] text-[13px] text-[var(--ld-muted-3)]">What happens next</p>
             <ol
               className="relative grid gap-7 sm:grid-cols-2 lg:grid-cols-[repeat(var(--steps),minmax(0,1fr))] lg:gap-0"
               style={{ ["--steps" as string]: steps.length }}
@@ -85,7 +85,7 @@ async function MentorshipApply() {
                   />
                   <span
                     className={cn(
-                      "block font-mono text-xs tracking-[0.08em] uppercase",
+                      "block text-[13px]",
                       index === 0 ? "text-[var(--ld-paper)]" : "text-[var(--ld-muted-3)]"
                     )}
                   >

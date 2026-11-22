@@ -152,10 +152,11 @@ function ProjectsShowcase({
                   </div>
                   <div className="flex min-w-0 flex-1 items-start justify-between gap-3 sm:mt-4">
                     <div className="min-w-0">
-                      <p className="flex items-center gap-2 font-mono text-[11px] tracking-[0.06em] text-[var(--ld-text-muted)] uppercase">
-                        <span aria-hidden="true" className={cn("size-1.5 rounded-full", statusTone(project.status))} />
-                        <span className="sr-only">{project.status}, </span>
-                        {project.category}
+                      <p className="flex min-w-0 items-center gap-2 text-[13px] text-[var(--ld-text-muted)]">
+                        <span aria-hidden="true" className={cn("size-1.5 shrink-0 rounded-full", statusTone(project.status))} />
+                        <span className="shrink-0 font-medium text-[var(--ld-text-2)]">{project.status}</span>
+                        <span aria-hidden="true">·</span>
+                        <span className="truncate">{project.category}</span>
                       </p>
                       <h3 className="ld-display mt-1 text-[19px] leading-tight font-bold tracking-[-0.02em] sm:mt-1.5 sm:text-[22px]">
                         {/* The link covers the whole card through its ::after,
@@ -196,13 +197,13 @@ function ProjectsShowcase({
                   <span className="ld-display truncate text-[clamp(20px,2.2vw,28px)] font-bold tracking-[-0.02em] transition-transform duration-300 group-hover:translate-x-2">
                     {project.name}
                   </span>
-                  <span className="hidden font-mono text-[11.5px] text-[var(--ld-text-muted)] uppercase md:block">
+                  <span className="hidden text-[13px] text-[var(--ld-text-muted)] md:block">
                     {project.category}
                   </span>
                   <span className="hidden truncate text-[13.5px] text-[var(--ld-text-2)] md:block">
                     {project.tags.slice(0, 3).join(" · ")}
                   </span>
-                  <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase">
+                  <span className="inline-flex items-center gap-2 text-[13px]">
                     <span aria-hidden="true" className={cn("size-[7px] rounded-full", statusTone(project.status))} />
                     {project.status}
                   </span>

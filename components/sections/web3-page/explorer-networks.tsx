@@ -43,7 +43,7 @@ function ExplorerNetworks({ networks }: { networks: { name: string; count: numbe
               </span>
               <span>
                 <span className="block text-[15px] font-bold">{name}</span>
-                <span className="mt-0.5 block font-mono text-[10.5px] uppercase opacity-65">{count > 0 ? `${count} listed` : "Supported"}</span>
+                <span className="mt-0.5 block text-[13px] opacity-65">{count > 0 ? `${count} listed` : "Supported"}</span>
               </span>
             </button>
           </li>
