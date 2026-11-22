@@ -25,8 +25,8 @@ function ProjectWriteUp({ sections }: { sections: readonly CaseStudySection[] })
       aria-label="Case study"
       className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]"
     >
-      <div className="doc-shell grid gap-x-[clamp(28px,5vw,80px)] gap-y-6 py-[clamp(44px,5.5vw,88px)] lg:grid-cols-[260px_minmax(0,1fr)]">
-        <aside className="sticky top-[76px] z-20 -mx-5 bg-[var(--ld-paper)]/92 px-5 py-2.5 backdrop-blur-md sm:-mx-8 sm:px-8 lg:top-28 lg:mx-0 lg:self-start lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+      <div className="doc-shell grid grid-cols-1 gap-x-[clamp(28px,5vw,80px)] gap-y-6 py-[clamp(44px,5.5vw,88px)] lg:grid-cols-[260px_minmax(0,1fr)]">
+        <aside className="sticky top-[76px] z-20 -mx-5 min-w-0 bg-[var(--ld-paper)]/92 px-5 py-2.5 backdrop-blur-md sm:-mx-8 sm:px-8 lg:top-28 lg:mx-0 lg:self-start lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           <p className="mb-2 text-[13px] text-[var(--ld-text-muted)] lg:mb-3">
             The write-up · {readingMinutes(sections)} min read
           </p>

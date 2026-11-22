@@ -147,7 +147,7 @@ function ProjectHero({
           </div>
         </div>
 
-        <dl className="ld-up ld-delay-4 mt-[clamp(28px,4vw,52px)] grid grid-cols-2 gap-px overflow-hidden rounded-[18px] bg-[rgb(var(--ld-tint-rgb)/0.12)] ring-1 ring-[rgb(var(--ld-tint-rgb)/0.12)] sm:auto-cols-fr sm:grid-flow-col sm:grid-cols-none">
+        <dl className="ld-up ld-delay-4 mt-[clamp(28px,4vw,52px)] grid grid-cols-2 gap-px overflow-hidden rounded-[18px] max-sm:[&>*:last-child:nth-child(odd)]:col-span-2 bg-[rgb(var(--ld-tint-rgb)/0.12)] ring-1 ring-[rgb(var(--ld-tint-rgb)/0.12)] sm:auto-cols-fr sm:grid-flow-col sm:grid-cols-none">
           {facts.map((fact) => (
             <div key={fact.label} className="min-w-0 bg-[var(--ld-ink)] px-4 py-3.5 sm:px-5 sm:py-4">
               <dt className="text-[12.5px] text-[var(--ld-muted-3)]">{fact.label}</dt>
