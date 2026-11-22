@@ -20,40 +20,40 @@ function ProjectOutcomes({ results, status = "Live" }: { results: readonly strin
 
   return (
     <section aria-labelledby="outcomes-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-      <div className="doc-shell pt-[clamp(64px,8vw,112px)]">
-        <div className="flex flex-wrap items-end justify-between gap-5">
+      <div className="doc-shell pt-[clamp(40px,5vw,72px)]">
+        <div className="flex flex-wrap items-end justify-between gap-x-5 gap-y-2">
           <div>
             <h2
               id="outcomes-title"
-              className="ld-display text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"
+              className="ld-display text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em]"
             >
               What changed.
             </h2>
           </div>
-          <p className="max-w-[22rem] text-[15px] leading-normal text-[var(--ld-text-muted)]">
+          <p className="max-w-[22rem] text-[14px] leading-normal text-[var(--ld-text-muted)]">
             {NOTE[status] ?? "What it achieved so far."}
           </p>
         </div>
 
-        <ol className="mt-11 grid border-t-2 border-[var(--ld-ink)] lg:grid-cols-3">
+        <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((result) => {
             const figure = resultFigure(result);
             return (
               <li
                 key={result}
-                className="border-b border-[var(--ld-line)] py-7 lg:mr-7 lg:border-r lg:border-b-0 lg:pr-7 lg:last:mr-0 lg:last:border-r-0"
+                className="flex flex-col rounded-[18px] bg-[var(--ld-card)] p-5 shadow-[0_1px_0_rgb(8_16_46/0.04),0_20px_40px_-30px_rgb(8_16_46/0.25)] ring-1 ring-[rgb(8_16_46/0.06)] sm:p-6"
               >
                 {figure ? (
                   <span
                     aria-hidden="true"
-                    className="ld-display mt-6 block text-[clamp(64px,7.4vw,112px)] leading-[0.85] font-extrabold tracking-[-0.06em]"
+                    className="ld-display block text-[clamp(36px,3.6vw,52px)] leading-none font-semibold tracking-[-0.04em]"
                   >
                     {figure.figure}
                     <span className="text-[var(--ld-accent)]">{figure.suffix}</span>
                   </span>
                 ) : null}
-                <span aria-hidden="true" className="ld-grow mt-5 mb-4 block h-[3px] w-12 rounded-full bg-[var(--ld-accent)]" />
-                <p className="text-base leading-relaxed text-[var(--ld-text-2)]">{result}</p>
+                <span aria-hidden="true" className={figure ? "ld-grow mt-4 mb-3 block h-[3px] w-10 rounded-full bg-[var(--ld-accent)]" : "ld-grow mb-3 block h-[3px] w-10 rounded-full bg-[var(--ld-accent)]"} />
+                <p className="text-[15px] leading-relaxed text-[var(--ld-text-2)]">{result}</p>
               </li>
             );
           })}

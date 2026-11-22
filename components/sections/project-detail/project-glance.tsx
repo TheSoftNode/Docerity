@@ -24,16 +24,16 @@ function ProjectGlance({ project }: { project: Project }) {
 
   return (
     <section aria-labelledby="glance-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-      <div className="doc-shell grid items-start gap-[clamp(32px,6vw,96px)] py-[clamp(64px,8vw,112px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+      <div className="doc-shell grid items-start gap-[clamp(24px,4vw,72px)] py-[clamp(44px,5.5vw,88px)] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
         <div>
           <h2
             id="glance-title"
-            className="ld-display text-[clamp(38px,5.2vw,72px)] leading-[0.95] font-extrabold tracking-[-0.045em]"
+            className="ld-display text-[clamp(28px,3.1vw,40px)] leading-[1.05] font-semibold tracking-[-0.03em]"
           >
             The short version.
           </h2>
-          <div className="mt-8 rounded-[20px] border border-dashed border-[var(--ld-line-2)] p-6">
-            <p className="text-base leading-normal text-[var(--ld-text-2)]">
+          <div className="mt-5 rounded-[18px] border border-dashed border-[var(--ld-line-2)] p-5">
+            <p className="text-[15px] leading-relaxed text-[var(--ld-text-2)]">
               The full story of {project.name} hasn&apos;t been written up yet. Want it sooner? We are happy to walk
               you through it.
             </p>
@@ -45,14 +45,14 @@ function ProjectGlance({ project }: { project: Project }) {
           </div>
         </div>
 
-        <dl className="border-t-2 border-[var(--ld-ink)]">
+        <dl className="overflow-hidden rounded-[18px] bg-[var(--ld-card)] ring-1 ring-[rgb(8_16_46/0.06)]">
           {sheet.map((fact) => (
             <div
               key={fact.label}
-              className="grid gap-1.5 border-b border-[var(--ld-line)] py-5 sm:grid-cols-[170px_minmax(0,1fr)] sm:gap-5"
+              className="grid gap-1 border-b border-[var(--ld-line)] px-5 py-4 last:border-b-0 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-5"
             >
-              <dt className="pt-0.5 font-mono text-xs tracking-[0.08em] text-[var(--ld-text-muted)] uppercase">{fact.label}</dt>
-              <dd className="text-[17px] leading-normal font-medium [overflow-wrap:anywhere]">{fact.value}</dd>
+              <dt className="pt-0.5 text-[13px] text-[var(--ld-text-muted)]">{fact.label}</dt>
+              <dd className="text-[15.5px] leading-normal font-medium [overflow-wrap:anywhere]">{fact.value}</dd>
             </div>
           ))}
         </dl>

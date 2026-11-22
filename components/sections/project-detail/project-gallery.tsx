@@ -9,14 +9,14 @@ function ProjectGallery({ images, name }: { images: readonly ProjectImage[]; nam
 
   return (
     <section aria-labelledby="gallery-title" className="bg-[var(--ld-paper-2)] text-[var(--ld-ink)]">
-      <div className="doc-shell py-[clamp(56px,7vw,96px)]">
+      <div className="doc-shell py-[clamp(40px,5vw,72px)]">
         <h2
           id="gallery-title"
-          className="ld-display text-[clamp(32px,4vw,56px)] leading-[0.95] font-extrabold tracking-[-0.045em]"
+          className="ld-display text-[clamp(26px,2.8vw,36px)] leading-[1.05] font-semibold tracking-[-0.03em]"
         >
           More of {name}.
         </h2>
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2">
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
           {images.map((image) => (
             <li key={image.src}>
               <figure className="group">
@@ -32,7 +32,7 @@ function ProjectGallery({ images, name }: { images: readonly ProjectImage[]; nam
                   />
                 </div>
                 {image.caption ? (
-                  <figcaption className="mt-2.5 font-mono text-xs text-[var(--ld-text-muted)]">{image.caption}</figcaption>
+                  <figcaption className="mt-2 text-[13px] text-[var(--ld-text-muted)]">{image.caption}</figcaption>
                 ) : null}
               </figure>
             </li>
