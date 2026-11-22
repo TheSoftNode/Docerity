@@ -15,7 +15,7 @@ function ProjectEvidence({ project }: { project: Project }) {
 
   return (
     <section aria-labelledby="evidence-title" className="bg-[var(--ld-paper)] text-[var(--ld-ink)]">
-      <div className="doc-shell pt-[clamp(44px,5vw,80px)]">
+      <div className="doc-shell pt-[clamp(32px,4vw,56px)]">
         <h2 id="evidence-title" className="sr-only">
           The evidence
         </h2>

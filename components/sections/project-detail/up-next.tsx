@@ -30,8 +30,8 @@ function UpNext({
 
   return (
     <section aria-label="More projects" className="relative overflow-hidden bg-[var(--ld-ink)] text-[var(--ld-paper)]">
-      <div className="doc-shell pt-[clamp(64px,8vw,112px)] pb-[clamp(24px,3vw,40px)]">
-        <div className="flex items-center justify-between gap-3.5 font-mono text-xs tracking-[0.1em] text-[var(--ld-muted-3)] uppercase">
+      <div className="doc-shell pt-[clamp(44px,5.5vw,80px)] pb-[clamp(20px,2.5vw,32px)]">
+        <div className="flex items-center justify-between gap-3.5 text-[13px] text-[var(--ld-muted-3)]">
           <span>Up next</span>
           <span>
             {pad(nextPosition)} / {pad(total)}
@@ -46,20 +46,20 @@ function UpNext({
 
         <Link
           href={`/projects/${next.slug}`}
-          className="group relative flex items-center justify-between gap-6 py-[clamp(40px,5vw,72px)] outline-none"
+          className="group relative flex items-center justify-between gap-6 py-[clamp(28px,3.5vw,52px)] outline-none"
         >
           <span className="min-w-0">
-            <span className="block font-mono text-[12.5px] tracking-[0.1em] text-[var(--ld-tint)] uppercase">
+            <span className="block text-[13.5px] text-[var(--ld-tint)]">
               {next.category}
             </span>
-            <span className="ld-display mt-3.5 block bg-[linear-gradient(90deg,var(--ld-accent)_0_50%,transparent_50%_100%)] bg-[length:200%_100%] bg-clip-text bg-[position:100%_0] text-[clamp(54px,10vw,168px)] leading-[0.86] font-extrabold tracking-[-0.06em] text-transparent transition-[background-position] duration-700 ease-[cubic-bezier(.2,.7,.2,1)] [overflow-wrap:anywhere] [-webkit-text-stroke:1.5px_rgb(var(--ld-paper-rgb)/0.7)] group-hover:bg-[position:0_0] group-focus-visible:bg-[position:0_0] motion-reduce:transition-none">
+            <span className="ld-display mt-3.5 block bg-[linear-gradient(90deg,var(--ld-accent)_0_50%,transparent_50%_100%)] bg-[length:200%_100%] bg-clip-text bg-[position:100%_0] text-[clamp(40px,6.4vw,104px)] leading-[0.92] font-semibold tracking-[-0.045em] text-transparent transition-[background-position] duration-700 ease-[cubic-bezier(.2,.7,.2,1)] [overflow-wrap:anywhere] [-webkit-text-stroke:1.5px_rgb(var(--ld-paper-rgb)/0.7)] group-hover:bg-[position:0_0] group-focus-visible:bg-[position:0_0] motion-reduce:transition-none">
               <span className="sr-only">Up next: </span>
               {next.name}
             </span>
           </span>
           <span
             aria-hidden="true"
-            className="grid size-[clamp(56px,6vw,88px)] shrink-0 place-items-center rounded-full border border-[rgb(var(--ld-paper-rgb)/0.25)] transition-[transform,background-color,color] duration-300 group-hover:translate-x-2.5 group-hover:bg-[var(--ld-accent)] group-hover:text-[var(--ld-ink)] group-focus-visible:bg-[var(--ld-accent)] group-focus-visible:text-[var(--ld-ink)]"
+            className="grid size-[clamp(48px,5vw,72px)] shrink-0 place-items-center rounded-full border border-[rgb(var(--ld-paper-rgb)/0.25)] transition-[transform,background-color,color] duration-300 group-hover:translate-x-2.5 group-hover:bg-[var(--ld-accent)] group-hover:text-[var(--ld-ink)] group-focus-visible:bg-[var(--ld-accent)] group-focus-visible:text-[var(--ld-ink)]"
           >
             <ArrowRightIcon className="size-[40%]" />
           </span>
@@ -86,7 +86,7 @@ function UpNext({
           >
             <ArrowLeftIcon aria-hidden="true" className="size-4 transition-transform group-hover:-translate-x-1" />
             <span>
-              <span className="mr-2 font-mono text-[11px] tracking-[0.1em] text-[var(--ld-muted-3)] uppercase">Previous</span>
+              <span className="mr-2 text-[13px] text-[var(--ld-muted-3)]">Previous</span>
               {previous.name}
             </span>
           </Link>

@@ -6,6 +6,7 @@ import { useReducedMotion } from "framer-motion";
 import type { Project, ProjectMedia } from "@/components/sections/work/work-data";
 import { ProjectMediaFill } from "@/components/sections/work/project-media-fill";
 import { hostOf } from "@/components/sections/project-detail/project-detail-content";
+import { statusDot } from "@/lib/content/project-schema";
 
 /**
  * The product, in a browser window that sits half in the hero's ink and half
@@ -24,10 +25,10 @@ function ProjectPreview({ project, media }: { project: Project; media?: ProjectM
   return (
     <section
       aria-label={`${project.name} preview`}
-      className="relative bg-[linear-gradient(var(--ld-ink)_0_52%,var(--ld-paper)_52%_100%)] pt-[clamp(28px,4vw,56px)]"
+      className="relative bg-[linear-gradient(var(--ld-ink)_0_52%,var(--ld-paper)_52%_100%)] pt-[clamp(24px,3.5vw,44px)]"
     >
       <div className="doc-shell [perspective:1600px]">
-        <figure className="ld-lift mx-auto max-w-[1240px] overflow-hidden rounded-[22px] border border-[rgb(var(--ld-tint-rgb)/0.2)] bg-[var(--ld-panel)] shadow-[0_80px_140px_-60px_rgb(var(--ld-ink-rgb)/0.85),0_0_0_10px_rgb(var(--ld-tint-rgb)/0.05)]">
+        <figure className="ld-lift mx-auto max-w-[1180px] overflow-hidden rounded-[18px] sm:rounded-[22px] border border-[rgb(var(--ld-tint-rgb)/0.2)] bg-[var(--ld-panel)] shadow-[0_80px_140px_-60px_rgb(var(--ld-ink-rgb)/0.85),0_0_0_10px_rgb(var(--ld-tint-rgb)/0.05)]">
           <div className="flex items-center gap-2 border-b border-[rgb(var(--ld-tint-rgb)/0.12)] bg-[var(--ld-ink-2)] px-4 py-3">
             <span aria-hidden="true" className="size-2.5 rounded-full bg-[#FF6B3D]" />
             <span aria-hidden="true" className="size-2.5 rounded-full bg-[#FFC94A]" />
@@ -36,16 +37,14 @@ function ProjectPreview({ project, media }: { project: Project; media?: ProjectM
               <LockIcon aria-hidden="true" className="size-3 shrink-0 text-[#54D696]" />
               <span className="truncate">{host || project.name}</span>
             </span>
-            <span
-              className={`hidden items-center gap-1.5 font-mono text-[11px] tracking-[0.08em] uppercase sm:inline-flex ${
-                live ? "text-[#54D696]" : "text-[#FFC94A]"
-              }`}
-            >
-              <span aria-hidden="true" className={`size-1.5 rounded-full ${live ? "bg-[#54D696]" : "bg-[#FFC94A]"}`} />
+            <span className="hidden items-center gap-1.5 text-[12.5px] text-[var(--ld-muted)] sm:inline-flex">
+              <span aria-hidden="true" className={`size-1.5 rounded-full ${live ? "bg-[#54D696]" : statusDot(project.status)}`} />
               {project.status}
             </span>
           </div>
-          <div className="relative aspect-[16/9] overflow-hidden bg-[var(--ld-panel)]">
+          {/* Without a screenshot the frame only holds the name again, so it
+              stays short rather than taking a screen of its own. */}
+          <div className={`relative overflow-hidden bg-[var(--ld-panel)] ${media ? "aspect-[16/9]" : "aspect-[16/8] sm:aspect-[21/7]"}`}>
             <ProjectMediaFill
               project={project}
               media={media}

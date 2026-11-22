@@ -25,9 +25,9 @@ function ProjectWriteUp({ sections }: { sections: readonly CaseStudySection[] })
       aria-label="Case study"
       className="scroll-mt-24 bg-[var(--ld-paper)] text-[var(--ld-ink)]"
     >
-      <div className="doc-shell grid gap-[clamp(28px,5vw,88px)] py-[clamp(72px,9vw,128px)] lg:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className="lg:sticky lg:top-28 lg:self-start">
-          <p className="mb-4 font-mono text-xs tracking-[0.1em] text-[var(--ld-text-muted)] uppercase">
+      <div className="doc-shell grid gap-x-[clamp(28px,5vw,80px)] gap-y-6 py-[clamp(44px,5.5vw,88px)] lg:grid-cols-[260px_minmax(0,1fr)]">
+        <aside className="sticky top-[76px] z-20 -mx-5 bg-[var(--ld-paper)]/92 px-5 py-2.5 backdrop-blur-md sm:-mx-8 sm:px-8 lg:top-28 lg:mx-0 lg:self-start lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+          <p className="mb-2 text-[13px] text-[var(--ld-text-muted)] lg:mb-3">
             The write-up · {readingMinutes(sections)} min read
           </p>
           {chapters.length > 1 ? <ChapterRail chapters={chapters} /> : null}
@@ -50,23 +50,23 @@ function ProjectWriteUp({ sections }: { sections: readonly CaseStudySection[] })
                 key={chapters[index].id}
                 id={chapters[index].id}
                 aria-labelledby={`${chapters[index].id}-title`}
-                className="mb-[clamp(48px,6vw,80px)] scroll-mt-28 border-b border-[var(--ld-line)] pb-[clamp(48px,6vw,80px)] last:mb-0 last:border-b-0 last:pb-0"
+                className="mb-[clamp(36px,4.5vw,60px)] scroll-mt-40 border-b border-[var(--ld-line)] pb-[clamp(36px,4.5vw,60px)] last:mb-0 last:border-b-0 last:pb-0 lg:scroll-mt-28"
               >
-                <p className="flex items-center gap-3 font-mono text-xs tracking-[0.1em] text-[var(--ld-accent)] uppercase">
-                  <span aria-hidden="true" className="h-0.5 w-7 bg-[var(--ld-accent)]" />
+                <p className="flex items-center gap-2.5 text-[13px] font-medium text-[var(--ld-accent)]">
+                  <span aria-hidden="true" className="h-0.5 w-6 bg-[var(--ld-accent)]" />
                   Chapter {pad(index + 1)}
                 </p>
                 <h2
                   id={`${chapters[index].id}-title`}
-                  className="ld-display mt-[18px] text-[clamp(32px,3.6vw,52px)] leading-none font-extrabold tracking-[-0.04em] text-balance"
+                  className="ld-display mt-3 text-[clamp(24px,2.4vw,34px)] leading-[1.1] font-semibold tracking-[-0.025em] text-balance"
                 >
                   {section.heading}
                 </h2>
                 {lead ? (
-                  <p className="mt-6 text-[clamp(19px,1.7vw,22px)] leading-relaxed font-medium text-pretty">{lead}</p>
+                  <p className="mt-4 text-[clamp(17px,1.35vw,19px)] leading-relaxed font-medium text-pretty">{lead}</p>
                 ) : null}
                 {rest.map((paragraph) => (
-                  <p key={paragraph.slice(0, 32)} className="mt-5 text-[17.5px] leading-[1.75] text-pretty text-[var(--ld-text-2)]">
+                  <p key={paragraph.slice(0, 32)} className="mt-4 text-[16.5px] leading-[1.75] text-pretty text-[var(--ld-text-2)]">
                     {paragraph}
                   </p>
                 ))}
@@ -82,7 +82,7 @@ function ProjectWriteUp({ sections }: { sections: readonly CaseStudySection[] })
                       className="w-full rounded-[18px] border border-[var(--ld-line)]"
                     />
                     {section.image.caption ? (
-                      <figcaption className="mt-2.5 font-mono text-xs text-[var(--ld-text-muted)]">
+                      <figcaption className="mt-2.5 text-[13px] text-[var(--ld-text-muted)]">
                         {section.image.caption}
                       </figcaption>
                     ) : null}
