@@ -4,7 +4,7 @@
   "showcase": "professional",
   "description": "Uri's AI employee on WhatsApp. Business owners create, design and schedule their posts by chatting with Jane, and their customers get instant, accurate answers on the business's own number, with anything Jane can't answer handed to a person.",
   "role": "CTO: wrote all the application code for both services",
-  "timeline": "Jun 2026 – present",
+  "timeline": "Nov 2025 – present",
   "tags": [
     "Python",
     "FastAPI",
@@ -16,13 +16,14 @@
     "OpenAI"
   ],
   "contributions": [
+    "Reviewed and supervised all of it as CTO: where a colleague built the backend, it was built under my review; I revamped the interface and fixed most of the bugs",
     "Wrote all the application code in both services: the conversation engine, graphics, scheduling, credits, the reply engine, routing between businesses, and escalation",
     "Split WhatsApp out of the main backend so it scales on its own: webhooks acknowledge at once and queue the work",
     "Built a conversation engine with about 30 states and session memory, so owners can type naturally",
     "Built the reply engine that answers customers only from the brand's own facts and escalates the rest",
     "Encrypted customers' phone numbers with their own key, decryptable in two places only, and purged after a retention window",
     "Ran a security and money audit in July 2026: found and fixed 15 issues, 5 of them critical, and removed about 1,700 lines of dead code",
-    "Set the target architecture for the move to containers; a teammate built the deploy pipelines"
+    "Set the target architecture for the move to containers; a colleague built the deploy pipelines under my review"
   ],
   "results": [
     "15 issues fixed in the July 2026 audit, 5 critical",
@@ -35,6 +36,12 @@
       "heading": "The problem",
       "paragraphs": [
         "Many of Uri's customers run their business from their phone, and WhatsApp is where they already are; opening a web dashboard is a step too far. Their own customers ask the same questions all day (prices, delivery, opening hours) on WhatsApp, often when the owner can't reply."
+      ]
+    },
+    {
+      "heading": "Under my review",
+      "paragraphs": [
+        "As CTO I review every change to Uri's code. Where a colleague built a part, they built it under my review and supervision. I also led the revamp of the interface and fixed most of the bugs. Uri began as Uri Creative in November 2025, and this product grew out of that work."
       ]
     },
     {

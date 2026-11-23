@@ -1,0 +1,91 @@
+{
+  "name": "Uri Creative",
+  "category": "AI · Sales intelligence",
+  "client": "Uri",
+  "showcase": "professional",
+  "status": "Discontinued",
+  "groups": [
+    "AI",
+    "Full-stack"
+  ],
+  "description": "Uri's first product: AI sales intelligence for businesses in Africa. It listened to public conversation on X, LinkedIn, Facebook, TikTok and Reddit for people showing buying intent, filtered the noise out with rules and an LLM, found the decision-makers behind hiring signals, and watched a company's dead CRM leads for the moment they became worth calling again. It became Uri Social.",
+  "role": "Lead engineer, then CTO: built most of the AI back end and much of the web app",
+  "timeline": "Nov 2025 – Apr 2026",
+  "tags": [
+    "Python",
+    "FastAPI",
+    "MongoDB",
+    "Redis",
+    "OpenAI",
+    "Gemini",
+    "Next.js",
+    "TypeScript"
+  ],
+  "contributions": [
+    "Wrote 409 of the AI service's 483 commits and 155 of the web app's 365; every colleague's change went through my review",
+    "Built the smart LLM router: most requests to a small, cheap model, harder ones to larger models, with Gemini and rule-based scoring as fallbacks",
+    "Built Sales Signals: a background job that gathers public posts showing buying intent, pain or opportunity across X, Facebook and TikTok, balanced per platform",
+    "Built Signal Refinery: rule-based pre-filtering followed by an LLM that separates real buyers from sellers and noise",
+    "Built intent analysis across five kinds of intent, from a direct \"where can I buy\" to a complaint that implies a need",
+    "Built the Lazarus Protocol: dead CRM leads watched in weekly batch scans for job changes, hiring sprees, funding and pivots, with buying signals scored",
+    "Built two-way CRM sync with HubSpot and Salesforce, and automatic dead-lead detection from user rules",
+    "Built hiring-signal lead generation: job boards and LinkedIn scanned, roles mapped to the decision-makers who buy, and contacts enriched through Apollo and Bright Data",
+    "Built the Lazarus screens, lead-tracking forms, onboarding and feature limits in the web app"
+  ],
+  "results": [
+    "About 450 API endpoints in the AI service",
+    "5 kinds of buying intent detected",
+    "Leads from 5 social platforms and the major job boards",
+    "CRM sync with HubSpot and Salesforce"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "A small sales team in Lagos or Nairobi can't watch every conversation where someone says they need what it sells, can't tell which job post means a company is about to buy, and has a CRM full of leads that went cold and were never looked at again. Uri Creative did that watching for them."
+      ]
+    },
+    {
+      "heading": "My role",
+      "paragraphs": [
+        "I joined in November 2025 and wrote most of the AI service: 409 of its 483 commits and about 77,000 of the lines added to it. I also built much of the web app. As CTO, everything my colleagues built went through my review."
+      ]
+    },
+    {
+      "heading": "Sales Signals",
+      "paragraphs": [
+        "A background job collects public posts from X, Facebook and TikTok that show buying intent, pain or an opportunity, keeping each platform to its share so one noisy source can't drown the others. Each post is classified into one of five kinds of intent (direct, implied, problem, comparison or recommendation-seeking) with its sentiment, in the language people actually use: \"Harmattan is making my skin dry\" is a skincare lead."
+      ]
+    },
+    {
+      "heading": "Signal Refinery",
+      "paragraphs": [
+        "Raw search results are mostly noise, and much of what looks like a buyer is a seller advertising. Signal Refinery runs in two stages: cheap rules throw out the obvious junk first, then an LLM classifies what is left as buyer or seller with a structured answer. Only qualified leads reach the user, and the expensive model only sees what the rules couldn't settle."
+      ]
+    },
+    {
+      "heading": "The Lazarus Protocol",
+      "paragraphs": [
+        "Every company's CRM is full of leads that said \"not now\". Lazarus brings them back. A user connects HubSpot or Salesforce, picks focus contacts and companies to watch, and weekly batch scans look for the moments that make a dead lead worth calling: a new job, a promotion, a hiring spree, a funding round, a pivot, a complaint about a competitor. Each signal is scored, logged and synced back to the CRM, and rules can mark leads dead automatically and add them to the watch list."
+      ]
+    },
+    {
+      "heading": "Routing every request to the right model",
+      "paragraphs": [
+        "With this many classification calls, the model bill decides whether the product is viable. The smart LLM router sends the large majority of requests to a small, fast model, standard ones to a mid-size model and only the hardest reasoning to the largest. If OpenAI fails it falls back to Gemini, and if both fail, to rule-based scoring, so the pipeline keeps working through a provider outage."
+      ]
+    },
+    {
+      "heading": "Hiring signals",
+      "paragraphs": [
+        "A company hiring a DevOps engineer is about to spend money on infrastructure. Uri Creative scanned job boards and LinkedIn, generated the right search keywords for each user's offer, mapped each hiring role to the decision-makers who buy for it (a DevOps hire leads to the CTO or Head of Engineering), and enriched those people through Apollo and Bright Data."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Python and FastAPI on MongoDB with Motor, Redis and APScheduler workers; OpenAI and Gemini; Apify, Bright Data, Firecrawl and Playwright for collection; HubSpot and Salesforce APIs; WebSockets for real-time leads; Sentry. The web app is Next.js and TypeScript with TanStack Query."
+      ]
+    }
+  ]
+}

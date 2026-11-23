@@ -4,7 +4,7 @@
   "showcase": "professional",
   "description": "The Uri SDK lets other software companies build Uri's AI content, scheduling, publishing and analytics into their own products, in TypeScript, Python or React, through an API gateway that handles keys, usage and billing, with a developer portal and docs.",
   "role": "CTO: designed and published the SDK packages; built the developer portal; co-built the gateway",
-  "timeline": "May 2026 – present",
+  "timeline": "Nov 2025 – present",
   "tags": [
     "TypeScript",
     "Python",
@@ -16,13 +16,14 @@
     "PyPI"
   ],
   "contributions": [
+    "Reviewed and supervised all of it as CTO: where a colleague built the backend, it was built under my review; I revamped the interface and fixed most of the bugs",
     "Designed, wrote and published all three client packages: TypeScript, Python and React",
     "Designed multi-tenant support (v3.0): one key, with every call scoped to the platform's end customer",
     "Mirrored 18 resource groups across TypeScript and Python, with React hooks and components on top",
     "Audited every resource against the live backend and fixed the mismatches in the 3.1 and 3.2 releases",
     "Built the developer portal: landing page, docs, API-key and webhook dashboards, and billing",
     "Built the playground, a sample app that runs the SDK end to end",
-    "In the gateway: built credit-based multi-currency billing, usage tracking and webhook events; a teammate wrote most of its other commits to my design"
+    "In the gateway: built credit-based multi-currency billing, usage tracking and webhook events; a colleague wrote most of its other commits, to my design and under my review"
   ],
   "results": [
     "@urisocial/sdk 3.2.2 and @urisocial/react 3.1.1 on npm; urisocial on PyPI",
@@ -35,6 +36,12 @@
       "heading": "The problem",
       "paragraphs": [
         "Agencies and software platforms wanted Uri's capabilities inside their own products, for their own customers. That needs stable client libraries, an API key per developer, usage metering and billing, documentation, and a way for one platform to act for many customers without mixing their data."
+      ]
+    },
+    {
+      "heading": "Under my review",
+      "paragraphs": [
+        "As CTO I review every change to Uri's code. Where a colleague built a part, they built it under my review and supervision. I also led the revamp of the interface and fixed most of the bugs. Uri began as Uri Creative in November 2025, and this product grew out of that work."
       ]
     },
     {

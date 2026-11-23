@@ -5,7 +5,7 @@
   "status": "Live",
   "description": "An AI marketing and sales team for small businesses, mainly in Africa. Uri learns a brand once, then writes and publishes its social posts, runs its paid ads, answers its customers' messages and explains what is driving sales. The owner only approves.",
   "role": "CTO: architecture, releases and standards; wrote about half the backend and most of the web app",
-  "timeline": "Mar 2026 – present",
+  "timeline": "Nov 2025 – present",
   "tags": [
     "Python",
     "FastAPI",
@@ -17,6 +17,7 @@
     "Docker"
   ],
   "contributions": [
+    "Reviewed and supervised all of it as CTO: where a colleague built the backend, it was built under my review; I revamped the interface and fixed most of the bugs",
     "Own the architecture, the production environment and every release across Uri's products",
     "Wrote 2,602 of the backend's 5,077 commits and 994 of the web app's 1,688; scaffolded the web app",
     "Built most of the content and publishing engine, and the shared billing, credits, trials and wallets",
@@ -37,6 +38,12 @@
       "heading": "The problem",
       "paragraphs": [
         "A small business owner has to do marketing, sales follow-up and customer service on top of running the business, across several platforms, with no team. Uri learns the brand once, through a Brand Playbook, then does that work in the brand's own voice. The owner only approves."
+      ]
+    },
+    {
+      "heading": "Under my review",
+      "paragraphs": [
+        "As CTO I review every change to Uri's code. Where a colleague built a part, they built it under my review and supervision. I also led the revamp of the interface and fixed most of the bugs. Uri began as Uri Creative in November 2025, and this product grew out of that work."
       ]
     },
     {

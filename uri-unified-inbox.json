@@ -3,8 +3,8 @@
   "client": "Uri",
   "showcase": "",
   "description": "Every direct message and comment a business receives, from every connected platform, in one inbox inside Uri, with replies drafted by AI in the brand's voice.",
-  "role": "CTO: set the scope, built much of the front end and released it; a teammate built most of the backend",
-  "timeline": "2026",
+  "role": "CTO: scoped it, supervised and reviewed the backend a colleague built, built much of the front end and released it",
+  "timeline": "Nov 2025 – present",
   "tags": [
     "Python",
     "FastAPI",
@@ -14,10 +14,11 @@
     "OpenAI"
   ],
   "contributions": [
+    "Reviewed and supervised all of it as CTO: where a colleague built the backend, it was built under my review; I revamped the interface and fixed most of the bugs",
     "Set the scope of the inbox",
-    "Built much of the inbox screens on desktop and phone",
-    "Integrated and released it to production",
-    "A teammate built most of the backend"
+    "Reviewed and supervised the backend a colleague built",
+    "Built much of the inbox screens on desktop and phone, and fixed most of the bugs",
+    "Integrated and released it to production"
   ],
   "results": [
     "Messages and comments from every platform in one place",
@@ -31,9 +32,9 @@
       ]
     },
     {
-      "heading": "My part",
+      "heading": "Under my review",
       "paragraphs": [
-        "I scoped it, built much of the front end on desktop and phone, and released it. A teammate built most of the backend."
+        "As CTO I review every change to Uri's code. Where a colleague built a part, they built it under my review and supervision. I also led the revamp of the interface and fixed most of the bugs. Uri began as Uri Creative in November 2025, and this product grew out of that work."
       ]
     }
   ]
