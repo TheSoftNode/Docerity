@@ -3,87 +3,116 @@
   "category": "AI · Sales intelligence",
   "client": "Uri",
   "showcase": "professional",
+  "status": "Discontinued",
   "groups": [
     "AI",
     "Full-stack"
   ],
-  "description": "Uri's first product: AI sales intelligence for businesses in Africa. It listened to public conversation on X, LinkedIn, Facebook, TikTok and Reddit for people showing buying intent, filtered the noise out with rules and an LLM, found the decision-makers behind hiring signals, and watched a company's dead CRM leads for the moment they became worth calling again. It became Uri Social.",
-  "role": "Lead engineer, then CTO: built most of the AI back end and much of the web app",
+  "description": "Where Uri started: AI sales intelligence for businesses in Africa. Its centrepiece, Conversational Leads, found people publicly saying they needed what a business sells (on X, Facebook, TikTok and job boards), scored each post for buying intent with an LLM, threw out sellers and noise, and handed the business qualified leads. Around it: hiring-signal lead generation, CRM sync, and the Lazarus Protocol for reviving dead leads. Retired when Uri became Uri Social.",
+  "role": "Lead engineer, then CTO: designed and built the AI service and reviewed every other change",
   "timeline": "Nov 2025 – Apr 2026",
   "tags": [
     "Python",
     "FastAPI",
-    "MongoDB",
-    "Redis",
     "OpenAI",
     "Gemini",
+    "MongoDB",
+    "Redis",
+    "NestJS",
     "Next.js",
-    "TypeScript"
+    ".NET"
   ],
   "contributions": [
-    "Wrote 409 of the AI service's 483 commits and 155 of the web app's 365; every colleague's change went through my review",
-    "Built the smart LLM router: most requests to a small, cheap model, harder ones to larger models, with Gemini and rule-based scoring as fallbacks",
-    "Built Sales Signals: a background job that gathers public posts showing buying intent, pain or opportunity across X, Facebook and TikTok, balanced per platform",
-    "Built Signal Refinery: rule-based pre-filtering followed by an LLM that separates real buyers from sellers and noise",
-    "Built intent analysis across five kinds of intent, from a direct \"where can I buy\" to a complaint about a competitor",
-    "Built the Lazarus Protocol: dead CRM leads watched in weekly batch scans for job changes, hiring sprees, funding and pivots, with buying signals scored",
-    "Built two-way CRM sync with HubSpot and Salesforce, and automatic dead-lead detection from user rules",
-    "Built hiring-signal lead generation: job boards and LinkedIn scanned, roles mapped to the decision-makers who buy, and contacts enriched through Apollo and Bright Data",
-    "Built the Lazarus screens, lead-tracking forms, onboarding and feature limits in the web app"
+    "Wrote 663 of the platform's 1,075 commits across six services, including 409 of the AI service's 483, and reviewed every other change as CTO",
+    "Designed and built Conversational Leads end to end: AI-generated search plans, per-platform collection, deduplication, parallel LLM intent scoring, adaptive thresholds and a spam view with reasons",
+    "Built the intent model: five kinds of buying intent, scored for intent, relevance and urgency, combined into one qualification score",
+    "Built Signal Refinery: cheap rules first, then an LLM that separates buyers from sellers",
+    "Built the smart LLM router: small model for most calls, larger ones only when needed, Gemini and rules as fallbacks",
+    "Built the Lazarus Protocol: dead CRM leads watched weekly for job changes, hiring, funding and pivots, synced with HubSpot and Salesforce",
+    "Built hiring-signal lead generation and the query router that picks Apollo, Google Maps or both",
+    "Built the credits, pricing and trial system across the transaction and task services, and fixed the gateway's routing and CI",
+    "Built the Lazarus and lead-tracking screens, onboarding and feature limits in the web app"
   ],
   "results": [
-    "About 450 API endpoints in the AI service",
-    "5 kinds of buying intent detected",
-    "Leads from 5 social platforms and the major job boards",
-    "CRM sync with HubSpot and Salesforce"
+    "Up to 200 posts per search across 4 sources, split 70/20/10 across X, Facebook and TikTok",
+    "5 kinds of buying intent, scored in parallel",
+    "663 of 1,075 commits across 6 services",
+    "About 450 endpoints in the AI service"
   ],
   "body": [
     {
       "heading": "The problem",
       "paragraphs": [
-        "A small sales team in Lagos or Nairobi can't watch every conversation where someone says they need what it sells, can't tell which job post means a company is about to buy, and has a CRM full of leads that went cold and were never looked at again. Uri Creative did that watching for them."
+        "A small business in Lagos or Nairobi knows its customers are online saying exactly what they need (\"where can I get a personal trainer in Lekki?\", \"Harmattan is making my skin dry\"), but nobody has time to watch every conversation, and search results are full of other sellers advertising. Uri Creative did the watching and the sorting, and handed back people worth contacting."
       ]
     },
     {
       "heading": "My role",
       "paragraphs": [
-        "I joined in November 2025 and wrote most of the AI service: 409 of its 483 commits and about 77,000 of the lines added to it. I also built much of the web app. As CTO, everything my colleagues built went through my review."
+        "I joined in November 2025 and became CTO. I designed and built the AI service at the centre of the platform: 409 of its 483 commits and about 77,000 of the lines added to it, plus much of the web app and the credits, pricing and trial logic across the supporting services. Everything my colleagues built went through my review and supervision."
       ]
     },
     {
-      "heading": "Sales Signals",
+      "heading": "Conversational Leads: from one sentence to a search plan",
       "paragraphs": [
-        "A background job collects public posts from X, Facebook and TikTok that show buying intent, pain or an opportunity, keeping each platform to its share so one noisy source can't drown the others. Each post is classified into one of five kinds of intent (direct, implied, a problem, a comparison, or a complaint about a competitor), scored for intent, relevance and urgency, with its sentiment, in the language people actually use: \"Harmattan is making my skin dry\" is a skincare lead."
+        "A business describes itself in a sentence: \"I run a fitness coaching business in Lagos and want people who need a personal trainer.\" An LLM, taught with worked examples across very different businesses, turns that into a search plan: direct keywords, implied keywords (the problems and frustrations that mean someone needs you), competitors, buying-signal phrases, and excluded keywords, the language of people on the other side of the sale. The plan is shown back to the user to edit before anything runs.",
+        "Keywords are then ordered so the strongest come first (a balance of short and long, direct and implied) and rewritten for each platform, because what finds a buyer on X is not what finds one on TikTok or in a Facebook group."
+      ]
+    },
+    {
+      "heading": "Collecting without drowning",
+      "paragraphs": [
+        "A search collects up to 200 posts: 150 from social platforms, split 70% X, 20% Facebook and 10% TikTok, and 50 from job boards. A distribution manager tracks what each platform has delivered and stops asking a platform once its share is full, so one noisy source can't crowd out the rest or burn the budget.",
+        "Posts are filtered by how recent they are and where they come from, and duplicates are removed by hashing each post's text after stripping links, mentions, hashtags and emoji, which catches retweets and reposts that look different but say the same thing. The job runs in the background, reports its progress live, and can be cancelled at any point."
+      ]
+    },
+    {
+      "heading": "Reading intent",
+      "paragraphs": [
+        "Every remaining post goes to the intent model in parallel. It classifies the post into one of five kinds of intent: direct (\"where can I buy sunscreen?\"), implied (\"Harmattan is making my skin dry\"), a problem (\"my acne won't go away\"), a comparison (\"CeraVe or La Roche-Posay?\"), or a complaint about a competitor. It returns an intent score, a relevance score to this business, an urgency flag and the sentiment, as structured output.",
+        "They combine into one qualification score: half intent, 35% relevance and 15% urgency. A lead qualifies above set thresholds on all three. If a search finds nothing at those thresholds, it relaxes them once and retries, so a quiet niche still gets its borderline leads, clearly marked as such."
+      ]
+    },
+    {
+      "heading": "Nothing silently thrown away",
+      "paragraphs": [
+        "A post that doesn't qualify isn't deleted. It goes to a spam view with the reason it was rejected, whether low intent, off-topic, too old, outside the target location, a duplicate or a seller. Users can see exactly what was filtered and why, which is what made them trust the leads that remained."
       ]
     },
     {
       "heading": "Signal Refinery",
       "paragraphs": [
-        "Raw search results are mostly noise, and much of what looks like a buyer is a seller advertising. Signal Refinery runs in two stages: cheap rules throw out the obvious junk first, then an LLM classifies what is left as buyer or seller with a structured answer. Only qualified leads reach the user, and the expensive model only sees what the rules couldn't settle."
+        "Search results from Google are mostly noise, and much of what looks like a buyer is a seller advertising. Signal Refinery runs in two stages: cheap rules throw out the obvious junk first, then an LLM classifies what is left as a buyer or a seller, with a structured answer. The expensive model only sees what the rules couldn't settle."
+      ]
+    },
+    {
+      "heading": "Paying only for the model each call needs",
+      "paragraphs": [
+        "With thousands of classifications per search, the model bill decides whether the product can exist. The smart LLM router sends the large majority of calls to a small, fast model, standard ones to a mid-size model, and only the hardest reasoning to the largest. If OpenAI fails it falls back to Gemini, and if both fail, to rule-based scoring, so searches finish through a provider outage."
       ]
     },
     {
       "heading": "The Lazarus Protocol",
       "paragraphs": [
-        "Every company's CRM is full of leads that said \"not now\". Lazarus brings them back. A user connects HubSpot or Salesforce, picks focus contacts and companies to watch, and weekly batch scans look for the moments that make a dead lead worth calling: a new job, a promotion, a hiring spree, a funding round, a pivot, a complaint about a competitor. Each signal is scored, logged and synced back to the CRM, and rules can mark leads dead automatically and add them to the watch list."
+        "Every company's CRM is full of leads that said \"not now\". Lazarus brings them back. A user connects HubSpot or Salesforce (or uploads a CSV), picks focus contacts and companies to watch, and weekly batch scans look for the moments that make a dead lead worth calling again: a new job or promotion, a new decision-maker, a hiring spree, a funding round, a pivot, a complaint about a competitor. Each signal is scored, logged with the evidence, and synced back to the CRM; rules can mark leads dead automatically and add them to the watch list."
       ]
     },
     {
-      "heading": "Routing every request to the right model",
+      "heading": "Hiring signals and company leads",
       "paragraphs": [
-        "With this many classification calls, the model bill decides whether the product is viable. The smart LLM router sends the large majority of requests to a small, fast model, standard ones to a mid-size model and only the hardest reasoning to the largest. If OpenAI fails it falls back to Gemini, and if both fail, to rule-based scoring, so the pipeline keeps working through a provider outage."
+        "A company hiring a DevOps engineer is about to spend on infrastructure. Uri Creative scanned LinkedIn, Indeed and local job boards with AI-generated keywords for each business's offer, mapped each role to the people who buy for it (a DevOps hire points to the CTO or Head of Engineering), and enriched them through Apollo and Bright Data. A query classifier decided whether a lead search needed company data from Apollo, local businesses from Google Maps, or both."
       ]
     },
     {
-      "heading": "Hiring signals",
+      "heading": "Architecture",
       "paragraphs": [
-        "A company hiring a DevOps engineer is about to spend money on infrastructure. Uri Creative scanned job boards and LinkedIn, generated the right search keywords for each user's offer, mapped each hiring role to the decision-makers who buy for it (a DevOps hire leads to the CTO or Head of Engineering), and enriched those people through Apollo and Bright Data."
+        "The web app talked to a .NET gateway that routed to four services: a NestJS backend for accounts, profiles and the admin; a NestJS transaction service for wallets and payments; a NestJS task service for credits and feature limits; and the FastAPI AI service, with its own Redis-backed workers and real-time updates over WebSockets. I built the AI service, the credits, pricing and trial system across the transaction and task services, and the Lazarus endpoints in the backend, and I fixed the gateway's routing and deployment pipeline."
       ]
     },
     {
       "heading": "Built with",
       "paragraphs": [
-        "Python and FastAPI on MongoDB with Motor, Redis and APScheduler workers; OpenAI and Gemini; Apify, Bright Data, Firecrawl and Playwright for collection; HubSpot and Salesforce APIs; WebSockets for real-time leads; Sentry. The web app is Next.js and TypeScript with TanStack Query."
+        "Python, FastAPI, Motor on MongoDB, Redis and APScheduler workers; OpenAI and Gemini; Apify, Bright Data, Firecrawl and Playwright for collection; Apollo, Google Maps, HubSpot and Salesforce APIs; NestJS and TypeScript services; an Ocelot gateway on .NET; Next.js and TanStack Query for the web app; Sentry; Docker and GitHub Actions."
       ]
     }
   ]
