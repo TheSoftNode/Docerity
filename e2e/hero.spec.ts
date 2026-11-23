@@ -32,7 +32,7 @@ test.describe("Hero", () => {
     );
     await expect(
       hero$.getByRole("link", { name: copy.secondaryLabel as string })
-    ).toHaveAttribute("href", "/#services");
+    ).toHaveAttribute("href", "/projects");
 
     expect(errors).toEqual([]);
   });

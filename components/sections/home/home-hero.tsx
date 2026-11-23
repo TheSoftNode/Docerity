@@ -59,7 +59,7 @@ async function HomeHero() {
               <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
-              href="/#services"
+              href="/projects"
               className="ld-hero-secondary inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[15px] font-semibold text-[var(--ld-tint)] transition-transform hover:-translate-y-0.5 sm:border-[1.5px] sm:border-[rgb(var(--ld-paper-rgb)/0.35)] sm:text-inherit"
             >
               {hero.secondaryLabel}
