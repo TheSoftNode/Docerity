@@ -392,6 +392,7 @@ export const BLOCKS: Block[] = [
             kind: "text",
             required: true,
             maxLength: 40,
+            hint: "Goes to the projects page.",
           },
         ],
       },
