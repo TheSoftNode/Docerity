@@ -28,7 +28,7 @@ export type LeanProject = ProjectDocument & {
  * Exported so the cap, the homepage slice and the message that explains the
  * refusal are all the same number.
  */
-export const MAX_FEATURED_PROJECTS = 6;
+export const MAX_FEATURED_PROJECTS = 10;
 
 /** Published only, in display order. */
 export async function listPublishedProjects(): Promise<LeanProject[]> {

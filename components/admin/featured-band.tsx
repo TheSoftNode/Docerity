@@ -25,7 +25,7 @@ export type FeaturedProject = {
  *
  * Separate from the list below it, and arranged separately, because the two
  * orders answer different questions. The catalogue on /projects is ordered so
- * twenty-five entries read well; this is six picked to make a case to somebody
+ * twenty-five entries read well; this is up to ten picked to make a case to somebody
  * four seconds into the site. Sharing one order meant every homepage
  * rearrangement quietly reshuffled the catalogue.
  *
