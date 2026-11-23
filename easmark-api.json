@@ -51,7 +51,7 @@
     {
       "heading": "Built with",
       "paragraphs": [
-        "Python. Django 5 and Django REST Framework with Simple JWT, Stripe, SendGrid and drf-yasg on Google Cloud Run, Cloud SQL Postgres and Secret Manager. FastAPI, Pydantic, the OpenAI SDK, PyPDF2, python-docx and SlowAPI for the marking service, tested with pytest and packaged with Docker."
+        "Python. Django 5 and Django REST Framework with Simple JWT, Stripe, Django email over SMTP and drf-yasg on Google Cloud Run, Cloud SQL Postgres and Secret Manager. FastAPI, Pydantic, the OpenAI SDK, PyPDF2, python-docx and SlowAPI for the marking service, tested with pytest and packaged with Docker."
       ]
     }
   ]

@@ -68,7 +68,7 @@
     {
       "heading": "Built with",
       "paragraphs": [
-        "Next.js and TypeScript with Redux Toolkit Query on the front end. Django 5 and Django REST Framework with JWT, Stripe, SendGrid and Swagger for the API, running on Google Cloud Run with Cloud SQL Postgres and Secret Manager. FastAPI with OpenAI (gpt-4o-mini), PyPDF2 and python-docx for the marking service, with rate limiting, structured logging and pytest."
+        "Next.js and TypeScript with Redux Toolkit Query on the front end. Django 5 and Django REST Framework with JWT, Stripe and Swagger for the API, running on Google Cloud Run with Cloud SQL Postgres and Secret Manager. FastAPI with OpenAI (gpt-4o-mini), PyPDF2 and python-docx for the marking service, with rate limiting, structured logging and pytest."
       ]
     }
   ]
