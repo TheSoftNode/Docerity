@@ -1,37 +1,57 @@
 {
-  "description": "The API behind Easmark: accounts, marking for theses and code, credits and payments, coupons and analytics, documented in Swagger.",
-  "role": "Back end for Easmark",
-  "timeline": "Dec 2024 – Jan 2025",
+  "description": "The API behind Easmark, and the AI service that does the marking. The Django API holds accounts, marking types and prices, saved results, credits, payments, coupons and analytics; the FastAPI service turns an uploaded thesis or code file into marks and written feedback with OpenAI.",
+  "client": "HitoAI Limited",
+  "role": "Back-end engineer: built the Django API and the AI marking service",
+  "timeline": "Dec 2024 – Nov 2025",
   "tags": [
     "Django",
     "Django REST Framework",
+    "FastAPI",
+    "OpenAI",
     "PostgreSQL",
-    "JWT",
     "Stripe",
-    "Swagger"
+    "SendGrid",
+    "JWT",
+    "Google Cloud Run"
   ],
   "contributions": [
-    "Accounts: sign-up with email verification, login, logout, token refresh and password reset",
-    "Marking: marking types with their prices, performing a marking, and saving and archiving results",
-    "Credits: balance, usage, payments through Stripe, pricing tiers and transaction history",
-    "Coupons: create, assign to users or user types, revoke, and list assignments",
-    "Analytics for each user and for the platform",
-    "Every endpoint documented in Swagger"
+    "Built the Django API in five apps (users, profiles, analysis, credits and coupons): about 75 endpoints and 8,000 lines of Python, documented in Swagger",
+    "Built accounts for students, lecturers and institutions: sign-up with a six-digit email code, JWT sign-in, password reset and admin roles",
+    "Built credits: Stripe Checkout sessions, a signature-verified webhook, usage and payment records, pricing tiers, and balances changed only inside database transactions",
+    "Built coupons: per-user assignments with expiry and usage limits, restriction by user type, and revocation with a recorded reason",
+    "Built analytics per user, per marking type and across the platform",
+    "Built the AI marking service in FastAPI: file checks, text extraction from PDF and Word, language detection for code, rubric prompts, OpenAI in JSON mode, rate limiting, structured logs and tests",
+    "Deployed the API to Google Cloud Run with Cloud SQL Postgres and Secret Manager, falling back to SQLite for local development"
   ],
   "results": [
-    "One documented API behind the Easmark app"
+    "About 75 endpoints across five Django apps",
+    "Marks returned as validated JSON, per criterion",
+    "Rate limit of 10 markings a minute per client",
+    "Credits applied by a verified Stripe webhook"
   ],
   "body": [
     {
-      "heading": "What it does",
+      "heading": "Two services",
       "paragraphs": [
-        "Easmark API is everything behind the Easmark app. It holds accounts, runs marking for theses and code, keeps each user's credits, takes payments and applies coupons, and reports usage. The Easmark page explains the product; this one is the service."
+        "Easmark's back end is split by what can go wrong. The Django API owns anything that must be correct and permanent: who a user is, what they have paid, what they have used, and the results they saved. The AI service owns the slow, expensive, unpredictable part: reading a file and asking a model to mark it. Either can change or scale without the other."
+      ]
+    },
+    {
+      "heading": "Marking a file",
+      "paragraphs": [
+        "The AI service checks the file's type and size (up to 50 MB), extracts the text from a PDF or Word document or detects the programming language of a code file, and builds a prompt from a rubric for that kind of work: seven criteria for a thesis, five for code. It calls OpenAI in JSON mode and validates the reply against a schema, so the app always receives a mark out of 100 and feedback for every criterion, or a clear error. Requests are rate-limited per client, and every step is logged in structured JSON."
+      ]
+    },
+    {
+      "heading": "Money that adds up",
+      "paragraphs": [
+        "Buying credits creates a Stripe Checkout session; when Stripe confirms the payment, a webhook verified by its signature adds the credits. Every change to a balance (a purchase, a marking, a coupon) runs inside a database transaction, and usage and payments are kept as separate records, so any balance at any moment can be reconstructed from its history."
       ]
     },
     {
       "heading": "Built with",
       "paragraphs": [
-        "Django and Django REST Framework with PostgreSQL, JSON Web Tokens for sign-in, Stripe for payments, and Swagger for the documentation."
+        "Python. Django 5 and Django REST Framework with Simple JWT, Stripe, SendGrid and drf-yasg on Google Cloud Run, Cloud SQL Postgres and Secret Manager. FastAPI, Pydantic, the OpenAI SDK, PyPDF2, python-docx and SlowAPI for the marking service, tested with pytest and packaged with Docker."
       ]
     }
   ]

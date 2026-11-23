@@ -1,31 +1,33 @@
 {
-  "description": "AI-assisted marking for thesis papers and code submissions. A lecturer uploads the work, Easmark marks it criterion by criterion with written feedback for each, and the lecturer reviews and adjusts before anything reaches a student. Paid for with credits, so a department only pays for what it marks.",
-  "role": "Full-stack engineer: designed and built the web app",
-  "timeline": "Dec 2024 – Jan 2025",
+  "description": "AI-assisted marking for thesis papers and code submissions, built for HitoAI. A lecturer uploads the work, Easmark marks it criterion by criterion with written feedback for each, and the lecturer reviews and adjusts the marks before anything reaches a student. Paid for with credits, so a department only pays for what it marks.",
+  "client": "HitoAI Limited",
+  "role": "Full-stack engineer: built all three services, the web app, the API and the AI marking service",
+  "timeline": "Dec 2024 – Nov 2025",
   "tags": [
     "Next.js",
     "TypeScript",
     "Redux Toolkit",
     "Django",
+    "FastAPI",
+    "OpenAI",
     "PostgreSQL",
     "Stripe",
-    "Recharts"
+    "Google Cloud Run"
   ],
   "contributions": [
-    "Designed and built the whole web app: landing page, sign-up with email verification, password reset, and the lecturer's dashboard",
-    "Built the marking flow: pick a level, upload a thesis (PDF or Word) or code (Python, JavaScript, HTML/CSS, notebooks, config), watch it go through, then read the result",
-    "Built the results view: a mark and written feedback for every criterion, summary charts, and a one-click PDF report to file or send on",
-    "Built credits end to end: balance, Stripe checkout, transaction history in credits and dollars, and the cost shown before each marking",
-    "Built coupons: admins create them, assign them to users or user types, and revoke them; users see and apply theirs at checkout",
-    "Built the admin side: marking types and their prices, pricing tiers, credit and coupon management",
-    "Wired the app to the Django API with RTK Query, one slice per area (auth, marking, credits, coupons, dashboard)"
+    "Designed the platform as three services: a Next.js web app, a Django API, and a FastAPI service that does the marking",
+    "Built the marking service: it extracts text from PDF and Word files or detects the code's language, sends it to OpenAI with a rubric for that kind of work, and returns a 0–100 mark and written feedback per criterion as validated JSON",
+    "Built the Django API: accounts for students, lecturers and institutions with email verification, marking types and prices, saved results, credits, coupons and analytics, about 75 endpoints documented in Swagger",
+    "Built credits and payments: Stripe Checkout, a signature-verified webhook that tops up the balance, and every credit change made inside a database transaction",
+    "Built coupons with expiry dates, usage limits, restriction to a user type, and a record of every revocation",
+    "Built the web app: upload and marking flow, a results view where the lecturer can edit marks, summary charts, a PDF report, the credit balance and history, and the admin area",
+    "Deployed the API to Google Cloud Run with Cloud SQL Postgres and secrets in Secret Manager; rate-limited the marking service and wrote its tests"
   ],
   "results": [
-    "Two kinds of work marked: thesis papers and code",
-    "Every thesis marked on 7 criteria and code on 5, each with its own written feedback",
-    "Lecturers review and adjust every mark before it is final",
-    "Pay-per-marking credits with Stripe checkout and coupons",
-    "About 19,500 lines of TypeScript"
+    "Every thesis marked on 7 criteria and code on 5, each with written feedback",
+    "Lecturers review and edit every mark before it is final",
+    "Three services: web app, Django API and AI marking service",
+    "Credits paid through Stripe, applied by a verified webhook"
   ],
   "body": [
     {
@@ -38,35 +40,35 @@
     {
       "heading": "How it works",
       "paragraphs": [
-        "A lecturer picks the level they mark at, then uploads either a thesis (PDF or Word) or a code submission (Python, JavaScript, HTML and CSS, notebooks, config files). Before anything runs, Easmark shows what the marking will cost in credits and applies any coupon they hold.",
-        "The work goes to the marking service, and progress shows on screen while it runs. The result is not a single number: a thesis gets a separate mark and written feedback for each of seven criteria, from the abstract and introduction through the literature review, methodology and findings to the conclusions and references. Code is marked on readability, functionality, efficiency, error handling and modularity.",
-        "The lecturer reads it, adjusts what they disagree with, and saves it. A summary with charts can be downloaded as a PDF report to file or send to the student."
+        "A lecturer uploads either a thesis (PDF or Word) or a code submission (Python, JavaScript, HTML and CSS, notebooks, config files). Before anything runs, Easmark shows what the marking will cost in credits and applies any coupon they hold.",
+        "The file goes to the marking service. A thesis gets a separate mark out of 100 and written feedback for each of seven criteria: abstract, introduction, literature review, methodology, results, conclusions and references. Code is marked on readability, functionality, efficiency, error handling and modularity.",
+        "The lecturer reads the result, edits any mark they disagree with, and saves it. A summary with charts can be downloaded as a PDF report to file or send to the student."
       ]
     },
     {
       "heading": "Feedback that shows its working",
       "paragraphs": [
         "The most important decision was to mark criterion by criterion, not to produce one overall grade. A single AI score is hard to trust and impossible to argue with. A mark per criterion with the reason beside it is something a lecturer can check in a minute, agree with or correct, and pass on to a student as feedback they can act on.",
-        "It also keeps the lecturer in charge. Nothing is final until they have reviewed it, which is the difference between a tool a department will adopt and one it will ban."
+        "The marking service asks the model for that exact structure, in JSON mode, with a rubric written for each kind of work, and rejects anything that doesn't parse. Nothing is final until the lecturer has reviewed it, which is the difference between a tool a department will adopt and one it will ban."
+      ]
+    },
+    {
+      "heading": "Three services, one job each",
+      "paragraphs": [
+        "The web app is Next.js. The Django API owns everything that must be right: accounts, saved results, credits, coupons and analytics. The marking service is a separate FastAPI app that reads the file, talks to OpenAI and returns marks. Keeping it separate means it can be rate-limited, scaled and changed (I rebuilt it in November 2025) without touching accounts or money."
       ]
     },
     {
       "heading": "Paying for it",
       "paragraphs": [
-        "Departments buy marking in different ways, so Easmark runs on credits, not a flat subscription. Each kind of marking has its own price, set by an admin; a lecturer buys credits through Stripe and sees their balance, what each marking cost, and their history in both credits and dollars.",
-        "Coupons cover pilots and institutional deals: an admin can create a coupon, give it to particular users or a whole type of user, and revoke it, and the discount appears at the point of marking."
-      ]
-    },
-    {
-      "heading": "The admin side",
-      "paragraphs": [
-        "Behind the lecturer's dashboard is an admin area for running the service: the kinds of marking on offer and their base prices, pricing tiers for buying credits, every user's credits, and the coupon book. Usage and marking analytics sit on both sides, so a lecturer sees their own pattern and the admin sees the whole platform's."
+        "Departments buy marking in different ways, so Easmark runs on credits, not a flat subscription. Each kind of marking has its own price; a user buys credits through Stripe Checkout, and Stripe's webhook, verified by its signature, tops up their balance. Every change to a balance happens inside a database transaction, so a marking and its charge either both happen or neither does.",
+        "Coupons cover pilots and institutional deals. An admin creates a coupon for a type of user (students, lecturers or institutions), assigns it with an expiry date and a usage limit, and can revoke it with a reason that is kept on record."
       ]
     },
     {
       "heading": "Built with",
       "paragraphs": [
-        "Next.js and TypeScript on the front end, with Redux Toolkit Query for every call to the API, one slice per area, so caching and refetching after a purchase or a marking came for free. Forms are validated with React Hook Form and Zod, charts are Recharts, and the PDF report is rendered in the browser. The API behind it is Django with PostgreSQL, documented with Swagger; it has its own page here as Easmark API."
+        "Next.js and TypeScript with Redux Toolkit Query on the front end. Django 5 and Django REST Framework with JWT, Stripe, SendGrid and Swagger for the API, running on Google Cloud Run with Cloud SQL Postgres and Secret Manager. FastAPI with OpenAI (gpt-4o-mini), PyPDF2 and python-docx for the marking service, with rate limiting, structured logging and pytest."
       ]
     }
   ]
