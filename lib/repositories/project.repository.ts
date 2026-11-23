@@ -299,12 +299,11 @@ export async function moveFeaturedProject(id: string, direction: -1 | 1) {
 }
 
 /**
- * Moves a project one place up or down by swapping `sortOrder` with its
- * neighbour.
+ * Moves a project one place up or down.
  *
- * A swap rather than rewriting every row: reordering is the common edit on this
- * list, and renumbering twenty-five documents to move one is a lot of writes
- * for a single drag.
+ * Writes only the rows whose position changed, so a move on a list already
+ * numbered 1, 2, 3… costs two writes, and a list with gaps or ties is
+ * straightened out by the first move made on it.
  */
 export async function moveProject(id: string, direction: -1 | 1) {
   await connectDB();
@@ -320,15 +319,19 @@ export async function moveProject(id: string, direction: -1 | 1) {
   const target = index + direction;
   if (target < 0 || target >= all.length) return false;
 
-  const a = all[index];
-  const b = all[target];
-
-  /* Positions rather than the stored values: imported rows can share a
-     sortOrder, and swapping two equal numbers moves nothing. */
-  await Promise.all([
-    ProjectModel.updateOne({ _id: a._id }, { $set: { sortOrder: target + 1 } }),
-    ProjectModel.updateOne({ _id: b._id }, { $set: { sortOrder: index + 1 } }),
-  ]);
+  /* Swap in the list, then renumber every row whose number no longer
+     matches its position. Swapping only the two rows' numbers left ties
+     behind once imported rows shared a sortOrder, and a tie can stop a
+     project moving past its neighbour at all. Usually this writes two rows. */
+  const order = [...all];
+  [order[index], order[target]] = [order[target], order[index]];
+  const writes = order
+    .map((row, position) => ({ row, position }))
+    .filter(({ row, position }) => row.sortOrder !== position + 1)
+    .map(({ row, position }) => ({
+      updateOne: { filter: { _id: row._id }, update: { $set: { sortOrder: position + 1 } } },
+    }));
+  if (writes.length > 0) await ProjectModel.bulkWrite(writes);
 
   return true;
 }
