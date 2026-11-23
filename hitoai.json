@@ -1,0 +1,61 @@
+{
+  "category": "AI · Corporate platform",
+  "client": "HitoAI Limited, an Irish AI and EdTech company",
+  "description": "The public platform for HitoAI, an Irish AI company with a portfolio of products across education, health, marketing and energy. One site presents every product on a page of its own, catalogues the AI APIs the company offers, and runs applications for its EEP programme from form to inbox.",
+  "role": "Full-stack engineer: built the site, the application backend and the admin screens",
+  "timeline": "Nov 2024 – Feb 2025",
+  "tags": [
+    "React",
+    "TypeScript",
+    "Vite",
+    "Tailwind CSS",
+    "Node.js",
+    "Express",
+    "MongoDB",
+    "Nodemailer"
+  ],
+  "contributions": [
+    "Built the whole front end in React and TypeScript: landing, about with the board and team, services, contact, and sign-in and register",
+    "Built a page for each product in the portfolio: EEP, SusNet, AI4Physio, AIMarcom, 223D, Knomed, Secuall and Selwell",
+    "Built the API catalogue and documentation pages for the company's AI services (prediction, NLP, vision, conversational)",
+    "Built the EEP application flow: a form with CV upload, an Express API that emails the application and CV to the team, and a confirmation email to the applicant",
+    "Wrote the terms and conditions flow for applicants, including the NDA",
+    "Built admin screens for managing clients, staff and projects",
+    "Added an assistant chat on every page"
+  ],
+  "results": [
+    "One site for a portfolio of 8 AI products",
+    "Applications go from the form to the team's inbox with the CV attached, and the applicant gets a confirmation",
+    "About 10,500 lines of TypeScript",
+    "First version up in four days, then extended over three months"
+  ],
+  "body": [
+    {
+      "heading": "The brief",
+      "paragraphs": [
+        "HitoAI is an Irish company run by academics in AI, with a growing set of products: a learning and mentorship programme (EEP), energy forecasting (SusNet), AI-assisted physiotherapy (AI4Physio), marketing (AIMarcom), 3D model generation (223D), and more.",
+        "The site had to explain the company and every product clearly to partners, funders and future students in one place, and take applications for the EEP programme without a spreadsheet and a shared inbox."
+      ]
+    },
+    {
+      "heading": "One site, many products",
+      "paragraphs": [
+        "Each product gets its own page with the same shape: what it is, who it is for, the features that matter, and how to get involved. That made the portfolio easy to scan and made adding the next product a matter of content, not design.",
+        "Around them sit the company pages: the board and team, the services HitoAI offers, and a catalogue of the AI APIs it can build or provide (prediction and anomaly detection, natural-language processing, computer vision, conversational AI), with a documentation section behind it."
+      ]
+    },
+    {
+      "heading": "Applications that arrive complete",
+      "paragraphs": [
+        "The EEP programme takes applicants, so the site needed more than a contact form. Applicants fill in their details, agree to the terms and the NDA, and upload a CV. A small Express API receives it, emails the application to the team with the CV attached, and sends the applicant a confirmation, both from templated emails.",
+        "Nobody has to chase a missing CV or reply to say an application arrived: it lands in one inbox complete, and the applicant knows it did."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "React and TypeScript on Vite, styled with Tailwind and shadcn/ui, deployed on Vercel. The application API is Node.js and Express with Multer for uploads, Nodemailer with EJS templates for the emails, and Helmet and CORS in front; MongoDB is set up for storing what comes in."
+      ]
+    }
+  ]
+}

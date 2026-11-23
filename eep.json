@@ -1,0 +1,60 @@
+{
+  "category": "EdTech · Learning platform",
+  "client": "HitoAI Limited",
+  "description": "A learning and mentorship platform for developers working toward industry jobs, built for HitoAI's EEP programme. Learners work on real projects along learning paths, book sessions with mentors, collaborate in shared workspaces and message each other in real time, while mentors and admins follow everyone's progress.",
+  "role": "Lead full-stack engineer: designed and built the platform, front end and back end",
+  "timeline": "Feb – Jul 2025",
+  "tags": ["Next.js", "TypeScript", "Redux Toolkit", "Firebase", "Cloud Functions", "Firestore", "Express", "Socket.IO", "Google Cloud"],
+  "contributions": [
+    "Designed the platform and built the front end: the public site, the learner's dashboard and the admin dashboard, 65 pages in Next.js and TypeScript",
+    "Built the back end as an Express API on Firebase Cloud Functions: about 270 endpoints across users, mentors, projects, learning paths, sessions, tasks, workspaces, chat, notifications and the audit log",
+    "Built projects and learning paths: projects split into areas, tasks and milestones, with learners' progress tracked against the skills each path teaches",
+    "Built shared workspaces: members and invitations, files, activity, and messaging inside each workspace",
+    "Built real-time chat on Firestore: one-to-one and group conversations, contacts and attachments",
+    "Built mentoring: mentor profiles and availability, session booking, and direct messages to mentors",
+    "Built sign-in with two-factor authentication (authenticator app with QR setup), an audit log, and secrets kept in Google Secret Manager",
+    "Built the applications pipeline for the programme, for both individuals and businesses, with templated emails at each step",
+    "Built an in-browser terminal for learners; an AI workspace is designed and in progress"
+  ],
+  "results": [
+    "65 pages across the public site, learner dashboard and admin",
+    "About 270 API endpoints on Firebase Cloud Functions",
+    "Real-time chat, shared workspaces and mentor sessions in one place",
+    "Two-factor sign-in and an audit log from day one"
+  ],
+  "body": [
+    {
+      "heading": "The brief",
+      "paragraphs": [
+        "EEP is HitoAI's programme for getting developers from courses to industry work. That gap is about experience, not tutorials: working on a real project, with a mentor who reviews it, alongside other people. The programme needed a platform that held all of that together, rather than a course site plus a chat app plus a spreadsheet of who is mentoring whom.",
+        "I designed it and built it end to end, the public site, the learner's side, the admin side and the API behind them."
+      ]
+    },
+    {
+      "heading": "What a learner does",
+      "paragraphs": [
+        "A learner applies, is accepted, and lands on a dashboard of their projects. Each project sits on a learning path and is split into areas, tasks and milestones, so it is always clear what is next and which skills it builds. Progress is tracked as they go, and certificates mark the end of a path.",
+        "When they need help they book a session with a mentor, from the mentor's own availability, or message them directly. Group work happens in workspaces: a shared space with its members, files, activity and conversation, which mentors can join."
+      ]
+    },
+    {
+      "heading": "Real time where it matters",
+      "paragraphs": [
+        "Chat runs on Firestore listeners rather than polling, so messages, group conversations and attachments arrive as they are sent, and notifications follow the same path. Everything else goes through the API, which keeps the rules (who can see a workspace, who can mark a task done, who can message a mentor) in one place on the server."
+      ]
+    },
+    {
+      "heading": "An API shaped like the programme",
+      "paragraphs": [
+        "The back end is an Express app running on Firebase Cloud Functions, with Firestore for data and Cloud Storage for files. It is organised by the programme's own parts (users and mentors, projects and their areas and activities, learning paths with milestones and skills, sessions, tasks, workspaces, chat, communications, notifications and the audit log), about 270 endpoints in all.",
+        "Security was built in from the start: two-factor sign-in with an authenticator app, an audit log of who did what, file-upload checks, and every secret held in Google Secret Manager, never in the code."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js and TypeScript with Redux Toolkit Query on the front end, one API slice per area. Express on Firebase Cloud Functions, Firestore, Cloud Storage and Secret Manager on Google Cloud for the back end, with Nodemailer and EJS for email, Speakeasy for two-factor codes, and Socket.IO and Firestore listeners for real time. The admin side has its own page here as EEP Admin."
+      ]
+    }
+  ]
+}

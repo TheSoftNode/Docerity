@@ -1,0 +1,73 @@
+{
+  "description": "AI-assisted marking for thesis papers and code submissions. A lecturer uploads the work, Easmark marks it criterion by criterion with written feedback for each, and the lecturer reviews and adjusts before anything reaches a student. Paid for with credits, so a department only pays for what it marks.",
+  "role": "Full-stack engineer: designed and built the web app",
+  "timeline": "Dec 2024 – Jan 2025",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Redux Toolkit",
+    "Django",
+    "PostgreSQL",
+    "Stripe",
+    "Recharts"
+  ],
+  "contributions": [
+    "Designed and built the whole web app: landing page, sign-up with email verification, password reset, and the lecturer's dashboard",
+    "Built the marking flow: pick a level, upload a thesis (PDF or Word) or code (Python, JavaScript, HTML/CSS, notebooks, config), watch it go through, then read the result",
+    "Built the results view: a mark and written feedback for every criterion, summary charts, and a one-click PDF report to file or send on",
+    "Built credits end to end: balance, Stripe checkout, transaction history in credits and dollars, and the cost shown before each marking",
+    "Built coupons: admins create them, assign them to users or user types, and revoke them; users see and apply theirs at checkout",
+    "Built the admin side: marking types and their prices, pricing tiers, credit and coupon management",
+    "Wired the app to the Django API with RTK Query, one slice per area (auth, marking, credits, coupons, dashboard)"
+  ],
+  "results": [
+    "Two kinds of work marked: thesis papers and code",
+    "Every thesis marked on 7 criteria and code on 5, each with its own written feedback",
+    "Lecturers review and adjust every mark before it is final",
+    "Pay-per-marking credits with Stripe checkout and coupons",
+    "About 19,500 lines of TypeScript"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Marking a final-year thesis properly takes hours, and a lecturer with a full class has dozens of them, plus coding assignments, in the same few weeks. The feedback suffers first: the mark goes back, the reasons behind it often don't.",
+        "Easmark doesn't take the judgement away from the lecturer. It does the first careful pass, so their time goes on deciding, not on reading the same structure problems for the fortieth time."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "A lecturer picks the level they mark at, then uploads either a thesis (PDF or Word) or a code submission (Python, JavaScript, HTML and CSS, notebooks, config files). Before anything runs, Easmark shows what the marking will cost in credits and applies any coupon they hold.",
+        "The work goes to the marking service, and progress shows on screen while it runs. The result is not a single number: a thesis gets a separate mark and written feedback for each of seven criteria, from the abstract and introduction through the literature review, methodology and findings to the conclusions and references. Code is marked on readability, functionality, efficiency, error handling and modularity.",
+        "The lecturer reads it, adjusts what they disagree with, and saves it. A summary with charts can be downloaded as a PDF report to file or send to the student."
+      ]
+    },
+    {
+      "heading": "Feedback that shows its working",
+      "paragraphs": [
+        "The most important decision was to mark criterion by criterion, not to produce one overall grade. A single AI score is hard to trust and impossible to argue with. A mark per criterion with the reason beside it is something a lecturer can check in a minute, agree with or correct, and pass on to a student as feedback they can act on.",
+        "It also keeps the lecturer in charge. Nothing is final until they have reviewed it, which is the difference between a tool a department will adopt and one it will ban."
+      ]
+    },
+    {
+      "heading": "Paying for it",
+      "paragraphs": [
+        "Departments buy marking in different ways, so Easmark runs on credits, not a flat subscription. Each kind of marking has its own price, set by an admin; a lecturer buys credits through Stripe and sees their balance, what each marking cost, and their history in both credits and dollars.",
+        "Coupons cover pilots and institutional deals: an admin can create a coupon, give it to particular users or a whole type of user, and revoke it, and the discount appears at the point of marking."
+      ]
+    },
+    {
+      "heading": "The admin side",
+      "paragraphs": [
+        "Behind the lecturer's dashboard is an admin area for running the service: the kinds of marking on offer and their base prices, pricing tiers for buying credits, every user's credits, and the coupon book. Usage and marking analytics sit on both sides, so a lecturer sees their own pattern and the admin sees the whole platform's."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js and TypeScript on the front end, with Redux Toolkit Query for every call to the API, one slice per area, so caching and refetching after a purchase or a marking came for free. Forms are validated with React Hook Form and Zod, charts are Recharts, and the PDF report is rendered in the browser. The API behind it is Django with PostgreSQL, documented with Swagger; it has its own page here as Easmark API."
+      ]
+    }
+  ]
+}
