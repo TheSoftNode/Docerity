@@ -25,7 +25,7 @@ function PostBody({ entry, url, title }: { entry: BlogEntry; url: string; title:
       <div className="doc-shell grid grid-cols-1 gap-x-[clamp(28px,4vw,64px)] gap-y-6 py-[clamp(40px,5.5vw,88px)] lg:grid-cols-[220px_minmax(0,1fr)]">
         {/* On a phone the contents are a strip that stays under the header
             while reading; on a wide screen, a rail beside the text. */}
-        <aside className="sticky top-[76px] z-20 -mx-5 min-w-0 bg-white/92 px-5 py-2.5 backdrop-blur-md sm:-mx-8 sm:px-8 lg:top-24 lg:mx-0 lg:self-start lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+        <aside className="ld-under-nav sticky z-20 -mx-5 min-w-0 bg-white/92 px-5 py-2.5 backdrop-blur-md sm:-mx-8 sm:px-8 lg:top-24 lg:mx-0 lg:self-start lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           {sections.length > 1 ? (
             <>
               <p className="mb-2 text-[13px] text-[var(--ld-text-muted)] lg:mb-3">In this piece</p>

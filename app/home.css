@@ -1067,3 +1067,21 @@ html.light :is(main, footer) [class*="bg-[var(--ld-deep)]"]:not(.ld-hero *) {
   --ld-dim: var(--lx-dim);
   color: var(--lx-paper);
 }
+
+/* Strips that stick just under the floating header (a post's or a case
+   study's contents on a phone). When the header steps aside on the way down,
+   they rise to the top with it. Wide screens keep their own utilities. */
+@media (max-width: 1023.98px) {
+  .ld-under-nav {
+    top: 76px;
+    transition: top 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  html[data-nav-hidden] .ld-under-nav {
+    top: 0;
+  }
+}
+@media (max-width: 1023.98px) and (prefers-reduced-motion: reduce) {
+  .ld-under-nav {
+    transition: none;
+  }
+}
