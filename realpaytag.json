@@ -2,15 +2,23 @@
   "description": "Payments and payroll on the Pharos blockchain with a stablecoin. Each person gets a PayTag, a short @name in place of a wallet address; employers run payroll in the stablecoin; users can convert mobile airtime into it and register real-world assets such as property or vehicles.",
   "role": "Full-stack engineer: built the web app and the API; a teammate wrote the contracts",
   "timeline": "Apr – May 2025",
-  "tags": ["Next.js", "TypeScript", "Node.js", "Express", "Solidity", "Hardhat", "Pharos"],
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Node.js",
+    "Express",
+    "Solidity",
+    "Hardhat",
+    "Pharos"
+  ],
   "contributions": [
     "Built the web app in Next.js and TypeScript: onboarding, separate dashboards for users and employers, and pages for PayTags, payroll, the stablecoin, airtime and assets",
     "Built onboarding so a new user claims their @PayTag as part of signing up",
     "Built the API in Node.js, Express and TypeScript behind the app",
-    "Connected the app to the five contracts on Pharos devnet: stablecoin, payroll, PayTag registry, asset registry and airtime converter"
+    "Connected the app to the contracts on Pharos devnet: claiming a PayTag and adding employees go on-chain from the browser"
   ],
   "results": [
-    "Five contracts with about 100 tests, connected to one app",
+    "Five contracts with about 85 tests behind one app",
     "Pay anyone by @name instead of a wallet address",
     "Separate dashboards for individuals and employers"
   ],
