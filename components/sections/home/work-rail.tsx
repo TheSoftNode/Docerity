@@ -9,7 +9,7 @@ import type { Project, ProjectMedia } from "@/components/sections/work/work-data
 import { ProjectMediaFill } from "@/components/sections/work/project-media-fill";
 
 /** How many projects the phone rail carries before handing over to /projects. */
-const RAIL_LIMIT = 6;
+const RAIL_LIMIT = 10;
 
 /**
  * The featured projects on a phone: a row of cards you swipe through.
