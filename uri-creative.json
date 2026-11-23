@@ -3,7 +3,6 @@
   "category": "AI · Sales intelligence",
   "client": "Uri",
   "showcase": "professional",
-  "status": "Discontinued",
   "groups": [
     "AI",
     "Full-stack"
@@ -26,7 +25,7 @@
     "Built the smart LLM router: most requests to a small, cheap model, harder ones to larger models, with Gemini and rule-based scoring as fallbacks",
     "Built Sales Signals: a background job that gathers public posts showing buying intent, pain or opportunity across X, Facebook and TikTok, balanced per platform",
     "Built Signal Refinery: rule-based pre-filtering followed by an LLM that separates real buyers from sellers and noise",
-    "Built intent analysis across five kinds of intent, from a direct \"where can I buy\" to a complaint that implies a need",
+    "Built intent analysis across five kinds of intent, from a direct \"where can I buy\" to a complaint about a competitor",
     "Built the Lazarus Protocol: dead CRM leads watched in weekly batch scans for job changes, hiring sprees, funding and pivots, with buying signals scored",
     "Built two-way CRM sync with HubSpot and Salesforce, and automatic dead-lead detection from user rules",
     "Built hiring-signal lead generation: job boards and LinkedIn scanned, roles mapped to the decision-makers who buy, and contacts enriched through Apollo and Bright Data",
@@ -54,7 +53,7 @@
     {
       "heading": "Sales Signals",
       "paragraphs": [
-        "A background job collects public posts from X, Facebook and TikTok that show buying intent, pain or an opportunity, keeping each platform to its share so one noisy source can't drown the others. Each post is classified into one of five kinds of intent (direct, implied, problem, comparison or recommendation-seeking) with its sentiment, in the language people actually use: \"Harmattan is making my skin dry\" is a skincare lead."
+        "A background job collects public posts from X, Facebook and TikTok that show buying intent, pain or an opportunity, keeping each platform to its share so one noisy source can't drown the others. Each post is classified into one of five kinds of intent (direct, implied, a problem, a comparison, or a complaint about a competitor), scored for intent, relevance and urgency, with its sentiment, in the language people actually use: \"Harmattan is making my skin dry\" is a skincare lead."
       ]
     },
     {
