@@ -1,0 +1,46 @@
+{
+  "description": "Pricing for fuel stations. A station manager sees their own prices beside every competitor nearby on a map, gets a recommended price for each fuel from a forecast of where the local market is heading, and can set rules that reprice automatically when competitors move.",
+  "role": "Full-stack engineer: built the dashboard, the API and the forecasting service",
+  "timeline": "Nov 2024 – Feb 2025",
+  "tags": ["Next.js", "TypeScript", "Django", "FastAPI", "statsmodels", "Leaflet", "Recharts"],
+  "contributions": [
+    "Built the dashboard in Next.js and TypeScript: overview, analytics, a pricing console and automated rules",
+    "Built the competitor map: every station nearby with its latest price for each fuel",
+    "Built the pricing console: current price, the competition and the recommended price side by side, ready to apply",
+    "Built automated pricing rules: conditions on competitors' prices and the action to take, switched on and off per rule",
+    "Built the API in Django: stations with their locations, fuel prices over time and recommended prices",
+    "Built the forecasting service in FastAPI with statsmodels: an autoregressive model that predicts the next price from recent history"
+  ],
+  "results": [
+    "Competitor prices, forecasts and recommended prices on one screen",
+    "Rules that reprice without a manager watching",
+    "Two versions: the second rebuilt the dashboard around the map and the pricing console"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "A fuel station's price is set against the stations around it, and those prices change several times a week. Managers check them by driving past or by phoning around, then guess. Price too high and drivers go next door; too low and the margin goes."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "The map shows every competing station nearby with its latest price for each fuel. The pricing console puts the station's own price beside the competition and a recommended price, worked out from a forecast of where local prices are heading, and the manager can apply it in one step.",
+        "Rules take the routine out of it: if a named competitor drops below a threshold, match it, or stay a set amount under the local average. Each rule can be switched on or off, and the analytics page shows how prices and recommendations have moved over time."
+      ]
+    },
+    {
+      "heading": "A forecast that can be explained",
+      "paragraphs": [
+        "The forecast is a small autoregressive model: it predicts the next price from the last few. That was a deliberate choice over something larger. Fuel prices move in short, regular steps, the data per station is modest, and a manager is far more likely to act on a recommendation that follows visibly from recent prices than on a black box."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js, TypeScript and Tailwind for the dashboard, with Leaflet for the map and Recharts for charts. Django for the API and the price data, and a FastAPI service with statsmodels for the forecast."
+      ]
+    }
+  ]
+}

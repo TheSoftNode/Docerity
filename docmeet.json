@@ -1,0 +1,40 @@
+{
+  "description": "Booking appointments with doctors online. Patients find an approved doctor, book a slot and pay in one step; doctors manage their schedule and patients from their own dashboard; admins approve doctors before they can be booked.",
+  "role": "Full-stack engineer: built most of the API and the web app with one teammate",
+  "timeline": "Feb – Sep 2024",
+  "tags": ["React", "Vite", "Node.js", "Express", "MongoDB", "Stripe", "JWT", "Nodemailer"],
+  "contributions": [
+    "Built most of the API in Node.js, Express and MongoDB: about 60 of its 70 commits",
+    "Built authentication: sign-up with email activation, login with access and refresh tokens, forgot and reset password, and role-based access for patients, doctors and admins",
+    "Built doctor onboarding: a doctor applies, an admin approves or revokes them, and only approved doctors can be booked",
+    "Built booking and payment: a patient picks a doctor and pays through Stripe Checkout, and the booking is created when the payment succeeds",
+    "Built reviews, notifications and booking cancellation",
+    "Built most of the React front end: the patient and doctor dashboards, doctor profiles and booking"
+  ],
+  "results": [
+    "Three roles in one app: patients, doctors and admins",
+    "Paid bookings through Stripe Checkout",
+    "Only admin-approved doctors can be booked"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Booking a doctor still often means phoning a clinic during working hours, being put on hold, and paying at the desk. DocMeet moves that online: find a doctor, see when they are free, book and pay, and get on with your day."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "A patient browses approved doctors with their specialism, fees and reviews, picks one and pays through Stripe Checkout; the booking is confirmed when the payment succeeds. Doctors have their own dashboard for their profile, schedule and bookings, and either side can cancel. Patients review doctors after an appointment, and notifications keep both sides informed.",
+        "Doctors can't simply sign up and start taking money: they apply, an admin reviews and approves them, and an admin can revoke that approval later."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "React with Vite and Tailwind on the front end; Node.js, Express and MongoDB for the API; JSON Web Tokens with refresh tokens for sign-in; Stripe for payment; Nodemailer for activation and password emails. Built with Henry Agukwe."
+      ]
+    }
+  ]
+}

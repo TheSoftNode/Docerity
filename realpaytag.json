@@ -1,0 +1,38 @@
+{
+  "description": "Payments and payroll on the Pharos blockchain with a stablecoin. Each person gets a PayTag, a short @name in place of a wallet address; employers run payroll in the stablecoin; users can convert mobile airtime into it and register real-world assets such as property or vehicles.",
+  "role": "Full-stack engineer: built the web app and the API; a teammate wrote the contracts",
+  "timeline": "Apr – May 2025",
+  "tags": ["Next.js", "TypeScript", "Node.js", "Express", "Solidity", "Hardhat", "Pharos"],
+  "contributions": [
+    "Built the web app in Next.js and TypeScript: onboarding, separate dashboards for users and employers, and pages for PayTags, payroll, the stablecoin, airtime and assets",
+    "Built onboarding so a new user claims their @PayTag as part of signing up",
+    "Built the API in Node.js, Express and TypeScript behind the app",
+    "Connected the app to the five contracts on Pharos devnet: stablecoin, payroll, PayTag registry, asset registry and airtime converter"
+  ],
+  "results": [
+    "Five contracts with about 100 tests, connected to one app",
+    "Pay anyone by @name instead of a wallet address",
+    "Separate dashboards for individuals and employers"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "In much of Africa, getting paid sits between slow bank transfers and crypto that is volatile and hard to use. Wallet addresses are unreadable, salaries can't easily be paid in crypto, and many people hold value as mobile airtime rather than in a bank."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "Everyone claims a PayTag when they sign up, so paying someone means typing @name rather than pasting an address. Money moves in a stablecoin, which keeps its value. Employers register their staff and run payroll from the employer dashboard; salaries are paid in the stablecoin on schedule.",
+        "Airtime can be converted into the stablecoin at a rate set per network, which turns a common store of value into something that can be spent anywhere. Real-world assets such as property and vehicles can be registered, verified and transferred on the asset registry."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js, TypeScript and Tailwind for the app; Node.js, Express and TypeScript for the API; Solidity and Hardhat for the contracts, written by my teammate Arowolo Kehinde and deployed to Pharos devnet."
+      ]
+    }
+  ]
+}
