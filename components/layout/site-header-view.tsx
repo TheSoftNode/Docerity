@@ -9,6 +9,7 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/content/blocks/site";
 import { useScrolled } from "@/hooks/use-scrolled";
+import { useHideOnScroll } from "@/hooks/use-hide-on-scroll";
 import { PaletteLogo } from "@/components/shared/palette/palette-logo";
 
 type Props = Pick<SiteSettings, "name" | "navLinks" | "email">;
@@ -45,6 +46,8 @@ function MenuIcon({ open }: { open: boolean }) {
 function SiteHeaderView({ name, navLinks, email }: Props) {
   const scrolled = useScrolled();
   const [open, setOpen] = useState(false);
+  /* Out of the way while reading down a page on a phone; never while the menu is open. */
+  const hidden = useHideOnScroll({ enabled: !open });
   const menuId = useId();
   const pathname = usePathname();
   /* A link is current on its own page and on the pages beneath it, so the
@@ -73,7 +76,12 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
      rounded ends. As a wrapper it still lines the pill up with every
      section's content edge. */
   return (
-    <header className="sticky top-3 z-40">
+    <header
+      className={cn(
+        "sticky top-3 z-40 transition-transform duration-300 ease-[cubic-bezier(.2,.7,.2,1)] motion-reduce:transition-none",
+        hidden && "max-lg:-translate-y-[calc(100%+20px)]"
+      )}
+    >
       <div className="doc-shell">
         <nav
           aria-label="Main"
