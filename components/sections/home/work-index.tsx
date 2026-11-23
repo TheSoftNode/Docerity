@@ -74,7 +74,9 @@ function WorkIndex({ projects, media }: Props) {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
       }}
     >
-      <div className="min-w-0">
+      {/* The list stays in view beside a tall stage on a wide screen, so the
+          column never ends in an empty band. */}
+      <div className="min-w-0 lg:sticky lg:top-28">
         <ul aria-label="Featured projects">
           {projects.map((item, position) => {
             const active = position === index;
@@ -191,9 +193,10 @@ function WorkIndex({ projects, media }: Props) {
               <h3 className="ld-display text-[clamp(28px,3vw,38px)] font-extrabold tracking-[-0.035em]">
                 {project.name}
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-[var(--ld-muted)]">{project.description}</p>
+              {/* A taste of the write-up; the whole of it is on the project's page. */}
+              <p className="mt-3 line-clamp-3 text-base leading-relaxed text-[var(--ld-muted)]">{project.description}</p>
               <p className="mt-3 font-mono text-xs leading-relaxed text-[var(--ld-muted-3)]">
-                {project.tags.join(" · ")}
+                {project.tags.slice(0, 6).join(" · ")}
               </p>
             </div>
 
