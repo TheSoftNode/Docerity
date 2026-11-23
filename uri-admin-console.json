@@ -1,0 +1,56 @@
+{
+  "name": "Uri Admin Console",
+  "category": "Internal tool · Operations",
+  "client": "Uri",
+  "showcase": "professional",
+  "status": "In progress",
+  "description": "The operations console for Uri's own team: users, billing, agencies, content moderation, ad campaigns, market listening, alerts and platform health in one audited place. The account administration inside Uri is live; the standalone console's front end is complete and being connected to the backend.",
+  "role": "CTO: built the standalone console and the live admin screens inside Uri",
+  "timeline": "Oct 2026",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "shadcn/ui",
+    "Tailwind CSS",
+    "TanStack Table",
+    "Zod"
+  ],
+  "contributions": [
+    "Built the standalone console: 17 sections, the design system, the data layer and every screen",
+    "Built the live admin inside Uri: user management, subscription and credit controls, access codes, ad-wallet top-ups and account deletion",
+    "Designed every section to read through one typed server function shaped like the planned API",
+    "Built the audit log: every credit adjustment, plan override, admin grant and moderation action is attributed",
+    "Built safety into the screens: campaigns go live only by an explicit human launch, and budget-cap breaches are flagged"
+  ],
+  "results": [
+    "17 console sections",
+    "About 15,000 lines of strict TypeScript",
+    "Every admin action in the audit log"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "As Uri grew, operations work happened in scattered admin screens and database queries: crediting a user after a bank transfer, reviewing flagged content, checking an ad budget breach, working out why an account looks the way it does. The console puts all of it in one place, with a record of who did what."
+      ]
+    },
+    {
+      "heading": "Backend-ready from day one",
+      "paragraphs": [
+        "I built the front end before the API, against typed sample data shaped exactly like the planned endpoints. Each section reads through one server-only function, so connecting the backend means replacing one function per feature with no changes to components. Operations got to use and critique the screens weeks earlier, and the backend team got a precise contract."
+      ]
+    },
+    {
+      "heading": "Safe by design",
+      "paragraphs": [
+        "Every credit adjustment, plan override, admin grant and moderation action is attributed in the audit log, so there is always an answer to \"why does this account look like this?\". Campaigns go live only through an explicit human launch, budget-cap breaches are flagged, and the sign-in requires a second factor."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js 16 with the App Router and Turbopack, strict TypeScript, shadcn/ui on Radix, Tailwind CSS v4, Framer Motion, TanStack Table, and React Hook Form with Zod."
+      ]
+    }
+  ]
+}

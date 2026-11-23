@@ -1,0 +1,65 @@
+{
+  "category": "Developer platform · SDK",
+  "client": "Uri",
+  "showcase": "professional",
+  "description": "The Uri SDK lets other software companies build Uri's AI content, scheduling, publishing and analytics into their own products, in TypeScript, Python or React, through an API gateway that handles keys, usage and billing, with a developer portal and docs.",
+  "role": "CTO: designed and published the SDK packages; built the developer portal; co-built the gateway",
+  "timeline": "May 2026 – present",
+  "tags": [
+    "TypeScript",
+    "Python",
+    "React",
+    "FastAPI",
+    "MongoDB",
+    "Next.js",
+    "npm",
+    "PyPI"
+  ],
+  "contributions": [
+    "Designed, wrote and published all three client packages: TypeScript, Python and React",
+    "Designed multi-tenant support (v3.0): one key, with every call scoped to the platform's end customer",
+    "Mirrored 18 resource groups across TypeScript and Python, with React hooks and components on top",
+    "Audited every resource against the live backend and fixed the mismatches in the 3.1 and 3.2 releases",
+    "Built the developer portal: landing page, docs, API-key and webhook dashboards, and billing",
+    "Built the playground, a sample app that runs the SDK end to end",
+    "In the gateway: built credit-based multi-currency billing, usage tracking and webhook events; a teammate wrote most of its other commits to my design"
+  ],
+  "results": [
+    "@urisocial/sdk 3.2.2 and @urisocial/react 3.1.1 on npm; urisocial on PyPI",
+    "18 resource groups in TypeScript and Python",
+    "About 195 TypeScript and 150 Python methods",
+    "Multi-tenant since 3.0"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Agencies and software platforms wanted Uri's capabilities inside their own products, for their own customers. That needs stable client libraries, an API key per developer, usage metering and billing, documentation, and a way for one platform to act for many customers without mixing their data."
+      ]
+    },
+    {
+      "heading": "One key, many customers",
+      "paragraphs": [
+        "In version 3.0 a platform sets its end customer's ID on the client, and every call is scoped to that customer's brand, drafts and connections. The platform manages one key instead of thousands, and isolation is enforced on the server. This is what made the SDK usable by software platforms, not just single businesses."
+      ]
+    },
+    {
+      "heading": "Making the SDK match reality",
+      "paragraphs": [
+        "Hand-written clients are idiomatic in each language but drift from the API. In 3.1 and 3.2 I audited every resource against the live backend and fixed what had drifted (wrong endpoints, unwrapped responses, multipart uploads missing in Python), added video editing, and shipped the fixes as point releases with a changelog."
+      ]
+    },
+    {
+      "heading": "A gateway in front",
+      "paragraphs": [
+        "Keys, scopes, rate limits, rotation, metering and billing live in a separate gateway rather than in Uri's core API. It is another service to run, but the core product stays free of partner concerns, and a partner can be rate-limited or cut off without touching it."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "TypeScript built with tsup, Python packaging and React for the clients; FastAPI with Beanie on MongoDB for the gateway; Next.js 16 for the portal and playground."
+      ]
+    }
+  ]
+}

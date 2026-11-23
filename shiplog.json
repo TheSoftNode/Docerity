@@ -1,0 +1,61 @@
+{
+  "name": "Shiplog",
+  "category": "Internal tool · Engineering",
+  "client": "Uri",
+  "showcase": "professional",
+  "status": "In progress",
+  "description": "An engineering-accountability platform I built for Uri's team. Requirements come in, engineers log daily work against real branches, pull requests are reviewed with AI help, QA runs off edge-case checklists, and every feature can be traced back to who built it, all without a status meeting.",
+  "role": "CTO: built all of it, API and web app",
+  "timeline": "Oct – Nov 2026",
+  "tags": [
+    "NestJS",
+    "MongoDB",
+    "Socket.IO",
+    "Redis",
+    "Next.js",
+    "TypeScript",
+    "OpenAI",
+    "GitHub OAuth"
+  ],
+  "contributions": [
+    "Built the whole thing, API and web app, in about a week (83 commits)",
+    "Built requirement intake: a document written, uploaded or dictated is broken into features by an AI model that first checks the connected repositories",
+    "Built verified PR reviews: logged from GitHub events, with the diff fetched, AI findings attached and replays rejected",
+    "Built QA that can't be skipped: done stays blocked while any edge case is untested",
+    "Built the realtime board, each engineer's daily workboard, end-of-day summaries and an audit trail per feature",
+    "Set up CI deploys to containers with short-lived credentials"
+  ],
+  "results": [
+    "117 API endpoints in 16 controllers",
+    "27 database schemas",
+    "Rate limiting on every route; 5 logins a minute",
+    "Built in about a week"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "As CTO I needed to answer at any moment: who is working on what, on which branch, and is it actually tested? Status meetings answer that once a day and badly. Shiplog answers it from the work itself."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "A requirement document comes in, written, uploaded or dictated, and an AI model breaks it into features after checking the connected repositories, so the breakdown accounts for what already exists. Features go on a realtime board and into each engineer's daily workboard, where they declare the branch they're working on.",
+        "Pull-request reviews are logged from real GitHub events: the diff is fetched, AI findings are attached, and merges and re-review requests are tracked. Testers work from edge-case checklists, and a feature can't be marked done while any check is untested. Issues route to their owners and back to the board, and every requirement links to its card, pull requests, QA results and issues."
+      ]
+    },
+    {
+      "heading": "Decisions",
+      "paragraphs": [
+        "Branches and pull requests come from GitHub webhooks, not from what engineers type, so the record reflects what actually happened. Permissions are derived on the server from each person's job title, so the client can't raise its own access. Every feature folder owns its components and styles, and lint warns past 220 lines a file and 90 a function, so a new engineer can find their way on day one. The web app is static and the API runs in containers, deployed with short-lived credentials, so there are no long-lived deploy keys to leak."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "NestJS, Mongoose on MongoDB, Socket.IO with a Redis adapter, and Passport for JWT, GitHub OAuth and magic links; Next.js 16 with CSS Modules and design tokens; Jest, Testing Library and Playwright; GitHub Actions deploying to containers."
+      ]
+    }
+  ]
+}

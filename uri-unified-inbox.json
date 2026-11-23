@@ -1,0 +1,40 @@
+{
+  "category": "AI · Messaging",
+  "client": "Uri",
+  "showcase": "",
+  "description": "Every direct message and comment a business receives, from every connected platform, in one inbox inside Uri, with replies drafted by AI in the brand's voice.",
+  "role": "CTO: set the scope, built much of the front end and released it; a teammate built most of the backend",
+  "timeline": "2026",
+  "tags": [
+    "Python",
+    "FastAPI",
+    "MongoDB",
+    "Next.js",
+    "TypeScript",
+    "OpenAI"
+  ],
+  "contributions": [
+    "Set the scope of the inbox",
+    "Built much of the inbox screens on desktop and phone",
+    "Integrated and released it to production",
+    "A teammate built most of the backend"
+  ],
+  "results": [
+    "Messages and comments from every platform in one place",
+    "AI-drafted replies in the brand's voice"
+  ],
+  "body": [
+    {
+      "heading": "What it does",
+      "paragraphs": [
+        "A small business gets messages and comments on several platforms at once and misses half of them. The unified inbox gathers them into one list, filtered by platform and status, with a reply drafted by AI from the brand's Playbook ready to edit and send."
+      ]
+    },
+    {
+      "heading": "My part",
+      "paragraphs": [
+        "I scoped it, built much of the front end on desktop and phone, and released it. A teammate built most of the backend."
+      ]
+    }
+  ]
+}

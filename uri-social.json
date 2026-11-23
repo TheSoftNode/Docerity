@@ -1,0 +1,86 @@
+{
+  "category": "AI · Marketing platform",
+  "client": "Uri",
+  "showcase": "professional",
+  "status": "Live",
+  "description": "An AI marketing and sales team for small businesses, mainly in Africa. Uri learns a brand once, then writes and publishes its social posts, runs its paid ads, answers its customers' messages and explains what is driving sales. The owner only approves.",
+  "role": "CTO: architecture, releases and standards; wrote about half the backend and most of the web app",
+  "timeline": "Mar 2026 – present",
+  "tags": [
+    "Python",
+    "FastAPI",
+    "MongoDB",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "OpenAI",
+    "Docker"
+  ],
+  "contributions": [
+    "Own the architecture, the production environment and every release across Uri's products",
+    "Wrote 2,602 of the backend's 5,077 commits and 994 of the web app's 1,688; scaffolded the web app",
+    "Built most of the content and publishing engine, and the shared billing, credits, trials and wallets",
+    "Built Market Intelligence and the visual engine that designs post and ad images, alone",
+    "Replaced a third-party aggregator with direct publishing to Instagram, Facebook, LinkedIn, TikTok and X, with confirmation that each post went out",
+    "Built complete account deletion as a resumable job that recovers from stalls",
+    "Fixed a class of cross-account data leaks on shared browsers",
+    "Set the release process, code-owner rules and CI; integrated and shipped the team's work in 90 merges"
+  ],
+  "results": [
+    "641 API routes across 35 modules",
+    "4,621 backend tests passing, none failing",
+    "5 social platforms published to directly",
+    "9,050 media files migrated with none left behind"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "A small business owner has to do marketing, sales follow-up and customer service on top of running the business, across several platforms, with no team. Uri learns the brand once, through a Brand Playbook, then does that work in the brand's own voice. The owner only approves."
+      ]
+    },
+    {
+      "heading": "My role",
+      "paragraphs": [
+        "I'm Uri's CTO. I own the architecture across all five of its products, the production environment, what gets released and when, and the engineering standards the team works to. I still build most of it myself: about half the backend's commits and close to 60% of the web app's are mine, and I integrated the team's branches into releases 90 times."
+      ]
+    },
+    {
+      "heading": "What it does",
+      "paragraphs": [
+        "The content studio turns a short brief into posts for each platform, with images designed by the visual engine, and schedules them. The ads agent plans, launches and optimises paid campaigns on Meta, Google and TikTok. The unified inbox gathers direct messages and comments in one place, with AI-drafted replies. Market Intelligence listens to public conversation in a market, scores emerging topics, and turns them into ready-to-post ideas."
+      ]
+    },
+    {
+      "heading": "Production as the source of truth",
+      "paragraphs": [
+        "When I took over releases, staging and production had drifted apart. I scoped the reconciliation, untangling months of diverging history without losing fixes that only existed in production, then set the rule the team works by now: every change branches from production, is proven on staging, and ships from the same branch. Unfinished features are hidden with flags rather than with branch differences, so the codebase means the same thing in every environment.",
+        "Every production change needs a code-owner approval. Every pull request has to pass automated checks: the backend must start and pass its tests, and the web app must typecheck, lint and build. Database passwords moved out of the code into the cloud's parameter store."
+      ]
+    },
+    {
+      "heading": "Publishing we control",
+      "paragraphs": [
+        "Posts used to go out through a third-party aggregator. I replaced it with direct integrations for Instagram, Facebook, LinkedIn, TikTok and X, each confirming that the post actually published. That is more code to keep up with each platform's changes, in exchange for lower cost, clearer failures, and one less service between the customer and their audience."
+      ]
+    },
+    {
+      "heading": "Deleting an account properly",
+      "paragraphs": [
+        "An admin can permanently remove an account and everything it owns: records across every database, uploaded files, and the access it was granted on connected social platforms. Payment records can be kept, stripped of personal details, for accounting. Deletion is blocked while ads are running or the wallet holds money, with an explicit way through, and it runs as a resumable job that detects and recovers from stalls."
+      ]
+    },
+    {
+      "heading": "Architecture",
+      "paragraphs": [
+        "One FastAPI service hosts the agents (content, ads, inbox, market intelligence and visuals), sharing authentication, billing and one document database. I chose one service with agent modules over microservices: a small team ships faster and shares billing and auth logic, at the cost of larger deploys and a codebase that needs conventions to stay navigable. Scheduled jobs publish posts and manage campaigns. The web app is a single Next.js application that works on phone and desktop. Everything runs in containers with blue-green deploys, on separate staging and production accounts."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Python, FastAPI and Motor on MongoDB, with APScheduler; Next.js 16, React 19, TypeScript, MUI and Tailwind; containers with blue-green deploys, object storage and a parameter store for secrets; OpenAI models for text and images; a regional payment provider."
+      ]
+    }
+  ]
+}

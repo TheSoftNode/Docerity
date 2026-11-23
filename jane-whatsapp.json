@@ -1,0 +1,73 @@
+{
+  "category": "AI · WhatsApp",
+  "client": "Uri",
+  "showcase": "professional",
+  "description": "Uri's AI employee on WhatsApp. Business owners create, design and schedule their posts by chatting with Jane, and their customers get instant, accurate answers on the business's own number, with anything Jane can't answer handed to a person.",
+  "role": "CTO: wrote all the application code for both services",
+  "timeline": "Jun 2026 – present",
+  "tags": [
+    "Python",
+    "FastAPI",
+    "Celery",
+    "Redis",
+    "nginx",
+    "Twilio",
+    "WhatsApp Cloud API",
+    "OpenAI"
+  ],
+  "contributions": [
+    "Wrote all the application code in both services: the conversation engine, graphics, scheduling, credits, the reply engine, routing between businesses, and escalation",
+    "Split WhatsApp out of the main backend so it scales on its own: webhooks acknowledge at once and queue the work",
+    "Built a conversation engine with about 30 states and session memory, so owners can type naturally",
+    "Built the reply engine that answers customers only from the brand's own facts and escalates the rest",
+    "Encrypted customers' phone numbers with their own key, decryptable in two places only, and purged after a retention window",
+    "Ran a security and money audit in July 2026: found and fixed 15 issues, 5 of them critical, and removed about 1,700 lines of dead code",
+    "Set the target architecture for the move to containers; a teammate built the deploy pipelines"
+  ],
+  "results": [
+    "15 issues fixed in the July 2026 audit, 5 critical",
+    "3 webhook replicas and worker pools per service",
+    "~30 conversation states with session memory",
+    "Reply engine: 43 tests, all passing"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Many of Uri's customers run their business from their phone, and WhatsApp is where they already are; opening a web dashboard is a step too far. Their own customers ask the same questions all day (prices, delivery, opening hours) on WhatsApp, often when the owner can't reply."
+      ]
+    },
+    {
+      "heading": "Two services, on purpose",
+      "paragraphs": [
+        "The WhatsApp agent is for owners: they ask Jane for ideas, posts and branded graphics in their brand's voice, edit or regenerate them, use their own photos, and post now or schedule (\"tomorrow 9am\"). Every morning at 9 Jane sends ideas, and credits, upgrades and a link to the dashboard are all a message away.",
+        "The reply engine is for the business's customers, on the business's own number. It answers only from facts in the brand's Playbook, so it never invents a price or a policy. When there is no exact answer, the customer gets a holding reply and the team gets an escalation; they reply from the Uri dashboard or by email, into the same chat.",
+        "They are separate services because they differ in everything that matters: one Uri number against each business's own, an owner creating content against a stranger asking about prices, and the size of the damage when something goes wrong. A wrong answer in the reply engine hurts a client's reputation with their own customer."
+      ]
+    },
+    {
+      "heading": "Built to take a spike",
+      "paragraphs": [
+        "Behind nginx, three webhook replicas acknowledge every message immediately and queue it in Redis; Celery worker pools do the slow AI work, and a scheduler sends the daily messages. Providers never time out and retry, slow generation never blocks new messages, and a rush of chats can't slow down the web app. Both services share the web app's database, so a brand is the same brand everywhere."
+      ]
+    },
+    {
+      "heading": "Answers that can't be wrong",
+      "paragraphs": [
+        "In its first version the reply engine only answers on an exact match against the brand's own facts and escalates everything else. More questions reach a person, but the AI never states a wrong price to someone's customer. Customers' numbers have to be recoverable to reply later, so they are encrypted rather than hashed, with their own key, decryptable in exactly two places, and purged after a retention window."
+      ]
+    },
+    {
+      "heading": "The audit",
+      "paragraphs": [
+        "In July 2026 I audited both services for security and money handling. I found and fixed 15 issues, five of them critical, including an unauthenticated scheduler endpoint, a webhook that crashed on bad signatures, a path that could publish across businesses, a race when linking phone numbers, and charges that weren't refunded when generation failed. Each fix was checked against production, read-only, before and after."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Python and FastAPI, Celery and Redis, Motor on the shared MongoDB, nginx and Docker Compose; Twilio for the owners' channel and Meta's WhatsApp Cloud API for business numbers; OpenAI models for text and images; GitHub Actions deploying to containers."
+      ]
+    }
+  ]
+}
