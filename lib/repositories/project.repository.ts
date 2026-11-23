@@ -278,7 +278,7 @@ export async function moveFeaturedProject(id: string, direction: -1 | 1) {
 
   const featured = await ProjectModel.find({ featured: true })
     .sort({ featuredOrder: 1, sortOrder: 1, createdAt: -1 })
-    .select("_id")
+    .select("_id featuredOrder")
     .lean();
 
   const index = featured.findIndex((project) => String(project._id) === id);
@@ -287,13 +287,18 @@ export async function moveFeaturedProject(id: string, direction: -1 | 1) {
   const target = index + direction;
   if (target < 0 || target >= featured.length) return false;
 
-  /* Positions rather than the stored values, for the same reason the catalogue
-     swap uses them: a set featured before this field existed shares a
-     `featuredOrder` of zero, and swapping two zeroes moves nothing. */
-  await Promise.all([
-    ProjectModel.updateOne({ _id: featured[index]._id }, { $set: { featuredOrder: target + 1 } }),
-    ProjectModel.updateOne({ _id: featured[target]._id }, { $set: { featuredOrder: index + 1 } }),
-  ]);
+  /* Swap in the list, then renumber every featured row whose number no longer
+     matches its position, as `moveProject` does: swapping two rows' numbers
+     by position left ties with the others, and a tie stopped a project moving. */
+  const order = [...featured];
+  [order[index], order[target]] = [order[target], order[index]];
+  const writes = order
+    .map((row, position) => ({ row, position }))
+    .filter(({ row, position }) => row.featuredOrder !== position + 1)
+    .map(({ row, position }) => ({
+      updateOne: { filter: { _id: row._id }, update: { $set: { featuredOrder: position + 1 } } },
+    }));
+  if (writes.length > 0) await ProjectModel.bulkWrite(writes);
 
   return true;
 }
