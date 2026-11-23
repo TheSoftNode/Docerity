@@ -1,0 +1,67 @@
+{
+  "category": "Security · API scanning",
+  "client": "SmartComply",
+  "showcase": "professional",
+  "status": "Live",
+  "description": "Security scans of a company's public API with three engines in parallel, run on their own service and returned as a plain-language PDF report inside SmartComply's compliance platform. Built so a scan can't slow the platform down, and so the report tells the person fixing things what to do first.",
+  "role": "Senior software engineer: built the scan service alone, the multi-engine scan and the report",
+  "timeline": "Jul 2026 – present",
+  "tags": [
+    "Python",
+    "FastAPI",
+    "Docker",
+    "OWASP ZAP",
+    "Nuclei",
+    "Schemathesis",
+    "Django",
+    "Celery",
+    "ReportLab",
+    "React"
+  ],
+  "contributions": [
+    "Built the scan service from scratch, alone (12 of 12 commits)",
+    "Built the multi-engine scan: OWASP ZAP, Nuclei and Schemathesis in parallel, with duplicate findings merged into one issue",
+    "Redesigned the PDF report: summary, what to fix first, changes since the last scan, then the detail",
+    "Built endpoint import from a file or link, bulk report download and SLA tracking",
+    "Built the scan list and filters in the web app",
+    "Made results honest: the report says why an engine found nothing, unreachable targets fail the scan, and contradictions are gone"
+  ],
+  "results": [
+    "3 engines in parallel",
+    "23 issue types merged to 13 issues in the report fixture",
+    "Scan service: 32 of 32 tests pass",
+    "~2,800 lines, holds no customer data"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Standards such as PCI DSS expect regular testing of internet-facing APIs. The original scan used one engine, ran inside the main web platform, and produced a report that repeated the same issue several times and sometimes contradicted itself. Heavy scans next to the web app also put the whole platform at risk."
+      ]
+    },
+    {
+      "heading": "Three engines, one answer",
+      "paragraphs": [
+        "OWASP ZAP, Nuclei and Schemathesis each catch different problems, so the scan runs all three in parallel. They also name and grade the same problem differently, so findings are merged by meaning, not by engine: one issue, the right severity, and a count of where it occurs. That takes a catalogue of equivalent findings to keep up as the engines change, and gives a report a developer can actually read."
+      ]
+    },
+    {
+      "heading": "Off the platform",
+      "paragraphs": [
+        "A full scan uses every core and about 1.6 GB of memory, so it now runs on its own service. The service receives only a URL and a callback address, holds no database, files or customer data, queues work and answers 429 when it's full, and deploys automatically on push. A missed callback is covered by fetching the result by its ID."
+      ]
+    },
+    {
+      "heading": "A report for the person fixing things",
+      "paragraphs": [
+        "The PDF opens with a summary, a what-to-do-first list and what changed since the last scan, then the detail for each issue. It says why an engine reported nothing (no OpenAPI description found, for example), fails the scan when the target can't be reached, and never lists a header as both missing and passed. It handles any language in company names."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Python and FastAPI in Docker for the scan service, with OWASP ZAP, Nuclei and Schemathesis; Django, Celery and ReportLab in the compliance platform; React for the scan pages."
+      ]
+    }
+  ]
+}

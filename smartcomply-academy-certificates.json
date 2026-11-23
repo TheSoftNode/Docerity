@@ -1,0 +1,54 @@
+{
+  "name": "SmartComply Academy Certificates",
+  "category": "EdTech · Certification",
+  "client": "SmartComply",
+  "showcase": "professional",
+  "status": "Live",
+  "groups": [
+    "Full-stack"
+  ],
+  "description": "Certificate management and public verification for SmartComply Academy, a training and certification platform for cybersecurity professionals. Admins search, filter and export every certificate issued; anyone can check a certificate by its ID and see exactly what they should, and nothing more.",
+  "role": "Senior software engineer: built verification, status rules and the admin list",
+  "timeline": "Nov 2026",
+  "tags": [
+    "Django",
+    "Django REST Framework",
+    "PostgreSQL",
+    "React",
+    "Vite",
+    "Redux Toolkit Query",
+    "Material UI",
+    "Jest"
+  ],
+  "contributions": [
+    "Built the public verification endpoint and the Verify page: lookup by certificate ID only, every lookup recorded",
+    "Put the certificate status rules (active, suspended, withdrawn, expired) in one module, with an event on expiry",
+    "Added search, date ranges and a pathway filter to the admin list, plus row actions",
+    "Built a formula-safe CSV export of everything that matches",
+    "Stacked my work on two colleagues' open pull requests and wrote the merge order, so three PRs merged without conflicts"
+  ],
+  "results": [
+    "353 of 353 backend tests pass with all four PRs combined",
+    "26 of 26 front-end tests pass"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "An accreditation sprint needed three things at once: certificate status rules enforced in one place, a public verification page that reveals only what it should, and an admin list that can be searched, filtered and exported. Four engineers were changing the same files."
+      ]
+    },
+    {
+      "heading": "What I built",
+      "paragraphs": [
+        "Verification answers by certificate ID alone and shows the holder, the certification and its status; every lookup is recorded. Status (active, suspended, withdrawn or expired) is decided in one module, with an event when a certificate expires. The admin list gained search across holder, certification and scheme, date ranges, a pathway filter loaded from the server, row actions, and a CSV export in which any cell that would run as a spreadsheet formula is neutralised."
+      ]
+    },
+    {
+      "heading": "Keeping four people's merges clean",
+      "paragraphs": [
+        "Instead of racing to merge first, I rebased my backend work onto a colleague's open pull request and wrote the merge order (theirs, then mine), and stacked the front end the same way on another colleague's. The reviewer merged three pull requests without a conflict, and nobody's work was undone."
+      ]
+    }
+  ]
+}

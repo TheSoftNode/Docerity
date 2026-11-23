@@ -1,0 +1,70 @@
+{
+  "name": "SmartComply Platform Reliability",
+  "category": "Compliance platform · Reliability",
+  "client": "SmartComply",
+  "showcase": "professional",
+  "status": "Live",
+  "groups": [
+    "Backend / API"
+  ],
+  "description": "Reliability, release hygiene and production fixes on SmartComply's multi-tenant compliance platform, where companies run their compliance programmes for NDPA, PCI DSS, ISO 27001 and SOC 2: background jobs that now say when they fail, migrations that replay, CI that stops failing, and same-day fixes for customers.",
+  "role": "Senior software engineer: reliability, CI and production fixes; reviewed and merged colleagues' work",
+  "timeline": "Aug 2026 – present",
+  "tags": [
+    "Python",
+    "Django",
+    "Django REST Framework",
+    "PostgreSQL",
+    "Redis",
+    "Celery",
+    "React",
+    "GitHub Actions",
+    "Docker"
+  ],
+  "contributions": [
+    "Reviewed and merged about 69 of my colleagues' pull requests on the platform's API and web app, most of them the roles-and-permissions rebuild",
+    "Closed two silent gaps in background-job failure alerting, removed 8 duplicate task definitions, and gave heavy scans their own queue",
+    "Fixed the migration graph so deploys can replay migrations from scratch",
+    "Fixed scheduled jobs that dispatched nothing in production",
+    "Fixed the front-end build in CI: pinned Node and memory, moved off an undersized runner, added a formatting gate and a pre-push lock-file check",
+    "Built Docker test images and a runner for the main and production lines",
+    "Shipped production fixes: ID background-check name matching (with 23 tests), forced password change after reset, role sync on onboarding, control generation for every merchant"
+  ],
+  "results": [
+    "About 69 colleagues' pull requests reviewed and merged",
+    "499 commits across the platform's API and web app since August",
+    "23 tests behind the ID-matching fix"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "A large, long-lived codebase with many contributors: background jobs that failed silently, migrations that couldn't replay from scratch, scheduled jobs that dispatched nothing in production, and front-end builds that ran out of memory in CI. Customers also met production bugs that needed same-day fixes."
+      ]
+    },
+    {
+      "heading": "Fail loudly",
+      "paragraphs": [
+        "Background jobs now report failures to a channel the team watches rather than retrying quietly. That meant more alerts at first, until the noisy ones were fixed. Heavy scans moved to their own queue, so they can't starve everyday jobs."
+      ]
+    },
+    {
+      "heading": "Identity checks that stop refusing real people",
+      "paragraphs": [
+        "Employee ID verification was refusing genuine people over middle names, swapped order, hyphens and joined names. I replaced the exact match with word-by-word matching, then tightened it on purpose: every name on the profile, including the surname, must appear on the ID, and the same ID can't be reused across people. The fix shipped with 23 tests."
+      ]
+    },
+    {
+      "heading": "Reviewing the team's work",
+      "paragraphs": [
+        "I reviewed and merged about 69 of my colleagues' pull requests across the platform's API and web app, most of them the rebuild of roles and permissions and its rounds of fixes, working within the team's rules for releases and hotfixes."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Python, Django 3.2, Django REST Framework, PostgreSQL, Redis, Celery and Channels; React; GitHub Actions and Docker."
+      ]
+    }
+  ]
+}

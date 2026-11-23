@@ -1,0 +1,93 @@
+{
+  "name": "SmartGuard",
+  "category": "Security · Endpoint protection",
+  "client": "SmartComply",
+  "showcase": "professional",
+  "status": "Live",
+  "groups": [
+    "Full-stack"
+  ],
+  "description": "Endpoint protection that produces compliance evidence. A Windows agent finds and stops threats on each company computer, including payment-card numbers left on laptops, and a console inside SmartComply's compliance platform lets the security team see and act on every computer at once, with every incident carried through to a ticket and an audit trail an auditor can read.",
+  "role": "Senior software engineer: own the product end to end, agent, console and user guide",
+  "timeline": "Jul 2026 – present",
+  "tags": [
+    "Rust",
+    "Tokio",
+    "Axum",
+    "SQLite",
+    "YARA-X",
+    "Tauri",
+    "React",
+    "TypeScript",
+    "Django REST Framework",
+    "PostgreSQL",
+    "Celery"
+  ],
+  "contributions": [
+    "Own SmartGuard end to end: the Windows agent, its module in the compliance platform, and the user guide",
+    "Built PAN Scan: finds card numbers in files, SQLite databases and the saved-payment stores of Chrome, Edge and Firefox, shown masked, with quarantine or review in place",
+    "Built the live manual-scan console: quick, full and custom scans with pause, resume and stop, on the device and from the cloud",
+    "Built the Windows service that runs isolation, quarantine and scans sent from the console, with every action in the audit trail",
+    "Built the console's device-facing API (heartbeat, telemetry, command acknowledgements), playbook execution, indicators of compromise, tickets and scan control",
+    "Built the console pages: devices, device detail, threat review, live scan progress, tickets, playbooks, indicators and events",
+    "Defined one counting rule for threats so the app, the device page and the overview never disagree",
+    "Wrote the 140-page SmartGuard User Guide, and shipped the 19 display fixes writing it turned up",
+    "Reviewed and merged a colleague's real-time telemetry sync, API and web"
+  ],
+  "results": [
+    "58 Rust modules, about 61,000 lines, 528 unit tests",
+    "210 console API routes and 22 playbook action types",
+    "140-page user guide",
+    "231 of the agent's 711 commits"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Small companies need endpoint protection, but auditors also ask how each incident was handled: who did what, and when. Most tools stop at \"threat blocked\", so the evidence ends up in screenshots and emails. SmartGuard carries every threat through to a ticket and an audit trail, linked to the compliance controls it is evidence for. It also finds payment-card numbers left on laptops, which PCI DSS cares about."
+      ]
+    },
+    {
+      "heading": "My part",
+      "paragraphs": [
+        "I joined SmartComply as a senior software engineer in July 2026 and own SmartGuard end to end: the Windows agent and desktop app, its whole module in the compliance platform (API, data model and pages), and the 140-page user guide. I become engineering manager in January."
+      ]
+    },
+    {
+      "heading": "Finding card data",
+      "paragraphs": [
+        "PAN Scan looks for card numbers in files, SQLite databases and the saved-payment stores of Chrome, Edge and Firefox. Each browser stores cards differently, and naive matching flags every long number, so a finding needs nearby payment context before it counts. The scan runs off the request thread with real progress and a configurable scope, shows only masked numbers, and lets each finding be quarantined or reviewed where it is."
+      ]
+    },
+    {
+      "heading": "Acting from the console",
+      "paragraphs": [
+        "The security team can isolate a computer, quarantine a file or start a scan from the cloud console, and a separate Windows service carries it out without an admin prompt on the user's screen. Commands travel on the live stream and again in each heartbeat reply, so a command still reaches a device whose stream silently died; the agent de-duplicates them. Device-signed requests are rate-limited per device, not per address, and every action lands in the audit trail."
+      ]
+    },
+    {
+      "heading": "Safe enough to trust",
+      "paragraphs": [
+        "An agent that quarantines the wrong file is uninstalled by lunchtime. SmartGuard acts automatically only on exact identifications; anything merely suspicious raises an alert for a person to confirm. It never quarantines its own files or ordinary source code. Telemetry on the device is bounded by size, age and row count, so a cheap laptop's disk stays healthy, and the Events page says how far back it can see. A crash-loop sweep removed every crash it found."
+      ]
+    },
+    {
+      "heading": "One set of numbers",
+      "paragraphs": [
+        "The app, the device page and the console overview used to count threats differently. I defined what new, open and handled mean, and reconciled threats between the device and the cloud so every screen shows the same figures."
+      ]
+    },
+    {
+      "heading": "A guide for people without a security team",
+      "paragraphs": [
+        "SmartGuard is sold to companies without a security department, so I wrote the user guide for them: 140 pages with an annotated figure for every screen, plain explanations of why things work as they do, and personal data redacted from every screenshot. Writing it turned up 19 display problems, which I fixed."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Rust with Tokio and Axum for the agent engine, SQLite on the device, YARA-X and Sigma rules for detection; Tauri, React, TypeScript, Zustand and Tailwind for the desktop app; an NSIS installer that bundles its runtime and frees locked files on reinstall. The console is Django REST Framework, PostgreSQL, Redis and Celery, with a React front end."
+      ]
+    }
+  ]
+}
