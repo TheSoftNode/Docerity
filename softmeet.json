@@ -1,0 +1,37 @@
+{
+  "description": "Video meetings in the browser: start an instant meeting, schedule one for later, or keep a personal room with a permanent link. Meetings can be recorded and watched back, with sign-in handled by Clerk and video by Stream.",
+  "role": "Sole engineer: designed and built the app",
+  "timeline": "Apr – Sep 2024",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Stream Video",
+    "Clerk",
+    "Tailwind CSS"
+  ],
+  "contributions": [
+    "Built the app in Next.js and TypeScript, in two versions",
+    "Built instant, scheduled and personal-room meetings, with upcoming and previous meetings listed",
+    "Built the meeting room: camera and microphone setup, screen sharing, layouts and participants",
+    "Built recordings: meetings recorded and listed for playback",
+    "Added sign-in and protected routes with Clerk, and generated Stream tokens on the server"
+  ],
+  "results": [
+    "Instant, scheduled and personal-room meetings",
+    "Recordings of past meetings"
+  ],
+  "body": [
+    {
+      "heading": "What it does",
+      "paragraphs": [
+        "SoftMeet covers the everyday meeting: start one now and share the link, schedule one for later, or send people to your personal room, which always has the same link. Upcoming and previous meetings are listed, and recordings can be watched back."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js and TypeScript with Tailwind; Stream's video SDK for calls, screen sharing and recording, with tokens issued from the server; Clerk for sign-in."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "description": "A tour booking service: tours with locations and dates, booking and payment through Stripe, reviews, notifications and user accounts with roles, plus a React front end, documented in Swagger.",
+  "role": "Sole engineer: built the API and the front end",
+  "timeline": "Dec 2023 – Feb 2025",
+  "tags": [
+    "Node.js",
+    "Express",
+    "MongoDB",
+    "Stripe",
+    "JWT",
+    "Swagger",
+    "React"
+  ],
+  "contributions": [
+    "Built the API in Node.js, Express and MongoDB, over 102 commits",
+    "Built accounts: sign-up with email verification, login with refresh tokens, password reset and update, roles, and deactivation",
+    "Built tours with geospatial search: tours within a distance of a point, and distances from a point",
+    "Built aggregation reports: tour statistics, the five cheapest tours, and a monthly plan",
+    "Built booking and payment through Stripe, reviews, and notifications",
+    "Hardened it with Helmet, rate limiting and input sanitising; resized uploaded images with Sharp",
+    "Documented the API in Swagger and built a React front end for it"
+  ],
+  "results": [
+    "Geospatial search and aggregation reports on MongoDB",
+    "Booking paid through Stripe",
+    "Rate limiting and input sanitising on every request"
+  ],
+  "body": [
+    {
+      "heading": "What it does",
+      "paragraphs": [
+        "Tours API runs a tour company's bookings. Tours carry their locations and dates, so customers can find tours within a distance of where they are and see how far each one is. Customers book and pay through Stripe and leave reviews afterwards; staff see statistics, the cheapest tours and a monthly plan of starts."
+      ]
+    },
+    {
+      "heading": "Built carefully",
+      "paragraphs": [
+        "Accounts use email verification, short-lived access tokens with refresh tokens, and roles. Every request passes through Helmet, a rate limiter and input sanitising before it reaches the database. Uploaded photos are resized with Sharp. Everything is documented in Swagger."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Node.js, Express and MongoDB with Mongoose, JSON Web Tokens, Stripe, Nodemailer, Multer and Sharp, Swagger, and a React front end with Vite."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "description": "The service behind a learning platform: courses with sections and videos, enrolment through orders, questions and answers on each lesson, notifications, and accounts with roles, documented in Swagger.",
+  "role": "Sole engineer: built the API",
+  "timeline": "Nov 2023 – Feb 2025",
+  "tags": [
+    "Node.js",
+    "Express",
+    "TypeScript",
+    "MongoDB",
+    "Redis",
+    "Cloudinary",
+    "Swagger",
+    "Jest"
+  ],
+  "contributions": [
+    "Built the API in TypeScript with Node.js, Express and MongoDB, over 69 commits",
+    "Built accounts: sign-up with verification, login, social login, refresh tokens, password reset, profile pictures and roles",
+    "Built courses: create, edit and delete, course content by section, and protected video playback through VdoCipher",
+    "Built questions and answers and comments on each lesson, and notifications that are cleaned up on a schedule",
+    "Built orders for enrolment and site layout settings for the front end",
+    "Cached sessions and hot data in Redis, stored images in Cloudinary, and wrote tests with Jest"
+  ],
+  "results": [
+    "Course delivery, enrolment and Q&A behind one documented API",
+    "Redis caching and Jest tests"
+  ],
+  "body": [
+    {
+      "heading": "What it does",
+      "paragraphs": [
+        "LMS API serves everything a course platform needs: instructors create courses with content sections and videos; students enrol through orders, watch protected videos, ask questions on any lesson and get answers; notifications keep both sides up to date. It is built to sit behind more than one front end."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "TypeScript, Node.js, Express and MongoDB; Redis for caching; Cloudinary for images; VdoCipher for protected video; Nodemailer and EJS for email; node-cron for clean-up; Swagger for documentation; Jest for tests."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "description": "Inventory management for firms that produce goods and supply shops: stock levels by location, orders from shops, sales, suppliers and reports, with updates pushed live to everyone using it.",
+  "role": "Sole engineer: designed and built the system",
+  "timeline": "Jul 2024",
+  "tags": [
+    "C#",
+    ".NET",
+    "Blazor",
+    "SignalR",
+    "SQL Server",
+    "Docker"
+  ],
+  "contributions": [
+    "Designed it in clean-architecture layers: Domain, Application, Infrastructure and a Blazor web UI",
+    "Built stock tracking by location and category, with reorder points",
+    "Built order processing from shops, sales recording and supplier management",
+    "Built live updates with SignalR, so stock and order changes appear for every user without a refresh",
+    "Built roles for admins, managers and staff",
+    "Set up SQL Server with Entity Framework migrations, and Docker Compose to run it all"
+  ],
+  "results": [
+    "Live stock and order updates over SignalR",
+    "Clean-architecture .NET solution with 104 C# files",
+    "Built in five days"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "A firm that makes goods and supplies shops needs to know what is in stock, where, and what has been ordered, and so does everyone on its team at the same moment. A spreadsheet that someone else has open is always out of date."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "Products are tracked by location and category with reorder points, so low stock raises a notification. Shops' orders are processed and invoiced, sales are recorded, and suppliers and purchase orders are managed in the same place. Reports cover stock, sales and order history.",
+        "Changes are pushed to every open screen through SignalR, so the warehouse and the office see the same numbers."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "C# and .NET in clean-architecture layers, Blazor for the web UI, SignalR for live updates, SQL Server with Entity Framework, and Docker Compose."
+      ]
+    }
+  ]
+}

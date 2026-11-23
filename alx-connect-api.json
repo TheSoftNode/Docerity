@@ -1,0 +1,36 @@
+{
+  "description": "The account service for ALX Connect, a platform matching developers by skill, experience and learning goal. Sign-up with email verification, login with access and refresh tokens, and password reset and change, documented in Swagger and ReDoc.",
+  "role": "Back-end engineer: built the API with a small team",
+  "timeline": "Oct – Nov 2024",
+  "tags": [
+    "Django",
+    "Django REST Framework",
+    "JWT",
+    "Swagger",
+    "Python"
+  ],
+  "contributions": [
+    "Built the Django project and the custom user model",
+    "Built sign-up with email verification and resend, login, and access and refresh tokens",
+    "Built forgot, reset and change password",
+    "Documented the API in Swagger and ReDoc",
+    "Wrote 15 of the project's 19 commits"
+  ],
+  "results": [
+    "Complete account flow documented in Swagger"
+  ],
+  "body": [
+    {
+      "heading": "What it does",
+      "paragraphs": [
+        "ALX Connect matches developers with each other for learning and mentorship. This API is its foundation: secure accounts. A developer signs up and verifies their email, logs in and gets an access token and a refresh token, and can reset or change their password, all documented in Swagger and ReDoc."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Python, Django and Django REST Framework with JSON Web Tokens, and drf-yasg for Swagger and ReDoc."
+      ]
+    }
+  ]
+}

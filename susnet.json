@@ -1,0 +1,46 @@
+{
+  "description": "Energy management for buildings. SusNet connects smart meters and plugs, shows live and historical energy and environmental data, turns it into an energy bill and savings, and sells the kits that make a building smart, built for HitoAI.",
+  "role": "Front-end engineer: built the platform's web app",
+  "client": "HitoAI Limited",
+  "timeline": "Oct 2024",
+  "tags": [
+    "React",
+    "Vite",
+    "Firebase",
+    "Chart.js",
+    "Tuya IoT",
+    "Tailwind CSS"
+  ],
+  "contributions": [
+    "Built the web app in React: landing, sign-up and login, documentation, support and contact",
+    "Built environmental data analytics: charts of energy use and conditions from the building's devices",
+    "Built the energy bill page that turns usage into cost",
+    "Built the kits shop: choosing a kit and plan, and a cart",
+    "Connected live device data from the Tuya IoT cloud and stored users and data in Firebase",
+    "Built a short quiz that recommends the right kit"
+  ],
+  "results": [
+    "Device data to energy cost in one app",
+    "First version in five days, then rebuilt in a second pass"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Most buildings only find out how much energy they used when the bill arrives. By then it is too late to change anything. SusNet puts meters and smart plugs in the building and shows what is being used, where and when, while it can still be changed."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "A building owner registers their building and picks a kit (thermostats, plugs and an IoT hub) from the shop, guided by a short quiz. Once the devices are online, their readings flow from the Tuya IoT cloud into the analytics pages: energy use and environmental conditions over time, and an energy bill that turns kilowatt-hours into money."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "React, Vite and Tailwind, with Chart.js for analytics, Firebase for accounts and data, and Tuya's cloud API for device readings."
+      ]
+    }
+  ]
+}

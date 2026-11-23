@@ -1,0 +1,43 @@
+{
+  "description": "One place to put Bitcoin to work on Stacks. YieldNexus brings sBTC yield strategies into a single dashboard, with a simple path for beginners and full detail for experienced users, on top of a yield-manager contract.",
+  "role": "Front-end engineer: designed and built the web app; a teammate wrote the contracts",
+  "timeline": "Jun – Jul 2025",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Stacks.js",
+    "Clarity",
+    "sBTC",
+    "Tailwind CSS"
+  ],
+  "contributions": [
+    "Built a product-requirements site that set out the scope before the app",
+    "Designed and built the web app in Next.js and TypeScript: landing page, how it works, and the user dashboard",
+    "Built the dashboard: portfolio overview, notifications and profile",
+    "Connected Stacks wallets with Stacks Connect"
+  ],
+  "results": [
+    "About 10,000 lines of TypeScript",
+    "From requirements to a working dashboard in five weeks"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Earning yield on Bitcoin through Stacks means visiting several protocols, each with its own interface and its own risks. A newcomer doesn't know where to start; an experienced user has to piece their position together by hand."
+      ]
+    },
+    {
+      "heading": "What I built",
+      "paragraphs": [
+        "I wrote the product requirements, then designed and built the web app: a landing page that explains sBTC yield in plain terms, and a dashboard showing the user's position, notifications and profile, connected to Stacks wallets. The yield-manager contract and its strategies were written by my teammate Emmanuel."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js, TypeScript and Tailwind, with Stacks Connect for wallets, on top of a Clarity yield-manager contract."
+      ]
+    }
+  ]
+}

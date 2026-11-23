@@ -1,0 +1,34 @@
+{
+  "description": "The site for BIASADRA, an Irish AI academy that places students into partner universities. Students browse programmes by country (Ireland, the UK, Germany, France, Spain, the Netherlands, the USA and Canada) and subject, compare duration, fees and intake dates, and apply.",
+  "role": "Front-end engineer: built the site",
+  "client": "BIASADRA",
+  "timeline": "Oct 2024",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS"
+  ],
+  "contributions": [
+    "Built the site in Next.js and TypeScript",
+    "Built programme pages for eight countries and the EU, each listing programmes with duration, tuition fees and intake dates",
+    "Built subject areas (AI, energy, health and art), about, contact and sign-in"
+  ],
+  "results": [
+    "Programmes in 8 countries on one site",
+    "Duration, fees and intakes comparable at a glance"
+  ],
+  "body": [
+    {
+      "heading": "The brief",
+      "paragraphs": [
+        "BIASADRA connects students with universities across Europe and North America. The site had to let a student find a programme in the country they want, in the subject they want, and see what it costs and when it starts, without a PDF brochure per university."
+      ]
+    },
+    {
+      "heading": "What I built",
+      "paragraphs": [
+        "A page per country listing its partner programmes with duration, tuition and intake dates in the same layout, so they can be compared directly; subject pages for AI, energy, health and art; and the about, contact and sign-in pages. BIASADRA is a sister company of HitoAI, whose platform I also built."
+      ]
+    }
+  ]
+}

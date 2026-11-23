@@ -1,0 +1,67 @@
+{
+  "description": "Risk intelligence for Bitcoin capital on Stacks. Rivisk reads a wallet's positions across Stacks protocols, turns them into one portfolio, measures concentration, liquidity and liquidation distance, runs stress tests such as a 30% BTC drop, raises alerts, and publishes a compact risk attestation on-chain that other contracts can read. It never holds funds or trades.",
+  "role": "Sole engineer: designed and built the whole platform",
+  "timeline": "Sep 2026",
+  "tags": [
+    "TypeScript",
+    "NestJS",
+    "Next.js",
+    "Clarity",
+    "PostgreSQL",
+    "Redis",
+    "BullMQ",
+    "Socket.IO",
+    "Chainhook",
+    "AWS"
+  ],
+  "contributions": [
+    "Designed the system and built it alone as a TypeScript monorepo: five deployable services (API, indexer, worker, realtime and web) and shared domain packages",
+    "Built the indexer and protocol adapters that read wallet and protocol positions from Stacks and turn them into one portfolio model",
+    "Built the risk and stress engines: deterministic metrics for concentration, liquidity, collateral health and liquidation distance, and BTC-decline scenarios",
+    "Wrote three Clarity contracts (risk registry, risk policy and protocol registry) with a provider trait so other contracts can consume Rivisk's attestations",
+    "Built the attestation pipeline: indexing a wallet publishes an attestation to the testnet registry, throttled to changes, and Chainhook confirms each one back into the API",
+    "Built the NestJS REST API with an interactive reference, real-time updates over Socket.IO, and a TypeScript SDK published on npm",
+    "Built the dashboard in Next.js: overview, positions, stress tests, alerts, risk policy and developer settings, each linkable by address",
+    "Deployed the beta to AWS, with docs and a public status page saying what is and isn't proven yet"
+  ],
+  "results": [
+    "Live beta on Stacks testnet: app, API, realtime and contracts",
+    "5 services and an npm SDK from one monorepo",
+    "3 Clarity contracts with attestations confirmed back through Chainhook",
+    "Built solo in about a week"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "As more Bitcoin-linked capital becomes usable on Stacks, one address can hold sBTC directly while also having capital in a lending market, a liquidity pool and a streaming contract. Each protocol shows its own slice. Nobody shows the whole portfolio: where the sBTC actually is, how much is liquid, which protocol is the biggest exposure, and how close a position is to liquidation.",
+        "Rivisk answers those questions across protocol boundaries, without ever touching the funds."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "Rivisk indexes a wallet's positions from the Stacks API and Chainhook, and protocol adapters translate each protocol's state into one common position model. The portfolio engine adds them up; the risk engine computes deterministic metrics such as concentration, liquidity, collateral health and distance to liquidation; the stress engine replays the portfolio under 10%, 20% and 30% BTC declines.",
+        "Alerts fire when a metric crosses the user's policy. The dashboard shows each part on its own page, and every page can be shared by address."
+      ]
+    },
+    {
+      "heading": "Risk you can verify on-chain",
+      "paragraphs": [
+        "Each indexed wallet gets a compact risk attestation published to a Clarity registry on testnet, throttled so it only publishes on change or every 120 blocks. Chainhook watches the chain and confirms each attestation back into the API. A shared trait lets any Stacks contract read an attestation before it acts, for example a lending market checking a borrower's portfolio risk."
+      ]
+    },
+    {
+      "heading": "Built to be relied on",
+      "paragraphs": [
+        "The numbers are deterministic, so the same positions always give the same risk. The work runs as separate services (indexer, worker, realtime, API and web) over PostgreSQL, Redis and BullMQ, so a slow chain read never blocks the dashboard. A public status page lists what is proven on testnet and what is not yet."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "TypeScript throughout in a pnpm and Turborepo monorepo: NestJS for the API, Next.js for the web app, BullMQ workers, Socket.IO for real time, PostgreSQL and Redis, Clarity contracts tested with Clarinet and Vitest, Chainhook for confirmations, and a beta running on AWS."
+      ]
+    }
+  ]
+}

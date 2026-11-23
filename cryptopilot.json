@@ -1,0 +1,44 @@
+{
+  "description": "Send crypto by asking for it. CryptoPilot is a wallet assistant: type \"send 0.05 ETH to Sam\", it recognises the amount, the token and the contact, shows a summary, and MetaMask signs it, so the signing step stays where the user expects it.",
+  "role": "Sole engineer: designed and built the app",
+  "timeline": "Jul 2025",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Wagmi",
+    "MetaMask",
+    "Tailwind CSS"
+  ],
+  "contributions": [
+    "Designed and built the app in Next.js and TypeScript: chat, dashboard, transactions, address book and tutorials",
+    "Built the chat assistant: it reads a plain-language request, recognises amounts, tokens and saved contacts, and turns it into a transaction form",
+    "Built a confirmation step that summarises each transaction before MetaMask is asked to sign",
+    "Connected MetaMask through Wagmi, with network detection and live balances",
+    "Built transaction history with filters and statistics, and an address book that the assistant uses to resolve names"
+  ],
+  "results": [
+    "About 13,000 lines of TypeScript",
+    "No transaction forms to fill: one sentence and a confirmation"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Sending crypto means copying a long address, choosing a network and filling a form, and one wrong character loses the money. Most people would rather say what they want."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "The user writes a request in the chat. CryptoPilot works out what is being asked (send, check a balance, look up a contact), recognises addresses and names from the address book, and fills a transaction form from it. Smart suggestions and keyboard shortcuts speed up repeat actions.",
+        "Before anything is signed it shows a plain summary: who, how much, on which network. Only then does MetaMask open, so the user signs exactly what they read."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js, TypeScript and Tailwind, with Wagmi for MetaMask, balances and network state."
+      ]
+    }
+  ]
+}

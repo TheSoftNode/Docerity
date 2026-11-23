@@ -1,0 +1,42 @@
+{
+  "description": "Moving USDC between Ethereum and Stellar for low fees, with fiat on- and off-ramps for African currencies at both ends. One dashboard connects both wallets, shows the fee before you bridge, and tracks the transfer until it lands.",
+  "role": "Front-end engineer: built the bridge interface",
+  "timeline": "Feb 2025",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Ethers.js",
+    "Stellar SDK",
+    "Allbridge"
+  ],
+  "contributions": [
+    "Built the wallet service that connects an Ethereum wallet and a Stellar wallet side by side and reads USDC balances on both",
+    "Built bridging through Allbridge: quoting the bridge fee, creating the bridge transaction, and signing the Stellar side",
+    "Built the dashboard: deposit, send, swap, withdraw, transaction monitor and history",
+    "Built the landing page explaining the bridge and its impact"
+  ],
+  "results": [
+    "Both wallets and both USDC balances on one screen",
+    "The fee shown before any transfer is signed"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Sending dollars across African borders is slow and expensive. USDC moves cheaply, but it lives on different chains, and getting it from Ethereum to Stellar (where low-cost local cash-out exists) takes several tools and a lot of trust."
+      ]
+    },
+    {
+      "heading": "What I built",
+      "paragraphs": [
+        "The interface: connect an Ethereum wallet and a Stellar wallet together, see USDC on both, get a quote for the bridge fee, and send. Bridging runs through Allbridge; the Stellar side is signed in the user's own wallet. The dashboard covers deposits, sends, swaps and withdrawals, and monitors each transfer until it lands. The wider CrossFlow project, including the on- and off-ramps, was built with Emmanuel."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js and TypeScript, Ethers.js for Ethereum, the Stellar wallet SDK for Stellar, and Allbridge for the bridge."
+      ]
+    }
+  ]
+}

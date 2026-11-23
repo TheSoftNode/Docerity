@@ -1,0 +1,38 @@
+{
+  "description": "The API behind Easmark: accounts, marking for theses and code, credits and payments, coupons and analytics, documented in Swagger.",
+  "role": "Back end for Easmark",
+  "timeline": "Dec 2024 – Jan 2025",
+  "tags": [
+    "Django",
+    "Django REST Framework",
+    "PostgreSQL",
+    "JWT",
+    "Stripe",
+    "Swagger"
+  ],
+  "contributions": [
+    "Accounts: sign-up with email verification, login, logout, token refresh and password reset",
+    "Marking: marking types with their prices, performing a marking, and saving and archiving results",
+    "Credits: balance, usage, payments through Stripe, pricing tiers and transaction history",
+    "Coupons: create, assign to users or user types, revoke, and list assignments",
+    "Analytics for each user and for the platform",
+    "Every endpoint documented in Swagger"
+  ],
+  "results": [
+    "One documented API behind the Easmark app"
+  ],
+  "body": [
+    {
+      "heading": "What it does",
+      "paragraphs": [
+        "Easmark API is everything behind the Easmark app. It holds accounts, runs marking for theses and code, keeps each user's credits, takes payments and applies coupons, and reports usage. The Easmark page explains the product; this one is the service."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Django and Django REST Framework with PostgreSQL, JSON Web Tokens for sign-in, Stripe for payments, and Swagger for the documentation."
+      ]
+    }
+  ]
+}

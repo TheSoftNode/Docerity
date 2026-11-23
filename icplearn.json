@@ -1,0 +1,43 @@
+{
+  "description": "A learning platform on the Internet Computer that rewards progress. Learners sign in with Internet Identity, follow AI-guided courses, compete in knowledge battles and on leaderboards, earn NFT achievements, and can stake ICP so the incentive to learn the protocol and the incentive to hold it point the same way.",
+  "role": "Full-stack engineer in a team of three",
+  "timeline": "Jul 2025",
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "Internet Computer",
+    "Kybra",
+    "Python",
+    "Internet Identity"
+  ],
+  "contributions": [
+    "Built with two teammates over a week; the full-stack version is in my repo",
+    "Front end in Next.js and TypeScript: learning, dashboard, leaderboard, staking and neurons, community, profile and docs",
+    "Integrated the front end with the canister backend: Internet Identity sign-in and the backend's services through React hooks",
+    "The backend is a Python canister written with Kybra, with auth, models and services"
+  ],
+  "results": [
+    "About 28,000 lines across front end and canister",
+    "Sign-in with Internet Identity, no passwords"
+  ],
+  "body": [
+    {
+      "heading": "The idea",
+      "paragraphs": [
+        "Most crypto learning is either dry documentation or a quiz for a token. ICPLearn ties learning to real participation in the network: complete courses, prove what you know in head-to-head battles, collect achievements as NFTs, and stake ICP from the same app."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "A learner signs in with Internet Identity, so there is no password and their identity is a principal on the network. Courses adapt to how they are doing, assessments check answers as they go, and progress feeds a leaderboard. The staking and neurons pages let them put ICP to work from the same place they learn about it."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js and TypeScript on the front end, talking to a Python canister written with Kybra on the Internet Computer, with Internet Identity for sign-in."
+      ]
+    }
+  ]
+}
