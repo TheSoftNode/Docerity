@@ -26,7 +26,7 @@
   "contributions": [
     "Own SmartGuard end to end: the Windows agent, its module in the compliance platform, and the user guide",
     "Built PAN Scan: finds card numbers in files, SQLite databases and the saved-payment stores of Chrome, Edge and Firefox, shown masked, with quarantine or review in place",
-    "Built the live manual-scan console: quick, full and custom scans with pause, resume and stop, on the device and from the cloud",
+    "Built the live scan console: quick, full and custom scans with pause, resume and stop on the device and from the cloud; a live log with tabs, search, pinning and per-line actions; scan history; and export to reports, spreadsheets, SIEM and threat-intel formats",
     "Built the Windows service that runs isolation, quarantine and scans sent from the console, with every action in the audit trail",
     "Built the console's device-facing API (heartbeat, telemetry, command acknowledgements), playbook execution, indicators of compromise, tickets and scan control",
     "Built the console pages: devices, device detail, threat review, live scan progress, tickets, playbooks, indicators and events",
@@ -57,6 +57,19 @@
       "heading": "Finding card data",
       "paragraphs": [
         "PAN Scan looks for card numbers in files, SQLite databases and the saved-payment stores of Chrome, Edge and Firefox. Each browser stores cards differently, and naive matching flags every long number, so a finding needs nearby payment context before it counts. The scan runs off the request thread with real progress and a configurable scope, shows only masked numbers, and lets each finding be quarantined or reviewed where it is."
+      ]
+    },
+    {
+      "heading": "A scan you can watch",
+      "paragraphs": [
+        "Quick, full and custom scans can be started, paused, resumed and stopped from the computer or from the cloud console, and both always agree on where a scan is, through restarts, dropped connections and late results. While it runs, the window shows files checked, threats found and how many are new, files it couldn't read, the speed and an honest estimate of the time left. Stopping asks first and says how many files are still unchecked; anything already found stays on the list."
+      ]
+    },
+    {
+      "heading": "A log that explains itself",
+      "paragraphs": [
+        "Every scan keeps a log, its diary: who started, paused, resumed or stopped it, which folders it checked, and every threat it found. Tabs sort the lines into threats, warnings, actions, progress and pinned lines; search highlights every match; and any line can be copied, pinned, narrowed to its folder, excluded from future scans or opened for the threat's details, with quarantine right there.",
+        "Scan history lists every scan on the computer, what it found, how many threats are still open and who started it, the user or the security team, and opens any of them back at its full log. A scan can be exported as a report for managers, findings for a spreadsheet, the raw log, full data, SIEM events or threat indicators for other security tools, with a choice to strip fingerprints and paths before sharing outside the company. Keyboard shortcuts cover the lot."
       ]
     },
     {
