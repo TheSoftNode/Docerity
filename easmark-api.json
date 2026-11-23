@@ -10,7 +10,6 @@
     "OpenAI",
     "PostgreSQL",
     "Stripe",
-    "SendGrid",
     "JWT",
     "Google Cloud Run"
   ],
