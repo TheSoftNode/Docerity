@@ -36,6 +36,7 @@ import {
   type ProjectFieldErrors,
   type ProjectInput,
 } from "@/lib/content/project-schema";
+import { applyWriteUp } from "@/lib/content/project-writeup";
 
 const selectClass =
   "h-11 w-full rounded-xl border border-input bg-card px-3.5 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/15";
@@ -43,6 +44,67 @@ const selectClass =
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
   return <p className="text-xs text-destructive">{message}</p>;
+}
+
+/**
+ * Fills the words of a project from one pasted block, then leaves it to be
+ * read over and saved as usual. Nothing is saved by the paste itself.
+ */
+function PasteWriteUp({ project, onApply }: { project: ProjectInput; onApply: (next: ProjectInput) => void }) {
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState("");
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+
+  function apply() {
+    const result = applyWriteUp(project, text);
+    if (!result.ok) {
+      setMessage({ ok: false, text: result.error });
+      return;
+    }
+    onApply(result.project);
+    setText("");
+    setOpen(false);
+    setMessage({ ok: true, text: `Filled in: ${result.changed.join(", ")}. Read it over, then save.` });
+  }
+
+  return (
+    <div className="mt-5 rounded-2xl border border-border/80 bg-card/60 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm">
+          <span className="font-medium">Paste a write-up</span>
+          <span className="text-muted-foreground"> · fills in the words in one go; screenshots and the URL stay as they are</span>
+        </p>
+        <Button variant="ghost" size="sm" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
+          {open ? "Close" : "Paste"}
+        </Button>
+      </div>
+      {open ? (
+        <div className="mt-3 grid gap-2">
+          <Label htmlFor="writeup" className="sr-only">
+            Write-up block
+          </Label>
+          <Textarea
+            id="writeup"
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+            rows={8}
+            className="font-mono text-xs"
+            placeholder='{ "description": "…", "role": "…", "body": [ … ] }'
+          />
+          <div>
+            <Button size="sm" onClick={apply} disabled={!text.trim()}>
+              Fill in
+            </Button>
+          </div>
+        </div>
+      ) : null}
+      {message ? (
+        <p role="status" className={cn("mt-2 text-xs", message.ok ? "text-brand-teal" : "text-destructive")}>
+          {message.text}
+        </p>
+      ) : null}
+    </div>
+  );
 }
 
 /**
@@ -286,6 +348,15 @@ function ProjectEditor({
           {errors.form}
         </p>
       ) : null}
+
+      <PasteWriteUp
+        onApply={(next) => {
+          setProject(next);
+          setSaved(false);
+          setErrors({});
+        }}
+        project={project}
+      />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-10">
         <div className="min-w-0 space-y-6">
