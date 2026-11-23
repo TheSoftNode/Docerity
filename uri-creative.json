@@ -55,7 +55,7 @@
     {
       "heading": "Conversational Leads: from one sentence to a search plan",
       "paragraphs": [
-        "A business describes itself in a sentence: \"I run a fitness coaching business in Lagos and want people who need a personal trainer.\" An LLM, taught with worked examples across very different businesses, turns that into a search plan: direct keywords, implied keywords (the problems and frustrations that mean someone needs you), competitors, buying-signal phrases, and excluded keywords, the language of people on the other side of the sale. The plan is shown back to the user to edit before anything runs.",
+        "A business describes itself in a sentence: \"I run a fitness coaching business in Lagos and want people who need a personal trainer.\" An LLM, taught with worked examples across very different businesses, turns that into a search plan: direct keywords, implied keywords (the problems and frustrations that mean someone needs you), competitors, buying-signal phrases, and excluded keywords, the language of people on the other side of the sale.",
         "Keywords are then ordered so the strongest come first (a balance of short and long, direct and implied) and rewritten for each platform, because what finds a buyer on X is not what finds one on TikTok or in a Facebook group."
       ]
     },
@@ -70,13 +70,13 @@
       "heading": "Reading intent",
       "paragraphs": [
         "Every remaining post goes to the intent model in parallel. It classifies the post into one of five kinds of intent: direct (\"where can I buy sunscreen?\"), implied (\"Harmattan is making my skin dry\"), a problem (\"my acne won't go away\"), a comparison (\"CeraVe or La Roche-Posay?\"), or a complaint about a competitor. It returns an intent score, a relevance score to this business, an urgency flag and the sentiment, as structured output.",
-        "They combine into one qualification score: half intent, 35% relevance and 15% urgency. A lead qualifies above set thresholds on all three. If a search finds nothing at those thresholds, it relaxes them once and retries, so a quiet niche still gets its borderline leads, clearly marked as such."
+        "They combine into one qualification score: half intent, 35% relevance and 15% urgency. A lead qualifies above set thresholds on all three. If a search finds nothing at those thresholds, it relaxes them and retries, so a quiet niche still gets its borderline leads."
       ]
     },
     {
       "heading": "Nothing silently thrown away",
       "paragraphs": [
-        "A post that doesn't qualify isn't deleted. It goes to a spam view with the reason it was rejected, whether low intent, off-topic, too old, outside the target location, a duplicate or a seller. Users can see exactly what was filtered and why, which is what made them trust the leads that remained."
+        "A post that doesn't qualify isn't deleted. It goes to a spam view with the reason it was rejected, whether low buying intent, low relevance to the business, a weak problem-to-solution match, too old, outside the target location, or a duplicate. Users can see exactly what was filtered and why, which is what made them trust the leads that remained."
       ]
     },
     {
