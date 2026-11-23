@@ -1,0 +1,48 @@
+{
+  "description": "Verifiable skill credentials on Hedera. Each skill is a soulbound token that levels up or down as the holder's work is reviewed, a reputation oracle scores that work, and companies fund job pools that candidates join with the skills they hold. Your professional reputation travels with you instead of being re-proved at every interview.",
+  "role": "Lead engineer: built the smart contracts, the API and the web app",
+  "timeline": "Jul – Oct 2025",
+  "tags": ["Solidity", "Hedera", "Hardhat", "Python", "FastAPI", "LangChain", "Next.js", "TypeScript", "WalletConnect"],
+  "contributions": [
+    "Wrote the four core contracts in Solidity: SkillToken (non-transferable skill credentials with levels), ReputationOracle, TalentPool and Governance, with shared libraries for each",
+    "Wrote about 220 contract tests in Hardhat, then deployed all four contracts to Hedera testnet",
+    "Built the API in Python and FastAPI: about 75 endpoints for skills, job pools, reputation and governance",
+    "Built AI work evaluation with LangChain and Groq: submitted work is assessed and the result feeds the holder's reputation and skill level",
+    "Built the web app in Next.js and TypeScript: dashboard, skills, jobs, companies, governance, notifications and settings, with Hedera wallets through WalletConnect",
+    "Ported the contracts and front end to Solana as a second version"
+  ],
+  "results": [
+    "4 contracts live on Hedera testnet",
+    "About 220 contract tests",
+    "About 75 API endpoints",
+    "43 of the project's 49 commits are mine"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "A developer's reputation is scattered: a CV no one can check, references on one platform, ratings on another. Every new client or employer starts from zero and asks them to prove it again.",
+        "TalentChain Pro makes skills a record the developer owns and anyone can verify."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "Each skill a developer holds is a soulbound token: it cannot be sold or transferred, and it carries a level, so ReactJS level 3 can become level 4 after good work is reviewed. Work is submitted for evaluation; the AI evaluator assesses it, the reputation oracle records the score, and the skill token moves up or down to match.",
+        "Companies create job pools and fund them; developers join with the skill tokens a role asks for, and matches are made from verified skills rather than claims. Governance lets token holders vote on the skill frameworks for each field."
+      ]
+    },
+    {
+      "heading": "Contracts first",
+      "paragraphs": [
+        "The contracts are the source of truth, so I wrote them first and tested them hardest: four contracts with a library each, about 220 tests in Hardhat, then deployment to Hedera testnet. The API and the app read and write through them rather than keeping a separate copy of who holds what."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Solidity and Hardhat on Hedera for the contracts; Python, FastAPI, LangChain and Groq for the API and the AI evaluator; Next.js, TypeScript, Tailwind and WalletConnect for the app. A Solana version of the contracts and front end followed."
+      ]
+    }
+  ]
+}

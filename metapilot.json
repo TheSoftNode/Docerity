@@ -1,0 +1,55 @@
+{
+  "description": "Automates the routine parts of holding crypto and governance positions. A holder sets rules once, such as \"vote yes on proposals that pay rewards\" or \"buy when the price drops below this\", and MetaPilot watches for the conditions and acts on their behalf, within permissions they can revoke. Built first on Ethereum with MetaMask's delegation toolkit, then extended to Solana.",
+  "role": "Full-stack and smart-contract engineer: built the front end throughout, then the AI engine and Solana programs",
+  "timeline": "May – Oct 2025",
+  "tags": ["Next.js", "TypeScript", "MetaMask Delegation Toolkit", "Web3Auth", "Solana", "Anchor", "Rust", "Solana Pay"],
+  "contributions": [
+    "Built the front end for the first version: connecting a wallet, choosing DAOs and tokens to follow, and setting the rules MetaPilot acts on",
+    "Rebuilt it as a multi-chain app with Web3Auth: one social or wallet sign-in gives the user both an Ethereum and a Solana wallet",
+    "Built the AI engine in TypeScript: rule matching and sentiment scoring behind a plugin system, with caching, input sanitising and a test suite",
+    "Wrote four Solana programs in Rust with Anchor: DAO voting automation, token automation, a yield optimiser and a transaction scheduler",
+    "Added Solana Pay: QR payment requests for SOL, USDC and other SPL tokens",
+    "Wrote the deployment scripts and tracking for the programs across local and devnet clusters"
+  ],
+  "results": [
+    "Three versions in six months: Ethereum, multi-chain, then Solana-native",
+    "4 Solana programs in about 11,000 lines of Rust",
+    "About 41,000 lines of TypeScript in the front end",
+    "One sign-in for both Ethereum and Solana wallets"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Holding a governance token comes with chores: reading proposals and voting before deadlines, claiming rewards when they unlock, buying or selling when the price reaches a level you decided on weeks ago. Most holders miss most of them, and the ones who don't spend their evenings on it.",
+        "MetaPilot lets a holder decide once and have the chores done for them, without handing over their keys."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "A user connects, picks the DAOs and tokens they care about, and writes rules in plain terms: vote yes when a proposal includes rewards, claim when a reward unlocks, buy when a token falls below a price. MetaPilot watches proposals and prices, checks each event against the user's rules, and when one matches, acts on the user's behalf.",
+        "The authority to act is delegated, not given away. On Ethereum that is MetaMask's Delegation Toolkit (ERC-7710 and ERC-7715), which grants narrow, revocable permissions; on Solana it is the programs' own delegation instructions. The user can see and withdraw what MetaPilot is allowed to do at any time."
+      ]
+    },
+    {
+      "heading": "From one chain to two",
+      "paragraphs": [
+        "The first version was built with a teammate in a couple of weeks: I built the front end, he built the backend and the always-on agent that executes delegated actions. It proved the idea on Ethereum.",
+        "I then took it further on my own. Web3Auth replaced the wallet-only sign-in, so a user can sign in with Google or a wallet and get both an Ethereum and a Solana wallet from that one step. The Solana side became native: four Anchor programs for voting automation, token automation, yield strategies and scheduled transactions, and Solana Pay for payment requests by QR code."
+      ]
+    },
+    {
+      "heading": "The decision engine",
+      "paragraphs": [
+        "The AI engine decides whether an event matches a rule and how confident it is. It is deliberately simple at the core: explicit rules first, with sentiment scoring on proposal text as a second signal, so every action can be explained by the rule that triggered it. Analysers plug in, results are cached, and inputs are sanitised before they reach anything that acts on-chain. It comes with its own test suite covering the full voting flow."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js and TypeScript with Radix UI and Tailwind on the front end; Web3Auth, Wagmi and Solana Web3.js for wallets; MetaMask's Delegation Toolkit on Ethereum; Rust and Anchor for the Solana programs; Solana Pay for payments; and a TypeScript decision engine with Jest tests."
+      ]
+    }
+  ]
+}

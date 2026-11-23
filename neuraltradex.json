@@ -1,0 +1,39 @@
+{
+  "description": "Ready-made trading agents for individual crypto traders on NEAR. A trader picks a strategy, sets a budget and how much risk they will take, and the agent trades for them: a market-making agent that uses a price-prediction model, or a dollar-cost-averaging agent that buys on a schedule.",
+  "role": "Full-stack engineer: built the web app, the NEAR integration and the trading agents",
+  "timeline": "Mar 2025 (five days)",
+  "tags": ["Next.js", "TypeScript", "NEAR Protocol", "TensorFlow.js", "Node.js"],
+  "contributions": [
+    "Built the web app in Next.js and TypeScript: landing, dashboard, agents, trade history, docs and settings",
+    "Connected NEAR wallets through the NEAR Wallet Selector, including Ethereum wallets",
+    "Built the agent service in Node.js: a market-making agent and a dollar-cost-averaging agent, with a scheduler and a market-data service",
+    "Built the price-prediction model in TensorFlow.js that the market-making agent trades on",
+    "Wrote a small NEAR contract for the platform in the NEAR JavaScript SDK"
+  ],
+  "results": [
+    "Two working strategies: market making and dollar-cost averaging",
+    "Risk, budget, pair and frequency set by the trader, not by code",
+    "Built in five days"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Algorithmic trading is mostly available to people who can write and tune models. An individual trader who wants a disciplined strategy, such as buying a fixed amount every week or trading a spread with a stop-loss, either does it by hand or not at all."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "A trader connects a NEAR wallet, picks a strategy, and sets the pair, the budget, a risk level from 1 to 10, and how often to act. The dollar-cost-averaging agent then buys on that schedule. The market-making agent reads recent prices, asks the prediction model where the price is likely to go, and places buy or sell orders around the market price to earn the spread, within position limits and a stop-loss tied to the risk level.",
+        "Every trade shows on the dashboard and in the history, so the trader can see what their agent did and why."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "Next.js, TypeScript and Tailwind for the app; the NEAR Wallet Selector and NEAR's JavaScript SDK for wallets and the contract; Node.js for the agent service, with TensorFlow.js for the price model."
+      ]
+    }
+  ]
+}

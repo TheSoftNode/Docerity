@@ -1,0 +1,46 @@
+{
+  "description": "Tipping on Bitcoin's Stacks layer. A fan sends a creator STX straight from their wallet to a username, the platform takes a small fixed fee, and both sides earn reward points they can see. Built in a week with a teammate, on Stacks testnet.",
+  "role": "Full-stack engineer: built the web app and the API; a teammate wrote the Clarity contract",
+  "timeline": "Dec 2024 (one week)",
+  "tags": ["React", "TypeScript", "Stacks.js", "Clarity", "Node.js", "Express", "MongoDB"],
+  "contributions": [
+    "Built the web app in React and TypeScript: landing page, sending a tip, dashboard, history, rewards, verified users and settings",
+    "Connected it to the Stacks wallet and the tipping contract with Stacks Connect: a tip is a contract call the user confirms in their own wallet",
+    "Built quick-send and a confirmation step that shows the fee and what the recipient receives before anything is signed",
+    "Built the API in Node.js, Express and MongoDB: linking a wallet to an email, verifying the account, looking users up by wallet or email, and listing verified users",
+    "Added email notifications so a creator hears about a tip as it arrives"
+  ],
+  "results": [
+    "Built and shipped in seven days",
+    "Contract live on Stacks testnet with a 5% platform fee and rewards on tips of 1 STX and more",
+    "Tips go wallet to wallet; the platform never holds the money"
+  ],
+  "body": [
+    {
+      "heading": "The problem",
+      "paragraphs": [
+        "Paying a creator across borders usually costs more than the tip itself once a card network and a currency conversion take their share. A tip of a few dollars is not worth sending.",
+        "On Stacks, a tip can go straight from one wallet to another for a small, fixed and visible fee, and the record of who tipped whom is public."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "paragraphs": [
+        "A creator connects their wallet and links it to a username and email, which the API verifies. A fan finds them by name, enters an amount, and sees exactly what the creator will receive after the 5% platform fee before confirming in their own wallet.",
+        "The contract moves the tip, takes the fee, records the tip in its history, and adds reward points to both sides for tips of 1 STX or more. The creator gets an email when it lands. Each side's dashboard shows tips sent and received, rewards, and history."
+      ]
+    },
+    {
+      "heading": "Keeping the money on-chain",
+      "paragraphs": [
+        "The API never touches funds. It only knows who a wallet belongs to and whether that person is verified, so it can show a name rather than an address and send emails. Every tip is a contract call the sender signs themselves, which keeps the platform out of the money and makes every number on the dashboard checkable on the chain."
+      ]
+    },
+    {
+      "heading": "Built with",
+      "paragraphs": [
+        "React, TypeScript, Vite and Tailwind on the front end, with Stacks Connect and Stacks.js for wallets and contract calls. Node.js, Express and MongoDB for accounts and emails. The tipping contract is written in Clarity by my teammate."
+      ]
+    }
+  ]
+}
