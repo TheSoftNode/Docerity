@@ -64,6 +64,10 @@ export type FaqView = { question: string; answer: string };
 
 export type CapabilityView = { title: string; description: string; iconName: string };
 
+export type FigureView = { value: string; label: string };
+
+export type EvaluationHabitView = { title: string; description: string };
+
 export type ProcessStepView = {
   title: string;
   summary: string;

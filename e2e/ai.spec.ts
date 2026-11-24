@@ -17,6 +17,7 @@ test.describe("AI page", () => {
       "Built for real traffic, not a proof of concept.",
       "The part after the demo works.",
       "Picked per task, not one model for everything.",
+      "I also test the models, until they fail.",
       heading("homepage", "home-cta").replace(/\*/g, ""),
     ]) {
       await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
@@ -27,6 +28,14 @@ test.describe("AI page", () => {
     }
 
     expect(errors).toEqual([]);
+  });
+
+  test("the evaluation section shows its figures and method", async ({ page }) => {
+    await page.goto("/ai");
+    const section = page.locator("#evaluation");
+    await expect(section.getByText("150+", { exact: true })).toBeVisible();
+    await expect(section.getByRole("heading", { name: "Run it, don't read it", exact: true })).toBeVisible();
+    await expect(section.getByRole("heading", { name: "Verify every source", exact: true })).toBeVisible();
   });
 
   test("the router routes what a visitor types", async ({ page }) => {

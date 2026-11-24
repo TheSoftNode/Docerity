@@ -538,6 +538,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
         "eyebrow": "Models & platforms",
         "title": "Picked per task, not one model for everything.",
         "lede": "Each call goes to the model that fits it, weighing quality against cost instead of paying top price for every request."
+      },
+      "ai-evaluation": {
+        "eyebrow": "",
+        "title": "I also test the models, until they fail.",
+        "lede": "Alongside building with AI, I write and review the tasks used to evaluate frontier models: hard problems, answer keys a grader can apply, and evidence behind every checkpoint. The work is under NDA, so it is described here by method rather than by client."
       }
     },
     projects: aiProjects.map(({ Icon, tags, ...rest }) => ({
@@ -550,6 +555,43 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       iconName: nameForIcon(Icon),
     })),
     models: [...aiModels],
+    evaluationFigures: [
+      { value: "8", label: "tasks that stumped frontier models, on two projects still running" },
+      { value: "42", label: "criteria in one research answer key, each with its evidence" },
+      { value: "150+", label: "technical model responses evaluated by running the code" },
+      { value: "207+", label: "training samples designed, with rubrics and difficulty bands" },
+    ],
+    evaluationMethod: [
+      {
+        title: "Run it, don't read it",
+        description: "Every claim about code is checked by running it: in a terminal, in GitHub Codespaces or in a Colab notebook. An answer that reads well and fails to run is marked wrong.",
+      },
+      {
+        title: "Verify every source",
+        description: "Each factual checkpoint is traced to the original paper, documentation or dataset, with the supporting passage quoted. A real citation that does not say what the answer claims is an error, not a near miss.",
+      },
+      {
+        title: "Read for the small things",
+        description: "Units, versions, shapes, edge cases, an off-by-one in a loop, a theorem applied outside its conditions. Most model failures are small and confident, so the review goes line by line.",
+      },
+      {
+        title: "Give a verdict, with the reasons",
+        description: "Every evaluation ends in a clear verdict and the evidence for it, written so another reviewer can reach the same score on their own.",
+      },
+      {
+        title: "Build tasks around one real weakness",
+        description: "A task targets one failure: an invented citation, a wrong premise in a request, an unsafe change, a fast kernel with the wrong numbers. Its answer key accepts every defensible answer and nothing that only sounds right.",
+      },
+    ],
+    evaluationAreas: [
+      "Deep-research evaluation",
+      "Agentic coding on TPUs",
+      "Engineering judgment in real repos",
+      "Code review, as reviewer and lead",
+      "RLHF and golden annotations",
+      "Training-data design",
+      "Repository comprehension",
+    ],
   },
 
   web3: {

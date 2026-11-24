@@ -6,6 +6,7 @@ import { ContactBand } from "@/components/sections/contact-band/contact-band";
 import { AiHero } from "@/components/sections/ai-page/ai-hero";
 import { AiSystems } from "@/components/sections/ai-page/ai-systems";
 import { AiCapabilities } from "@/components/sections/ai-page/ai-capabilities";
+import { AiEvaluation } from "@/components/sections/ai-page/ai-evaluation";
 
 /* Read per request rather than exported as a constant, so the title and
    description a search result shows can be edited without a deploy. */
@@ -23,6 +24,7 @@ export default function AiPage() {
         <AiHero />
         <AiSystems />
         <AiCapabilities />
+        <AiEvaluation />
         <ContactBand />
       </main>
       <SiteFooter />

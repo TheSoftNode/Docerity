@@ -921,6 +921,7 @@ export const BLOCKS: Block[] = [
         { key: "ai-projects", label: "AI work" },
         { key: "ai-capabilities", label: "Capabilities" },
         { key: "ai-models", label: "Models" },
+        { key: "ai-evaluation", label: "How I test AI", hint: "The eyebrow is not shown." },
       ]),
       {
         kind: "list",
@@ -957,6 +958,37 @@ export const BLOCKS: Block[] = [
         ],
       },
       { kind: "strings", name: "models", label: "Models and services", max: 16, placeholder: "GPT-4o" },
+      {
+        kind: "list",
+        name: "evaluationFigures",
+        label: "How I test AI: figures",
+        description: "The numbers beside the heading. Name no client, model or project codename: the work is under NDA.",
+        itemNoun: "figure",
+        max: 4,
+        fields: [
+          { name: "value", label: "Figure", kind: "text", required: true, maxLength: 12, placeholder: "150+" },
+          { name: "label", label: "What it counts", kind: "text", required: true, maxLength: 80 },
+        ],
+      },
+      {
+        kind: "list",
+        name: "evaluationMethod",
+        label: "How I test AI: method",
+        description: "How the work is done, one habit per row.",
+        itemNoun: "habit",
+        max: 6,
+        fields: [
+          { name: "title", label: "Title", kind: "text", required: true, maxLength: 80 },
+          DESCRIPTION,
+        ],
+      },
+      {
+        kind: "strings",
+        name: "evaluationAreas",
+        label: "How I test AI: kinds of work",
+        max: 10,
+        placeholder: "Deep-research evaluation",
+      },
     ],
   },
 
