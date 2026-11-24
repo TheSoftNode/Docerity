@@ -63,6 +63,8 @@ function revalidateFor(key: BlockKey): void {
   if (key === "clients" || key === "explainers" || key === "mentorship") paths.add("/");
   /* Its link labels are shown on the Projects and contact pages. */
   if (key === "legal") paths.add("/terms");
+  /* The portfolio at /theo is built from the About block too. */
+  if (key === "about") paths.add("/theo");
   if (key === "how-we-work") {
     paths.add("/projects");
     paths.add("/contact");
