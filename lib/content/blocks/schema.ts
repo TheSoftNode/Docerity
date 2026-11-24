@@ -157,9 +157,8 @@ const HEADING_FIELDS: Field[] = [
     name: "eyebrow",
     label: "Eyebrow",
     kind: "text",
-    required: true,
     maxLength: 60,
-    hint: "The small line above the heading.",
+    hint: "The small line above the heading. Optional: most sections read better without one.",
   },
   {
     name: "title",

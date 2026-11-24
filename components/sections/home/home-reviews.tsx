@@ -48,7 +48,7 @@ async function HomeReviews() {
               id="home-reviews-title"
               className="ld-display text-[22px] font-bold tracking-[-0.02em] text-[var(--ld-ink)]"
             >
-              {heading.eyebrow}
+              {heading.eyebrow || "What people say"}
             </h2>
 
             {featured ? (
