@@ -85,7 +85,7 @@ export default async function PortfolioPage() {
     .sort((a, b) => a.position - b.position)
     .slice(0, 4)
     .map((entry) => entry.role);
-  const facts: FactView[] = [...about.facts, { value: String(work.projects.length), label: "Shipped projects", since: "every one listed on the projects page" }];
+  const facts: FactView[] = [...about.facts, { value: String(work.projects.length), label: "Shipped projects", since: "each with a write-up and screenshots" }];
 
   return (
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">

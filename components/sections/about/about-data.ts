@@ -46,7 +46,7 @@ export const facts = [
   {
     value: "6+",
     label: "Years building production software",
-    since: "the figure every CV leads with",
+    since: "since 2020",
   },
   /* Three, not four. Every one of the CVs says "won 3 blockchain hackathons";
      the four came from the old portfolio page and was never corrected. */
@@ -54,7 +54,7 @@ export const facts = [
   {
     value: String(projects.length),
     label: "Shipped projects",
-    since: "every one listed on the projects page",
+    since: "each with a write-up and screenshots",
   },
   {
     value: "7",
@@ -150,7 +150,7 @@ export const experience = [
     ],
   },
   {
-    role: "Fullstack Software Engineer",
+    role: "Full-Stack Software Engineer",
     org: "HitoAI",
     period: "2024",
     summary:

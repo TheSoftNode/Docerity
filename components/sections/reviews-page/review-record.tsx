@@ -134,7 +134,7 @@ function ReviewRecord({ reviews, eyebrow, title }: { reviews: ShownReview[]; eye
           </ul>
         ) : (
           <p className="mt-10 rounded-3xl border border-dashed border-[var(--ld-line-2)] p-10 text-center text-[var(--ld-text-muted)]">
-            The record starts with the first review. It appears here once it has been read.
+            No reviews yet. Yours could be the first.
           </p>
         )}
       </div>

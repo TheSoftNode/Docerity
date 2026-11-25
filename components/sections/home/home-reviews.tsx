@@ -89,8 +89,8 @@ async function HomeReviews() {
                   ”
                 </p>
                 <p className="mt-4 max-w-[35rem] text-base leading-relaxed text-[var(--ld-text-2)]">
-                  Every review is written by a real client or mentee and checked before it goes up.
-                  We would rather leave this empty than fill it with quotes nobody said.
+                  Worked with me, or learned with me? Tell people how it went. Every review comes from a real client or
+                  mentee.
                 </p>
               </>
             )}

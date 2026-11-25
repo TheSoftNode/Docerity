@@ -37,7 +37,7 @@ export default async function AboutPage() {
 
   /* The shipped-project count is counted from what is published, not typed,
      so it can't drift from the projects page. */
-  const facts: FactView[] = [{ value: String(work.projects.length), label: "Shipped projects", since: "every one listed on the projects page" }, ...about.facts];
+  const facts: FactView[] = [{ value: String(work.projects.length), label: "Shipped projects", since: "each with a write-up and screenshots" }, ...about.facts];
 
   return (
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">

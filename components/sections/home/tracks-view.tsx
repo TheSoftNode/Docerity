@@ -87,7 +87,7 @@ function TracksView({ serviceLines, pair }: Props) {
           );
         })}
         <p className="mt-auto border-t border-[var(--ld-line-2)] pt-6 text-[15px] text-[var(--ld-text-muted)]">
-          Select a track to see what is inside.
+          Pick one to see what&rsquo;s included.
         </p>
       </div>
 

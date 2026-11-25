@@ -69,7 +69,7 @@ test.describe("Reviews page", () => {
     page,
   }) => {
     await page.goto("/reviews");
-    await page.getByRole("button", { name: /Send for reading/ }).click();
+    await page.getByRole("button", { name: /Send review/ }).click();
 
     await expect(page.getByText("Please tell me your name.")).toBeVisible();
     await expect(page.getByText("Pick a rating from 1 to 5.")).toBeVisible();

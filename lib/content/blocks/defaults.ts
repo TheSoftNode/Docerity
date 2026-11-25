@@ -345,7 +345,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "about-story": {
         "eyebrow": "The story",
         "title": "Built first, explained second, taught third.",
-        "lede": "The studio is three things that turned out to be one skill. Read it in the founder's own words."
+        "lede": "How I got here, from taking things apart as a kid to building, explaining and teaching software."
       },
       "about-team": {
         "eyebrow": "The team",
@@ -355,7 +355,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "about-experience": {
         "eyebrow": "Experience",
         "title": "What shipped, and where.",
-        "lede": "Every role, newest first. Open one for its release notes."
+        "lede": "Every role, newest first. Open one to see what I did there."
       },
       "about-toolkit": {
         "eyebrow": "Toolkit",
@@ -365,7 +365,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "about-credentials": {
         "eyebrow": "Credentials",
         "title": "Studied, certified, and checkable.",
-        "lede": "The certificates themselves, not a line claiming them. Pick one to look at it properly."
+        "lede": "Pick any certificate to see the full scan."
       },
       "studio-build": {
         "eyebrow": "",
@@ -390,12 +390,12 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "portfolio-hero": {
         "eyebrow": "Portfolio",
         "title": "Theophilus Uchechukwu, *senior full-stack engineer.*",
-        "lede": "Banking middleware, AI products and smart contracts, shipped for clients across three continents. Every branch of the career below merged into Docerity."
+        "lede": "I build AI-powered products across web, mobile, Web3 and security: CTO at URI Social, senior software engineer at SmartComply and lead engineer at Coretrix. Every path below led to Docerity, the studio I run."
       },
       "portfolio-work": {
         "eyebrow": "Selected work",
         "title": "Selected work.",
-        "lede": "A few of the projects I've led and built. Every one is written up on the projects page."
+        "lede": "A few of the projects I've led and built. Open any of them for the full story."
       }
     },
     founder: {
@@ -444,8 +444,8 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       },
       "mentorship-team": {
         "eyebrow": "Who reviews your code",
-        "title": "A team that ships, not a lone tutor.",
-        "lede": "Your reviews come from engineers on the Docerity team, the same people building the systems on our projects page. You keep one lead for continuity, and get a specialist when the work calls for one."
+        "title": "Reviewed by people who ship.",
+        "lede": "Your code is reviewed by engineers who build production systems for a living, the kind of work on the projects page. You keep one lead for continuity, and get a specialist when the work calls for one."
       },
       "mentorship-testimonials": {
         "eyebrow": "From mentees",
@@ -478,7 +478,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "work-hero": {
         "eyebrow": "Selected Work",
         "title": "Software built for what happens after launch.",
-        "lede": "A few production systems, picked for the problems they actually solved, plus how projects like these usually go, start to finish."
+        "lede": "Products built for real users and real traffic, and how a project goes from the first call to launch."
       },
       "work-capabilities": {
         "eyebrow": "What we build",
@@ -488,7 +488,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "work-showcase": {
         "eyebrow": "Selected work",
         "title": "Everything shipped, and where it runs.",
-        "lede": "Every one of them live or in active build. Filter by what you came to see."
+        "lede": "From live products to hackathon builds. Filter by what you're looking for."
       },
       "work-process": {
         "eyebrow": "How it works",
@@ -522,7 +522,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "ai-hero": {
         "eyebrow": "AI & LLM Engineering",
         "title": "AI systems that run in production, not a demo.",
-        "lede": "LLM routing, RAG, multi-modal pipelines, and conversational agents, processing millions of real requests, plus the model evaluation work behind training data that actually improves a model."
+        "lede": "LLM routing, RAG, multimodal pipelines and conversational agents handling millions of real requests, plus evaluation work on frontier models."
       },
       "ai-projects": {
         "eyebrow": "Systems",
@@ -542,7 +542,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "ai-evaluation": {
         "eyebrow": "",
         "title": "I also test the models, until they fail.",
-        "lede": "Alongside building with AI, I write and review the tasks used to evaluate frontier models: hard problems, answer keys a grader can apply, and evidence behind every checkpoint. The work is under NDA, so it is described here by method rather than by client."
+        "lede": "Alongside building with AI, I write and review the tasks used to evaluate frontier models: hard problems, answer keys a grader can apply, and evidence behind every checkpoint. The work is under NDA, so here's how I do it rather than who it's for."
       }
     },
     projects: aiProjects.map(({ Icon, tags, ...rest }) => ({
@@ -599,7 +599,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "web3-hero": {
         "eyebrow": "Web3 & Blockchain",
         "title": "Hackathon-winning dApps, shipped on real chains.",
-        "lede": "Smart contract systems, DeFi automation, and real-world asset tokenization across Solana, Stacks, and beyond. Three hackathon wins came out of it, and the contracts are live."
+        "lede": "Smart contract systems, DeFi automation, and real-world asset tokenization across Solana, Stacks, and beyond. Three hackathons won along the way."
       },
       "web3-projects": {
         "eyebrow": "Projects",
@@ -657,7 +657,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "contact": {
         "eyebrow": "New project",
         "title": "Tell us what you're building.",
-        "lede": "A few details now save a lot of back-and-forth later. Every message is read by a person who could do the work."
+        "lede": "A few details now save a lot of back-and-forth later. I read every message myself."
       },
       "contact-mentorship": {
         "eyebrow": "Mentorship · taking new mentees",
@@ -835,11 +835,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "reviews-hero": {
         "eyebrow": "Record · Reviews",
         "title": "The people who *paid for the work*, in their words.",
-        "lede": "Clients and the engineers we have mentored. Nothing here was written by us, and nothing appears until it has been read."
+        "lede": "From clients and the engineers I've mentored, in their own words. Each one is checked before it goes up."
       },
       "reviews-record": {
         "eyebrow": "Every one read first",
-        "title": "Nothing here was written by us.",
+        "title": "Every review comes from a real client or mentee.",
         "lede": ""
       },
       "reviews-form": {
@@ -849,7 +849,7 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       }
     },
     empty: {
-      lede: "Clients and the engineers we have mentored. There is nothing here yet, which is the honest state of a page that only publishes what people actually send.",
+      lede: "From clients and the engineers I've mentored. Nothing yet, so yours could be the first.",
       formTitle: "Worked together? Be the first.",
     },
     process: [
