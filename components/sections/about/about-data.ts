@@ -82,7 +82,7 @@ export const facts = [
 */
 export const experience = [
   {
-    role: "Senior Full-Stack Software Engineer",
+    role: "Senior Software Engineer",
     org: "SmartComply",
     period: "2026 – present",
     summary:
@@ -110,7 +110,7 @@ export const experience = [
     ],
   },
   {
-    role: "Lead Full-Stack Software Engineer",
+    role: "Chief Technology Officer",
     org: "URI Creative",
     period: "2025 – present",
     summary:
