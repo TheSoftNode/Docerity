@@ -13,7 +13,7 @@ function figure(page: Page, label: string) {
 }
 const shipped = (page: Page) => figure(page, "Shipped projects");
 
-test.describe("About page", () => {
+test.describe("Portfolio page", () => {
   test("renders every section with no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (message) => {
@@ -21,9 +21,9 @@ test.describe("About page", () => {
     });
     page.on("pageerror", (error) => errors.push(error.message));
 
-    await page.goto("/about");
+    await page.goto("/theo");
 
-    await expect(page.getByRole("heading", { level: 1, name: heading("about", "about-hero").replace(/\*/g, "") })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: heading("about", "portfolio-hero").replace(/\*/g, "") })).toBeVisible();
     for (const entry of ["about-story", "about-experience", "about-toolkit", "about-credentials"]) {
       await expect(page.getByRole("heading", { level: 2, name: heading("about", entry), exact: true })).toBeVisible();
     }
@@ -34,7 +34,7 @@ test.describe("About page", () => {
 
   test("the graph has a branch for every role, and picking one shows its commit", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/about");
+    await page.goto("/theo");
 
     const roles = page.getByRole("list", { name: "Roles, oldest first" }).getByRole("button");
     await expect(roles).toHaveCount(about.experience.length);
@@ -52,38 +52,40 @@ test.describe("About page", () => {
   });
 
   test("every headline figure is on the page, the project count included", async ({ page }) => {
-    await page.goto("/about");
+    await page.goto("/theo");
     for (const fact of about.facts) await expect(figure(page, fact.label)).toHaveText(fact.value);
     await expect(shipped(page)).toHaveText(/^\d+$/);
   });
 
   test("the story opens on its first paragraphs and reads on in full", async ({ page }) => {
-    await page.goto("/about");
+    await page.goto("/theo");
     const story = page.getByRole("article", { name: "The story, in the founder's words" });
+    /* The story's own paragraphs, not the byline (name and role) above them. */
+    const storyText = story.locator("p").filter({ hasNotText: about.founder.name });
     const blocks = storyBlocks(about.fullStory?.body ?? "");
     const paragraphs = blocks.filter((block) => block.kind === "paragraph");
     await expect(story.getByRole("heading", { name: about.fullStory?.title })).toBeVisible();
     await expect(story.getByText(about.founder.name)).toBeVisible();
-    await expect(story.locator("p")).toHaveCount(STORY_OPENING);
+    await expect(storyText).toHaveCount(STORY_OPENING);
 
     const more = story.getByRole("button", { name: "Read the full story" });
     await expect(more).toHaveAttribute("aria-expanded", "false");
     await more.click();
-    await expect(story.locator("p")).toHaveCount(paragraphs.length);
+    await expect(storyText).toHaveCount(paragraphs.length);
     await expect(story.getByText(paragraphs[paragraphs.length - 1].text.slice(0, 40))).toBeVisible();
 
     await story.getByRole("button", { name: "Back to the top" }).click();
-    await expect(story.locator("p")).toHaveCount(STORY_OPENING);
+    await expect(storyText).toHaveCount(STORY_OPENING);
     await expect(page.getByText(`"${about.founder.based}"`)).toBeVisible();
   });
 
   test("with no team added, the team section is not shown", async ({ page }) => {
-    await page.goto("/about");
+    await page.goto("/theo");
     await expect(page.locator("#team")).toHaveCount(0);
   });
 
   test("the changelog filters, and each role opens to its notes", async ({ page }) => {
-    await page.goto("/about");
+    await page.goto("/theo");
     const changelog = page.locator("#changelog");
     const roles = changelog.getByRole("heading", { level: 3 });
     await expect(roles).toHaveCount(about.experience.length);
@@ -105,7 +107,7 @@ test.describe("About page", () => {
   });
 
   test("picking a part of the system prints its stack", async ({ page }) => {
-    await page.goto("/about");
+    await page.goto("/theo");
     const toolkit = page.locator("#toolkit");
     const backend = about.skillGroups.find((group) => group.title === "Backend")!;
 
@@ -117,7 +119,7 @@ test.describe("About page", () => {
   });
 
   test("certificates show their real scans, and the viewer follows the pick", async ({ page, request }) => {
-    await page.goto("/about");
+    await page.goto("/theo");
     const credentials = page.locator("#credentials");
     const scanned = about.certifications.filter((cert) => cert.image);
 
@@ -126,7 +128,8 @@ test.describe("About page", () => {
 
     const target = scanned[1];
     await wall.filter({ hasText: target.name }).click();
-    const viewer = credentials.locator(`img[alt="${target.name} certificate"]`);
+    /* By role, which skips the hidden full-screen copy of the same scan. */
+    const viewer = credentials.getByRole("img", { name: `${target.name} certificate`, exact: true });
     await expect(viewer).toBeVisible();
 
     /*
@@ -139,7 +142,7 @@ test.describe("About page", () => {
     const response = await request.get(url.searchParams.get("url") ?? url.pathname);
     expect(response.status()).toBe(200);
 
-    await expect(credentials.getByText(about.education[3].qualification)).toBeVisible();
+    await expect(credentials.getByText(about.education[3].qualification).filter({ visible: true }).first()).toBeVisible();
   });
 
   test("the hero has no background grid", async ({ page }) => {
@@ -149,7 +152,7 @@ test.describe("About page", () => {
       wireframe. This asserts it stays gone, since it is the kind of thing
       that gets reintroduced as "texture".
     */
-    await page.goto("/about");
+    await page.goto("/theo");
 
     const hasTiledGradient = await page
       .locator("section")
@@ -182,13 +185,14 @@ test.describe("About page", () => {
       phone numbers. On a company site those invite spam and belong nowhere
       but the contact route, so their absence is asserted rather than assumed.
     */
-    await page.goto("/about");
+    await page.goto("/theo");
     const body = await page.locator("body").innerText();
 
     expect(body).not.toContain("9135");
     expect(body).not.toContain("9038");
     expect(body).not.toMatch(/born on/i);
-    expect(body).not.toMatch(/whatsapp/i);
+    /* A WhatsApp contact, not the word: "Jane on WhatsApp" is a project name. */
+    expect(body).not.toMatch(/wa\.me|whatsapp\s*(number|:|\+|\d)/i);
   });
 
   test("the project count matches the work page", async ({ page }) => {
@@ -201,14 +205,14 @@ test.describe("About page", () => {
     await page.locator("#showcase").scrollIntoViewIfNeeded();
     const actual = await page.locator("#showcase h3 a").count();
 
-    await page.goto("/about");
+    await page.goto("/theo");
     await expect(shipped(page)).toHaveText(String(actual));
   });
 
   test("layout does not overflow horizontally at narrow widths", async ({ page }) => {
     for (const width of [320, 375, 768, 1024]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto("/about");
+      await page.goto("/theo");
 
       const { scrollWidth, clientWidth } = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,
