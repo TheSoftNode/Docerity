@@ -60,20 +60,22 @@ test.describe("Portfolio page", () => {
   test("the story opens on its first paragraphs and reads on in full", async ({ page }) => {
     await page.goto("/theo");
     const story = page.getByRole("article", { name: "The story, in the founder's words" });
+    /* The story's own paragraphs, not the byline (name and role) above them. */
+    const storyText = story.locator("p").filter({ hasNotText: about.founder.name });
     const blocks = storyBlocks(about.fullStory?.body ?? "");
     const paragraphs = blocks.filter((block) => block.kind === "paragraph");
     await expect(story.getByRole("heading", { name: about.fullStory?.title })).toBeVisible();
     await expect(story.getByText(about.founder.name)).toBeVisible();
-    await expect(story.locator("p")).toHaveCount(STORY_OPENING);
+    await expect(storyText).toHaveCount(STORY_OPENING);
 
     const more = story.getByRole("button", { name: "Read the full story" });
     await expect(more).toHaveAttribute("aria-expanded", "false");
     await more.click();
-    await expect(story.locator("p")).toHaveCount(paragraphs.length);
+    await expect(storyText).toHaveCount(paragraphs.length);
     await expect(story.getByText(paragraphs[paragraphs.length - 1].text.slice(0, 40))).toBeVisible();
 
     await story.getByRole("button", { name: "Back to the top" }).click();
-    await expect(story.locator("p")).toHaveCount(STORY_OPENING);
+    await expect(storyText).toHaveCount(STORY_OPENING);
     await expect(page.getByText(`"${about.founder.based}"`)).toBeVisible();
   });
 
@@ -126,7 +128,8 @@ test.describe("Portfolio page", () => {
 
     const target = scanned[1];
     await wall.filter({ hasText: target.name }).click();
-    const viewer = credentials.locator(`img[alt="${target.name} certificate"]`);
+    /* By role, which skips the hidden full-screen copy of the same scan. */
+    const viewer = credentials.getByRole("img", { name: `${target.name} certificate`, exact: true });
     await expect(viewer).toBeVisible();
 
     /*
@@ -188,7 +191,8 @@ test.describe("Portfolio page", () => {
     expect(body).not.toContain("9135");
     expect(body).not.toContain("9038");
     expect(body).not.toMatch(/born on/i);
-    expect(body).not.toMatch(/whatsapp/i);
+    /* A WhatsApp contact, not the word: "Jane on WhatsApp" is a project name. */
+    expect(body).not.toMatch(/wa\.me|whatsapp\s*(number|:|\+|\d)/i);
   });
 
   test("the project count matches the work page", async ({ page }) => {
