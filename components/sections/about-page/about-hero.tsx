@@ -21,13 +21,10 @@ function AboutHero({
   facts,
   portrait,
   current = [],
-  ongoing = [],
   children,
 }: {
   /** The roles held now, for the "Currently" card beside the heading. */
   current?: CurrentRole[];
-  /** Other ongoing work, named under the card. */
-  ongoing?: string[];
   children?: React.ReactNode;
   /** The founder's photo, beside the name. */
   portrait?: string;
@@ -61,7 +58,7 @@ function AboutHero({
           ) : null}
           {children ? <div className="ld-up ld-delay-3">{children}</div> : null}
         </div>
-        <CurrentRoles roles={current} more={ongoing} />
+        <CurrentRoles roles={current} />
         </div>
 
         {facts.length > 0 ? (
