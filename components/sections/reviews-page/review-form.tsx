@@ -72,7 +72,7 @@ function Field({
  * trip and again on the server, which is the authority. A photo that fails to
  * upload does not fail the review.
  */
-function ReviewForm({ submitLabel = "Send for reading" }: { submitLabel?: string }) {
+function ReviewForm({ submitLabel = "Send review" }: { submitLabel?: string }) {
   const id = useId();
   const [rating, setRating] = useState(0);
   const [kind, setKind] = useState<ReviewKind>("client");
@@ -421,7 +421,7 @@ function ReviewForm({ submitLabel = "Send for reading" }: { submitLabel?: string
       ) : null}
 
       <div className="flex flex-col gap-3.5 border-t border-[var(--ld-line)] pt-5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[13.5px] text-[var(--ld-text-muted)]">Reviews are read before they appear. Nothing goes up automatically.</p>
+        <p className="text-[13.5px] text-[var(--ld-text-muted)]">Every review is checked before it goes up.</p>
         <button
           type="submit"
           disabled={busy}
