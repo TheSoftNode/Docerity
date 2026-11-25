@@ -4,6 +4,7 @@ import type { SectionHeading } from "@/lib/content/blocks/source";
 import type { EducationView, ExperienceView, FactView } from "@/lib/content/blocks/views";
 import { TitlePieces } from "@/components/sections/mentorship-page/title-pieces";
 import { BranchGraph } from "@/components/sections/about-page/branch-graph";
+import { CurrentRoles, type CurrentRole } from "@/components/sections/about-page/current-roles";
 import { initLabel, lanesFor } from "@/components/sections/about-page/about-content";
 
 /**
@@ -19,8 +20,11 @@ function AboutHero({
   education,
   facts,
   portrait,
+  current = [],
   children,
 }: {
+  /** The roles held now, for the "Currently" card beside the heading. */
+  current?: CurrentRole[];
   children?: React.ReactNode;
   /** The founder's photo, beside the name. */
   portrait?: string;
@@ -34,6 +38,7 @@ function AboutHero({
   return (
     <section className="relative -mt-[76px] overflow-hidden bg-[radial-gradient(900px_520px_at_92%_30%,rgb(255_122_89/0.07),transparent_60%),radial-gradient(1200px_700px_at_50%_120%,rgb(28_58_140/0.55),transparent_60%),var(--ld-ink)] pt-[128px] text-[var(--ld-paper)]">
       <div className="doc-shell relative">
+        <div className="grid items-end gap-[clamp(28px,4vw,64px)] lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
         <div className="max-w-[46rem]">
           {portrait ? (
             <Image
@@ -52,6 +57,8 @@ function AboutHero({
             <p className="ld-up ld-delay-3 mt-5 max-w-[38rem] text-[clamp(15.5px,1.25vw,17.5px)] leading-relaxed text-[var(--ld-muted)]">{heading.lede}</p>
           ) : null}
           {children ? <div className="ld-up ld-delay-3">{children}</div> : null}
+        </div>
+        <CurrentRoles roles={current} />
         </div>
 
         {facts.length > 0 ? (
