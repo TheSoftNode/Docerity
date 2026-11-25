@@ -1,0 +1,121 @@
+
+Running 46 tests using 2 workers
+
+[1/46] [chromium] › e2e/about.spec.ts:17:7 › Portfolio page › renders every section with no console errors
+[2/46] [chromium] › e2e/about.spec.ts:35:7 › Portfolio page › the graph has a branch for every role, and picking one shows its commit
+[3/46] [chromium] › e2e/about.spec.ts:54:7 › Portfolio page › every headline figure is on the page, the project count included
+[4/46] [chromium] › e2e/about.spec.ts:60:7 › Portfolio page › the story opens on its first paragraphs and reads on in full
+[5/46] [chromium] › e2e/about.spec.ts:82:7 › Portfolio page › with no team added, the team section is not shown
+[6/46] [chromium] › e2e/about.spec.ts:87:7 › Portfolio page › the changelog filters, and each role opens to its notes
+[7/46] [chromium] › e2e/about.spec.ts:109:7 › Portfolio page › picking a part of the system prints its stack
+[8/46] [chromium] › e2e/about.spec.ts:121:7 › Portfolio page › certificates show their real scans, and the viewer follows the pick
+[9/46] [chromium] › e2e/about.spec.ts:148:7 › Portfolio page › the hero has no background grid
+[10/46] [chromium] › e2e/about.spec.ts:173:7 › Portfolio page › navbar 'About' link navigates to the page
+[11/46] [chromium] › e2e/about.spec.ts:182:7 › Portfolio page › does not expose personal contact details or date of birth
+[12/46] [chromium] › e2e/about.spec.ts:198:7 › Portfolio page › the project count matches the work page
+[13/46] [chromium] › e2e/about.spec.ts:212:7 › Portfolio page › layout does not overflow horizontally at narrow widths
+[14/46] [chromium] › e2e/ai.spec.ts:6:7 › AI page › renders all sections with no console errors
+[15/46] [chromium] › e2e/ai.spec.ts:33:7 › AI page › the evaluation section shows its figures and method
+[16/46] [chromium] › e2e/ai.spec.ts:41:7 › AI page › the router routes what a visitor types
+[17/46] [chromium] › e2e/ai.spec.ts:55:7 › AI page › the examples fill the request and are marked as chosen
+[18/46] [chromium] › e2e/ai.spec.ts:64:7 › AI page › navbar 'AI' link navigates to the dedicated page
+[19/46] [chromium] › e2e/ai.spec.ts:71:7 › AI page › 'see the systems' scrolls to them
+[20/46] [chromium] › e2e/contact.spec.ts:4:7 › Contact page › renders with no console errors
+[21/46] [chromium] › e2e/contact.spec.ts:25:7 › Contact page › the homepage's header, mentorship and contact links all navigate here
+[22/46] [chromium] › e2e/contact.spec.ts:46:7 › Contact page › the shared closing call to action navigates here
+[23/46] [chromium] › e2e/contact.spec.ts:53:7 › Contact page › the form asks a mentee different questions from a client
+[24/46] [chromium] › e2e/contact.spec.ts:72:7 › Contact page › an unknown type opens on a software project
+[25/46] [chromium] › e2e/contact.spec.ts:77:7 › Contact page › a mentorship application posts its starting point and code link, then shows a receipt
+[26/46] [chromium] › e2e/contact.spec.ts:115:7 › Contact page › a code link that is not a link is caught before sending
+[27/46] [chromium] › e2e/contact.spec.ts:125:7 › Contact page › a server-side field error is shown against its field
+[28/46] [chromium] › e2e/home.spec.ts:13:7 › Tracks › is a tab set, with Build selected first
+[29/46] [chromium] › e2e/home.spec.ts:27:7 › Tracks › switches panels by click and by arrow keys
+[30/46] [chromium] › e2e/home.spec.ts:51:7 › Tracks › each panel leads somewhere
+[31/46] [chromium] › e2e/home.spec.ts:65:7 › Contact › offers three ways in, with no console errors
+[32/46] [chromium] › e2e/mentorship.spec.ts:10:7 › Mentorship › draws a step for every stage, with no console errors
+[33/46] [chromium] › e2e/mentorship.spec.ts:33:7 › Mentorship › choosing a step describes it and marks it as the current one
+  1) [chromium] › e2e/mentorship.spec.ts:33:7 › Mentorship › choosing a step describes it and marks it as the current one 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#mentorship').getByText('Honest, weekly feedback')
+    Expected: visible
+    Error: strict mode violation: locator('#mentorship').getByText('Honest, weekly feedback') resolved to 2 elements:
+        1) <p class="mt-1 text-[14px] leading-relaxed text-[var(--ld-muted)]">Honest, weekly feedback</p> aka getByText('Honest, weekly feedback').first()
+        2) <p class="mt-3.5 text-base leading-normal text-[var(--ld-muted)]">Honest, weekly feedback</p> aka getByRole('paragraph').filter({ hasText: 'Honest, weekly feedback' })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 15000ms
+      - waiting for locator('#mentorship').getByText('Honest, weekly feedback')
+
+
+      47 |     await next.click();
+      48 |     await expect(next).toHaveAttribute("aria-pressed", "true");
+    > 49 |     await expect(section.getByText(second.detail)).toBeVisible();
+         |                                                    ^
+      50 |   });
+      51 | });
+      52 |
+        at /home/runner/work/Docerity/Docerity/e2e/mentorship.spec.ts:49:52
+
+    Error Context: test-results/mentorship-Mentorship-choo-bbf21-marks-it-as-the-current-one-chromium/error-context.md
+
+
+[34/46] [chromium] › e2e/reviews.spec.ts:11:7 › Reviews page › renders the hero and the form with no console errors
+[35/46] [chromium] › e2e/reviews.spec.ts:35:7 › Reviews page › omits the rating structured data when there is nothing to average
+[36/46] [chromium] › e2e/reviews.spec.ts:46:7 › Reviews page › the rating input is a real radio group
+[37/46] [chromium] › e2e/reviews.spec.ts:68:7 › Reviews page › submitting an empty form reports every problem and focuses the first
+[38/46] [chromium] › e2e/reviews.spec.ts:85:7 › Reviews page › how we know each other is a real radio group too
+[39/46] [chromium] › e2e/reviews.spec.ts:93:7 › Reviews page › is reachable from the footer and the homepage reviews
+[40/46] [chromium] › e2e/reviews.spec.ts:109:7 › Review submission API › rejects a submission that fails validation with per-field messages
+[41/46] [chromium] › e2e/reviews.spec.ts:128:7 › Review submission API › refuses a javascript: URL in a link
+[42/46] [chromium] › e2e/reviews.spec.ts:150:7 › Review submission API › answers the honeypot as though it worked
+[43/46] [chromium] › e2e/reviews.spec.ts:161:7 › Review submission API › answers 503, not 500, when the database is unreachable
+  2) [chromium] › e2e/reviews.spec.ts:161:7 › Review submission API › answers 503, not 500, when the database is unreachable 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 503
+    Received: 201
+
+      176 |     });
+      177 |
+    > 178 |     expect(response.status()).toBe(503);
+          |                               ^
+      179 |     expect((await response.json()).error.code).toBe("service_unavailable");
+      180 |   });
+      181 |
+        at /home/runner/work/Docerity/Docerity/e2e/reviews.spec.ts:178:31
+
+    Error Context: test-results/reviews-Review-submission--5b23c-the-database-is-unreachable-chromium/error-context.md
+
+
+[44/46] [chromium] › e2e/reviews.spec.ts:182:7 › Review submission API › refuses a photo signature for a file that is not an image
+[45/46] [chromium] › e2e/reviews.spec.ts:193:7 › Unsubscribe › a missing token says so without confirming anything
+[46/46] [chromium] › e2e/reviews.spec.ts:204:7 › Unsubscribe › is not indexable
+  3) [chromium] › e2e/contact.spec.ts:46:7 › Contact page › the shared closing call to action navigates here 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Start the conversation' })
+
+
+      47 |     await page.goto("/about");
+      48 |     await page.locator("#contact").scrollIntoViewIfNeeded();
+    > 49 |     await page.getByRole("button", { name: "Start the conversation" }).click();
+         |                                                                        ^
+      50 |     await expect(page).toHaveURL("/contact");
+      51 |   });
+      52 |
+        at /home/runner/work/Docerity/Docerity/e2e/contact.spec.ts:49:72
+
+    Error Context: test-results/contact-Contact-page-the-s-f412c-ll-to-action-navigates-here-chromium/error-context.md
+
+
+  3 failed
+    [chromium] › e2e/contact.spec.ts:46:7 › Contact page › the shared closing call to action navigates here 
+    [chromium] › e2e/mentorship.spec.ts:33:7 › Mentorship › choosing a step describes it and marks it as the current one 
+    [chromium] › e2e/reviews.spec.ts:161:7 › Review submission API › answers 503, not 500, when the database is unreachable 
+  43 passed (40.4s)

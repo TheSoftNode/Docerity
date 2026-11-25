@@ -1,0 +1,19 @@
+
+> docerity@0.1.0 start
+> next start
+
+▲ Next.js 16.2.10
+- Local:         http://localhost:3000
+- Network:       http://10.1.1.108:3000
+✓ Ready in 150ms
+{"level":"info","scope":"db","message":"opening connection","time":"2026-11-25T18:48:47.810Z"}
+{"level":"warn","scope":"api.reviews","message":"request failed: validation_failed","time":"2026-11-25T18:49:21.706Z","requestId":"72a85c6d-0874-41aa-9973-084bbb32d469"}
+{"level":"warn","scope":"api.reviews","message":"request failed: validation_failed","time":"2026-11-25T18:49:21.734Z","requestId":"07ed0001-5a35-40fd-be27-a90ec8b9450d"}
+{"level":"info","scope":"api.reviews","message":"honeypot triggered","time":"2026-11-25T18:49:21.754Z","requestId":"8feedf2f-b183-450a-91f3-1dc2b1cd3837","ip":"::1"}
+{"level":"info","scope":"api.reviews","message":"request completed","time":"2026-11-25T18:49:21.755Z","requestId":"8feedf2f-b183-450a-91f3-1dc2b1cd3837","method":"POST","status":200,"durationMs":1}
+{"level":"info","scope":"api.reviews","message":"review stored pending moderation","time":"2026-11-25T18:49:21.784Z","requestId":"486b2e18-aa00-46ab-a2c3-a7cd450506f3","id":"6b072db1bc396ae72f954536","rating":5,"hasPhoto":false}
+{"level":"info","scope":"api.reviews","message":"request completed","time":"2026-11-25T18:49:21.785Z","requestId":"486b2e18-aa00-46ab-a2c3-a7cd450506f3","method":"POST","status":201,"durationMs":14}
+{"level":"warn","scope":"email","message":"email is not configured, skipping send","time":"2026-11-25T18:49:21.787Z","to":""}
+{"level":"warn","scope":"api.reviews","message":"review notification was not delivered","time":"2026-11-25T18:49:21.787Z","requestId":"486b2e18-aa00-46ab-a2c3-a7cd450506f3","reason":"Email is not configured."}
+{"level":"warn","scope":"api.reviews.upload","message":"request failed: validation_failed","time":"2026-11-25T18:49:22.338Z","requestId":"04095c96-50ed-459e-94e4-74555da225bd"}
+{"level":"info","scope":"unsubscribe","message":"unsubscribe processed","time":"2026-11-25T18:49:22.887Z","matched":false}

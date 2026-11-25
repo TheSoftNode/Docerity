@@ -1,0 +1,13 @@
+
+/home/runner/work/Docerity/Docerity/components/sections/contribute-page/review-sheet.tsx
+  94:3  warning  'eyebrow' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/runner/work/Docerity/Docerity/components/sections/mentorship-page/mentorship-apply.tsx
+  9:22  warning  'pad' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/runner/work/Docerity/Docerity/components/sections/reviews-page/review-record.tsx
+  25:34  warning  'eyebrow' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 3 problems (0 errors, 3 warnings)
+
+lint exit 0

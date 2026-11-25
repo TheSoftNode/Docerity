@@ -1,0 +1,127 @@
+
+> docerity@0.1.0 build
+> next build
+
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+▲ Next.js 16.2.10 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 13.2s
+  Running TypeScript ...
+  Finished TypeScript in 17.6s ...
+  Collecting page data using 3 workers ...
+{"level":"info","scope":"db","message":"opening connection","time":"2026-11-25T18:48:42.502Z"}
+{"level":"info","scope":"db","message":"opening connection","time":"2026-11-25T18:48:42.545Z"}
+  Generating static pages using 3 workers (0/85) ...
+{"level":"info","scope":"db","message":"opening connection","time":"2026-11-25T18:48:43.124Z"}
+  Generating static pages using 3 workers (21/85) 
+  Generating static pages using 3 workers (42/85) 
+  Generating static pages using 3 workers (63/85) 
+✓ Generating static pages using 3 workers (85/85) in 1855ms
+  Finalizing page optimization ...
+
+Route (app)                        Revalidate  Expire
+┌ ○ /                                      5m      1y
+├ ○ /_not-found
+├ ○ /about                                 5m      1y
+├ ƒ /academy
+├ ƒ /academy/[course]
+├ ƒ /academy/[course]/[lesson]
+├ ƒ /academy/battles
+├ ƒ /academy/battles/[slug]
+├ ƒ /academy/projects
+├ ƒ /academy/projects/[id]
+├ ƒ /academy/showcase
+├ ƒ /account
+├ ○ /account/forgot
+├ ƒ /account/login
+├ ƒ /account/profile
+├ ƒ /account/projects/[id]
+├ ƒ /account/requests/[reference]
+├ ƒ /account/requests/new
+├ ƒ /account/reset/[token]
+├ ƒ /account/signup
+├ ƒ /account/verify/[token]
+├ ƒ /admin
+├ ƒ /admin/academy
+├ ƒ /admin/academy/[slug]
+├ ƒ /admin/academy/assignments
+├ ƒ /admin/academy/battles
+├ ƒ /admin/academy/battles/[slug]
+├ ƒ /admin/academy/briefs
+├ ƒ /admin/academy/builds
+├ ƒ /admin/client-projects
+├ ƒ /admin/client-projects/[id]
+├ ƒ /admin/client-projects/new
+├ ƒ /admin/content
+├ ƒ /admin/content/[key]
+├ ƒ /admin/enquiries
+├ ƒ /admin/enquiries/[id]
+├ ƒ /admin/forgot
+├ ƒ /admin/invite/[token]
+├ ƒ /admin/login
+├ ƒ /admin/media
+├ ƒ /admin/posts
+├ ƒ /admin/posts/[id]
+├ ƒ /admin/posts/new
+├ ƒ /admin/projects
+├ ƒ /admin/projects/[id]
+├ ƒ /admin/projects/new
+├ ƒ /admin/reset/[token]
+├ ƒ /admin/reviews
+├ ƒ /admin/subscribers
+├ ƒ /admin/users
+├ ○ /ai                                    5m      1y
+├ ƒ /api/admin/media
+├ ƒ /api/admin/posts/upload
+├ ƒ /api/admin/subscribers/export
+├ ƒ /api/admin/work/upload
+├ ƒ /api/contact
+├ ƒ /api/contact/upload
+├ ƒ /api/reviews
+├ ƒ /api/reviews/upload
+├ ƒ /api/subscribe
+├ ○ /apple-icon.png
+├ ○ /blog                                  5m      1y
+├ ● /blog/[slug]                           5m      1y
+│ ├ /blog/caching                          5m      1y
+│ ├ /blog/load-balancing                   5m      1y
+│ ├ /blog/api-requests                     5m      1y
+│ └ [+4 more paths]
+├ ƒ /blog/-/opengraph-image
+├ ○ /blog/opengraph-image
+├ ○ /blog/rss.xml                          5m      1y
+├ ƒ /contact
+├ ○ /contribute                            5m      1y
+├ ○ /how-we-work                           5m      1y
+├ ○ /icon.png
+├ ○ /mentorship                            5m      1y
+├ ○ /opengraph-image
+├ ○ /privacy                               1h      1y
+├ ○ /projects                              5m      1y
+├ ● /projects/[slug]                       5m      1y
+│ ├ /projects/eep                          5m      1y
+│ ├ /projects/hitoai                       5m      1y
+│ ├ /projects/easmark                      5m      1y
+│ └ [+27 more paths]
+├ ○ /reviews                               5m      1y
+├ ○ /robots.txt
+├ ○ /sitemap.xml                           5m      1y
+├ ○ /terms                                 1h      1y
+├ ○ /theo                                  5m      1y
+├ ƒ /unsubscribe
+└ ○ /web3                                  5m      1y
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+build exit 0
