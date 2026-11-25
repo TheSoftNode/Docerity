@@ -300,33 +300,6 @@ export const projects: readonly Project[] = [
   },
   {
     index: "17",
-    slug: "smart-treasures",
-    name: "Smart Treasures",
-    category: "Fintech · Investment",
-    groups: ["Fintech", "Full-stack"],
-    description:
-      "The public platform for a global investment group, covering their network and the programmes they run across regions.",
-    tags: ["Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
-    status: "Live",
-    preview: "grid",
-    liveUrl: "https://smart-treasures.vercel.app/",
-  },
-  {
-    index: "18",
-    slug: "loan-me",
-    name: "Loan App",
-    category: "Fintech · Lending",
-    groups: ["Fintech", "Full-stack"],
-    description:
-      "Personal and business lending with a short application path, credit assessment and repayment tracking built in.",
-    tags: ["Next.js", "TypeScript", "PostgreSQL", "Stripe", "RTK Query"],
-    status: "On hold",
-    preview: "dashboard",
-    liveUrl: "https://loan-me-v2.vercel.app/",
-    repoUrl: "https://github.com/TheSoftNode/loan-me-v2",
-  },
-  {
-    index: "19",
     slug: "softmeet",
     name: "SoftMeet",
     category: "Platform · Video",
@@ -340,7 +313,7 @@ export const projects: readonly Project[] = [
     repoUrl: "https://github.com/TheSoftNode/softmeet_v2",
   },
   {
-    index: "20",
+    index: "18",
     slug: "docmeet",
     name: "DocMeet",
     category: "Platform · Healthcare",
@@ -354,7 +327,7 @@ export const projects: readonly Project[] = [
     repoUrl: "https://github.com/Henryno111/DOCmeet_web_app",
   },
   {
-    index: "21",
+    index: "19",
     slug: "easmark-api",
     name: "Easmark API",
     category: "Backend · API",
@@ -367,7 +340,7 @@ export const projects: readonly Project[] = [
     liveUrl: "https://benstacks.pythonanywhere.com/swagger/",
   },
   {
-    index: "22",
+    index: "20",
     slug: "alx-connect-api",
     name: "ALX Connect API",
     category: "Backend · API",
@@ -380,7 +353,7 @@ export const projects: readonly Project[] = [
     liveUrl: "https://alxconnect.pythonanywhere.com/swagger/",
   },
   {
-    index: "23",
+    index: "21",
     slug: "tours-api",
     name: "Tours API",
     category: "Backend · API",
@@ -393,7 +366,7 @@ export const projects: readonly Project[] = [
     repoUrl: "https://github.com/TheSoftNode/TourApp/tree/main",
   },
   {
-    index: "24",
+    index: "22",
     slug: "softinven",
     name: "SoftInven",
     category: "Platform · Inventory",
@@ -406,7 +379,7 @@ export const projects: readonly Project[] = [
     repoUrl: "https://github.com/TheSoftNode/Soft-Inven",
   },
   {
-    index: "25",
+    index: "23",
     slug: "uri-social",
     name: "URI Social",
     category: "AI · Social platform",
@@ -449,7 +422,7 @@ export const projects: readonly Project[] = [
     ],
   },
   {
-    index: "26",
+    index: "24",
     slug: "uri-unified-inbox",
     name: "URI Unified Inbox",
     category: "Backend · Messaging",
@@ -485,7 +458,7 @@ export const projects: readonly Project[] = [
     ],
   },
   {
-    index: "27",
+    index: "25",
     slug: "jane-whatsapp",
     name: "Jane on WhatsApp",
     category: "AI · Conversational",
@@ -520,7 +493,7 @@ export const projects: readonly Project[] = [
     ],
   },
   {
-    index: "28",
+    index: "26",
     slug: "uri-developer-platform",
     name: "URI Developer Platform",
     category: "Backend · Developer platform",
@@ -540,7 +513,7 @@ export const projects: readonly Project[] = [
     ],
   },
   {
-    index: "29",
+    index: "27",
     slug: "api-scan-service",
     name: "API Scan Service",
     category: "Security · API scanning",
@@ -584,7 +557,7 @@ export const projects: readonly Project[] = [
     ],
   },
   {
-    index: "30",
+    index: "28",
     slug: "qwikpass",
     name: "QwikPass",
     category: "Mobile · Access control",
@@ -621,7 +594,7 @@ export const projects: readonly Project[] = [
     ],
   },
   {
-    index: "31",
+    index: "29",
     slug: "lms-api",
     name: "LMS API",
     category: "Backend · API",
@@ -672,8 +645,6 @@ export const projectMedia: Partial<Record<string, ProjectMedia>> = {
   "susnet": { type: "image", src: "/projects/susnet.webp", alt: "SusNet energy analytics" },
   "ai4energy": { type: "image", src: "/projects/ai4energy.webp", alt: "AI4Energy pricing forecasts" },
   "biasadra": { type: "image", src: "/projects/biasadra.webp", alt: "The Biasadra academy site" },
-  "smart-treasures": { type: "image", src: "/projects/smart-treasures.webp", alt: "Smart Treasures investment platform" },
-  "loan-me": { type: "image", src: "/projects/loan-me.webp", alt: "The loan application flow" },
   "softmeet": { type: "image", src: "/projects/softmeet.webp", alt: "SoftMeet video conferencing" },
   "docmeet": { type: "image", src: "/projects/docmeet.webp", alt: "DocMeet appointment booking" },
   "easmark-api": { type: "image", src: "/projects/easmark-api.webp", alt: "The Easmark API documentation" },
