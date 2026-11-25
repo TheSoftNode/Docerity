@@ -150,6 +150,9 @@ export function PortfolioActions({ founder, socials }: { founder: FounderView; s
         <Link href="/contact" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--ld-accent)] px-5 text-[14.5px] font-semibold text-[#08102e] transition-transform hover:-translate-y-0.5">
           Get in touch <ArrowRightIcon className="size-4" />
         </Link>
+        <Link href="/projects" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.22)] px-5 text-[14.5px] font-semibold text-[var(--ld-paper)] transition-colors hover:border-[rgb(var(--ld-paper-rgb)/0.5)]">
+          See projects
+        </Link>
         {cv ? (
           <a href={cv} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[rgb(var(--ld-paper-rgb)/0.22)] px-5 text-[14.5px] font-semibold text-[var(--ld-paper)] transition-colors hover:border-[rgb(var(--ld-paper-rgb)/0.5)]">
             <DownloadIcon className="size-4" /> Download CV
