@@ -78,6 +78,7 @@ export const SUGGESTED_GROUPS = [
   "Full-stack",
   "Backend / API",
   "Fintech",
+  "Security",
   "Hackathon",
 ] as const;
 
