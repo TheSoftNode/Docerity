@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
@@ -12,7 +13,10 @@ import { useScrolled } from "@/hooks/use-scrolled";
 import { useHideOnScroll } from "@/hooks/use-hide-on-scroll";
 import { PaletteLogo } from "@/components/shared/palette/palette-logo";
 
-type Props = Pick<SiteSettings, "name" | "navLinks" | "email">;
+type Props = Pick<SiteSettings, "name" | "navLinks" | "email"> & {
+  /** Whose portfolio the photo button opens. */
+  founder: { name: string; portrait: string };
+};
 
 /* Delay utilities in order, so the menu's rows cascade in when it opens. */
 const CASCADE = ["ld-delay-1", "ld-delay-2", "ld-delay-3", "ld-delay-4", "ld-delay-5", "ld-delay-6"];
@@ -43,7 +47,7 @@ function MenuIcon({ open }: { open: boolean }) {
   );
 }
 
-function SiteHeaderView({ name, navLinks, email }: Props) {
+function SiteHeaderView({ name, navLinks, email, founder }: Props) {
   const scrolled = useScrolled();
   const [open, setOpen] = useState(false);
   /* Out of the way while reading down a page on a phone; never while the menu is open. */
@@ -127,6 +131,29 @@ function SiteHeaderView({ name, navLinks, email }: Props) {
           </ul>
 
           <div className="flex items-center gap-2">
+            {/* The founder's portfolio, on every page and every screen: the
+                quickest way to the person behind the studio. A face is found
+                faster than one more word in a full row of links. */}
+            <Link
+              href="/theo"
+              aria-current={isCurrent("/theo") ? "page" : undefined}
+              aria-label={`${founder.name}'s portfolio`}
+              title={`${founder.name}'s portfolio`}
+              className={cn(
+                "inline-flex h-10 items-center gap-2 rounded-full border py-1 pr-1 pl-1 text-[14px] font-semibold outline-none transition-colors min-[360px]:pr-3.5",
+                "border-[rgb(var(--ld-paper-rgb)/0.18)] bg-[rgb(var(--ld-paper-rgb)/0.06)] text-[var(--ld-paper)] hover:bg-[rgb(var(--ld-paper-rgb)/0.12)] focus-visible:ring-1 focus-visible:ring-[rgb(var(--ld-accent-rgb)/0.7)]",
+                isCurrent("/theo") && "border-[rgb(var(--ld-accent-rgb)/0.7)]"
+              )}
+            >
+              <Image
+                src={founder.portrait}
+                alt=""
+                width={32}
+                height={32}
+                className="size-8 rounded-full object-cover ring-1 ring-[rgb(var(--ld-paper-rgb)/0.25)]"
+              />
+              <span className="hidden min-[360px]:inline">Portfolio</span>
+            </Link>
             {/* Light and dark. Which icon shows is decided by the class on
                 <html>, so the server and the first paint agree. */}
             <button
