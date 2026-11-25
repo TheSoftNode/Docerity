@@ -385,11 +385,11 @@ export const DEFAULTS: Record<BlockKey, BlockData> = {
       "studio-founder": {
         "eyebrow": "",
         "title": "Founded by an engineer who still ships.",
-        "lede": "Docerity was started by Theophilus Uchechukwu, a full-stack and Web3 engineer. His career, his work and his credentials are on his own page."
+        "lede": "Docerity was started by Theophilus Uchechukwu, a senior full-stack engineer who builds AI-powered products across web, mobile, Web3 and security. His career, his work and his credentials are on his own page."
       },
       "portfolio-hero": {
         "eyebrow": "Portfolio",
-        "title": "Theophilus Uchechukwu, *full-stack & Web3 engineer.*",
+        "title": "Theophilus Uchechukwu, *senior full-stack engineer.*",
         "lede": "Banking middleware, AI products and smart contracts, shipped for clients across three continents. Every branch of the career below merged into Docerity."
       },
       "portfolio-work": {

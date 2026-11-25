@@ -18,7 +18,7 @@ const STEP_MS = 5200;
  * decoration. Under reduced motion nothing draws in and nothing steps on.
  * `children` is the page's heading, set beside the card as HEAD's message.
  */
-function BranchGraph({ lanes, initLabel, children }: { lanes: Lane[]; initLabel: string; children: ReactNode }) {
+function BranchGraph({ lanes, initLabel, children }: { lanes: Lane[]; initLabel: string; children?: ReactNode }) {
   const reduceMotion = useReducedMotion() ?? false;
   const [active, setActive] = useState(0);
   const [held, setHeld] = useState(false);
@@ -144,8 +144,15 @@ function BranchGraph({ lanes, initLabel, children }: { lanes: Lane[]; initLabel:
         </div>
       </div>
 
-      <div className="mt-[clamp(18px,2.4vw,34px)] grid items-end gap-[clamp(24px,4vw,64px)] lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-        <div>{children}</div>
+      {/* Without a heading beside it, the commit card sits under the graph at a
+          reading width rather than stretched across the page. */}
+      <div
+        className={cn(
+          "mt-[clamp(18px,2.4vw,34px)] grid items-end gap-[clamp(24px,4vw,64px)]",
+          children ? "lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]" : "max-w-[40rem]"
+        )}
+      >
+        {children ? <div>{children}</div> : null}
         {lane ? (
           <div aria-live="polite">
             <div key={lane.index} className="ld-keep-dark ld-pop rounded-[22px] border border-[rgb(var(--ld-tint-rgb)/0.16)] bg-[rgb(17_35_88/0.5)] px-5 py-[18px] font-mono text-[12.5px] leading-[1.75]">

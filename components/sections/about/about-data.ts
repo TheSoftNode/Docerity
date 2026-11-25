@@ -12,7 +12,7 @@ import { projects } from "@/components/sections/work/work-data";
 
 export const founder = {
   name: "Theophilus Uchechukwu",
-  role: "Founder · Full-stack & Web3 Engineer",
+  role: "Founder · Senior Full-Stack Engineer",
   based: "Lagos, Nigeria",
   /* Stated because it is the practical question a distributed client actually
      has, and the portfolio made a point of it. `hours` is the same fact cut

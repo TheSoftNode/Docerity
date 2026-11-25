@@ -63,7 +63,7 @@ export default async function PortfolioPage() {
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
-        <AboutHero heading={hero} experience={about.experience} education={about.education} facts={facts}>
+        <AboutHero heading={hero} experience={about.experience} education={about.education} facts={facts} portrait={about.founder.portrait || "/about/headshot.webp"}>
           <PortfolioActions founder={about.founder} socials={site.socials} />
         </AboutHero>
         <AboutStory heading={story} story={about.story} fullStory={about.fullStory} founder={about.founder} />
