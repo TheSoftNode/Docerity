@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowRightIcon } from "lucide-react";
 
 import { getBlock, getHeading } from "@/lib/content/blocks/source";
 import { getSiteSettings } from "@/lib/content/blocks/site";
@@ -74,7 +76,7 @@ export default async function PortfolioPage() {
               {selected.lede ? <p className="text-[15.5px] leading-relaxed text-[var(--ld-muted)]">{selected.lede}</p> : null}
             </div>
             {caseStudies.length ? (
-              <CaseStudies projects={caseStudies} />
+              <CaseStudies projects={caseStudies} media={work.media} />
             ) : (
               <>
                 <div className="md:hidden">
@@ -85,6 +87,17 @@ export default async function PortfolioPage() {
                 </div>
               </>
             )}
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 border-t border-[rgb(var(--ld-paper-rgb)/0.12)] pt-8">
+              <p className="text-[15px] text-[var(--ld-muted)]">
+                {work.projects.length} projects in all, with screenshots and write-ups.
+              </p>
+              <Link
+                href="/projects"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--ld-paper)] px-5 text-[14.5px] font-semibold text-[var(--ld-ink)] transition-transform hover:-translate-y-0.5"
+              >
+                See all projects <ArrowRightIcon aria-hidden="true" className="size-4" />
+              </Link>
+            </div>
           </div>
         </section>
         <AboutChangelog heading={experience} experience={about.experience} />
