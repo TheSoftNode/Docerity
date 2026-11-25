@@ -57,13 +57,29 @@ export default async function PortfolioPage() {
   /* Projects placed on the portfolio in the projects editor; until there are
      any, the homepage's featured projects stand in. */
   const caseStudies = work.projects.filter((project) => project.showcase);
+  /* The roles held now, for the hero's "Currently" card: the first three
+     ongoing ones in Experience order, each linked to its first case study
+     whose client matches the organisation ("Uri" for "URI Creative"). */
+  const key = (name: string) => name.toLowerCase().split(/[\s,]+/)[0] ?? "";
+  const ongoingRoles = about.experience.filter((entry) => /present|now|current/i.test(entry.period));
+  const current = ongoingRoles.slice(0, 3).map((entry) => {
+    const project = caseStudies.find((item) => item.client && key(item.client) === key(entry.org));
+    return {
+      role: entry.role,
+      org: entry.org,
+      period: entry.period,
+      summary: entry.summary,
+      href: project ? `/projects/${project.slug}` : undefined,
+    };
+  });
+  const ongoing = ongoingRoles.slice(3).map((entry) => entry.org);
   const facts: FactView[] = [...about.facts, { value: String(work.projects.length), label: "Shipped projects", since: "every one listed on the projects page" }];
 
   return (
     <div className="ld-page flex flex-1 flex-col bg-[var(--ld-ink)] pt-3">
       <SiteHeader />
       <main className="flex-1">
-        <AboutHero heading={hero} experience={about.experience} education={about.education} facts={facts} portrait={about.founder.portrait || "/about/headshot.webp"}>
+        <AboutHero heading={hero} experience={about.experience} education={about.education} facts={facts} portrait={about.founder.portrait || "/about/headshot.webp"} current={current} ongoing={ongoing}>
           <PortfolioActions founder={about.founder} socials={site.socials} />
         </AboutHero>
         <AboutStory heading={story} story={about.story} fullStory={about.fullStory} founder={about.founder} />
