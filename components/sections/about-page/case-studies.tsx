@@ -12,6 +12,23 @@ import { cn } from "@/lib/utils";
  * Each card leads with the project's screenshot, says plainly what state the
  * work is in and what the author did, and opens the full write-up.
  */
+/*
+  A role is written as "title: what that meant", e.g. "Senior software engineer:
+  own the product end to end". The title is what a reader scans for, so it is
+  set apart in the card's brightest text; the detail follows in the body tone.
+*/
+function RoleLine({ role }: { role: string }) {
+  const split = role.indexOf(":");
+  const title = split > 0 ? role.slice(0, split).trim() : role.trim();
+  const detail = split > 0 ? role.slice(split + 1).trim() : "";
+  return (
+    <p className="mt-2.5 border-l-2 border-[rgb(var(--ld-paper-rgb)/0.35)] pl-3 text-[14px] leading-snug">
+      <span className="block font-semibold text-[var(--ld-paper)]">{title.charAt(0).toUpperCase() + title.slice(1)}</span>
+      {detail ? <span className="mt-0.5 block text-[var(--ld-muted)]">{detail.charAt(0).toUpperCase() + detail.slice(1)}</span> : null}
+    </p>
+  );
+}
+
 const CARD_SIZES = "(min-width: 1280px) 400px, (min-width: 768px) 50vw, 100vw";
 
 export function CaseStudies({
@@ -47,21 +64,19 @@ export function CaseStudies({
                       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-[var(--ld-muted)]">
                         <span aria-hidden="true" className={cn("size-1.5 rounded-full", statusDot(project.status))} />
                         {project.status}
-                        {project.role ? (
+                        {project.client ? (
                           <>
                             <span aria-hidden="true">·</span>
-                            {project.role}
+                            <span className="inline-flex items-center gap-1">
+                              {project.confidential ? <LockIcon aria-label="Confidential" className="size-3.5" /> : null}
+                              {project.client}
+                            </span>
                           </>
                         ) : null}
                       </p>
-                      <p className="ld-display mt-2 text-[20px] leading-tight font-semibold tracking-[-0.02em]">{project.name}</p>
-                      {project.client ? (
-                        <p className="mt-1 inline-flex items-center gap-1.5 text-[13.5px] text-[var(--ld-muted)]">
-                          {project.confidential ? <LockIcon className="size-3.5" /> : null}
-                          {project.client}
-                        </p>
-                      ) : null}
-                      <p className="mt-3 line-clamp-3 text-[14.5px] leading-relaxed text-[var(--ld-muted)]">{project.description}</p>
+                      <p className="ld-display mt-2 text-[21px] leading-tight font-semibold tracking-[-0.02em]">{project.name}</p>
+                      {project.role ? <RoleLine role={project.role} /> : null}
+                      <p className="mt-3 line-clamp-2 text-[14.5px] leading-relaxed text-[var(--ld-muted)]">{project.description}</p>
                       <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-4">
                         {project.recognition ? (
                           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ff7a59] px-3 py-1 text-[12.5px] font-semibold text-[#08102e]">
