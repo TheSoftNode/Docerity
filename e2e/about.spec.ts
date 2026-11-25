@@ -142,7 +142,7 @@ test.describe("Portfolio page", () => {
     const response = await request.get(url.searchParams.get("url") ?? url.pathname);
     expect(response.status()).toBe(200);
 
-    await expect(credentials.getByText(about.education[3].qualification)).toBeVisible();
+    await expect(credentials.getByText(about.education[3].qualification).first()).toBeVisible();
   });
 
   test("the hero has no background grid", async ({ page }) => {
