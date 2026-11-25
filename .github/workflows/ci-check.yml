@@ -1,0 +1,32 @@
+name: ci-check
+on:
+  push:
+    branches: [ci-check-portal]
+    paths-ignore: ["ci-shots/**"]
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7
+        ports: ["27017:27017"]
+    env:
+      MONGODB_URI: mongodb://localhost:27017/docerity
+      SESSION_SECRET: ci-session-secret-ci-session-secret-1234
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci --ignore-scripts && npx playwright install --with-deps chromium
+      - run: mkdir -p ci-shots; npx tsc --noEmit > ci-shots/tsc.txt 2>&1; echo "tsc exit $?" >> ci-shots/tsc.txt
+      - run: npx eslint components/sections lib/content/blocks > ci-shots/lint.txt 2>&1; echo "lint exit $?" >> ci-shots/lint.txt
+      - run: node .ci/seed.cjs
+      - run: npm run build > ci-shots/build.txt 2>&1; echo "build exit $?" >> ci-shots/build.txt; tail -n 5 ci-shots/build.txt
+      - run: (npm run start > ci-shots/start.txt 2>&1 &) && npx wait-on -t 120000 http://localhost:3000 && node .ci/shots.cjs && (CI= npx playwright test e2e/about.spec.ts e2e/reviews.spec.ts e2e/home.spec.ts e2e/ai.spec.ts e2e/mentorship.spec.ts e2e/contact.spec.ts --project=chromium --reporter=line > ci-shots/e2e.txt 2>&1 || true)
+      - name: commit
+        if: always()
+        run: |
+          git config user.name ci && git config user.email ci@users.noreply.github.com
+          git add -f ci-shots && git commit -m "ci-shots" && git push origin HEAD:ci-check-portal
