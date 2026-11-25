@@ -4,6 +4,10 @@ import { siteConfig } from "@/lib/config/site";
 import { getPublishedEntries } from "@/lib/content/posts";
 import { getWork } from "@/lib/content/work";
 
+/* Rebuilt every five minutes like the pages it lists, so a project or post
+   added, renamed or deleted in the admin reaches the sitemap without a deploy. */
+export const revalidate = 300;
+
 /* Async now, because the post list is a query rather than an import. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries = await getPublishedEntries();
